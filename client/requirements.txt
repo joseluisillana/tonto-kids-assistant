@@ -1,0 +1,2 @@
+# Requirements for TONTO Kids Assistant Client
+# Add dependencies here as needed
