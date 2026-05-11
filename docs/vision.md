@@ -1,17 +1,37 @@
 # Visión de TONTO Kids Assistant
 
-## Propósito del Proyecto
+## ¿Qué es TONTO?
 
-TONTO Kids Assistant es un agente educativo físico diseñado para apoyar el aprendizaje infantil a través de conversaciones naturales. El proyecto busca crear una herramienta práctica que integre inteligencia artificial y hardware accesible para fomentar el desarrollo cognitivo en niños de manera interactiva y amigable.
+TONTO es un asistente educativo físico para niños que responde a preguntas por voz usando inteligencia artificial. Es un dispositivo simple que facilita conversaciones naturales sobre temas educativos como matemáticas, ciencia e historia.
 
-## Problema que Resuelve
+## Por qué lo construimos
 
-Los métodos tradicionales de educación infantil a menudo carecen de interactividad personalizada, limitando la capacidad de los niños para explorar conceptos de manera autónoma. TONTO aborda esta brecha al proporcionar un compañero de aprendizaje que responde a preguntas naturales, adapta explicaciones al nivel del niño y mantiene el engagement a través de voz y presencia física.
+Queremos demostrar que se puede crear un compañero de aprendizaje accesible con hardware barato y IA externa. El enfoque es práctico: un MVP en 6 semanas que funcione bien para demos y pruebas iniciales.
 
-## Experiencia Ideal del Usuario
+## MVP Real
 
-Un niño interactúa con TONTO preguntando sobre temas como matemáticas, ciencia o historia. El dispositivo responde con explicaciones claras, adaptadas a su edad, usando voz natural y expresiones físicas simples. La experiencia es fluida: el niño habla, TONTO escucha y responde, creando un diálogo continuo que fomenta la curiosidad y el aprendizaje activo.
+- **Hardware**: Raspberry Pi 3 como cliente delgado.
+- **Backend**: IA externa para procesamiento de voz y respuestas.
+- **Enfoque**: Desarrollo rápido orientado a demos.
+- **Objetivo principal**: Conversación natural por voz para acompañamiento educativo.
 
-## Importancia del Enfoque Voice-First y AI-First
+## Enfoque Técnico
 
-El enfoque voice-first prioriza la comunicación natural por voz, eliminando barreras de interfaz y haciendo el aprendizaje más accesible para niños que aún no dominan la lectura o escritura. El enfoque AI-first permite que el sistema aprenda de interacciones previas, personalizando respuestas y mejorando continuamente la calidad de las explicaciones, lo que resulta en un compañero educativo más efectivo y adaptable.
+- **Voice-First**: TONTO prioriza interacción natural por voz para facilitar conversaciones simples y accesibles.
+- **AI-First**: La inteligencia artificial es el núcleo del sistema, pero el MVP prioriza simplicidad y velocidad de iteración sobre complejidad técnica.
+- **Thin Client Architecture**: La Raspberry Pi funciona como cliente ligero mientras el procesamiento principal ocurre en un backend IA remoto.
+
+## Principios del MVP
+
+TONTO prioriza:
+
+- simplicidad,
+- estabilidad,
+- conversación natural,
+- y demos funcionales rápidas.
+
+El proyecto evita deliberadamente sobreingeniería, arquitecturas complejas y funcionalidades no esenciales durante las primeras fases de desarrollo.
+
+## Experiencia del Usuario
+
+Un niño habla con TONTO preguntando algo. TONTO escucha, procesa la pregunta con IA y responde con voz clara y simple. Es un diálogo básico que ayuda a explorar conceptos de forma natural.
