@@ -1,179 +1,318 @@
 # Hardware del Proyecto TONTO
 
-## Propósito General
+## Objetivo
 
-El hardware de TONTO sigue una **estrategia thin-client**: la Raspberry Pi es un cliente ligero que captura entrada del usuario y reproduce respuestas, delegando toda la lógica conversacional y procesamiento al backend.
+El hardware de TONTO está diseñado siguiendo una estrategia **thin-client**:
 
----
+- la Raspberry Pi gestiona interacción física y audio,
+- mientras que la lógica conversacional y la IA se ejecutan principalmente en un backend remoto.
 
-## Inventario Actual
-
-### 1. **Raspberry Pi 3 Model B v1.2** (Controlador Principal)
-
-| Aspecto          | Detalle                                                                                  |
-| ---------------- | ---------------------------------------------------------------------------------------- |
-| **Propósito**    | Ejecuta cliente Python. Captura entrada de usuario y reproduce audio de respuestas.      |
-| **Rol**          | Thin-client: sin lógica de negocio, sin almacenamiento persistente.                      |
-| **Comunicación** | HTTP/REST al backend (Go/Python en Windows u otro servidor).                             |
-| **Limitaciones** | CPU modesta (quad-core 1.2 GHz), 1 GB RAM, sin GPU. Suficiente para cliente, no para IA. |
-| **Ventaja**      | Económica, bajo consumo eléctrico, forma compacta.                                       |
-
-**Rol esperado:** Punto de entrada del niño. Recibe comandos de voz/texto, envía al backend, reproduce respuestas.
+El objetivo del MVP NO es construir un robot complejo ni una plataforma hardware avanzada.
+El objetivo es validar una experiencia educativa conversacional funcional utilizando hardware accesible, reutilizable y fácil de mantener.
 
 ---
 
-### 2. **Arduino Uno** (I/O Futuro - Por Definir)
+# Filosofía Hardware
 
-| Aspecto               | Detalle                                                         |
-| --------------------- | --------------------------------------------------------------- |
-| **Propósito**         | TBD - Posible control de periféricos (LEDs, botones, sensores). |
-| **Comunicación**      | Serial USB a Raspberry Pi.                                      |
-| **Decisión Temporal** | No integrado en MVP. Reservado para expansión post-MVP.         |
-| **Razón**             | Simplicidad sobre características iniciales.                    |
+TONTO prioriza:
 
-**Estado:** En inventario, sin uso planificado antes de MVP estable.
+- reutilizar hardware existente,
+- minimizar coste y complejidad,
+- evitar componentes innecesarios,
+- favorecer estabilidad y facilidad de depuración,
+- mantener una arquitectura simple y mantenible.
 
----
-
-### 3. **Starter Kit Arduino** (Componentes Varios)
-
-| Aspecto               | Detalle                                                     |
-| --------------------- | ----------------------------------------------------------- |
-| **Contenido**         | LEDs, resistencias, botones, sensores, cables, proto-board. |
-| **Uso Potencial**     | Apoyo futuro a Arduino Uno.                                 |
-| **Decisión Temporal** | Inventario de respaldo. No crítico para MVP.                |
+La experiencia conversacional es el producto principal.
+El hardware es únicamente el medio de interacción.
 
 ---
 
-## Hardware Pendiente (Probable)
+# Inventario actual
 
-### 1. **Micrófono USB**
+## Raspberry Pi 3 Model B v1.2
 
-- **Propósito:** Entrada de voz clara del usuario.
-- **Requerimiento:** Mejor que micrófono integrado (si existiera) o entrada por texto.
-- **Prioridad:** Alta (si se implementa entrada de voz).
-- **Decisión:** Evaluar costo/calidad. Preferir modelo simple (no array de micrófonos).
+### Rol
 
-### 2. **Mini Speaker / Altavoz Compacto**
+Cliente físico principal del sistema.
 
-- **Propósito:** Reproducción de audio (respuestas TTS del backend).
-- **Requerimiento:** Audio claro para niño. Amplitud suficiente sin ser estridentes.
-- **Prioridad:** Media-Alta (si se implementa TTS).
-- **Decisión:** USB o conector jack de 3.5 mm. Evaluar opciones económicas.
+### Responsabilidades
 
-### 3. **Pantalla HDMI Compacta**
+- reproducción de audio,
+- TTS local,
+- captura de audio futura,
+- comunicación con backend,
+- control de estados físicos simples,
+- ejecución del cliente TONTO.
 
-- **Propósito:** Mostrar feedback visual (animaciones, contexto conversacional, modo "listening").
-- **Requerimiento:** Pantalla pequeña (7-10 pulgadas) con HDMI.
-- **Prioridad:** Baja. Funcionalidad MVP es conversacional (voz/texto), no visual.
-- **Decisión:** Evaluar solo si hay presupuesto tras MVP estable.
+### Estado actual
 
----
+Validado y operativo:
 
-## Hardware Descartado (Por Ahora)
+- Raspberry Pi OS instalado,
+- conexión SSH funcionando,
+- desarrollo remoto mediante VSCode,
+- audio output validado,
+- `espeak` funcionando correctamente.
 
-### ❌ Cámaras
+### Limitaciones conocidas
 
-- **Razón:** Añaden complejidad (visión, privacy). MVP es conversacional, no visual.
-- **Futuro:** Posible en expansión si se requiere reconocimiento de gestos.
+- 1 GB RAM,
+- CPU limitada,
+- no adecuada para modelos IA pesados,
+- recursos limitados para múltiples servicios concurrentes.
 
-### ❌ Sensores Ambientales (temperatura, humedad, luz, etc.)
+### Decisión arquitectónica
 
-- **Razón:** Fuera del scope de asistente conversacional infantil.
-- **Futuro:** Opcional si se expande a monitoreo del entorno.
+La Raspberry Pi debe permanecer como:
 
-### ❌ Pantalla Integrada en Raspberry
+- thin client,
+- simple,
+- estable,
+- fácil de reiniciar y mantener.
 
-- **Razón:** Costo vs beneficio. HDMI externa es más flexible.
-
-### ❌ GPU / Hardware Acelerador de IA
-
-- **Razón:** IA ejecuta en backend (OpenAI API). Raspberry no procesa modelos.
-- **Decisión Arquitectónica:** Thin-client, no compute-heavy en la Pi.
-
----
-
-## Decisiones de Diseño
-
-### 1. **Thin-Client (Raspberry Pi sin IA)**
-
-**Decisión:** Toda la inteligencia (OpenAI API) y lógica ejecuta en backend.
-
-- ✅ **Ventaja:** Raspberry simple, económica, bajo mantenimiento.
-- ✅ **Ventaja:** Backend escalable, upgrades sin tocar hardware en campo.
-- ❌ **Trade-off:** Depende de conectividad red.
-
-### 2. **Simplicidad Sobre Características**
-
-**Decisión:** MVP con Raspberry + conexión HTTP al backend. Sin Arduino, sin pantalla, sin sensores inicialmente.
-
-- ✅ **Ventaja:** Tiempo de desarrollo menor. Más fácil debuggear.
-- ❌ **Trade-off:** Menos atractivo visualmente, funcionalidad limitada.
-
-### 3. **Storage: Backend, No Raspberry**
-
-**Decisión:** Raspberry sin almacenamiento persistente local. Sesiones identificadas por `session_id` vía backend.
-
-- ✅ **Ventaja:** Stateless Raspberry. Fácil de replicar/reemplazar.
-- ✅ **Ventaja:** Datos centralizados en backend (más seguro para niño).
-- ❌ **Trade-off:** Requiere conexión activa al backend.
+No debe ejecutar procesamiento IA complejo localmente.
 
 ---
 
-## Conectividad y Deployment
+## Arduino Uno
 
-| Componente               | Conexión                       |
-| ------------------------ | ------------------------------ |
-| Raspberry Pi ↔ Backend   | Ethernet o WiFi (LAN/Internet) |
-| Raspberry Pi ↔ Arduino   | Serial USB (futuro)            |
-| Raspberry Pi ↔ Micrófono | USB (futuro)                   |
-| Raspberry Pi ↔ Pantalla  | HDMI (futuro, opcional)        |
+### Rol
 
----
+Periférico opcional para estados físicos simples.
 
-## Restricciones y Limitaciones Conocidas
+### Uso previsto
 
-| Limitación                | Impacto                                           | Mitigation                                             |
-| ------------------------- | ------------------------------------------------- | ------------------------------------------------------ |
-| **Raspberry Pi 1 GB RAM** | Limita procesos concurrentes, imposible IA local. | Mantener cliente simple (Python async). IA en backend. |
-| **Procesador 1.2 GHz**    | TTS local sería lento.                            | TTS en backend.                                        |
-| **Dependencia Red**       | Sin red = sin funcionalidad.                      | Caché local futuro (post-MVP).                         |
-| **Arduino no integrado**  | Expansión I/O limitada inicialmente.              | Reservado para post-MVP.                               |
-| **Sin pantalla inicial**  | Feedback visual limitado a audio.                 | UX basada en texto + voz.                              |
+- LEDs,
+- botones,
+- pequeños indicadores físicos,
+- posibles expresiones visuales básicas.
 
----
+### Estado actual
 
-## Roadmap Hardware
+Disponible pero todavía no integrado en el MVP.
 
-### MVP (Fase 1)
+### Prioridad
 
-- ✅ Raspberry Pi 3B v1.2 + cliente Python
-- ✅ Conexión HTTP al backend
-- 🔵 Entrada: teclado USB o SSH remoto
-- 🔵 Salida: texto en terminal o via API
+Baja-media.
 
-### Post-MVP (Fase 2)
-
-- ⏳ Micrófono USB (entrada voz)
-- ⏳ Mini speaker (salida audio TTS)
-- ⏳ Arduino integrado (expansión I/O)
-
-### Futuro (Fase 3+)
-
-- ⏳ Pantalla HDMI pequeña (UI visual)
-- ⏳ Sensores opcionales (según business case)
+La integración Arduino solo se realizará si aporta valor claro a la experiencia final de la demo.
 
 ---
 
-## Notas de Coste y Sostenibilidad
+## Starter Kit Arduino
 
-- **Raspberry Pi:** ~$50 USD (margen económico).
-- **Arduino Uno + Kit:** ~$30 USD (respaldo, opcional).
-- **Micrófono USB:** ~$10-20 USD.
-- **Mini Speaker:** ~$15-30 USD.
-- **Pantalla HDMI 7":** ~$50-100 USD (bajo prioridad).
+### Contenido
 
-**Filosofía:** Comenzar mínimo (solo Raspberry), agregar periféricos según validación de MVP.
+- LEDs,
+- resistencias,
+- cables,
+- botones,
+- sensores básicos,
+- protoboard.
+
+### Uso previsto
+
+Apoyo experimental para pruebas rápidas de estados físicos.
+
+### Estado actual
+
+Disponible para prototipado rápido.
+
+---
+
+# Hardware pendiente probable
+
+## Micrófono USB
+
+### Objetivo
+
+Permitir interacción por voz real.
+
+### Prioridad
+
+Alta.
+
+### Criterios
+
+- simple,
+- económico,
+- compatible Linux/Raspberry Pi,
+- sin procesamiento complejo integrado.
+
+El MVP no necesita arrays de micrófonos avanzados ni hardware especializado.
+
+---
+
+## Mini altavoz / speaker
+
+### Objetivo
+
+Mejorar claridad de reproducción de voz.
+
+### Prioridad
+
+Media.
+
+### Estado actual
+
+Audio ya validado mediante salida básica local.
+
+---
+
+# Hardware opcional futuro
+
+## Pantalla HDMI compacta
+
+### Objetivo potencial
+
+Mostrar:
+
+- estados simples,
+- modo escucha,
+- feedback visual mínimo.
+
+### Prioridad
+
+Baja.
+
+TONTO es principalmente voice-first, por lo que una pantalla NO es necesaria para validar el MVP.
+
+---
+
+# Hardware descartado para el MVP
+
+Las siguientes categorías quedan explícitamente fuera del alcance inicial:
+
+- cámaras,
+- visión artificial,
+- aceleradores IA,
+- sensores complejos,
+- brazos robóticos,
+- automatización doméstica avanzada,
+- hardware especializado costoso,
+- múltiples microcontroladores.
+
+Razón principal:
+
+añaden complejidad sin desbloquear directamente la experiencia conversacional del MVP.
+
+---
+
+# Estrategia Thin Client
+
+La Raspberry Pi NO es el cerebro principal del sistema.
+
+El procesamiento principal ocurre en el backend:
+
+- conversación IA,
+- memoria,
+- orquestación,
+- lógica del sistema.
+
+La Raspberry únicamente:
+
+- captura entrada,
+- reproduce salida,
+- controla interacción física,
+- mantiene estado local mínimo.
+
+---
+
+# Estado actual validado
+
+Actualmente se ha validado correctamente:
+
+- arranque estable de Raspberry Pi 3,
+- desarrollo remoto por SSH,
+- integración VSCode Remote SSH,
+- reproducción audio local,
+- TTS local mediante `espeak`,
+- estructura básica del entorno de desarrollo.
+
+Todavía pendiente:
+
+- micrófono USB,
+- captura de audio,
+- pipeline voz completo,
+- integración Arduino,
+- estados físicos visuales.
+
+---
+
+# Riesgos hardware principales
+
+## Dependencia de red
+
+El sistema depende inicialmente de conectividad entre Raspberry y backend.
+
+### Mitigación
+
+- arquitectura simple,
+- manejo básico de errores,
+- degradación controlada.
+
+---
+
+## Recursos limitados Raspberry Pi 3
+
+La Raspberry Pi tiene capacidad limitada para procesos concurrentes.
+
+### Mitigación
+
+- mantener cliente ligero,
+- evitar procesamiento IA local,
+- evitar servicios innecesarios.
+
+---
+
+## Complejidad hardware excesiva
+
+Añadir demasiados componentes puede ralentizar el desarrollo y dificultar depuración.
+
+### Mitigación
+
+- introducir hardware únicamente si desbloquea funcionalidades del MVP,
+- priorizar simplicidad sobre espectacularidad.
+
+---
+
+# Criterios para futuras compras
+
+Antes de añadir nuevo hardware debe responderse:
+
+1. ¿Desbloquea directamente una funcionalidad importante del MVP?
+2. ¿Reduce complejidad o la aumenta?
+3. ¿Puede reutilizarse hardware ya disponible?
+4. ¿Complica depuración o estabilidad?
+5. ¿Aporta realmente valor a la experiencia educativa?
+
+Si la respuesta no es claramente positiva:
+el hardware probablemente no debe añadirse todavía.
+
+---
+
+# Estado del MVP Hardware
+
+## Validado
+
+- Raspberry Pi 3 operativa,
+- SSH,
+- desarrollo remoto,
+- TTS local,
+- audio output.
+
+## Próximas prioridades
+
+- micrófono USB,
+- captura audio,
+- primer pipeline voz completo.
+
+## No prioritario actualmente
+
+- pantallas,
+- automatización física compleja,
+- sensores,
+- hardware visual avanzado.
 
 ---
 
