@@ -1,237 +1,367 @@
-# Conversation Loop - First Functional Flow
+# Conversation Loop - MVP Specification
 
-## Objetivo Funcional
-
-Establecer el primer flujo end-to-end completamente funcional de TONTO:
-
-- Usuario ingresa texto manualmente
-- Backend procesa y genera respuesta
-- Cliente reproduce respuesta vía TTS
-
-**Estado**: Validación inicial del pipeline completo (MVP)
+**Version:** 0.1
+**Status:** Active MVP Spec
+**Last Updated:** May 2026
 
 ---
 
-## Flujo Completo
+# Objective
 
+Validate the first functional end-to-end conversational loop of TONTO Kids Assistant.
+
+The MVP flow must prove that:
+
+1. A user can send a message from the Raspberry Pi client.
+2. The backend can process the request using OpenAI.
+3. TONTO can return a response.
+4. The Raspberry Pi can reproduce that response using local TTS.
+
+This is the first complete functional validation of the TONTO architecture.
+
+---
+
+# MVP Scope
+
+## Included
+
+- Manual text input
+- HTTP communication
+- Backend conversation processing
+- OpenAI integration
+- Local TTS using `espeak`
+- Simple session context in memory
+- Basic error handling
+
+## Explicitly Out of Scope
+
+- Speech-to-text (STT)
+- Wake word detection
+- Persistent memory
+- Arduino integration
+- Visual UI
+- Multi-user support
+- Authentication
+- Offline AI models
+- Advanced orchestration
+
+---
+
+# High-Level Flow
+
+```text
+User
+  ↓
+Raspberry Pi Client
+  ↓
+HTTP POST /chat
+  ↓
+Backend
+  ↓
+OpenAI
+  ↓
+Backend Response
+  ↓
+Raspberry Pi
+  ↓
+Local TTS (espeak)
+  ↓
+Audio Output
 ```
-┌─────────────┐
-│   Usuario   │
-└──────┬──────┘
-       │ (texto manual)
-       ▼
-┌─────────────────────┐
-│  Cliente (Python)   │
-│  main.py            │
-└──────┬──────────────┘
-       │ (HTTP POST)
-       ▼
-┌─────────────────────┐
-│  Backend (Go)       │
-│  main.go            │
-└──────┬──────────────┘
-       │ (respuesta texto)
-       ▼
-┌─────────────────────┐
-│  Cliente (Python)   │
-│  Recibe respuesta   │
-└──────┬──────────────┘
-       │ (texto a voz)
-       ▼
-┌─────────────────────┐
-│  TTS (espeak)       │
-│  Audio salida       │
-└─────────────────────┘
+
+---
+
+# System Responsibilities
+
+## Raspberry Pi Client
+
+Responsible for:
+
+- reading user input,
+- sending HTTP requests,
+- receiving backend responses,
+- reproducing local TTS,
+- maintaining temporary session state,
+- displaying simple logs/errors.
+
+The Raspberry Pi is NOT responsible for:
+
+- AI reasoning,
+- long-term memory,
+- orchestration,
+- conversation logic.
+
+---
+
+## Backend
+
+Responsible for:
+
+- exposing the `/chat` endpoint,
+- calling OpenAI,
+- maintaining short conversation history in memory,
+- generating conversational responses,
+- returning structured JSON responses.
+
+The backend is NOT responsible for:
+
+- audio playback,
+- hardware control,
+- wake word detection,
+- physical interaction.
+
+---
+
+# Initial MVP Flow
+
+## Step 1 - Client Starts
+
+The Raspberry Pi client starts locally:
+
+```bash
+python client/main.py
 ```
 
-### Pasos Detallados
+The client:
 
-1. **Input (Cliente)**
-   - Usuario ingresa texto en CLI
-   - Validación básica (no vacío, < 500 caracteres)
-
-2. **Transmisión (Cliente → Backend)**
-   - HTTP POST a `localhost:8080/chat`
-   - Body: `{"message": "texto del usuario"}`
-   - Header: `Content-Type: application/json`
-
-3. **Procesamiento (Backend)**
-   - Recibe mensaje
-   - Genera respuesta (placeholder o integración OpenAI)
-   - Retorna respuesta en JSON
-
-4. **Recepción (Cliente)**
-   - Parsea respuesta JSON
-   - Extrae texto de respuesta
-
-5. **Síntesis de Voz (Cliente)**
-   - Invoca `espeak` con el texto
-   - Reproduce audio (salida estándar del sistema)
+- creates a temporary session id,
+- shows a terminal prompt,
+- waits for user input.
 
 ---
 
-## Responsabilidades
+## Step 2 - User Sends Message
 
-### Cliente (Python)
+Example input:
 
-- `client/main.py`:
-  - Interfaz de entrada de usuario (CLI simple)
-  - Validación de entrada local
-  - HTTP POST al backend
-  - Parseo de respuesta JSON
-  - Invocación de `espeak` con el texto de respuesta
-  - Manejo de errores de conexión
-
-### Backend (Go)
-
-- `backend/main.go`:
-  - Servidor HTTP en puerto 8080
-  - Endpoint POST `/chat`
-  - Parseo de JSON del cliente
-  - Lógica de generación de respuesta (placeholder o OpenAI)
-  - Respuesta en formato JSON `{"response": "texto"}`
-  - Logging básico de requests
-
----
-
-## Criterios de Aceptación
-
-### Funcionalidad
-
-- [ ] Cliente conecta exitosamente a backend en localhost:8080
-- [ ] Usuario puede ingresar texto en CLI
-- [ ] Backend recibe el mensaje y responde
-- [ ] Cliente reproduce la respuesta mediante TTS
-- [ ] El audio es audible y comprensible
-
-### Flujo Completo
-
-- [ ] Ciclo completo usuario → input → backend → TTS funciona sin errores
-- [ ] No hay bloqueadores de conexión/red
-- [ ] TTS se ejecuta sin fallos
-
-### Confiabilidad
-
-- [ ] Manejo de errores en conexión al backend
-- [ ] Manejo de respuestas inválidas del backend
-- [ ] Reintentos o notificación clara de fallos
-
-### Performance
-
-- [ ] Respuesta del backend < 2 segundos
-- [ ] Latencia total end-to-end < 5 segundos
-
----
-
-## Limitaciones Actuales
-
-### Input
-
-- ✋ Solo texto manual en CLI
-- ✋ Sin soporte para audio/micrófono aún
-- ✋ Sin procesamiento de lenguaje natural (NLP)
-
-### Backend
-
-- ✋ Sin integración OpenAI (placeholder de respuesta estatica)
-- ✋ Sin contexto de conversación (stateless)
-- ✋ Sin persistencia de historial
-
-### TTS
-
-- ✋ Solo espeak (sin voces personalizadas)
-- ✋ Sin soporte multi-idioma (solo inglés)
-- ✋ Sin ajuste de velocidad/tono
-
-### Infra
-
-- ✋ Sin autenticación
-- ✋ Sin rate limiting
-- ✋ Sin logging persistente
-
----
-
-## Riesgos Técnicos
-
-| Riesgo                     | Probabilidad | Impacto | Mitigación                                  |
-| -------------------------- | ------------ | ------- | ------------------------------------------- |
-| **Conexión rechazada**     | Alta         | Crítico | Validar puerto, firewall, backend corriendo |
-| **Formato JSON inválido**  | Media        | Alto    | Parser robusto, logging de request/response |
-| **espeak no instalado**    | Media        | Alto    | Validar disponibilidad, instrucciones setup |
-| **Timeout en backend**     | Media        | Medio   | Timeout configurable, reintentos            |
-| **Encoding de caracteres** | Baja         | Medio   | UTF-8 consistente cliente/backend           |
-
----
-
-## Estado Actual de Implementación
-
-### Completado
-
-- [ ] Estructura de proyecto inicializada
-- [ ] `go.mod` y `requirements.txt` definidos
-- [ ] Carpetas base creadas
-
-### En Progreso
-
-- [ ] Backend: servidor HTTP básico en `backend/main.go`
-- [ ] Cliente: loop de input en `client/main.py`
-
-### Pendiente
-
-- [ ] Endpoint `/chat` en backend
-- [ ] Cliente: HTTP POST al backend
-- [ ] Cliente: invocación de espeak
-- [ ] Testing e2e del flujo completo
-- [ ] Integración OpenAI backend
-
-### Bloqueadores
-
-- Ninguno identificado en esta fase MVP
-
----
-
-## Especificación Técnica Mínima
-
-### Backend (Go)
-
+```text
+What is 2 + 2?
 ```
-POST /chat HTTP/1.1
-Content-Type: application/json
 
+The client builds a simple JSON request:
+
+```json
 {
-  "message": "string (max 500 chars)"
-}
-
-Response:
-{
-  "response": "string"
+  "session_id": "local-session-001",
+  "message": "What is 2 + 2?"
 }
 ```
 
-### Cliente (Python)
+The request is sent to the backend using HTTP POST.
 
-```python
-1. Loop: get input from user
-2. Validate (not empty, < 500 chars)
-3. POST to http://localhost:8080/chat
-4. Parse response JSON
-5. Execute: espeak "response text"
-6. Repeat or exit
+---
+
+## Step 3 - Backend Processes Message
+
+The backend:
+
+1. receives the request,
+2. validates basic fields,
+3. builds a minimal conversation context,
+4. sends the request to OpenAI,
+5. receives the AI response,
+6. returns structured JSON.
+
+Example response:
+
+```json
+{
+  "success": true,
+  "response_text": "2 + 2 equals 4."
+}
 ```
 
 ---
 
-## Próximos Pasos
+## Step 4 - Raspberry Pi Reproduces Response
 
-1. **Backend MVP**: Implementar servidor HTTP + endpoint `/chat` con respuesta estática
-2. **Cliente MVP**: Implementar HTTP client + validación + espeak integration
-3. **Testing**: Validar ciclo completo manual
-4. **OpenAI**: Integración de backend con API OpenAI (post-MVP)
+The client:
+
+1. extracts `response_text`,
+2. executes local TTS using `espeak`,
+3. reproduces audio locally.
+
+Example:
+
+```bash
+espeak "2 plus 2 equals 4"
+```
 
 ---
 
-## Referencias
+## Step 5 - Loop Continues
 
-- [Audio Pipeline](./audio-pipeline.md)
-- [Hardware](../docs/hardware.md)
-- [Architecture](../docs/architecture.md)
+The client waits for the next user input.
+
+The same temporary session id is reused during execution.
+
+---
+
+# Initial API Contract
+
+## Request
+
+```json
+{
+  "session_id": "string",
+  "message": "string"
+}
+```
+
+---
+
+## Response
+
+```json
+{
+  "success": true,
+  "response_text": "string"
+}
+```
+
+---
+
+# Acceptance Criteria
+
+## AC1 - Client Execution
+
+- [ ] Raspberry Pi client starts correctly.
+- [ ] User can manually enter text.
+
+---
+
+## AC2 - Backend Communication
+
+- [ ] Client can send HTTP request to backend.
+- [ ] Backend responds successfully.
+
+---
+
+## AC3 - OpenAI Integration
+
+- [ ] Backend successfully calls OpenAI.
+- [ ] Response text is returned correctly.
+
+---
+
+## AC4 - Local TTS
+
+- [ ] Raspberry Pi reproduces response using `espeak`.
+- [ ] Audio is understandable.
+
+---
+
+## AC5 - End-to-End Loop
+
+- [ ] User can complete multiple conversation turns.
+- [ ] The system remains stable during repeated interactions.
+
+---
+
+# Current Technical Decisions
+
+## Confirmed
+
+- Raspberry Pi 3 acts as thin client.
+- Backend runs initially on Windows.
+- HTTP + JSON communication.
+- OpenAI as primary conversational engine.
+- Local TTS on Raspberry Pi using `espeak`.
+
+## Still Open
+
+- Backend final language choice.
+- Persistent memory strategy.
+- STT provider.
+- Wake word implementation.
+- Arduino integration details.
+
+---
+
+# Known MVP Limitations
+
+- Input is manual text only.
+- No persistent memory between executions.
+- No offline mode.
+- No advanced personality system.
+- No voice recognition yet.
+- No visual states yet.
+
+These limitations are acceptable for the initial MVP validation phase.
+
+---
+
+# Risks
+
+## Network Dependency
+
+The system currently depends on backend connectivity and OpenAI availability.
+
+---
+
+## Raspberry Pi Resources
+
+The Raspberry Pi 3 has limited CPU and RAM resources.
+
+The client must remain lightweight.
+
+---
+
+## Latency
+
+The conversational experience depends on response time between:
+
+- Raspberry Pi,
+- backend,
+- OpenAI.
+
+---
+
+# MVP Simplification Rules
+
+During implementation:
+
+- simplicity is preferred over perfect architecture,
+- premature optimization should be avoided,
+- abstractions should remain minimal,
+- technical debt is acceptable if it accelerates validation,
+- any feature that does not directly improve the MVP demo should be postponed.
+
+The goal is to validate the conversational loop as quickly and reliably as possible.
+
+---
+
+# Definition of Done
+
+This spec is considered complete when:
+
+- the Raspberry Pi client can communicate with the backend,
+- OpenAI responses are returned successfully,
+- local TTS works reliably,
+- multiple conversation turns succeed,
+- the system can be demonstrated consistently on real hardware.
+
+---
+
+# Related Backlog
+
+## Immediate Priorities
+
+- [ ] Create backend skeleton
+- [ ] Create `/chat` endpoint
+- [ ] Connect OpenAI API
+- [ ] Create Raspberry Pi client
+- [ ] Implement HTTP communication
+- [ ] Implement local TTS playback
+- [ ] Add basic logging
+- [ ] Add minimal configuration handling
+
+---
+
+# Next Step
+
+After this spec is validated:
+
+1. implement backend skeleton,
+2. implement Raspberry Pi client,
+3. validate first real end-to-end conversation.
