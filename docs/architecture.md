@@ -21,18 +21,17 @@ La Raspberry maneja la interacción física, audio y estados, mientras que el ba
 
 **Responsabilidades actuales:**
 
-- captura de audio desde micrófono,
-- reproducción TTS,
-- manejo de estados físicos y LEDs,
+- entrada manual de texto,
+- reproducción TTS local con `espeak`,
 - envío/recepción de mensajes HTTP al backend,
 - mantenimiento de `session_id` local para contexto.
 - El cliente Raspberry NO es el cerebro principal.
 
-**Hardware:** Raspberry Pi 3 Model B v1.2 y Arduino Uno para estados físicos/LEDs.
+**Hardware:** Raspberry Pi 3 Model B v1.2. Arduino Uno queda fuera del primer milestone de conversación.
 
 ### Backend (`backend/`)
 
-**Lenguaje:** Por decidir (Python o Go inicialmente probablemente para acelerar iteración)
+**Lenguaje MVP:** Python con FastAPI.
 
 **Responsabilidades actuales:**
 
@@ -40,7 +39,7 @@ La Raspberry maneja la interacción física, audio y estados, mientras que el ba
 - llamada a OpenAI para la lógica de IA,
 - gestión de memoria de sesión/historial,
 - exposición de APIs REST simples,
-- composición de respuestas con texto, acciones y metadatos.
+- composición de respuestas con texto para TTS.
 
 **Entorno inicial:** ejecución local en Windows para desarrollo rápido.
 
@@ -57,11 +56,11 @@ Contiene estructuras comunes que usan cliente y backend:
 
 ### Raspberry Pi / cliente
 
-- audio input/output,
-- TTS de respuesta,
+- entrada manual de texto para el primer loop conversacional,
+- TTS local de respuesta con `espeak`,
 - wake word futuro,
-- control de hardware / estados físicos,
-- integración con Arduino Uno para LEDs y actuadores,
+- control de hardware / estados físicos futuro,
+- integración futura con Arduino Uno para LEDs y actuadores,
 - comunicación HTTP con el backend.
 
 ### Backend
@@ -72,14 +71,14 @@ Contiene estructuras comunes que usan cliente y backend:
 - APIs REST,
 - personalidad y reglas de respuesta.
 
-## Flujo básico de conversación
+## Flujo básico de conversación actual
 
-1. El usuario activa el dispositivo o un evento físico inicia la interacción.
-2. La Raspberry graba audio y construye la petición.
+1. El usuario escribe un mensaje en el cliente Raspberry.
+2. La Raspberry construye la petición JSON.
 3. El cliente envía `POST /chat (placeholder inicial)` al backend con `session_id` y datos de entrada.
 4. El backend transforma la entrada, consulta OpenAI y aplica reglas de orquestación.
-5. El backend responde con texto, contenido de TTS y acciones físicas sugeridas.
-6. La Raspberry reproduce el audio, actualiza LEDs/actuadores y mantiene el estado local de sesión.
+5. El backend responde con texto para TTS.
+6. La Raspberry reproduce el audio con `espeak` y mantiene el estado local de sesión.
 7. El ciclo puede repetirse mientras la sesión permanezca activa.
 
 ## Principios arquitectónicos
@@ -109,8 +108,7 @@ Componentes en desarrollo:
 
 - backend conversacional inicial,
 - pipeline cliente-servidor,
-- integración OpenAI,
-- audio input.
+- integración OpenAI.
 
 El objetivo actual es validar el primer loop conversacional extremo a extremo antes de introducir memoria avanzada, wake word o automatización física compleja.
 
@@ -119,19 +117,19 @@ La arquitectura está optimizada para velocidad de iteración y facilidad de dep
 ## Decisiones actuales
 
 - usar **Raspberry Pi 3 Model B v1.2** como cliente físico,
-- usar **Arduino Uno** como periférico de estados físicos y LEDs,
 - ejecutar el backend inicialmente en **Windows** para desarrollo rápido,
+- usar **Python/FastAPI** para el backend MVP,
 - usar **OpenAI** como motor de IA conversacional,
 - exponer **APIs HTTP/REST** simples,
+- usar **TTS local con espeak** en Raspberry para el primer milestone,
 - mantener la arquitectura como un **MVP pequeño** y práctico.
 
 ## Decisiones abiertas
 
 - persistencia de memoria: almacenamiento local simple vs esquema más estructurado,
 - autenticación / identificación de sesión: `session_id` vs device-id robusto,
-- generación de TTS: backend produce audio vs TTS local en Raspberry.
 - despliegue de backend: Windows local ahora, posible migración a Linux ligero más adelante,
-- grado de integración con Arduino: estado simple de LEDs ahora, actuadores más complejos después.
+- grado de integración futura con Arduino y estados físicos.
 
 ## Riesgos técnicos principales
 
