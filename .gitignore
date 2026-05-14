@@ -1,181 +1,79 @@
-## TONTO Kids Assistant - .gitignore
-## Modern monorepo setup for Python, Go, and AI/ML workflows
+# TONTO Kids Assistant
+# Keep this file small and specific to the MVP.
 
-# ============================================================================
-# Python
-# ============================================================================
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Virtual Environments
-.venv/
-venv/
-env/
-ENV/
-env.bak/
-venv.bak/
+# Secrets and local configuration
 .env
-.env.local
-.env.*.local
-
-# Testing & Coverage
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.pytest_cache/
-nosetests.xml
-coverage.xml
-*.cover
-
-# Type checking
-.mypy_cache/
-.dmypy.json
-dmypy.json
-.pyre/
-
-# Jupyter & Notebooks
-.ipynb_checkpoints/
-*.ipynb~
-*-checkpoint.ipynb
-*.nb.html
-
-# Python IDE
-.pytype/
-.spyderproject
-.spyproject
-.ropeproject
-
-# ============================================================================
-# Go
-# ============================================================================
-*.exe
-*.exe~
-*.dll
-*.dylib
-*.so
-*.test
-*.out
-go.work
-go.work.sum
-
-# ============================================================================
-# Logs & Temporary Files
-# ============================================================================
-*.log
-*.logs
-logs/
-temp/
-tmp/
-*.tmp
-*.temp
-*.bak
-*~
-
-# ============================================================================
-# AI/ML Outputs
-# ============================================================================
-outputs/
-models/cache/
-*.pkl
-*.pickle
-*.joblib
-.cache/
-cache/
-*.pth
-*.onnx
-
-# Sensitive Data & Secrets
-# ============================================================================
-.env
-secrets/
+.env.*
+!.env.example
 *.key
 *.pem
 *.p12
 *.pfx
-*.pkcs12
-credentials.json
-credentials.yaml
-service-account.json
-api_keys.txt
-config/secrets/*
-!config/secrets/.gitkeep
+secrets/
+credentials.*
 
-# ============================================================================
-# VSCode
-# ============================================================================
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python caches and build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+*.whl
+
+# Tests and local quality tools
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+
+# Logs and temporary output
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.bak
+*~
+
+# VSCode and Remote SSH
 .vscode/
 .vscode-server/
 *.code-workspace
 .history/
-.remote/
 
-# ============================================================================
-# macOS
-# ============================================================================
-.DS_Store
-.DS_Store?
-._*
-.AppleDouble
-.LSOverride
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-
-# ============================================================================
 # Windows
-# ============================================================================
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
-*.lnk
 
-# ============================================================================
-# Raspberry Pi & Embedded
-# ============================================================================
-*.swp
-*.swo
-*~
-.~*
+# macOS and Linux desktop files
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
 
-# ============================================================================
-# Project-Specific
-# ============================================================================
-# Audio/media processing
+# Arduino experiments
+.pio/
+*.hex
+*.elf
+*.bin
+
+# Local demo/audio artifacts
+audio_output/
 *.wav
 *.mp3
 *.ogg
-/audio_output/
-
-# Data files (if needed, adjust as project grows)
-data/raw/
-data/processed/
-*.parquet
-*.csv.bak
-
-# Build artifacts
-dist/
-build/
-*.whl
-*.tar.gz
