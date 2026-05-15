@@ -11,7 +11,7 @@ La arquitectura está diseñada para el MVP del proyecto:
 - sin microservicios,
 - sin arquitectura enterprise falsa.
 
-La Raspberry maneja la interacción física, audio y estados, mientras que el backend provee la experiencia conversacional, la memoria y la personalidad. El MVP incluye además un cliente web de validación para acelerar pruebas del backend desde navegador sin depender siempre del hardware físico.
+La Raspberry maneja la entrada local, la salida TTS y los estados físicos futuros, mientras que el backend provee la experiencia conversacional, la memoria corta de sesión y la personalidad. El MVP incluye además un cliente web de validación para acelerar pruebas del backend desde navegador sin depender siempre del hardware físico.
 
 ## Componentes principales
 
@@ -54,7 +54,7 @@ Go no forma parte de la implementación activa del MVP. Cualquier código Go exi
 
 - orquestación de la conversación,
 - llamada a OpenAI para la lógica de IA,
-- gestión de memoria de sesión/historial,
+- gestión de memoria corta de sesión en proceso,
 - exposición de APIs REST simples,
 - composición de respuestas con texto para TTS.
 
@@ -75,7 +75,7 @@ Contiene estructuras comunes que usan cliente y backend:
 
 - entrada manual de texto para el primer loop conversacional,
 - TTS local de respuesta con `espeak`,
-- wake word futuro,
+- captura de voz y wake word futuros,
 - control de hardware / estados físicos futuro,
 - integración futura con Arduino Uno para LEDs y actuadores,
 - comunicación HTTP con el backend.
@@ -92,7 +92,7 @@ El cliente web no debe duplicar orquestación conversacional ni lógica de IA.
 ### Backend
 
 - conversación IA,
-- memoria de sesión e historial,
+- memoria corta de sesión en proceso,
 - orquestación de flujo,
 - APIs REST,
 - personalidad y reglas de respuesta.
@@ -151,11 +151,13 @@ La arquitectura está optimizada para velocidad de iteración y facilidad de dep
 - exponer **APIs HTTP/REST** simples,
 - usar **TTS local con espeak** en Raspberry para el primer milestone,
 - incluir un **cliente web de validación** con React, TypeScript y Vite,
+- usar **Markdown en el repo** como fuente oficial de documentación,
+- usar **NotebookLM** como capa de investigación y síntesis desde fuentes exportadas,
 - mantener la arquitectura como un **MVP pequeño** y práctico.
 
 ## Decisiones abiertas
 
-- persistencia de memoria: almacenamiento local simple vs esquema más estructurado,
+- persistencia de memoria futura: almacenamiento local simple vs esquema más estructurado,
 - autenticación / identificación de sesión: `session_id` vs device-id robusto,
 - despliegue de backend: Windows local ahora, posible migración a Linux ligero más adelante,
 - grado de integración futura con Arduino y estados físicos.

@@ -30,6 +30,7 @@ Preparar el entorno completo de desarrollo y validar la arquitectura mínima del
 - Repositorio GitHub inicializado.
 - README y documentación fundacional creados.
 - Arquitectura MVP definida.
+- Workflow documental repo/Codex/NotebookLM definido.
 
 ## Prioridades
 
@@ -264,9 +265,11 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 
 ## Documentación
 
-- [ ] Completar specs iniciales.
-- [ ] Documentar setup reproducible.
-- [ ] Definir workflow AI-assisted development.
+- [x] Crear documentación fundacional.
+- [x] Documentar setup reproducible con scripts oficiales.
+- [x] Definir workflow AI-assisted development.
+- [x] Definir exportación para NotebookLM.
+- [ ] Mantener journal semanal actualizado.
 
 ---
 

@@ -39,3 +39,11 @@ Do not run Go checks in CI while the MVP backend language is Python/FastAPI and 
 ## D010 - Local automation and isolated environments
 
 Use PowerShell scripts under `scripts/` as the official command surface for setup, dev servers, tests, and builds. Python dependencies live in the repo-local `.venv/`; frontend dependencies live in `web/node_modules/`. Agents, humans, and CI should use the same scripts instead of installing packages globally or inventing one-off commands.
+
+## D011 - Documentation source of truth
+
+Use Markdown files in the repository as the source of truth for durable project documentation. NotebookLM is a synthesis and research layer that reads exported copies from `exports/notebooklm/`, and useful NotebookLM output must be reviewed and promoted back into repo docs before it becomes official.
+
+## D012 - NotebookLM export automation
+
+Generate NotebookLM source files with `scripts/export-docs-for-notebooklm.ps1`. Install the local Git `pre-commit` hook with `scripts/install-git-hooks.ps1` so the export is refreshed before commits. The export folder is derived output and is ignored by Git.

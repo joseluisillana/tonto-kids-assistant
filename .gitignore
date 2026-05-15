@@ -56,6 +56,9 @@ temp/
 *.bak
 *~
 
+# Derived documentation exports
+exports/notebooklm/
+
 # VSCode and Remote SSH
 .vscode/
 .vscode-server/

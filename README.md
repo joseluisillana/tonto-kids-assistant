@@ -2,11 +2,11 @@
 
 _T.O.N.T.O — Thinking Oriented Natural Tutor Organism_
 
-TONTO es un agente educativo físico con interacción por voz diseñado para acompañar a un niño en su aprendizaje diario mediante conversación natural, personalidad persistente y memoria contextual.
+TONTO es un agente educativo físico diseñado para acompañar a un niño en su aprendizaje diario mediante conversación natural.
 
 Es un producto AI-first moderno que combina hardware físico accesible con modelos de IA avanzados para crear experiencias de aprendizaje inmersivas y personalizadas.
 
-Nace como proyecto para la formación AI Expert de DevExpert.io, por ello, la IA forma está presente en el núcleo tanto del producto como del proceso de desarrollo.
+Nace como proyecto para la formación AI Expert de DevExpert.io. Por ello, la IA está presente en el núcleo del producto y también en el proceso de desarrollo.
 
 Este README es el documento fundacional operativo para el desarrollador principal del proyecto. Está pensado para orientar las decisiones técnicas diarias, el backlog inicial y las pruebas en hardware real.
 
@@ -36,15 +36,20 @@ El foco está en conversación natural persistente que adapta el aprendizaje al 
 
 ## Objetivos del MVP (6 semanas)
 
-Prototipo que demuestre conversación educativa básica:
+El MVP final de 6 semanas busca demostrar una conversación educativa básica sobre hardware real.
 
-- **Conversación básica**: Input voz → procesamiento IA → output voz.
-- **Memoria simple**: Recordar contexto de sesión actual.
-- **Estados físicos**: LEDs que reflejan estado de conversación.
-- **Wake word**: Activación por voz ("Hey TONTO") o física (wake button).
-- **Personalidad básica**: Respuestas adaptadas a edad del niño.
+El milestone inmediato es más pequeño: validar el primer loop texto → backend → IA → respuesta → TTS local.
 
-**No incluye**: Personalidad persistente compleja, aprendizaje estructurado, multi-idioma.
+Incluye ahora:
+
+- **Entrada manual de texto** desde Raspberry Pi o cliente web de validación.
+- **Backend Python/FastAPI** con endpoint `/chat`.
+- **Integración OpenAI** para generar respuestas educativas.
+- **TTS local** en Raspberry Pi mediante `espeak`.
+- **Memoria de sesión en proceso** solo para contexto corto.
+- **Documentación viva** en Markdown, asistida por Codex y NotebookLM.
+
+Queda fuera del primer loop: STT, wake word, Arduino/LEDs, persistencia, autenticación, multiusuario, memoria avanzada y UI de producto compleja.
 
 ## Arquitectura Actual
 
@@ -54,11 +59,10 @@ Prototipo que demuestre conversación educativa básica:
 │   (Thin Client) │                │   (Backend IA)  │
 │   v1.2          │                │ Python/FastAPI  │
 │                 │                │                 │
-│ • Audio I/O     │                │ • OpenAI API    │
-│ • Wake Word     │                │ • Memoria       │
-│ • TTS (espeak)  │                │ • Orquestación  │
-│ • LEDs/Arduino  │                │ • Personalidad  │
-│ • GPIO Control  │                │                 │
+│ • Text input    │                │ • OpenAI API    │
+│ • TTS (espeak)  │                │ • Session memory│
+│ • HTTP client   │                │ • Orquestación  │
+│ • Thin client   │                │ • Personalidad  │
 └─────────────────┘                └─────────────────┘
         ▲                                  ▲
         │                                  │
@@ -67,10 +71,11 @@ Prototipo que demuestre conversación educativa básica:
 
 ### Cliente (Raspberry Pi 3 Model B v1.2)
 
-- **Hardware confirmado**: Audio output validado, espeak funcionando, Arduino Uno para estados físicos.
+- **Hardware confirmado**: Audio output validado y `espeak` funcionando.
 - **Desarrollo**: VSCode Remote SSH, acceso por SSH remoto.
-- **Responsabilidades**: Captura audio, wake word, TTS, control GPIO/Arduino.
-- **Tecnología**: Python con bibliotecas de audio (pyaudio, speech_recognition) y GPIO (RPi.GPIO).
+- **Responsabilidades actuales**: entrada manual de texto, llamadas HTTP al backend, TTS local y manejo básico de errores.
+- **Responsabilidades futuras**: captura de voz, wake word y control físico/Arduino.
+- **Tecnología**: Python estándar para el primer loop; dependencias de audio/GPIO se añadirán solo cuando entren en alcance.
 
 ### Backend (Windows PC)
 
@@ -81,19 +86,20 @@ Prototipo que demuestre conversación educativa básica:
 ### Cliente Web de Validación
 
 - **Objetivo**: Probar el backend desde navegador sin depender siempre de la Raspberry Pi.
-- **Responsabilidades**: Entrada manual de texto, visualización de respuestas, panel tecnico de demo y soporte para CI/despliegue frontend.
+- **Responsabilidades**: Entrada manual de texto, visualización de respuestas, panel técnico de demo y soporte para CI/despliegue frontend.
 - **Tecnología**: React + TypeScript + Vite, con Tailwind CSS como base visual.
 
 ## Stack Tecnológico Confirmado
 
 - **Lenguajes**: Python (cliente y backend inicial)
 - **Web**: React, TypeScript, Vite, Tailwind CSS
-- **IA**: OpenAI API (GPT-4 para conversación)
-- **Audio**: pyaudio, speech_recognition, espeak-ng
-- **Hardware**: Raspberry Pi 3B v1.2, Arduino Uno
+- **IA**: OpenAI API
+- **Audio actual**: espeak/espeak-ng para TTS local
+- **Audio futuro**: STT y wake word se decidirán después del primer loop
+- **Hardware**: Raspberry Pi 3B v1.2; Arduino Uno queda futuro para estados físicos
 - **Comunicación**: REST APIs (FastAPI)
 - **Desarrollo**: Codex, GitHub, GitHub Copilot, VSCode + Remote SSH
-- **Documentación**: Markdown plano, NotebookLM para síntesis
+- **Documentación**: Markdown en repo como fuente oficial; NotebookLM para síntesis; Codex para mantenimiento asistido
 
 **Tecnologías aparcadas**: Go para backend queda como evaluación futura, no como requisito activo del MVP ni como gate de CI.
 
@@ -117,16 +123,16 @@ tonto-kids-assistant/
 │   ├── models.py     # DTOs y modelos
 │   └── config.py     # Configuración común
 ├── docs/             # Documentación técnica
+│   ├── README.md     # Índice documental
 │   ├── specs.md      # Specs activas
-│   └── api.md        # Endpoints
+│   └── decisions.md  # Decisiones técnicas
 ├── scripts/          # Automatización
 │   ├── setup-dev.ps1 # Setup local aislado
 │   ├── dev.ps1       # Servidores locales
 │   ├── test.ps1      # Tests y checks
-│   └── build.ps1     # Builds reproducibles
-├── tests/            # Tests
-│   ├── test_audio.py
-│   └── test_api.py
+│   ├── build.ps1     # Builds reproducibles
+│   └── export-docs-for-notebooklm.ps1
+├── tests/            # Tests automatizados
 ├── .gitignore
 └── README.md
 ```
@@ -157,13 +163,12 @@ tonto-kids-assistant/
 
 ## AI-Assisted Workflow
 
-- **Spec writing**: Copilot ayuda a redactar specs claras y técnicas.
-- **Code generation**: Codex para APIs, lógica de audio, integración OpenAI.
-- **Debugging**: AI para analizar logs y sugerir fixes.
-- **Testing**: Generar test cases para edge cases.
-- **Documentation**: Sintetizar cambios en specs usando NotebookLM.
+- **Codex**: inspección del repo, implementación acotada, actualización de documentación y verificación.
+- **GitHub Copilot**: asistencia dentro del editor para boilerplate y cambios pequeños.
+- **NotebookLM**: investigación, síntesis y borradores a partir de fuentes exportadas del repo.
+- **GitHub**: historial oficial de decisiones, código y documentación.
 
-**Principio**: AI acelera, no reemplaza. Validar todo en hardware real.
+**Principio**: AI acelera, no reemplaza. Las decisiones estables vuelven al repo y se validan con scripts, tests o hardware real.
 
 ## Spec Driven Development
 
@@ -184,10 +189,10 @@ tonto-kids-assistant/
 ## Decisiones Abiertas
 
 - **Backend language**: Python/FastAPI para MVP; Go queda aparcado hasta que una decisión futura lo reactive.
-- **Memoria storage**: JSON files inicialmente, DB si necesario.
-- **Wake word engine**: Picovoice vs custom (por licencia/costo).
-- **TTS engine**: espeak vs Google TTS (offline vs calidad).
-- **Deployment**: Docker vs native en Pi.
+- **Memoria futura**: solo después de validar el loop con memoria en proceso.
+- **STT y wake word**: proveedor/motor pendiente para fases posteriores.
+- **Estados físicos**: Arduino/LEDs fuera del primer loop.
+- **Deployment**: ejecución local primero; despliegue reproducible después.
 
 ## Riesgos Técnicos Principales
 
@@ -199,30 +204,32 @@ tonto-kids-assistant/
 
 ## Estado Actual del Proyecto
 
-**Semana 0 completa**: Estructura monorepo, hardware validado, specs iniciales.
+**Semana 1 en curso**: estructura monorepo, hardware base validado, cliente web de validación y automatización local inicial.
 
 - ✅ Raspberry Pi 3B v1.2 configurado con SSH/VSCode Remote
-- ✅ Audio output y espeak funcionando
-- ✅ Arduino Uno conectado y básico GPIO
-- ✅ Backend placeholder (Python) con API básica
-- ✅ Cliente placeholder con audio input básico
-- 🔄 Próximo: Integración OpenAI, wake word básico
+- ✅ Audio output y `espeak` funcionando
+- ✅ Backend Python/FastAPI con `/chat`
+- ✅ Cliente Raspberry de texto con TTS local
+- ✅ Cliente web de validación React/TypeScript/Vite
+- ✅ Scripts oficiales de setup/dev/test/build
+- 🔄 Próximo: estabilizar el loop mínimo con OpenAI, cliente Raspberry y web
 
 **Métricas MVP**:
 
-- Conversación de 3+ minutos sin crashes
-- Wake word accuracy >80%
-- Respuesta <3s desde voz a voz
-- Estados físicos que reflejan conversación
+- Varias interacciones de texto seguidas sin crashes
+- Respuesta backend en menos de 5 segundos como objetivo inicial
+- TTS local reproduce la respuesta de forma entendible
+- Web validation client permite probar el contrato sin hardware
 
 ## Backlog Semana 1
 
-- [ ] Setup OpenAI API integration en backend
-- [ ] Implementar endpoint /chat básico
-- [ ] Cliente: Captura audio continua
-- [ ] Wake word detection simple (keyword spotting)
-- [ ] TTS response playback
-- [ ] Test end-to-end: voz → API → voz
+- [x] Implementar endpoint `/chat` básico
+- [x] Crear cliente Raspberry de texto con TTS local
+- [x] Crear cliente web de validación
+- [x] Añadir scripts oficiales locales
+- [ ] Documentar workflow Codex/NotebookLM/GitHub
+- [ ] Validar conversación end-to-end con OpenAI real
+- [ ] Ejecutar demo texto → backend → TTS en Raspberry
 
 ## Getting Started
 
@@ -278,14 +285,18 @@ Usa estos comandos en vez de instalar dependencias o lanzar herramientas a mano:
 .\scripts\dev.ps1 -Service all
 .\scripts\test.ps1 -Target all
 .\scripts\build.ps1 -Target all
+.\scripts\export-docs-for-notebooklm.ps1
+.\scripts\install-git-hooks.ps1
 ```
 
 Python usa siempre el entorno virtual local `.venv/`. Las dependencias web viven en `web/node_modules/`. No instales paquetes Python o npm globales para trabajar en el MVP.
 
+`.\scripts\install-git-hooks.ps1` se ejecuta una vez por clon. Instala un hook local que actualiza la exportación para NotebookLM antes de cada commit.
+
 ### Desarrollo Diario
 
 - **Spec first**: Actualiza `docs/specs.md` antes de codear
-- **AI assist**: Copilot para code, Codex para logic
+- **AI assist**: Copilot para editor, Codex para cambios completos, NotebookLM para síntesis
 - **Test físico**: Siempre valida en Pi real
 - **Commit pequeño**: Cambios diarios, specs incluidas
 
