@@ -9,6 +9,8 @@ Week 01 achieved the project foundation goal: the repo is structured, the MVP ar
 
 The repository side is ready to close. Before tagging `v0.1.0-week1-foundation`, the only recommended manual confirmation is that the Raspberry Pi facts documented in the repo are still true on hardware: SSH/VSCode Remote, audio output, and `espeak`.
 
+Raspberry Pi reinstall and recovery steps are now documented in `docs/raspberry-pi-setup.md` so the hardware state can be rebuilt from a clean SD card.
+
 ## Evidence Reviewed
 
 - Repository status: clean and synchronized with `origin/main`.

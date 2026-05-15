@@ -54,6 +54,8 @@ Validado y operativo:
 - audio output validado,
 - `espeak` funcionando correctamente.
 
+La preparacion reproducible y los pasos de recuperacion desde una tarjeta SD limpia viven en `docs/raspberry-pi-setup.md`.
+
 ### Limitaciones conocidas
 
 - 1 GB RAM,

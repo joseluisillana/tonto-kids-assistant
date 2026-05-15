@@ -8,10 +8,11 @@ The repository is the source of truth. NotebookLM is a reading and synthesis too
 
 1. `../README.md` - project orientation, setup, and current MVP shape.
 2. `architecture.md` - how the Raspberry Pi client, backend, and web validation client fit together.
-3. `roadmap.md` - 6-week delivery plan and MVP boundaries.
-4. `specs.md` - active behavior-level specification summary.
-5. `decisions.md` - compact record of technical decisions.
-6. `documentation-workflow.md` - how docs, NotebookLM, Codex, and GitHub stay aligned.
+3. `raspberry-pi-setup.md` - reproducible setup and recovery guide for the Raspberry Pi client.
+4. `roadmap.md` - 6-week delivery plan and MVP boundaries.
+5. `specs.md` - active behavior-level specification summary.
+6. `decisions.md` - compact record of technical decisions.
+7. `documentation-workflow.md` - how docs, NotebookLM, Codex, and GitHub stay aligned.
 
 ## Working Notes
 
