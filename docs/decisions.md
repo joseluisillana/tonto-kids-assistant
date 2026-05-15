@@ -31,3 +31,7 @@ No STT, wake word, Arduino, advanced product UI, persistent memory or auth in th
 ## D008 - Web validation client
 
 Add a lightweight React + TypeScript + Vite web client under `web/` as a validation and demo surface. It consumes the same backend HTTP contracts as the Raspberry Pi client and must not duplicate AI orchestration or hardware responsibilities.
+
+## D009 - Go checks deferred from CI
+
+Do not run Go checks in CI while the MVP backend language is Python/FastAPI and Go is not selected in the active specs. Existing Go files are treated as legacy or evaluation artifacts, not as release gates. Reintroduce Go CI only if a future decision makes Go part of the active implementation.

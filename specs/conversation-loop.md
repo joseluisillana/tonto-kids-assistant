@@ -284,13 +284,15 @@ The same temporary session id is reused during execution.
 - Raspberry Pi 3 acts as thin client.
 - Web validation client exists as a development/demo surface.
 - Backend runs initially on Windows.
+- Backend MVP implementation is Python/FastAPI.
+- Go is deferred and excluded from CI gates until explicitly reactivated.
 - HTTP + JSON communication.
 - OpenAI as primary conversational engine.
 - Local TTS on Raspberry Pi using `espeak`.
 
 ## Still Open
 
-- Backend final language choice.
+- Whether Go is worth re-evaluating after the Python/FastAPI MVP is validated.
 - Persistent memory strategy.
 - STT provider.
 - Wake word implementation.

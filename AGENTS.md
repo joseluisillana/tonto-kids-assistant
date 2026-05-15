@@ -18,6 +18,7 @@ The project is demo-first. Prefer working, understandable prototypes over broad 
 - Backend for the MVP is Python with FastAPI.
 - Raspberry client is Python.
 - Communication is simple HTTP/JSON.
+- Go is not part of the active MVP implementation or CI gate. Treat any Go files as legacy/evaluation artifacts unless the user explicitly reactivates Go and updates the docs/specs.
 - The Raspberry Pi is a thin client. It handles local device I/O and audio playback, not AI orchestration.
 - The backend owns conversation orchestration and model/API integration.
 - Shared request/response contracts belong in `shared/` when needed.
@@ -50,6 +51,7 @@ Explicitly out of scope for this first milestone:
 - Keep code small, direct, and easy to inspect.
 - Prefer plain Python and FastAPI patterns already present in the repo.
 - Keep the backend as a lightweight monolith for the MVP.
+- Do not add or restore Go CI checks until Go is explicitly selected for an active backend implementation.
 - Keep the Raspberry client as a simple Python process.
 - Use typed data structures where they clarify request/response contracts.
 - Use clear names over clever abstractions.

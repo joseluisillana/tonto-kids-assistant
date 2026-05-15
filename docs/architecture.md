@@ -48,6 +48,8 @@ El cliente web no sustituye al producto físico. Es un cliente de validación pa
 
 **Lenguaje MVP:** Python con FastAPI.
 
+Go no forma parte de la implementación activa del MVP. Cualquier código Go existente se considera artefacto legacy o de evaluación hasta que una decisión futura lo reactive explícitamente.
+
 **Responsabilidades actuales:**
 
 - orquestación de la conversación,
@@ -144,6 +146,7 @@ La arquitectura está optimizada para velocidad de iteración y facilidad de dep
 - usar **Raspberry Pi 3 Model B v1.2** como cliente físico,
 - ejecutar el backend inicialmente en **Windows** para desarrollo rápido,
 - usar **Python/FastAPI** para el backend MVP,
+- excluir **Go** de los checks obligatorios de CI mientras no sea parte del spec activo,
 - usar **OpenAI** como motor de IA conversacional,
 - exponer **APIs HTTP/REST** simples,
 - usar **TTS local con espeak** en Raspberry para el primer milestone,

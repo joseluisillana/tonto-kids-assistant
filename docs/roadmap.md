@@ -205,6 +205,7 @@ El foco principal será:
 Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 
 - modelos IA locales pesados,
+- backend Go como requisito activo,
 - entrenamiento de modelos propios,
 - visión artificial avanzada,
 - automatización doméstica compleja,
@@ -253,6 +254,7 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [ ] Implementar flujo conversacional mínimo.
 - [ ] Gestionar historial simple.
 - [ ] Definir estructura de mensajes.
+- [x] Excluir checks Go de CI mientras el backend MVP siga siendo Python/FastAPI.
 
 ## Hardware
 

@@ -19,13 +19,13 @@ Este documento describe el pipeline de audio para la versión MVP de TONTO, un a
 
 ### Backend
 
-- **Tecnología**: Implementado en Go.
-- **Funciones**: Maneja la lógica de procesamiento de audio, integración con STT y TTS.
-- **Comunicación**: Recibe audio del cliente y envía respuestas de texto/audio.
+- **Tecnología MVP**: Python/FastAPI.
+- **Funciones**: Maneja la lógica conversacional y la integración con OpenAI. STT queda fuera del primer milestone.
+- **Comunicación**: Recibe mensajes HTTP/JSON del cliente y envía respuestas de texto para TTS local.
 
 ### TTS (Text-to-Speech)
 
-- **Generación**: Conversión de texto a audio en el backend.
+- **Generación**: Conversión de texto a audio localmente en la Raspberry Pi con `espeak`.
 - **Salida**: Audio sintetizado simple, enfocado en claridad para niños.
 
 ### Output Audio
@@ -48,8 +48,8 @@ Este documento describe el pipeline de audio para la versión MVP de TONTO, un a
 
 ### Backend
 
-- Procesamiento de audio (STT, lógica de conversación).
-- Generación de TTS.
+- Lógica de conversación.
+- Integración con OpenAI.
 - Gestión de la conversación y estado.
 
 ## Riesgos Técnicos Principales

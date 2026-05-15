@@ -52,7 +52,7 @@ Prototipo que demuestre conversación educativa básica:
 ┌─────────────────┐    HTTP APIs    ┌─────────────────┐
 │   Raspberry Pi  │◄──────────────►│   Windows PC    │
 │   (Thin Client) │                │   (Backend IA)  │
-│   v1.2          │                │   Python/Go?    │
+│   v1.2          │                │ Python/FastAPI  │
 │                 │                │                 │
 │ • Audio I/O     │                │ • OpenAI API    │
 │ • Wake Word     │                │ • Memoria       │
@@ -95,7 +95,7 @@ Prototipo que demuestre conversación educativa básica:
 - **Desarrollo**: Codex, GitHub, GitHub Copilot, VSCode + Remote SSH
 - **Documentación**: Markdown plano, NotebookLM para síntesis
 
-**Tecnologías evaluando**: Go para backend si Python limita rendimiento.
+**Tecnologías aparcadas**: Go para backend queda como evaluación futura, no como requisito activo del MVP ni como gate de CI.
 
 ## Estructura del Monorepo
 
@@ -181,7 +181,7 @@ tonto-kids-assistant/
 
 ## Decisiones Abiertas
 
-- **Backend language**: Python para MVP, evaluar Go para scale.
+- **Backend language**: Python/FastAPI para MVP; Go queda aparcado hasta que una decisión futura lo reactive.
 - **Memoria storage**: JSON files inicialmente, DB si necesario.
 - **Wake word engine**: Picovoice vs custom (por licencia/costo).
 - **TTS engine**: espeak vs Google TTS (offline vs calidad).
