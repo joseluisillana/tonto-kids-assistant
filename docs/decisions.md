@@ -47,3 +47,7 @@ Use Markdown files in the repository as the source of truth for durable project 
 ## D012 - NotebookLM export automation
 
 Generate NotebookLM source files with `scripts/export-docs-for-notebooklm.ps1`. Install the local Git `pre-commit` hook with `scripts/install-git-hooks.ps1` so the export is refreshed before commits. The export folder is derived output and is ignored by Git.
+
+## D013 - Backend LAN exposure for Raspberry validation
+
+Keep the backend bound to `127.0.0.1` by default for local development. Use `.\scripts\dev.ps1 -Service backend -AllowLan` when the Raspberry Pi must reach the backend over the local network; the Raspberry should use the Windows PC LAN IP or a resolvable hostname in `TONTO_BACKEND_URL`.

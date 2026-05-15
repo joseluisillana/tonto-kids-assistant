@@ -1,7 +1,9 @@
 [CmdletBinding()]
 param(
     [ValidateSet("backend", "web", "all")]
-    [string]$Service = "all"
+    [string]$Service = "all",
+
+    [switch]$AllowLan
 )
 
 Set-StrictMode -Version Latest
@@ -26,9 +28,17 @@ function Assert-DevEnvironment {
 
 function Start-Backend {
     Assert-DevEnvironment
+    $BackendHost = if ($AllowLan) { "0.0.0.0" } else { "127.0.0.1" }
+
+    Write-Host "Starting backend on ${BackendHost}:8000"
+    if ($AllowLan) {
+        Write-Host "LAN mode enabled. Use the Windows PC IP or resolvable hostname in TONTO_BACKEND_URL from the Raspberry Pi."
+        Write-Host "Example: TONTO_BACKEND_URL=http://<windows-pc-ip>:8000"
+    }
+
     Push-Location $RepoRoot
     try {
-        & $VenvPython -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
+        & $VenvPython -m uvicorn backend.main:app --host $BackendHost --port 8000 --reload
     } finally {
         Pop-Location
     }
@@ -72,10 +82,19 @@ switch ($Service) {
     }
     "all" {
         Assert-DevEnvironment
-        Start-ServiceWindow -WindowTitle "TONTO Backend" -ScriptCommand ".\scripts\dev.ps1 -Service backend"
+        $BackendCommand = ".\scripts\dev.ps1 -Service backend"
+        if ($AllowLan) {
+            $BackendCommand = "$BackendCommand -AllowLan"
+        }
+
+        Start-ServiceWindow -WindowTitle "TONTO Backend" -ScriptCommand $BackendCommand
         Start-ServiceWindow -WindowTitle "TONTO Web" -ScriptCommand ".\scripts\dev.ps1 -Service web"
         Write-Host "Started backend and web in separate PowerShell windows."
-        Write-Host "Backend: http://127.0.0.1:8000"
+        if ($AllowLan) {
+            Write-Host "Backend: http://0.0.0.0:8000 (use the Windows PC IP or hostname from Raspberry Pi)"
+        } else {
+            Write-Host "Backend: http://127.0.0.1:8000"
+        }
         Write-Host "Web:     http://127.0.0.1:5173"
     }
 }

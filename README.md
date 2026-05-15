@@ -212,7 +212,8 @@ tonto-kids-assistant/
 - ✅ Cliente Raspberry de texto con TTS local
 - ✅ Cliente web de validación React/TypeScript/Vite
 - ✅ Scripts oficiales de setup/dev/test/build
-- 🔄 Próximo: estabilizar el loop mínimo con OpenAI, cliente Raspberry y web
+- ✅ Loop Raspberry → backend LAN → OpenAI → TTS validado manualmente
+- 🔄 Próximo: repetir varias interacciones y estabilizar la demo
 
 **Métricas MVP**:
 
@@ -228,8 +229,8 @@ tonto-kids-assistant/
 - [x] Crear cliente web de validación
 - [x] Añadir scripts oficiales locales
 - [ ] Documentar workflow Codex/NotebookLM/GitHub
-- [ ] Validar conversación end-to-end con OpenAI real
-- [ ] Ejecutar demo texto → backend → TTS en Raspberry
+- [x] Validar conversación end-to-end con OpenAI real
+- [x] Ejecutar demo texto → backend → TTS en Raspberry
 
 ## Getting Started
 
@@ -256,6 +257,14 @@ tonto-kids-assistant/
    .\scripts\dev.ps1 -Service backend
    ```
 
+   Para permitir que la Raspberry Pi acceda al backend desde la misma red:
+
+   ```powershell
+   .\scripts\dev.ps1 -Service backend -AllowLan
+   ```
+
+   En ese modo usa la IP LAN del PC Windows en `TONTO_BACKEND_URL`, por ejemplo `http://192.168.1.91:8000`.
+
 3. **Levanta el cliente web de validación**
 
    ```powershell
@@ -270,6 +279,7 @@ tonto-kids-assistant/
 
 5. **Verifica comunicación**
    - Backend en `http://127.0.0.1:8000`
+   - Backend para Raspberry en LAN con `.\scripts\dev.ps1 -Service backend -AllowLan`
    - Cliente conecta y recibe audio
    - Web principal en `http://127.0.0.1:5173/`
    - Panel tecnico en `http://127.0.0.1:5173/admin`
@@ -281,6 +291,7 @@ Usa estos comandos en vez de instalar dependencias o lanzar herramientas a mano:
 ```powershell
 .\scripts\setup-dev.ps1
 .\scripts\dev.ps1 -Service backend
+.\scripts\dev.ps1 -Service backend -AllowLan
 .\scripts\dev.ps1 -Service web
 .\scripts\dev.ps1 -Service all
 .\scripts\test.ps1 -Target all

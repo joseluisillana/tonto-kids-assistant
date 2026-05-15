@@ -244,29 +244,29 @@ The same temporary session id is reused during execution.
 
 ## AC1 - Client Execution
 
-- [ ] Raspberry Pi client starts correctly.
-- [ ] User can manually enter text.
+- [x] Raspberry Pi client starts correctly.
+- [x] User can manually enter text.
 
 ---
 
 ## AC2 - Backend Communication
 
-- [ ] Client can send HTTP request to backend.
-- [ ] Backend responds successfully.
+- [x] Client can send HTTP request to backend.
+- [x] Backend responds successfully.
 
 ---
 
 ## AC3 - OpenAI Integration
 
-- [ ] Backend successfully calls OpenAI.
-- [ ] Response text is returned correctly.
+- [x] Backend successfully calls OpenAI.
+- [x] Response text is returned correctly.
 
 ---
 
 ## AC4 - Local TTS
 
-- [ ] Raspberry Pi reproduces response using `espeak`.
-- [ ] Audio is understandable.
+- [x] Raspberry Pi reproduces response using `espeak`.
+- [x] Audio is understandable.
 
 ---
 
@@ -274,6 +274,8 @@ The same temporary session id is reused during execution.
 
 - [ ] User can complete multiple conversation turns.
 - [ ] The system remains stable during repeated interactions.
+
+Manual validation on 2026-05-15 confirmed one full Raspberry -> backend LAN -> OpenAI -> local TTS turn on real hardware. Multiple repeated turns remain to be validated.
 
 ---
 
@@ -369,12 +371,12 @@ This spec is considered complete when:
 
 ## Immediate Priorities
 
-- [ ] Create backend skeleton
-- [ ] Create `/chat` endpoint
-- [ ] Connect OpenAI API
-- [ ] Create Raspberry Pi client
-- [ ] Implement HTTP communication
-- [ ] Implement local TTS playback
+- [x] Create backend skeleton
+- [x] Create `/chat` endpoint
+- [x] Connect OpenAI API
+- [x] Create Raspberry Pi client
+- [x] Implement HTTP communication
+- [x] Implement local TTS playback
 - [ ] Add basic logging
 - [ ] Add minimal configuration handling
 
@@ -382,8 +384,8 @@ This spec is considered complete when:
 
 # Next Step
 
-After this spec is validated:
+After the first end-to-end validation:
 
-1. implement backend skeleton,
-2. implement Raspberry Pi client,
-3. validate first real end-to-end conversation.
+1. validate multiple repeated conversation turns,
+2. improve basic logging and configuration handling,
+3. stabilize the demo path for repeatable hardware runs.

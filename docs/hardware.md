@@ -52,7 +52,7 @@ Validado y operativo:
 - conexión SSH funcionando,
 - desarrollo remoto mediante VSCode,
 - audio output validado,
-- `espeak` funcionando correctamente.
+- `espeak` funcionando correctamente por salida jack.
 
 La preparacion reproducible y los pasos de recuperacion desde una tarjeta SD limpia viven en `docs/raspberry-pi-setup.md`.
 
@@ -226,9 +226,9 @@ Actualmente se ha validado correctamente:
 
 - arranque estable de Raspberry Pi 3,
 - desarrollo remoto por SSH,
-- integración VSCode Remote SSH,
+- integración VSCode Remote SSH validada,
 - reproducción audio local,
-- TTS local mediante `espeak`,
+- TTS local mediante `espeak` validado por jack con voz española,
 - estructura básica del entorno de desarrollo.
 
 Todavía pendiente:

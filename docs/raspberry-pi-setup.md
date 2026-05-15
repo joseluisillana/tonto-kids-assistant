@@ -238,7 +238,15 @@ Validar audio y TTS local:
 espeak "TONTO week one audio check"
 ```
 
+Prueba validada en hardware real:
+
+```bash
+espeak -v es "Prueba de audio"
+```
+
 Debe escucharse la frase por el altavoz o salida configurada.
+
+Estado validado el 2026-05-15: audio audible por salida jack.
 
 Si no hay audio, revisar primero:
 
@@ -317,6 +325,42 @@ Donde `<BACKEND_HOST>` puede ser:
 - la IP local del ordenador que ejecuta el backend,
 - un hostname resoluble en la red local.
 
+En Windows, la primera validacion debe hacerse preferentemente con la IP LAN del PC. Los nombres `.local` pueden funcionar, pero no siempre se resuelven de forma fiable desde la Raspberry.
+
+El backend del PC debe estar escuchando en la red, no solo en `127.0.0.1`. Desde el PC Windows, arrancar el backend asi:
+
+```powershell
+.\scripts\dev.ps1 -Service backend -AllowLan
+```
+
+Desde la Raspberry, comprobar primero `/health`:
+
+```bash
+curl http://<IP_DEL_PC_WINDOWS>:8000/health
+```
+
+Resultado esperado:
+
+```json
+{"status":"ok"}
+```
+
+Despues arrancar el cliente:
+
+```bash
+TONTO_BACKEND_URL=http://<IP_DEL_PC_WINDOWS>:8000 .venv/bin/python client/main.py
+```
+
+Estado validado el 2026-05-15: desde VSCode Remote SSH en la Raspberry se arranco el cliente, se envio un prompt manual, el backend en Windows respondio tras invocar OpenAI con `OPENAI_API_KEY` configurada como variable de entorno, y la respuesta se escucho por la salida de auriculares/jack.
+
+Si `curl` o el cliente hacen timeout:
+
+- confirmar que Raspberry y PC estan en la misma red,
+- confirmar la IP actual del PC con `ipconfig`,
+- comprobar que el backend se arranco con `-AllowLan`,
+- permitir Python o el puerto `8000` en Windows Firewall para red privada,
+- reintentar `curl http://<IP_DEL_PC_WINDOWS>:8000/health`.
+
 Para Semana 1, esta prueba completa es opcional si el backend todavia no esta levantado. La validacion obligatoria de hardware es SSH, VSCode Remote SSH, audio y `espeak`.
 
 ## 10. Configurar VSCode Remote SSH
@@ -375,6 +419,17 @@ pwd
 which espeak
 ```
 
+Resultado validado el 2026-05-15:
+
+```text
+tonto-pi
+tonto-pi-user
+/home/tonto-pi-user
+/usr/bin/espeak
+```
+
+El repositorio tambien quedo clonado y abierto desde el directorio remoto del proyecto.
+
 ## 11. Checklist de Recuperacion
 
 Usar esta lista despues de reinstalar o recuperar la Raspberry:
@@ -426,3 +481,7 @@ NotebookLM debe leer la copia exportada, pero la fuente oficial sigue siendo est
 | 2026-05-15 | Semana 1 | Se documenta preparacion reproducible con Raspberry Pi Imager v2.0.7, Raspberry Pi OS Lite 64-bit, Wi-Fi, SSH, VSCode Remote SSH, `espeak` y cliente Python minimo. |
 | 2026-05-15 | Semana 1 | Se aclara que Raspberry Pi 3 debe configurarse con una red Wi-Fi disponible en 2.4 GHz; redes solo 5 GHz no sirven para el arranque headless. |
 | 2026-05-15 | Semana 1 | Se corrige el usuario validado de SSH a `tonto-pi-user`. |
+| 2026-05-15 | Semana 1 | Se valida primer arranque, paquetes base instalados y audio por jack con `espeak -v es "Prueba de audio"`. |
+| 2026-05-15 | Semana 1 | Se valida VSCode Remote SSH, terminal remota, `which espeak` y repositorio clonado en `/home/tonto-pi-user/tonto-kids-assistant`. |
+| 2026-05-15 | Semana 1 | Se documenta uso de `.\scripts\dev.ps1 -Service backend -AllowLan` para que la Raspberry alcance el backend del PC Windows en la LAN. |
+| 2026-05-15 | Semana 1 | Se valida prueba punto a punto Raspberry -> backend LAN -> OpenAI -> TTS por salida de auriculares/jack. |
