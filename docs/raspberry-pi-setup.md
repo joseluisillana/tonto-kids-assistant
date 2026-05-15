@@ -37,7 +37,7 @@ Usar estos valores para que la preparacion sea reproducible:
 | Campo | Valor |
 | --- | --- |
 | Hostname | `tonto-pi` |
-| Usuario | `tonto` |
+| Usuario | `tonto-pi-user` |
 | Zona horaria | `Europe/Madrid` |
 | Pais Wi-Fi | `ES` |
 | Teclado | Espanol |
@@ -89,7 +89,7 @@ Hostname: tonto-pi
 Esto permite intentar conectar despues con:
 
 ```bash
-ssh tonto@tonto-pi.local
+ssh tonto-pi-user@tonto-pi.local
 ```
 
 ### Localisation
@@ -107,7 +107,7 @@ Wi-Fi country: ES
 Configurar:
 
 ```text
-Username: tonto
+Username: tonto-pi-user
 Password: <CONTRASENA_LOCAL_DE_LA_RASPBERRY>
 ```
 
@@ -123,6 +123,8 @@ Password: <CONTRASENA_DE_LA_WIFI>
 Hidden SSID: solo si la red no publica el SSID
 ```
 
+Usar una red Wi-Fi de 2.4 GHz para Raspberry Pi 3. La Wi-Fi integrada de Raspberry Pi 3 no se conecta a redes que solo emiten en 5 GHz. Si el router usa el mismo nombre para 2.4 GHz y 5 GHz, confirmar que el SSID esta disponible tambien en 2.4 GHz o crear un SSID separado para 2.4 GHz antes de grabar la imagen.
+
 Este paso es obligatorio para una instalacion headless. La Raspberry necesita conectividad en el primer arranque para poder entrar por SSH.
 
 ### Remote Access
@@ -134,7 +136,7 @@ Enable SSH: yes
 Authentication: usuario configurado en Imager
 ```
 
-Para Semana 1 basta con SSH habilitado para el usuario `tonto`. Si mas adelante se decide exigir autenticacion solo por clave publica, actualizar esta guia y registrar la decision.
+Para Semana 1 basta con SSH habilitado para el usuario `tonto-pi-user`. Si mas adelante se decide exigir autenticacion solo por clave publica, actualizar esta guia y registrar la decision.
 
 ### Raspberry Pi Connect
 
@@ -177,7 +179,7 @@ ping tonto-pi.local
 Si `tonto-pi.local` no resuelve, buscar la IP de la Raspberry en el router y usar esa IP para SSH:
 
 ```powershell
-ssh tonto@<IP_DE_LA_RASPBERRY>
+ssh tonto-pi-user@<IP_DE_LA_RASPBERRY>
 ```
 
 ## 5. Conectar por SSH
@@ -185,7 +187,7 @@ ssh tonto@<IP_DE_LA_RASPBERRY>
 Desde el ordenador de desarrollo:
 
 ```powershell
-ssh tonto@tonto-pi.local
+ssh tonto-pi-user@tonto-pi.local
 ```
 
 Si aparece una pregunta de confianza del host, aceptar solo si el hostname o la IP son los esperados.
@@ -202,8 +204,8 @@ Resultado esperado:
 
 ```text
 tonto-pi
-tonto
-/home/tonto
+tonto-pi-user
+/home/tonto-pi-user
 ```
 
 ## 6. Preparacion Minima del Sistema
@@ -328,7 +330,7 @@ En el ordenador de desarrollo:
 3. Confirmar que el comando SSH funciona desde una terminal local:
 
 ```powershell
-ssh tonto@tonto-pi.local
+ssh tonto-pi-user@tonto-pi.local
 ```
 
 4. Crear o actualizar la configuracion SSH local.
@@ -344,7 +346,7 @@ Entrada recomendada:
 ```sshconfig
 Host tonto-pi
     HostName tonto-pi.local
-    User tonto
+    User tonto-pi-user
 ```
 
 Si `.local` no funciona de forma estable, usar IP fija o reserva DHCP:
@@ -352,7 +354,7 @@ Si `.local` no funciona de forma estable, usar IP fija o reserva DHCP:
 ```sshconfig
 Host tonto-pi
     HostName <IP_DE_LA_RASPBERRY>
-    User tonto
+    User tonto-pi-user
 ```
 
 5. En VSCode, ejecutar `Remote-SSH: Connect to Host...`.
@@ -360,7 +362,7 @@ Host tonto-pi
 7. Abrir la carpeta remota:
 
 ```text
-/home/tonto/tonto-kids-assistant
+/home/tonto-pi-user/tonto-kids-assistant
 ```
 
 8. Abrir una terminal integrada de VSCode. Esa terminal debe ejecutarse en la Raspberry.
@@ -383,17 +385,17 @@ Usar esta lista despues de reinstalar o recuperar la Raspberry:
 - [ ] Sistema seleccionado: `Raspberry Pi OS Lite (64-bit)`.
 - [ ] Tarjeta seleccionada: `SDHC Card`.
 - [ ] Hostname configurado: `tonto-pi`.
-- [ ] Usuario configurado: `tonto`.
+- [ ] Usuario configurado: `tonto-pi-user`.
 - [ ] Localizacion configurada: `Europe/Madrid`, teclado espanol, pais Wi-Fi `ES`.
-- [ ] Wi-Fi configurada desde Imager.
+- [ ] Wi-Fi configurada desde Imager con un SSID disponible en 2.4 GHz.
 - [ ] SSH habilitado desde Imager.
 - [ ] Raspberry arranca y aparece en la red.
-- [ ] `ssh tonto@tonto-pi.local` funciona, o funciona SSH por IP.
+- [ ] `ssh tonto-pi-user@tonto-pi.local` funciona, o funciona SSH por IP.
 - [ ] VSCode Remote SSH conecta con `tonto-pi`.
 - [ ] `sudo apt update` y `sudo apt upgrade` ejecutados.
 - [ ] `git`, `python3`, `python3-venv`, `python3-pip` y `espeak` instalados.
 - [ ] `espeak "TONTO week one audio check"` se escucha.
-- [ ] Repositorio clonado en `/home/tonto/tonto-kids-assistant`.
+- [ ] Repositorio clonado en `/home/tonto-pi-user/tonto-kids-assistant`.
 - [ ] `.venv` creado en el repo.
 - [ ] `client/requirements.txt` instalado dentro de `.venv`.
 - [ ] `TONTO_BACKEND_URL` apunta al backend real cuando se prueba el cliente.
@@ -422,3 +424,5 @@ NotebookLM debe leer la copia exportada, pero la fuente oficial sigue siendo est
 | Fecha | Semana | Cambio |
 | --- | --- | --- |
 | 2026-05-15 | Semana 1 | Se documenta preparacion reproducible con Raspberry Pi Imager v2.0.7, Raspberry Pi OS Lite 64-bit, Wi-Fi, SSH, VSCode Remote SSH, `espeak` y cliente Python minimo. |
+| 2026-05-15 | Semana 1 | Se aclara que Raspberry Pi 3 debe configurarse con una red Wi-Fi disponible en 2.4 GHz; redes solo 5 GHz no sirven para el arranque headless. |
+| 2026-05-15 | Semana 1 | Se corrige el usuario validado de SSH a `tonto-pi-user`. |
