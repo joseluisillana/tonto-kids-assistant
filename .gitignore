@@ -18,6 +18,13 @@ venv/
 env/
 ENV/
 
+# Node / web client
+node_modules/
+web/node_modules/
+web/dist/
+web/.vite/
+web/coverage/
+
 # Python caches and build artifacts
 __pycache__/
 *.py[cod]
