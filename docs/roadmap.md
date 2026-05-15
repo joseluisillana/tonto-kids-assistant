@@ -78,6 +78,14 @@ Construir el primer loop conversacional funcional extremo a extremo.
 
 ---
 
+## Estado de cierre
+
+Las semanas 1 y 2 quedan cerradas con validación en hardware y en el loop conversacional mínimo.
+
+Lo que sigue en este roadmap es ya trabajo de semanas posteriores o ajuste futuro, no pendiente del arranque inicial.
+
+---
+
 # Semana 3 - Pipeline de voz real
 
 ## Objetivo
@@ -223,10 +231,10 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 
 ## Infraestructura
 
-- [ ] Configurar backend mínimo local.
-- [ ] Crear endpoint HTTP inicial.
-- [ ] Configurar variables de entorno.
-- [ ] Validar comunicación Raspberry ↔ backend.
+- [x] Configurar backend mínimo local.
+- [x] Crear endpoint HTTP inicial.
+- [x] Configurar variables de entorno.
+- [x] Validar comunicación Raspberry ↔ backend.
 
 ## Audio
 
@@ -237,24 +245,24 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 
 ## Cliente Raspberry
 
-- [ ] Crear cliente Python mínimo.
-- [ ] Añadir logs básicos.
-- [ ] Añadir manejo básico de errores.
-- [ ] Gestionar estado de sesión local.
+- [x] Crear cliente Python mínimo.
+- [x] Añadir logs básicos.
+- [x] Añadir manejo básico de errores.
+- [x] Gestionar estado de sesión local.
 
 ## Cliente web de validación
 
 - [x] Crear scaffold inicial React + TypeScript + Vite.
-- [ ] Conectar con el endpoint `/chat` cuando el contrato esté estable.
+- [x] Conectar con el endpoint `/chat` cuando el contrato esté estable.
 - [x] Añadir build/typecheck a integración continua.
 - [ ] Desplegar preview web para pruebas rápidas.
 
 ## Backend
 
-- [ ] Integrar OpenAI API.
-- [ ] Implementar flujo conversacional mínimo.
-- [ ] Gestionar historial simple.
-- [ ] Definir estructura de mensajes.
+- [x] Integrar OpenAI API.
+- [x] Implementar flujo conversacional mínimo.
+- [x] Gestionar historial simple.
+- [x] Definir estructura de mensajes.
 - [x] Excluir checks Go de CI mientras el backend MVP siga siendo Python/FastAPI.
 
 ## Hardware

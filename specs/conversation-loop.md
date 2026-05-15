@@ -272,10 +272,10 @@ The same temporary session id is reused during execution.
 
 ## AC5 - End-to-End Loop
 
-- [ ] User can complete multiple conversation turns.
-- [ ] The system remains stable during repeated interactions.
+- [x] User can complete multiple conversation turns.
+- [x] The system remains stable during repeated interactions.
 
-Manual validation on 2026-05-15 confirmed one full Raspberry -> backend LAN -> OpenAI -> local TTS turn on real hardware. Multiple repeated turns remain to be validated.
+Manual validation on 2026-05-15 confirmed repeated Raspberry -> backend LAN -> OpenAI -> local TTS turns on real hardware.
 
 ---
 
