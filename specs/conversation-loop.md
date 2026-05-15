@@ -12,7 +12,7 @@ Validate the first functional end-to-end conversational loop of TONTO Kids Assis
 
 The MVP flow must prove that:
 
-1. A user can send a message from the Raspberry Pi client.
+1. A user can send a message from the Raspberry Pi client or the web validation client.
 2. The backend can process the request using OpenAI.
 3. TONTO can return a response.
 4. The Raspberry Pi can reproduce that response using local TTS.
@@ -32,6 +32,7 @@ This is the first complete functional validation of the TONTO architecture.
 - Local TTS using `espeak`
 - Simple session context in memory
 - Basic error handling
+- Web validation client scaffold for browser-based backend testing
 
 ## Explicitly Out of Scope
 
@@ -39,7 +40,7 @@ This is the first complete functional validation of the TONTO architecture.
 - Wake word detection
 - Persistent memory
 - Arduino integration
-- Visual UI
+- Advanced product UI
 - Multi-user support
 - Authentication
 - Offline AI models
@@ -52,7 +53,7 @@ This is the first complete functional validation of the TONTO architecture.
 ```text
 User
   ↓
-Raspberry Pi Client
+Raspberry Pi Client or Web Validation Client
   ↓
 HTTP POST /chat
   ↓
@@ -90,6 +91,24 @@ The Raspberry Pi is NOT responsible for:
 - long-term memory,
 - orchestration,
 - conversation logic.
+
+---
+
+## Web Validation Client
+
+Responsible for:
+
+- providing a browser-based way to test the backend,
+- sending the same JSON request shape as the Raspberry Pi client,
+- displaying backend responses and basic client-side states,
+- supporting CI and independent frontend deployment experiments.
+
+The web validation client is NOT responsible for:
+
+- AI reasoning,
+- long-term memory,
+- orchestration,
+- replacing the Raspberry Pi as the target product client.
 
 ---
 
@@ -263,6 +282,7 @@ The same temporary session id is reused during execution.
 ## Confirmed
 
 - Raspberry Pi 3 acts as thin client.
+- Web validation client exists as a development/demo surface.
 - Backend runs initially on Windows.
 - HTTP + JSON communication.
 - OpenAI as primary conversational engine.

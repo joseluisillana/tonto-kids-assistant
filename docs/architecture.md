@@ -11,7 +11,7 @@ La arquitectura está diseñada para el MVP del proyecto:
 - sin microservicios,
 - sin arquitectura enterprise falsa.
 
-La Raspberry maneja la interacción física, audio y estados, mientras que el backend provee la experiencia conversacional, la memoria y la personalidad.
+La Raspberry maneja la interacción física, audio y estados, mientras que el backend provee la experiencia conversacional, la memoria y la personalidad. El MVP incluye además un cliente web de validación para acelerar pruebas del backend desde navegador sin depender siempre del hardware físico.
 
 ## Componentes principales
 
@@ -28,6 +28,21 @@ La Raspberry maneja la interacción física, audio y estados, mientras que el ba
 - El cliente Raspberry NO es el cerebro principal.
 
 **Hardware:** Raspberry Pi 3 Model B v1.2. Arduino Uno queda fuera del primer milestone de conversación.
+
+### Cliente web de validación (`web/`)
+
+**Lenguaje:** TypeScript
+
+**Stack inicial:** React + Vite.
+
+**Responsabilidades previstas para el MVP:**
+
+- ofrecer una superficie rápida para probar el backend sin usar siempre la Raspberry,
+- consumir los mismos contratos HTTP/JSON que el cliente Raspberry,
+- facilitar integración continua, builds y despliegues paralelos del frontend,
+- servir como herramienta de demo y depuración durante el MVP.
+
+El cliente web no sustituye al producto físico. Es un cliente de validación para acelerar iteración y pruebas.
 
 ### Backend (`backend/`)
 
@@ -63,6 +78,15 @@ Contiene estructuras comunes que usan cliente y backend:
 - integración futura con Arduino Uno para LEDs y actuadores,
 - comunicación HTTP con el backend.
 
+### Cliente web
+
+- entrada manual de texto desde navegador,
+- comunicación HTTP con el backend,
+- visualización de respuestas y estados básicos,
+- soporte para pruebas de integración y despliegue frontend.
+
+El cliente web no debe duplicar orquestación conversacional ni lógica de IA.
+
 ### Backend
 
 - conversación IA,
@@ -73,8 +97,8 @@ Contiene estructuras comunes que usan cliente y backend:
 
 ## Flujo básico de conversación actual
 
-1. El usuario escribe un mensaje en el cliente Raspberry.
-2. La Raspberry construye la petición JSON.
+1. El usuario escribe un mensaje en el cliente Raspberry o en el cliente web de validación.
+2. El cliente construye la petición JSON.
 3. El cliente envía `POST /chat (placeholder inicial)` al backend con `session_id` y datos de entrada.
 4. El backend transforma la entrada, consulta OpenAI y aplica reglas de orquestación.
 5. El backend responde con texto para TTS.
@@ -87,6 +111,7 @@ Contiene estructuras comunes que usan cliente y backend:
 - **No microservicios:** el backend es un monolito ligero.
 - **No sobreingeniería:** se evitan capas, protocolos y herramientas no necesarias.
 - **Thin client:** la Raspberry no realiza IA ni lógica compleja.
+- **Cliente web de validación:** la web acelera pruebas y demos, pero no asume lógica de producto físico.
 - **HTTP simple:** comunicación REST/JSON clara y fácil de depurar.
 - **Separación de responsabilidades:** hardware y audio en la Raspberry; IA y memoria en el backend.
 - **Fallback seguro:** el cliente debe manejar fallos del backend sin bloquear el dispositivo.
@@ -122,6 +147,7 @@ La arquitectura está optimizada para velocidad de iteración y facilidad de dep
 - usar **OpenAI** como motor de IA conversacional,
 - exponer **APIs HTTP/REST** simples,
 - usar **TTS local con espeak** en Raspberry para el primer milestone,
+- incluir un **cliente web de validación** con React, TypeScript y Vite,
 - mantener la arquitectura como un **MVP pequeño** y práctico.
 
 ## Decisiones abiertas

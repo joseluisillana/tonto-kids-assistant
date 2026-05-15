@@ -24,6 +24,10 @@ Raspberry uses TONTO_BACKEND_URL; never localhost unless backend runs on Raspber
 
 Target < 5 seconds end-to-end for MVP; improve later.
 
-## D007 - Scope freeze
+## D007 - First implementation scope
 
-No STT, wake word, Arduino, UI, persistent memory or auth in the first implementation slice.
+No STT, wake word, Arduino, advanced product UI, persistent memory or auth in the first implementation slice.
+
+## D008 - Web validation client
+
+Add a lightweight React + TypeScript + Vite web client under `web/` as a validation and demo surface. It consumes the same backend HTTP contracts as the Raspberry Pi client and must not duplicate AI orchestration or hardware responsibilities.

@@ -58,6 +58,7 @@ Construir el primer loop conversacional funcional extremo a extremo.
 - Endpoint HTTP simple (`/chat` placeholder inicial).
 - Integración básica con OpenAI.
 - Cliente Raspberry capaz de enviar texto y recibir respuestas.
+- Scaffold del cliente web de validación para CI/despliegue paralelo.
 - TTS reproduciendo respuestas generadas por IA.
 
 ## Prioridades
@@ -66,6 +67,7 @@ Construir el primer loop conversacional funcional extremo a extremo.
    usuario → backend → OpenAI → Raspberry → TTS.
 2. Mantener la arquitectura extremadamente simple.
 3. Medir tiempos de respuesta básicos.
+4. Permitir pruebas rápidas desde navegador sin depender siempre de la Raspberry.
 
 ## Riesgos
 
@@ -209,7 +211,7 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - arquitectura distribuida,
 - multiusuario,
 - dashboards complejos,
-- interfaces gráficas avanzadas,
+- interfaces gráficas avanzadas de producto,
 - memoria vectorial avanzada,
 - sistemas multiagente.
 
@@ -237,6 +239,13 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [ ] Añadir logs básicos.
 - [ ] Añadir manejo básico de errores.
 - [ ] Gestionar estado de sesión local.
+
+## Cliente web de validación
+
+- [x] Crear scaffold inicial React + TypeScript + Vite.
+- [ ] Conectar con el endpoint `/chat` cuando el contrato esté estable.
+- [x] Añadir build/typecheck a integración continua.
+- [ ] Desplegar preview web para pruebas rápidas.
 
 ## Backend
 

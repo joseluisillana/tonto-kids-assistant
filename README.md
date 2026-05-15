@@ -18,7 +18,7 @@ TONTO transforma el aprendizaje en una conversación continua, haciendo que la e
 
 ## Visión Técnica
 
-Un sistema distribuido donde un thin client (Raspberry Pi) maneja I/O físico y un backend pesado procesa IA, memoria y personalidad.
+Un sistema distribuido donde un thin client físico (Raspberry Pi) maneja I/O, audio y hardware, un backend central procesa IA/orquestación, y un cliente web de validación permite probar el backend desde navegador durante el desarrollo.
 
 La comunicación es online-first con degradación offline básica.
 
@@ -60,6 +60,9 @@ Prototipo que demuestre conversación educativa básica:
 │ • LEDs/Arduino  │                │ • Personalidad  │
 │ • GPIO Control  │                │                 │
 └─────────────────┘                └─────────────────┘
+        ▲                                  ▲
+        │                                  │
+        └──────── Web Validation Client ───┘
 ```
 
 ### Cliente (Raspberry Pi 3 Model B v1.2)
@@ -71,13 +74,20 @@ Prototipo que demuestre conversación educativa básica:
 
 ### Backend (Windows PC)
 
-- **Decisión abierta**: Python inicialmente para iteración rápida (FastAPI, OpenAI), Go potencialmente para producción.
+- **Decisión MVP**: Python inicialmente para iteración rápida (FastAPI, OpenAI).
 - **Responsabilidades**: Llamadas OpenAI, gestión memoria, orquestación respuestas.
 - **Tecnología**: Python con FastAPI para APIs, integración OpenAI.
+
+### Cliente Web de Validación
+
+- **Objetivo**: Probar el backend desde navegador sin depender siempre de la Raspberry Pi.
+- **Responsabilidades**: Entrada manual de texto, visualización de respuestas y soporte para CI/despliegue frontend.
+- **Tecnología**: React + TypeScript + Vite, con Tailwind CSS como base visual.
 
 ## Stack Tecnológico Confirmado
 
 - **Lenguajes**: Python (cliente y backend inicial)
+- **Web**: React, TypeScript, Vite, Tailwind CSS
 - **IA**: OpenAI API (GPT-4 para conversación)
 - **Audio**: pyaudio, speech_recognition, espeak-ng
 - **Hardware**: Raspberry Pi 3B v1.2, Arduino Uno
@@ -98,6 +108,10 @@ tonto-kids-assistant/
 ├── client/           # Cliente Raspberry Pi
 │   ├── main.py       # Audio/GPIO loop
 │   ├── requirements.txt
+│   └── ...
+├── web/              # Cliente web de validación
+│   ├── src/          # React app
+│   ├── package.json
 │   └── ...
 ├── shared/           # Código compartido
 │   ├── models.py     # DTOs y modelos
@@ -244,9 +258,18 @@ tonto-kids-assistant/
    python main.py
    ```
 
-4. **Verifica comunicación**
+4. **Cliente web de validación**
+
+   ```bash
+   cd web
+   npm install
+   npm run dev
+   ```
+
+5. **Verifica comunicación**
    - Backend en `http://localhost:8080`
    - Cliente conecta y recibe audio
+   - Web arranca como scaffold para futuras pruebas del backend
 
 ### Desarrollo Diario
 

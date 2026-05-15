@@ -6,8 +6,9 @@ Sistema educativo de IA física para niños, con componentes de voz, memoria y p
 
 ## Arquitectura
 
-- **Cliente**: Raspberry Pi 3 (Python)
-- **Backend**: Windows (Go)
+- **Cliente físico**: Raspberry Pi 3 (Python)
+- **Cliente web de validación**: React + TypeScript + Vite
+- **Backend**: Windows local inicialmente, Python/FastAPI para el MVP
 - **Comunicación**: APIs HTTP
 
 ## Componentes Principales
@@ -18,13 +19,11 @@ Sistema educativo de IA física para niños, con componentes de voz, memoria y p
 4. **Personalidad Educativa**: Respuestas adaptadas al aprendizaje
 5. **Estados Visuales**: Indicadores LED/luces
 6. **Integración Arduino**: Futura expansión hardware
+7. **Cliente Web de Validación**: Interfaz mínima para probar el backend desde navegador
 
 ## APIs Base
 
-- POST /voice/input: Procesar entrada de voz
-- GET /tts/speak: Generar respuesta TTS
-- POST /memory/store: Almacenar dato
-- GET /memory/retrieve: Recuperar dato
+- POST /chat: Procesar una interacción conversacional con `session_id` y `message`
 
 ## Requisitos No Funcionales
 
