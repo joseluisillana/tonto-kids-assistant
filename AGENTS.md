@@ -14,7 +14,7 @@ The project is demo-first. Prefer working, understandable prototypes over broad 
 
 ## Current MVP Architecture
 
-- Monorepo with separate `backend/`, `client/`, `shared/`, `docs/`, `specs/`, `scripts/`, and `tests/` areas.
+- Monorepo with separate `backend/`, `client/`, `web/`, `shared/`, `docs/`, `specs/`, `scripts/`, and `tests/` areas.
 - Backend for the MVP is Python with FastAPI.
 - Raspberry client is Python.
 - Communication is simple HTTP/JSON.
@@ -38,7 +38,7 @@ Explicitly out of scope for this first milestone:
 - No speech-to-text.
 - No wake word.
 - No Arduino integration.
-- No UI.
+- No advanced product UI beyond the web validation client.
 - No persistence.
 - No authentication.
 - No user accounts.
@@ -60,6 +60,25 @@ Explicitly out of scope for this first milestone:
 - Do not silently change architecture or milestone scope.
 - Do not rewrite unrelated files.
 - Do not implement future-scope features unless the user explicitly asks.
+
+## Local Environment and Automation
+
+- Treat the host machine as clean. Do not install Python packages globally.
+- Use the official PowerShell scripts in `scripts/` before inventing ad hoc setup, dev, test, or build commands.
+- Python dependencies must be installed into the repo-local `.venv/`.
+- On Windows, use `.\.venv\Scripts\python.exe` when a direct Python command is unavoidable.
+- On Linux/macOS, use `.venv/bin/python` when a direct Python command is unavoidable.
+- Run Python tests through `.\scripts\test.ps1 -Target python` or the `.venv` Python executable, never through a global `pytest`.
+- Frontend dependencies must stay local to `web/node_modules/`.
+- Use `npm ci` or `npm install` only inside `web/`; never use `npm install -g` unless the user explicitly approves it.
+- Keep dependency caches local to `.cache/` when scripts support it; do not rely on user-profile caches such as global pip/npm caches.
+- If Codex sandboxing blocks network access or writes inside `.venv/`, `web/node_modules/`, or `.cache/`, request escalation for the official script command instead of switching to global tools.
+- If the build, test, setup, or dev workflow changes, update the scripts and documentation in the same change.
+- CI, humans, and agents should share the same command surface whenever practical:
+  - `.\scripts\setup-dev.ps1`
+  - `.\scripts\dev.ps1 -Service backend|web|all`
+  - `.\scripts\test.ps1 -Target python|web|all`
+  - `.\scripts\build.ps1 -Target web|all`
 
 ## Simplicity Rules
 

@@ -2,7 +2,7 @@
 
 Browser-based validation client for TONTO Kids Assistant.
 
-This app is intentionally minimal right now. It exists so the project can start frontend CI, preview deployments, and later backend integration without depending on the Raspberry Pi for every test cycle.
+This app is intentionally focused on MVP validation. It exists so the project can start frontend CI, preview deployments, and backend integration checks without depending on the Raspberry Pi for every test cycle.
 
 ## Stack
 
@@ -13,14 +13,24 @@ This app is intentionally minimal right now. It exists so the project can start 
 
 ## Local Commands
 
-```bash
-npm install
-npm run dev
-npm run typecheck
-npm run build
-npm run preview
+Run web tasks from the repository root through the official PowerShell scripts:
+
+```powershell
+.\scripts\setup-dev.ps1
+.\scripts\dev.ps1 -Service web
+.\scripts\test.ps1 -Target web
+.\scripts\build.ps1 -Target web
 ```
+
+The web app uses local dependencies in `web/node_modules/`. Do not install npm packages globally for this project.
+
+Create a local `.env` from `.env.example` when the backend is not running on `http://127.0.0.1:8000`.
 
 ## Current Status
 
-The current screen is only a hello world scaffold. Chat integration with the backend `/chat` endpoint is intentionally deferred.
+The web app exposes:
+
+- `/` for `TontoPage`, the main user/demo surface.
+- `/admin` for the technical validation panel.
+
+Both pages share the same in-memory conversation state and backend `/chat` integration.

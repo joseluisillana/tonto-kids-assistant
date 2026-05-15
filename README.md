@@ -81,7 +81,7 @@ Prototipo que demuestre conversación educativa básica:
 ### Cliente Web de Validación
 
 - **Objetivo**: Probar el backend desde navegador sin depender siempre de la Raspberry Pi.
-- **Responsabilidades**: Entrada manual de texto, visualización de respuestas y soporte para CI/despliegue frontend.
+- **Responsabilidades**: Entrada manual de texto, visualización de respuestas, panel tecnico de demo y soporte para CI/despliegue frontend.
 - **Tecnología**: React + TypeScript + Vite, con Tailwind CSS como base visual.
 
 ## Stack Tecnológico Confirmado
@@ -120,8 +120,10 @@ tonto-kids-assistant/
 │   ├── specs.md      # Specs activas
 │   └── api.md        # Endpoints
 ├── scripts/          # Automatización
-│   ├── deploy_pi.sh  # Deploy a Pi
-│   └── setup_dev.sh  # Setup entorno
+│   ├── setup-dev.ps1 # Setup local aislado
+│   ├── dev.ps1       # Servidores locales
+│   ├── test.ps1      # Tests y checks
+│   └── build.ps1     # Builds reproducibles
 ├── tests/            # Tests
 │   ├── test_audio.py
 │   └── test_api.py
@@ -235,41 +237,50 @@ tonto-kids-assistant/
 
 1. **Clona y configura**
 
-   ```bash
+   ```powershell
    git clone <repo-url>
    cd tonto-kids-assistant
+   .\scripts\setup-dev.ps1
    ```
 
-2. **Backend (Windows)**
+2. **Levanta el backend**
 
-   ```bash
-   cd backend
-   pip install -r requirements.txt
-   # Set OPENAI_API_KEY env var
-   python main.py
+   ```powershell
+   .\scripts\dev.ps1 -Service backend
    ```
 
-3. **Cliente (Raspberry Pi)**
+3. **Levanta el cliente web de validación**
 
-   ```bash
-   # Desde Windows, usa VSCode Remote SSH
-   cd client
-   pip install -r requirements.txt
-   python main.py
+   ```powershell
+   .\scripts\dev.ps1 -Service web
    ```
 
-4. **Cliente web de validación**
+4. **O levanta backend y web juntos**
 
-   ```bash
-   cd web
-   npm install
-   npm run dev
+   ```powershell
+   .\scripts\dev.ps1 -Service all
    ```
 
 5. **Verifica comunicación**
-   - Backend en `http://localhost:8080`
+   - Backend en `http://127.0.0.1:8000`
    - Cliente conecta y recibe audio
-   - Web arranca como scaffold para futuras pruebas del backend
+   - Web principal en `http://127.0.0.1:5173/`
+   - Panel tecnico en `http://127.0.0.1:5173/admin`
+
+### Comandos Oficiales
+
+Usa estos comandos en vez de instalar dependencias o lanzar herramientas a mano:
+
+```powershell
+.\scripts\setup-dev.ps1
+.\scripts\dev.ps1 -Service backend
+.\scripts\dev.ps1 -Service web
+.\scripts\dev.ps1 -Service all
+.\scripts\test.ps1 -Target all
+.\scripts\build.ps1 -Target all
+```
+
+Python usa siempre el entorno virtual local `.venv/`. Las dependencias web viven en `web/node_modules/`. No instales paquetes Python o npm globales para trabajar en el MVP.
 
 ### Desarrollo Diario
 

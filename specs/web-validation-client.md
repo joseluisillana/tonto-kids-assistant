@@ -1,7 +1,7 @@
 # Web Validation Client - MVP Specification
 
 **Version:** 0.1
-**Status:** Planning Scaffold
+**Status:** Active MVP Implementation
 **Last Updated:** May 2026
 
 ---
@@ -19,14 +19,15 @@ This client exists to speed up development, continuous integration, preview depl
 ## Included
 
 - React + TypeScript + Vite scaffold.
-- Minimal hello world screen.
+- `TontoPage` as the main user/demo web surface.
+- `AdminPage` as the technical validation panel.
+- Browser-based `/chat` integration using the same backend contract as the Raspberry Pi client.
+- Backend `/health` checks.
 - Project scripts for development, typecheck, build, and preview.
-- Clear folder structure for future chat integration.
+- Clear folder structure for UI, API, and conversation state.
 
 ## Deferred
 
-- Chat UI implementation.
-- Backend `/chat` integration.
 - Browser TTS.
 - Authentication.
 - Persistence.
@@ -45,6 +46,7 @@ web/
     features/     # Future feature modules, starting with chat
     components/   # Shared UI components
     lib/          # Small reusable utilities
+    pages/        # TontoPage and AdminPage
     styles/       # Global styles
 ```
 
@@ -74,7 +76,8 @@ The first real feature should be a chat validation screen that sends the same re
 # Acceptance Criteria
 
 - [x] A `web/` project exists in the monorepo.
-- [x] The project has a minimal hello world screen.
+- [x] The project has `TontoPage` and `AdminPage`.
 - [x] The project can be installed and built independently from backend/client code.
 - [x] CI can run web typecheck/build.
-- [ ] A future chat screen can consume the same backend `/chat` contract as the Raspberry Pi client.
+- [x] The web client can use the same backend `/chat` contract as the Raspberry Pi client.
+- [x] The web client can check backend health.

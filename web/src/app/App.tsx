@@ -1,18 +1,58 @@
+import { useEffect, useState } from "react";
+import { useConversation } from "../features/conversation/useConversation";
+import { AdminPage } from "../pages/AdminPage";
+import { TontoPage } from "../pages/TontoPage";
+import type { AppRoute } from "./routes";
+import { getPathnameForRoute, getRouteFromPathname } from "./routes";
+
 export function App() {
+  const conversation = useConversation();
+  const [route, setRoute] = useState<AppRoute>(() =>
+    getRouteFromPathname(window.location.pathname),
+  );
+
+  useEffect(() => {
+    function handlePopState() {
+      setRoute(getRouteFromPathname(window.location.pathname));
+    }
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  function navigate(nextRoute: AppRoute) {
+    const pathname = getPathnameForRoute(nextRoute);
+    window.history.pushState(null, "", pathname);
+    setRoute(nextRoute);
+  }
+
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-10 text-slate-100">
-      <section className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-3xl flex-col justify-center">
-        <p className="mb-3 text-sm font-medium uppercase tracking-wide text-cyan-300">
-          TONTO Web Validation Client
-        </p>
-        <h1 className="text-4xl font-semibold tracking-normal text-white sm:text-5xl">
-          Hola mundo desde el cliente web.
-        </h1>
-        <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-300">
-          Scaffold inicial listo para integrar CI, previews y futuras pruebas
-          del backend sin depender siempre de la Raspberry Pi.
-        </p>
-      </section>
-    </main>
+    <>
+      <nav className="fixed left-1/2 top-4 z-50 flex -translate-x-1/2 gap-2 rounded-full border border-white/30 bg-slate-950/70 p-2 text-sm font-bold text-white shadow-xl backdrop-blur">
+        <button
+          className={`rounded-full px-4 py-2 ${
+            route === "tonto" ? "bg-white text-slate-950" : "text-white/80"
+          }`}
+          onClick={() => navigate("tonto")}
+          type="button"
+        >
+          Tonto
+        </button>
+        <button
+          className={`rounded-full px-4 py-2 ${
+            route === "admin" ? "bg-white text-slate-950" : "text-white/80"
+          }`}
+          onClick={() => navigate("admin")}
+          type="button"
+        >
+          Admin
+        </button>
+      </nav>
+      {route === "admin" ? (
+        <AdminPage conversation={conversation} />
+      ) : (
+        <TontoPage conversation={conversation} />
+      )}
+    </>
   );
 }

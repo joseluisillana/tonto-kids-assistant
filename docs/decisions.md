@@ -35,3 +35,7 @@ Add a lightweight React + TypeScript + Vite web client under `web/` as a validat
 ## D009 - Go checks deferred from CI
 
 Do not run Go checks in CI while the MVP backend language is Python/FastAPI and Go is not selected in the active specs. Existing Go files are treated as legacy or evaluation artifacts, not as release gates. Reintroduce Go CI only if a future decision makes Go part of the active implementation.
+
+## D010 - Local automation and isolated environments
+
+Use PowerShell scripts under `scripts/` as the official command surface for setup, dev servers, tests, and builds. Python dependencies live in the repo-local `.venv/`; frontend dependencies live in `web/node_modules/`. Agents, humans, and CI should use the same scripts instead of installing packages globally or inventing one-off commands.

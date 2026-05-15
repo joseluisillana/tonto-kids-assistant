@@ -37,6 +37,7 @@ dist/
 *.whl
 
 # Tests and local quality tools
+.cache/
 .pytest_cache/
 .coverage
 .coverage.*
