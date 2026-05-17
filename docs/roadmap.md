@@ -86,6 +86,28 @@ Lo que sigue en este roadmap es ya trabajo de semanas posteriores o ajuste futur
 
 ---
 
+# Fase extra - Mejora del workflow NotebookLM
+
+## Objetivo
+
+Reducir fricción en la actualización de fuentes de NotebookLM tras validar el uso real del flujo documental.
+
+## Motivo
+
+La exportación inicial generaba múltiples Markdown individuales, pero NotebookLM puede duplicar fuentes al reimportarlas en vez de sobrescribirlas de forma ágil.
+
+## Entregables
+
+- Documento combinado generado en `exports/notebooklm/NOTEBOOKLM_COMBINED.md`.
+- Ficheros individuales e `INDEX.md` conservados para inspección y uso granular.
+- Documentación actualizada para recomendar el combinado como fuente principal.
+
+## Estado
+
+Feature añadida como mejora no planificada del workflow documental, derivada del uso práctico de NotebookLM.
+
+---
+
 # Semana 3 - Pipeline de voz real
 
 ## Objetivo
@@ -277,6 +299,7 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [x] Documentar setup reproducible con scripts oficiales.
 - [x] Definir workflow AI-assisted development.
 - [x] Definir exportación para NotebookLM.
+- [x] Añadir exportación combinada para refrescos ágiles de NotebookLM.
 - [ ] Mantener journal semanal actualizado.
 
 ---

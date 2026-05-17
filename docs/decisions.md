@@ -55,3 +55,7 @@ Keep the backend bound to `127.0.0.1` by default for local development. Use `.\s
 ## D014 - AI-assisted Git workflow
 
 Use a lightweight GitHub Flow for human and AI-assisted project changes. Branch names use `<type>/<short-kebab-description>` with initial types `feature/`, `fix/`, `docs/`, `chore/`, and `experiment/`. Commit messages use Conventional Commits such as `feat:`, `fix:`, `docs:`, `chore:`, `test:`, and `refactor:`. Project branches describe the work, not the assistant or tool that helped with it.
+
+## D015 - NotebookLM combined source export
+
+Extend `scripts/export-docs-for-notebooklm.ps1` to generate `exports/notebooklm/NOTEBOOKLM_COMBINED.md` alongside the individual Markdown exports and `INDEX.md`. The combined file is the preferred source for routine NotebookLM refreshes because NotebookLM can duplicate many re-uploaded files instead of replacing them cleanly. The repository remains the source of truth, and `exports/notebooklm/` remains derived output ignored by Git.
