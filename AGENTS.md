@@ -91,6 +91,19 @@ Explicitly out of scope for this first milestone:
 - Include docs or specs in the same change when behavior, architecture, setup, scope, or workflow changes.
 - Follow `docs/ai-assisted-workflow.md` for the shared human and AI-assisted Git workflow.
 
+## Pre-Edit AI Workflow Gate
+
+Before any repository edit, agents must follow `docs/ai-assisted-workflow.md`.
+
+Minimum pre-edit gate:
+
+1. Run `git branch --show-current` and `git status --short --branch`.
+2. If the current branch is `main`, do not edit files yet. First create or switch to a project branch using `<type>/<short-kebab-description>`, unless the user explicitly says to work on `main`.
+3. Use `docs/` for documentation-only work, `fix/` for bug fixes, `feature/` for new behavior, `chore/` for maintenance, and `experiment/` for exploratory work.
+4. Do not use tool-owned prefixes such as `codex/` unless the user explicitly asks for them.
+5. If `main` has uncommitted changes, stop and ask before moving, stashing, committing, discarding, or editing those changes.
+6. Apply the same gate before running formatters, generators, export scripts, or other commands that write repository files.
+
 ## Simplicity Rules
 
 - Start with the simplest end-to-end path that can work.

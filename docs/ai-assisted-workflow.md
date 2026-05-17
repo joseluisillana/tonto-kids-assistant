@@ -95,6 +95,19 @@ experiment/local-stt-spike
 
 Avoid tool-owned prefixes such as `codex/` for project branches. Branch names should describe the work, not the assistant that helped with it.
 
+## Pre-Edit Gate for AI Assistants
+
+Before any repository edit, AI assistants must verify the Git context and align with the project branch workflow.
+
+Minimum required gate:
+
+1. Run `git branch --show-current` and `git status --short --branch`.
+2. If the current branch is `main`, do not edit files yet. First create or switch to a project branch using `<type>/<short-kebab-description>`, unless the developer explicitly says to work on `main`.
+3. Use `docs/` for documentation-only work, `fix/` for bug fixes, `feature/` for new behavior, `chore/` for maintenance, and `experiment/` for exploratory work.
+4. Do not use tool-owned prefixes such as `codex/` unless the developer explicitly asks for them.
+5. If `main` has uncommitted changes, stop and ask before moving, stashing, committing, discarding, or editing those changes.
+6. Apply the same gate before running formatters, generators, export scripts, or other commands that write repository files.
+
 ## Commit Messages
 
 Use Conventional Commits for human and AI-assisted changes:
