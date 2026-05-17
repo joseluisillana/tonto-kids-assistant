@@ -206,7 +206,7 @@ El flujo común para Codex, Copilot, Cursor, Claude u otras herramientas vive en
 
 ## Estado Actual del Proyecto
 
-**Semana 1 en curso**: estructura monorepo, hardware base validado, cliente web de validación y automatización local inicial.
+**Semanas 1 y 2 cerradas**: estructura monorepo, hardware base validado, backend conversacional mínimo, cliente Raspberry con TTS local, cliente web de validación y automatización local inicial.
 
 - ✅ Raspberry Pi 3B v1.2 configurado con SSH/VSCode Remote
 - ✅ Audio output y `espeak` funcionando
@@ -215,7 +215,8 @@ El flujo común para Codex, Copilot, Cursor, Claude u otras herramientas vive en
 - ✅ Cliente web de validación React/TypeScript/Vite
 - ✅ Scripts oficiales de setup/dev/test/build
 - ✅ Loop Raspberry → backend LAN → OpenAI → TTS validado manualmente
-- 🔄 Próximo: repetir varias interacciones y estabilizar la demo
+- ✅ Varias interacciones seguidas validadas en hardware real
+- 🔄 Próximo: iniciar Semana 3 con pipeline de voz real
 
 **Métricas MVP**:
 
@@ -224,7 +225,7 @@ El flujo común para Codex, Copilot, Cursor, Claude u otras herramientas vive en
 - TTS local reproduce la respuesta de forma entendible
 - Web validation client permite probar el contrato sin hardware
 
-## Backlog Semana 1
+## Backlog Cerrado Semanas 1-2
 
 - [x] Implementar endpoint `/chat` básico
 - [x] Crear cliente Raspberry de texto con TTS local
@@ -233,6 +234,7 @@ El flujo común para Codex, Copilot, Cursor, Claude u otras herramientas vive en
 - [x] Documentar workflow Codex/NotebookLM/GitHub
 - [x] Validar conversación end-to-end con OpenAI real
 - [x] Ejecutar demo texto → backend → TTS en Raspberry
+- [x] Validar múltiples turnos Raspberry → backend LAN → OpenAI → TTS
 
 ## Getting Started
 
