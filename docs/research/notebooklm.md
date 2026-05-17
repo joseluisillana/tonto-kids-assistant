@@ -30,9 +30,21 @@ exports/notebooklm/
 
 Upload or refresh those files in NotebookLM when you want it to understand the current project state.
 
+For normal refreshes, use this generated file first:
+
+```text
+exports/notebooklm/NOTEBOOKLM_COMBINED.md
+```
+
+It contains the same repository documentation as the individual exports, grouped by original source path. This avoids manually replacing many NotebookLM sources when the tool duplicates uploaded files instead of overwriting them cleanly.
+
 ## Recommended Initial Sources
 
-Start with these exported files:
+Start with the combined source:
+
+- `NOTEBOOKLM_COMBINED.md`
+
+Use these individual exported files only when you want granular sources or need to debug what NotebookLM read:
 
 - `README.md`
 - `AGENTS.md`
@@ -45,7 +57,7 @@ Start with these exported files:
 - `docs__ai-assisted-workflow.md`
 - `specs__conversation-loop.md`
 
-The generated `INDEX.md` explains what was exported.
+The generated `INDEX.md` explains what was exported and maps original source paths to exported filenames.
 
 ## Good Questions to Ask
 
@@ -73,6 +85,12 @@ The reliable sync boundary is:
 
 ```text
 repo -> export script -> exports/notebooklm -> NotebookLM
+```
+
+The usual source to upload is:
+
+```text
+exports/notebooklm/NOTEBOOKLM_COMBINED.md
 ```
 
 The return path is human-reviewed:

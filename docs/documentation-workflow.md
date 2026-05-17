@@ -49,6 +49,14 @@ NotebookLM is a research and synthesis layer.
 
 It should read exported copies of repository files from `exports/notebooklm/`. It should not become the place where final project truth lives.
 
+For routine refreshes, prefer the generated combined source:
+
+```text
+exports/notebooklm/NOTEBOOKLM_COMBINED.md
+```
+
+NotebookLM can duplicate imported files when many sources are refreshed manually. The combined source keeps the update loop simple because one document can be replaced while still preserving all repository context.
+
 Good uses:
 
 - ask questions about the current architecture,
@@ -82,6 +90,8 @@ Run this whenever you want to refresh NotebookLM sources outside a commit:
 ```
 
 The export is derived output and is ignored by Git.
+
+The script writes individual source files, `INDEX.md`, and `NOTEBOOKLM_COMBINED.md`. Use the combined file as the primary NotebookLM source unless you need to inspect or import a specific document separately.
 
 ## Hook Installation
 

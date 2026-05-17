@@ -306,6 +306,8 @@ Python usa siempre el entorno virtual local `.venv/`. Las dependencias web viven
 
 `.\scripts\install-git-hooks.ps1` se ejecuta una vez por clon. Instala un hook local que actualiza la exportación para NotebookLM antes de cada commit.
 
+La exportación de NotebookLM genera fuentes individuales y `exports/notebooklm/NOTEBOOKLM_COMBINED.md`. Para refrescos normales en NotebookLM, usa el documento combinado como fuente principal.
+
 ### Desarrollo Diario
 
 - **Spec first**: Actualiza `docs/specs.md` antes de codear
