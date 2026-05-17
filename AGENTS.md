@@ -80,6 +80,17 @@ Explicitly out of scope for this first milestone:
   - `.\scripts\test.ps1 -Target python|web|all`
   - `.\scripts\build.ps1 -Target web|all`
 
+## Git and Contribution Workflow
+
+- Use the project branch convention `<type>/<short-kebab-description>`.
+- Use `feature/`, `fix/`, `docs/`, `chore/`, or `experiment/` as the initial branch types.
+- Prefer `docs/` for documentation-only changes.
+- Do not use tool-owned branch prefixes such as `codex/` unless the user explicitly asks for them.
+- Use Conventional Commits when preparing commits, such as `feat:`, `fix:`, `docs:`, `chore:`, `test:`, or `refactor:`.
+- Keep PRs focused on one coherent change.
+- Include docs or specs in the same change when behavior, architecture, setup, scope, or workflow changes.
+- Follow `docs/ai-assisted-workflow.md` for the shared human and AI-assisted Git workflow.
+
 ## Simplicity Rules
 
 - Start with the simplest end-to-end path that can work.

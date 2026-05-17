@@ -170,6 +170,8 @@ tonto-kids-assistant/
 
 **Principio**: AI acelera, no reemplaza. Las decisiones estables vuelven al repo y se validan con scripts, tests o hardware real.
 
+El flujo común para Codex, Copilot, Cursor, Claude u otras herramientas vive en `docs/ai-assisted-workflow.md`. TONTO usa GitHub Flow ligero, ramas `<type>/<short-kebab-description>` y Conventional Commits.
+
 ## Spec Driven Development
 
 1. **Spec first**: Escribir requerimiento técnico claro en `docs/specs.md`.
@@ -228,7 +230,7 @@ tonto-kids-assistant/
 - [x] Crear cliente Raspberry de texto con TTS local
 - [x] Crear cliente web de validación
 - [x] Añadir scripts oficiales locales
-- [ ] Documentar workflow Codex/NotebookLM/GitHub
+- [x] Documentar workflow Codex/NotebookLM/GitHub
 - [x] Validar conversación end-to-end con OpenAI real
 - [x] Ejecutar demo texto → backend → TTS en Raspberry
 
@@ -309,7 +311,7 @@ Python usa siempre el entorno virtual local `.venv/`. Las dependencias web viven
 - **Spec first**: Actualiza `docs/specs.md` antes de codear
 - **AI assist**: Copilot para editor, Codex para cambios completos, NotebookLM para síntesis
 - **Test físico**: Siempre valida en Pi real
-- **Commit pequeño**: Cambios diarios, specs incluidas
+- **Commit pequeño**: Ramas cortas, Conventional Commits y specs/docs incluidas cuando aplique
 
 ## Contribución
 
@@ -318,7 +320,9 @@ Actualmente este proyecto es mantenido por un desarrollador principal con foco e
 Se trabajaa alrededor de un backlog corto con especificaciones validadas y tests reales en Raspberry Pi.
 
 - **Issues**: Bugs o ideas técnicas específicas
-- **PRs**: Incluye spec changes y tests
+- **Ramas**: Usa `<type>/<short-kebab-description>`, por ejemplo `docs/formalize-ai-git-workflow`
+- **Commits**: Usa Conventional Commits, por ejemplo `docs: formalize AI-assisted Git workflow`
+- **PRs**: Incluye resumen, docs/specs afectadas y verificación ejecutada
 - **Reviews**: Feedback técnico honesto, no político
 - **Decisiones**: El desarrollador principal valida cambios de arquitectura y dependencias
 
