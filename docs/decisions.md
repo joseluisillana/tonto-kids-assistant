@@ -51,3 +51,7 @@ Generate NotebookLM source files with `scripts/export-docs-for-notebooklm.ps1`. 
 ## D013 - Backend LAN exposure for Raspberry validation
 
 Keep the backend bound to `127.0.0.1` by default for local development. Use `.\scripts\dev.ps1 -Service backend -AllowLan` when the Raspberry Pi must reach the backend over the local network; the Raspberry should use the Windows PC LAN IP or a resolvable hostname in `TONTO_BACKEND_URL`.
+
+## D014 - AI-assisted Git workflow
+
+Use a lightweight GitHub Flow for human and AI-assisted project changes. Branch names use `<type>/<short-kebab-description>` with initial types `feature/`, `fix/`, `docs/`, `chore/`, and `experiment/`. Commit messages use Conventional Commits such as `feat:`, `fix:`, `docs:`, `chore:`, `test:`, and `refactor:`. Project branches describe the work, not the assistant or tool that helped with it.
