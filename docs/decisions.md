@@ -59,3 +59,11 @@ Use a lightweight GitHub Flow for human and AI-assisted project changes. Branch 
 ## D015 - NotebookLM combined source export
 
 Extend `scripts/export-docs-for-notebooklm.ps1` to generate `exports/notebooklm/NOTEBOOKLM_COMBINED.md` alongside the individual Markdown exports and `INDEX.md`. The combined file is the preferred source for routine NotebookLM refreshes because NotebookLM can duplicate many re-uploaded files instead of replacing them cleanly. The repository remains the source of truth, and `exports/notebooklm/` remains derived output ignored by Git.
+
+## D016 - Provisional STT ownership
+
+Use backend STT as the default direction for Week 03 voice work, but treat it as a provisional MVP design choice rather than a proven Raspberry Pi limitation.
+
+The rationale is simplicity: the Raspberry Pi remains a thin client that captures audio and plays TTS, while the backend owns orchestration, provider integration, and future STT changes. This keeps the client small and makes the STT provider easier to replace.
+
+This decision does not prove that local Raspberry Pi STT is infeasible. Local STT should only be ruled out after a concrete hardware test shows unacceptable CPU, memory, latency, quality, or setup complexity. Until then, local STT, wake word, and local audio models remain out of scope for the MVP kickoff, not technically disproven.
