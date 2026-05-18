@@ -26,14 +26,14 @@ voice -> Raspberry capture -> backend STT -> /chat -> response -> local TTS
 - [x] Run `.\scripts\setup-dev.ps1` if `.venv` or `web/node_modules` are missing.
 - [x] Run `.\scripts\test.ps1 -Target all`.
 - [x] Run `.\scripts\build.ps1 -Target all`.
-- [ ] Start backend with `.\scripts\dev.ps1 -Service backend -AllowLan`.
+- [x] Start backend with `.\scripts\dev.ps1 -Service backend -AllowLan`.
 - [x] Confirm `/health` from the Windows host.
-- [ ] Confirm Raspberry can still run the Week 02 text loop against `TONTO_BACKEND_URL`.
-- [ ] Confirm TTS output still works with `espeak`.
+- [x] Confirm Raspberry can still run the Week 02 text loop against `TONTO_BACKEND_URL`.
+- [x] Confirm TTS output still works with `espeak`.
 
 PowerShell profile or oh-my-posh warnings are local shell noise unless an official script fails.
 
-`/health` was confirmed with a temporary direct uvicorn process on the Windows host. The LAN-mode `dev.ps1` startup remains pending for Raspberry validation.
+The local Week 03 kickoff checklist is complete. Hardware voice validation remains separate and starts with microphone detection, WAV recording, and WAV playback on the Raspberry Pi.
 
 ## Hardware Voice Checklist
 
