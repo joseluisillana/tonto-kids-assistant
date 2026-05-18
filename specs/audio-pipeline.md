@@ -4,24 +4,32 @@
 
 Este documento describe el pipeline de audio para la versión MVP de TONTO, un asistente para niños. El enfoque está en simplicidad y estabilidad, utilizando un Raspberry Pi 3 como thin client. El audio output ya está validado, mientras que el micrófono USB está pendiente de implementación.
 
+Semana 3 empieza con una fase de preparación: validar hardware de entrada y dejar el repositorio listo para implementar voz sin cambiar todavía contratos públicos ni añadir dependencias. El loop `/chat` de texto sigue siendo la referencia estable mientras se desbloquea la captura de audio.
+
+La dirección provisional es procesar STT en el backend. Esto deriva de la arquitectura MVP de Raspberry Pi como thin client y de la necesidad de mantener el cliente simple, no de una limitación ya demostrada de la Raspberry. STT local solo se descartará si una prueba concreta demuestra problemas de CPU, memoria, latencia, calidad o complejidad de setup.
+
 ## Componentes del Pipeline
 
 ### Input Audio
 
 - **Fuente**: Micrófono USB (pendiente de validación).
 - **Captura**: Se realiza en el Raspberry Pi 3.
-- **Formato**: Audio raw o WAV básico para minimizar procesamiento.
+- **Formato inicial**: WAV básico grabado en Raspberry para minimizar procesamiento y facilitar depuración.
+- **Precondición**: el dispositivo debe aparecer en `arecord -l` y poder grabar una muestra corta reproducible.
 
 ### Procesamiento
 
-- **Conversión**: De audio a texto (STT) en el backend.
+- **Conversión prevista**: De audio a texto (STT) en el backend.
 - **Filtrado básico**: Eliminación de ruido simple si es necesario, priorizando estabilidad sobre calidad avanzada.
+- **No objetivo inicial**: STT local complejo en Raspberry, wake word o modelos locales de audio.
+- **Estado de decisión**: STT backend es el default provisional; proveedor, endpoint y formato de audio siguen pendientes.
 
 ### Backend
 
 - **Tecnología MVP**: Python/FastAPI.
-- **Funciones**: Maneja la lógica conversacional y la integración con OpenAI. STT queda fuera del primer milestone.
-- **Comunicación**: Recibe mensajes HTTP/JSON del cliente y envía respuestas de texto para TTS local.
+- **Funciones actuales**: Maneja la lógica conversacional y la integración con OpenAI mediante `/chat`.
+- **Preparación semana 3**: no se añade endpoint de audio hasta validar captura WAV y decidir el contrato mínimo.
+- **Comunicación actual**: Recibe mensajes HTTP/JSON del cliente y envía respuestas de texto para TTS local.
 
 ### TTS (Text-to-Speech)
 
@@ -44,13 +52,28 @@ Este documento describe el pipeline de audio para la versión MVP de TONTO, un a
 
 - Captura de audio input.
 - Reproducción de audio output.
-- Comunicación básica con el backend (envío de audio, recepción de respuestas).
+- Comunicación básica con el backend.
+- Mantener la entrada manual de texto como fallback durante el desarrollo de voz.
 
 ### Backend
 
 - Lógica de conversación.
 - Integración con OpenAI.
 - Gestión de la conversación y estado.
+- STT backend como default provisional cuando se decida el contrato de audio.
+
+## Checklist de Preparación Semana 3
+
+- Confirmar rama de trabajo `docs/week-3-kickoff` antes de editar documentación.
+- Ejecutar `.\scripts\setup-dev.ps1` si el entorno local no está preparado.
+- Ejecutar `.\scripts\test.ps1 -Target all`.
+- Ejecutar `.\scripts\build.ps1 -Target all`.
+- Arrancar backend con `.\scripts\dev.ps1 -Service backend -AllowLan` para pruebas desde Raspberry.
+- Confirmar que el cliente actual de texto sigue hablando respuestas con `espeak`.
+- Conectar micrófono USB a Raspberry y comprobar `arecord -l`.
+- Grabar una muestra WAV corta y reproducirla localmente.
+- Documentar cualquier bloqueo de hardware antes de implementar endpoints o dependencias.
+- Si se considera STT local, documentar la prueba concreta y el motivo técnico antes de cambiar el default.
 
 ## Riesgos Técnicos Principales
 
@@ -67,9 +90,10 @@ Este documento describe el pipeline de audio para la versión MVP de TONTO, un a
 ## Criterios de Aceptación
 
 - El audio input se captura correctamente con micrófono USB.
-- El procesamiento STT convierte audio a texto con al menos 80% de precisión en entornos controlados.
+- Una muestra WAV corta puede grabarse y reproducirse en Raspberry.
+- El contrato de STT backend queda decidido antes de añadir dependencias o endpoints.
+- Cualquier descarte de STT local queda respaldado por una prueba técnica, no por una suposición.
 - El TTS genera audio claro y comprensible.
 - El output audio se reproduce sin interrupciones.
-- La latencia total es inferior a 2 segundos.
-- El sistema opera de manera estable sin crashes en sesiones de 10 minutos.
-- Modo offline básico funciona si implementado.
+- El loop de texto de semana 2 sigue funcionando como fallback.
+- La latencia total se mide durante el primer prototipo de voz, sin optimizar prematuramente.
