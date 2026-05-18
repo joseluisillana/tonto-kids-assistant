@@ -16,6 +16,7 @@ La dirección provisional es procesar STT en el backend. Esto deriva de la arqui
 - **Captura**: Se realiza en el Raspberry Pi 3.
 - **Formato inicial**: WAV básico grabado en Raspberry para minimizar procesamiento y facilitar depuración.
 - **Precondición**: el dispositivo debe aparecer en `arecord -l` y poder grabar una muestra corta reproducible.
+- **Validación mínima**: grabar un WAV mono de 5 segundos a 16 kHz con `arecord` y reproducirlo localmente con `aplay` antes de diseñar el contrato de subida de audio.
 
 ### Procesamiento
 
@@ -64,16 +65,34 @@ La dirección provisional es procesar STT en el backend. Esto deriva de la arqui
 
 ## Checklist de Preparación Semana 3
 
-- Confirmar rama de trabajo `docs/week-3-kickoff` antes de editar documentación.
+- Confirmar rama de trabajo `feature/week-3-audio-capture` antes de editar Semana 3.
 - Ejecutar `.\scripts\setup-dev.ps1` si el entorno local no está preparado.
 - Ejecutar `.\scripts\test.ps1 -Target all`.
 - Ejecutar `.\scripts\build.ps1 -Target all`.
 - Arrancar backend con `.\scripts\dev.ps1 -Service backend -AllowLan` para pruebas desde Raspberry.
 - Confirmar que el cliente actual de texto sigue hablando respuestas con `espeak`.
 - Conectar micrófono USB a Raspberry y comprobar `arecord -l`.
-- Grabar una muestra WAV corta y reproducirla localmente.
+- Grabar una muestra WAV corta:
+
+```bash
+arecord -f S16_LE -r 16000 -c 1 -d 5 ~/tonto-mic-check.wav
+```
+
+- Si hace falta seleccionar el dispositivo explícitamente, usar los números de `arecord -l`:
+
+```bash
+arecord -D plughw:<CARD>,<DEVICE> -f S16_LE -r 16000 -c 1 -d 5 ~/tonto-mic-check.wav
+```
+
+- Reproducir la muestra localmente:
+
+```bash
+aplay ~/tonto-mic-check.wav
+```
+
 - Documentar cualquier bloqueo de hardware antes de implementar endpoints o dependencias.
 - Si se considera STT local, documentar la prueba concreta y el motivo técnico antes de cambiar el default.
+- Mantener `POST /chat` estable hasta decidir el contrato mínimo de audio.
 
 ## Riesgos Técnicos Principales
 
@@ -91,6 +110,7 @@ La dirección provisional es procesar STT en el backend. Esto deriva de la arqui
 
 - El audio input se captura correctamente con micrófono USB.
 - Una muestra WAV corta puede grabarse y reproducirse en Raspberry.
+- La validación de captura registra dispositivo, comando usado, duración y notas de calidad.
 - El contrato de STT backend queda decidido antes de añadir dependencias o endpoints.
 - Cualquier descarte de STT local queda respaldado por una prueba técnica, no por una suposición.
 - El TTS genera audio claro y comprensible.

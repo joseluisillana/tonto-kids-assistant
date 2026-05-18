@@ -56,6 +56,8 @@ Validado y operativo:
 
 La preparacion reproducible y los pasos de recuperacion desde una tarjeta SD limpia viven en `docs/raspberry-pi-setup.md`.
 
+La validacion de captura de audio de Semana 3 debe empezar con `arecord -l`, una grabacion WAV corta y reproduccion local con `aplay` en la Raspberry. Hasta completar esa prueba, el microfono USB sigue pendiente y no hay contrato de STT activo.
+
 ### Limitaciones conocidas
 
 - 1 GB RAM,
@@ -234,7 +236,7 @@ Actualmente se ha validado correctamente:
 Todavía pendiente:
 
 - micrófono USB,
-- captura de audio,
+- captura de audio reproducible con `arecord` y `aplay`,
 - pipeline voz completo,
 - integración Arduino,
 - estados físicos visuales.

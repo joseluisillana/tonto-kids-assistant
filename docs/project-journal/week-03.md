@@ -44,6 +44,58 @@ The local Week 03 kickoff checklist is complete. Hardware voice validation remai
 - [ ] Note device name, command used, sample duration, and any audio quality issue.
 - [ ] Decide the smallest STT/backend contract only after capture is reproducible.
 
+## Raspberry Audio Capture Validation Plan
+
+Run these commands from a terminal on the Raspberry Pi after connecting the USB microphone. They are validation commands only; they do not add STT or change the `/chat` contract.
+
+1. Confirm ALSA can see the capture device:
+
+```bash
+arecord -l
+```
+
+Expected result: at least one capture card appears. Record the card number, device number, and human-readable device name in the validation notes below.
+
+2. Record a short mono WAV sample using the default capture device:
+
+```bash
+arecord -f S16_LE -r 16000 -c 1 -d 5 ~/tonto-mic-check.wav
+```
+
+If the default device is not the USB microphone, use the card and device from `arecord -l`:
+
+```bash
+arecord -D plughw:<CARD>,<DEVICE> -f S16_LE -r 16000 -c 1 -d 5 ~/tonto-mic-check.wav
+```
+
+3. Replay the sample locally:
+
+```bash
+aplay ~/tonto-mic-check.wav
+```
+
+4. Optional quick file check:
+
+```bash
+ls -lh ~/tonto-mic-check.wav
+```
+
+Validation evidence to capture:
+
+```text
+Date:
+Raspberry hostname:
+Microphone/card from arecord -l:
+Record command used:
+Playback command used:
+Sample duration:
+Result:
+Audio quality notes:
+Blockers:
+```
+
+Decision rule: do not add an audio upload endpoint, STT provider integration, or new audio dependency until a short WAV can be recorded and replayed on the Raspberry Pi.
+
 ## Guardrails
 
 - Keep Raspberry as a thin client: capture audio, call backend, play TTS.
