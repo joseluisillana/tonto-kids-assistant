@@ -1,7 +1,7 @@
 # Week 03 Kickoff
 
 **Date:** 2026-05-18
-**Status:** Repository kickoff prepared; hardware voice validation pending.
+**Status:** Repository kickoff prepared; USB microphone capture validated on Raspberry Pi.
 
 ## Objective
 
@@ -37,11 +37,11 @@ The local Week 03 kickoff checklist is complete. Hardware voice validation remai
 
 ## Hardware Voice Checklist
 
-- [ ] Connect USB microphone to Raspberry Pi.
-- [ ] Confirm microphone appears in `arecord -l`.
-- [ ] Record a short WAV sample.
-- [ ] Replay the WAV sample locally.
-- [ ] Note device name, command used, sample duration, and any audio quality issue.
+- [x] Connect USB microphone to Raspberry Pi.
+- [x] Confirm microphone appears in `arecord -l`.
+- [x] Record a short WAV sample.
+- [x] Replay the WAV sample locally.
+- [x] Note device name, command used, sample duration, and any audio quality issue.
 - [ ] Decide the smallest STT/backend contract only after capture is reproducible.
 
 ## Raspberry Audio Capture Validation Plan
@@ -95,6 +95,105 @@ Blockers:
 ```
 
 Decision rule: do not add an audio upload endpoint, STT provider integration, or new audio dependency until a short WAV can be recorded and replayed on the Raspberry Pi.
+
+## Raspberry USB Microphone Validation Evidence
+
+**Date:** 2026-05-23, 09:00 local time.
+**Raspberry hostname:** `tonto-pi`.
+**Microphone:** Mini USB Microphone M-305, connected by USB.
+**Detected device:** `card 2: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]`.
+**ALSA capture aliases:** `hw:CARD=Device,DEV=0`, `plughw:CARD=Device,DEV=0`, `default:CARD=Device`, `sysdefault:CARD=Device`, `front:CARD=Device,DEV=0`, and `dsnoop:CARD=Device,DEV=0`.
+
+Command used to list capture hardware:
+
+```bash
+arecord -l
+```
+
+Output:
+
+```text
+**** List of CAPTURE Hardware Devices ****
+card 2: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+```
+
+Additional ALSA device listing:
+
+```bash
+arecord -L
+```
+
+Output:
+
+```text
+null
+    Discard all samples (playback) or generate zero samples (capture)
+hw:CARD=Device,DEV=0
+    USB PnP Sound Device, USB Audio
+    Direct hardware device without any conversions
+plughw:CARD=Device,DEV=0
+    USB PnP Sound Device, USB Audio
+    Hardware device with all software conversions
+default:CARD=Device
+    USB PnP Sound Device, USB Audio
+    Default Audio Device
+sysdefault:CARD=Device
+    USB PnP Sound Device, USB Audio
+    Default Audio Device
+front:CARD=Device,DEV=0
+    USB PnP Sound Device, USB Audio
+    Front output / input
+dsnoop:CARD=Device,DEV=0
+    USB PnP Sound Device, USB Audio
+    Direct sample snooping device
+```
+
+Recording command used:
+
+```bash
+arecord -D plughw:2,0 -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav
+```
+
+Recording output:
+
+```text
+Recording WAVE '/home/tonto-pi-user/tonto-mic-check.wav' : Signed 16 bit Little Endian, Rate 16000 Hz, Mono
+```
+
+Playback command used:
+
+```bash
+aplay ~/tonto-mic-check.wav
+```
+
+Playback output:
+
+```text
+Playing WAVE '/home/tonto-pi-user/tonto-mic-check.wav' : Signed 16 bit Little Endian, Rate 16000 Hz, Mono
+```
+
+File size check:
+
+```bash
+ls -lh ~/tonto-mic-check.wav
+```
+
+Output:
+
+```text
+-rw-r--r-- 1 tonto-pi-user tonto-pi-user 157K May 23 08:59 /home/tonto-pi-user/tonto-mic-check.wav
+```
+
+**Sample duration:** 10 seconds.
+**Recorded file size:** 157K.
+**Result:** capture and local playback worked correctly on Raspberry Pi.
+**Audio quality notes:** recording gain was raised to maximum with `alsamixer` before the successful capture. Playback was audible and correct according to the manual validation.
+**Blockers:** no capture blocker found.
+**AI tools used:** Codex reviewed `AGENTS.md`, `docs/ai-assisted-workflow.md`, `docs/project-journal/week-03.md`, `specs/audio-pipeline.md`, `docs/specs.md`, and `docs/hardware.md`, then recorded the human-provided Raspberry validation evidence.
+**Human decision:** capture validation is recorded only; no STT, wake word, audio endpoint, new dependency, or architecture change is introduced in this iteration.
+**Validation:** USB microphone capture is reproducible enough to unblock the next design step. The next iteration may decide the minimum audio upload contract to the backend while keeping `POST /chat` stable until that decision is explicit.
 
 ## Guardrails
 

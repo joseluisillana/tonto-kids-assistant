@@ -16,7 +16,7 @@ El foco activo de la semana 3 es preparar y validar el primer pipeline de voz re
 voz -> captura Raspberry -> STT backend -> /chat -> respuesta -> TTS local en Raspberry
 ```
 
-La preparación de semana 3 no cambia todavía las interfaces públicas. Antes de implementar nuevos endpoints o dependencias, hay que validar el micrófono USB y capturar audio reproducible en la Raspberry.
+La preparación de semana 3 no cambia todavía las interfaces públicas. La captura con micrófono USB ya fue validada en Raspberry con un WAV reproducible; antes de implementar nuevos endpoints o dependencias, hay que decidir el contrato mínimo de subida de audio.
 
 ## Arquitectura
 
@@ -32,7 +32,7 @@ La preparación de semana 3 no cambia todavía las interfaces públicas. Antes d
 3. **Memoria de sesión**: historial corto en memoria de proceso.
 4. **Personalidad educativa**: respuestas breves, claras y adaptadas a niños.
 5. **Cliente web de validación**: interfaz mínima para probar el backend desde navegador.
-6. **Voz real**: foco activo de semana 3, empezando por micrófono USB y captura WAV simple.
+6. **Voz real**: foco activo de semana 3, con micrófono USB y captura WAV simple ya validados como base de la siguiente iteración.
 7. **Estados visuales e integración Arduino**: expansión futura, no parte del arranque de semana 3.
 
 ## APIs Base
@@ -47,7 +47,7 @@ Durante la preparación de semana 3, `/chat` sigue siendo el contrato estable. N
 - STT local complejo en Raspberry.
 - Modelos locales de audio.
 - Nuevas dependencias sin decisión explícita.
-- Nuevos endpoints antes de validar captura básica.
+- Nuevos endpoints antes de decidir el contrato mínimo de audio.
 - Arduino/LEDs.
 - Persistencia.
 - Autenticación.
@@ -56,10 +56,10 @@ Durante la preparación de semana 3, `/chat` sigue siendo el contrato estable. N
 
 ## Checklist de Desbloqueo de Voz
 
-- Micrófono USB conectado a la Raspberry Pi.
-- Dispositivo visible con `arecord -l`.
-- Grabación WAV corta validada.
-- Reproducción local validada.
+- Micrófono USB conectado a la Raspberry Pi. Validado en Semana 3.
+- Dispositivo visible con `arecord -l`. Validado como `USB PnP Sound Device`, `card 2`, `device 0`.
+- Grabación WAV corta validada con `arecord -D plughw:2,0 -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav`.
+- Reproducción local validada con `aplay ~/tonto-mic-check.wav`.
 - Backend arrancado con `.\scripts\dev.ps1 -Service backend -AllowLan`.
 - Cliente Raspberry apuntando a `TONTO_BACKEND_URL`.
 - Loop de texto de semana 2 confirmado antes de tocar audio input.

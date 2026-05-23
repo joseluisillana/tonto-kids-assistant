@@ -2,7 +2,7 @@
 
 ## Introducción
 
-Este documento describe el pipeline de audio para la versión MVP de TONTO, un asistente para niños. El enfoque está en simplicidad y estabilidad, utilizando un Raspberry Pi 3 como thin client. El audio output ya está validado, mientras que el micrófono USB está pendiente de implementación.
+Este documento describe el pipeline de audio para la versión MVP de TONTO, un asistente para niños. El enfoque está en simplicidad y estabilidad, utilizando un Raspberry Pi 3 como thin client. El audio output ya está validado, y la captura inicial con micrófono USB quedó validada en Raspberry durante Semana 3.
 
 Semana 3 empieza con una fase de preparación: validar hardware de entrada y dejar el repositorio listo para implementar voz sin cambiar todavía contratos públicos ni añadir dependencias. El loop `/chat` de texto sigue siendo la referencia estable mientras se desbloquea la captura de audio.
 
@@ -12,11 +12,11 @@ La dirección provisional es procesar STT en el backend. Esto deriva de la arqui
 
 ### Input Audio
 
-- **Fuente**: Micrófono USB (pendiente de validación).
+- **Fuente**: Micrófono USB Mini USB Microphone M-305, validado como `USB PnP Sound Device` en ALSA.
 - **Captura**: Se realiza en el Raspberry Pi 3.
 - **Formato inicial**: WAV básico grabado en Raspberry para minimizar procesamiento y facilitar depuración.
-- **Precondición**: el dispositivo debe aparecer en `arecord -l` y poder grabar una muestra corta reproducible.
-- **Validación mínima**: grabar un WAV mono de 5 segundos a 16 kHz con `arecord` y reproducirlo localmente con `aplay` antes de diseñar el contrato de subida de audio.
+- **Precondición validada**: el dispositivo aparece en `arecord -l` como `card 2`, `device 0`, y puede grabar una muestra corta reproducible.
+- **Validación mínima cumplida**: se grabo un WAV mono de 10 segundos a 16 kHz con `arecord -D plughw:2,0 -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav` y se reprodujo localmente con `aplay`.
 
 ### Procesamiento
 
@@ -29,7 +29,7 @@ La dirección provisional es procesar STT en el backend. Esto deriva de la arqui
 
 - **Tecnología MVP**: Python/FastAPI.
 - **Funciones actuales**: Maneja la lógica conversacional y la integración con OpenAI mediante `/chat`.
-- **Preparación semana 3**: no se añade endpoint de audio hasta validar captura WAV y decidir el contrato mínimo.
+- **Preparación semana 3**: la captura WAV ya quedo validada; no se añade endpoint de audio hasta decidir el contrato mínimo.
 - **Comunicación actual**: Recibe mensajes HTTP/JSON del cliente y envía respuestas de texto para TTS local.
 
 ### TTS (Text-to-Speech)
@@ -71,11 +71,11 @@ La dirección provisional es procesar STT en el backend. Esto deriva de la arqui
 - Ejecutar `.\scripts\build.ps1 -Target all`.
 - Arrancar backend con `.\scripts\dev.ps1 -Service backend -AllowLan` para pruebas desde Raspberry.
 - Confirmar que el cliente actual de texto sigue hablando respuestas con `espeak`.
-- Conectar micrófono USB a Raspberry y comprobar `arecord -l`.
-- Grabar una muestra WAV corta:
+- Conectar micrófono USB a Raspberry y comprobar `arecord -l`. Validado en Semana 3 con Mini USB Microphone M-305.
+- Grabar una muestra WAV corta. Validado con dispositivo explicito:
 
 ```bash
-arecord -f S16_LE -r 16000 -c 1 -d 5 ~/tonto-mic-check.wav
+arecord -D plughw:2,0 -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav
 ```
 
 - Si hace falta seleccionar el dispositivo explícitamente, usar los números de `arecord -l`:
@@ -84,20 +84,20 @@ arecord -f S16_LE -r 16000 -c 1 -d 5 ~/tonto-mic-check.wav
 arecord -D plughw:<CARD>,<DEVICE> -f S16_LE -r 16000 -c 1 -d 5 ~/tonto-mic-check.wav
 ```
 
-- Reproducir la muestra localmente:
+- Reproducir la muestra localmente. Validado en Semana 3:
 
 ```bash
 aplay ~/tonto-mic-check.wav
 ```
 
-- Documentar cualquier bloqueo de hardware antes de implementar endpoints o dependencias.
+- Documentar cualquier bloqueo de hardware antes de implementar endpoints o dependencias. No hubo bloqueo de captura en la validacion de Semana 3.
 - Si se considera STT local, documentar la prueba concreta y el motivo técnico antes de cambiar el default.
 - Mantener `POST /chat` estable hasta decidir el contrato mínimo de audio.
 
 ## Riesgos Técnicos Principales
 
 - **Recursos limitados del Raspberry Pi 3**: Posible latencia o inestabilidad en procesamiento de audio.
-- **Micrófono USB pendiente**: Riesgo de compatibilidad o calidad de captura.
+- **Micrófono USB validado inicialmente**: queda pendiente medir calidad suficiente para STT real y latencia end-to-end.
 - **Latencia**: Procesamiento en tiempo real puede ser desafiante con hardware limitado.
 - **Estabilidad**: Priorizar simplicidad para evitar crashes o comportamientos impredecibles.
 
