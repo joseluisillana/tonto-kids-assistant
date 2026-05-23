@@ -39,7 +39,7 @@ La preparación de semana 3 no cambia todavía las interfaces públicas. La capt
 
 - POST /chat: Procesar una interacción conversacional con `session_id` y `message`
 
-Durante la preparación de semana 3, `/chat` sigue siendo el contrato estable. No se añade endpoint de audio hasta decidir el enfoque mínimo de STT y formato de subida.
+Durante la preparación de semana 3, `/chat` sigue siendo el contrato estable. Tras validar la captura WAV en Raspberry, `specs/audio-pipeline.md` documenta `POST /chat/audio` como contrato mínimo candidato para subir un turno WAV al backend antes de implementar STT. Este endpoint sigue sin estar implementado y no reemplaza `/chat`.
 
 ## Fuera de Alcance del Arranque de Semana 3
 

@@ -32,6 +32,159 @@ La dirección provisional es procesar STT en el backend. Esto deriva de la arqui
 - **Preparación semana 3**: la captura WAV ya quedo validada; no se añade endpoint de audio hasta decidir el contrato mínimo.
 - **Comunicación actual**: Recibe mensajes HTTP/JSON del cliente y envía respuestas de texto para TTS local.
 
+## Contrato Mínimo Candidato de Subida de Audio
+
+Esta sección define el contrato candidato para la siguiente iteración de voz. No implementa todavía un endpoint real ni activa STT; sirve para aprobar el contrato antes de escribir código.
+
+### Endpoint Candidato
+
+- **Endpoint candidato**: `POST /chat/audio`
+- **Método HTTP**: `POST`
+- **Estado**: candidato documentado, no implementado.
+- **Propósito**: recibir un turno corto de audio capturado por la Raspberry, transcribirlo en el backend cuando se añada STT, reutilizar el flujo conversacional existente de `/chat`, y devolver una respuesta textual speakable para que la Raspberry la reproduzca con `espeak`.
+
+### Request Recomendado
+
+Usar `multipart/form-data` para evitar codificar WAV en base64 y mantener la subida simple de depurar con herramientas HTTP estándar.
+
+Campos recomendados:
+
+- `audio`: archivo WAV del turno capturado.
+- `session_id`: identificador de sesión local ya usado por `/chat`.
+- `device_id`: identificador estable y simple del cliente Raspberry, por ejemplo `tonto-pi`.
+- `recorded_at`: timestamp ISO 8601 generado por el cliente si está disponible.
+- `duration_ms`: duración aproximada de la captura.
+- `sample_rate_hz`: frecuencia de muestreo declarada por el cliente.
+- `channels`: número de canales.
+- `language`: idioma esperado para STT; valor inicial recomendado `es`.
+
+Metadatos mínimos para aprobar la primera implementación:
+
+- `session_id`
+- `audio`
+- `duration_ms`
+- `sample_rate_hz`
+- `channels`
+
+`device_id`, `recorded_at` y `language` son recomendados desde el inicio porque ayudan a depurar, pero pueden tener defaults explícitos en el backend durante el primer prototipo.
+
+### Formato de Audio Inicial
+
+Formato aceptado inicialmente:
+
+- Contenedor: WAV.
+- Codificación: PCM signed 16-bit little endian (`S16_LE`).
+- Frecuencia: 16 kHz.
+- Canales: mono.
+
+Comando de captura compatible con la validación de Semana 3:
+
+```bash
+arecord -D plughw:2,0 -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-turn.wav
+```
+
+No se aceptan inicialmente formatos comprimidos, streaming, múltiples archivos por request, ni audio estéreo salvo decisión explícita posterior.
+
+### Límites Iniciales
+
+Límites candidatos para mantener la demo rápida y evitar requests grandes:
+
+- Duración mínima: 250 ms.
+- Duración máxima: 10 segundos.
+- Tamaño máximo del archivo: 512 KiB.
+- Un solo turno de audio por request.
+- El backend debe rechazar archivos vacíos o metadatos incompatibles con el WAV recibido.
+
+Estos límites son deliberadamente conservadores. Una captura WAV mono PCM 16 kHz de 10 segundos pesa aproximadamente 320 KiB, por debajo del límite candidato.
+
+### Respuesta Esperada
+
+La respuesta debe seguir siendo texto speakable para el cliente Raspberry:
+
+```json
+{
+  "session_id": "demo-session",
+  "transcript": "texto reconocido",
+  "response": "respuesta educativa para reproducir con espeak"
+}
+```
+
+Campos mínimos:
+
+- `session_id`: sesión usada para el turno.
+- `transcript`: texto reconocido por STT.
+- `response`: respuesta final del backend, lista para TTS local.
+
+Campos opcionales de depuración para primeras pruebas:
+
+- `request_id`
+- `duration_ms`
+- `stt_provider`
+- `warnings`
+
+La Raspberry no debe reproducir audio generado por el backend en esta etapa; debe seguir reproduciendo `response` localmente con `espeak`.
+
+### Errores Básicos
+
+Errores candidatos:
+
+- `400 Bad Request`: falta `audio`, falta `session_id`, metadatos inválidos, WAV mal formado o duración fuera de rango.
+- `413 Payload Too Large`: archivo mayor que el límite aprobado.
+- `415 Unsupported Media Type`: formato distinto de WAV PCM mono 16 kHz inicial.
+- `422 Unprocessable Entity`: audio válido pero sin habla reconocible o transcripción vacía.
+- `502 Bad Gateway`: fallo del proveedor STT cuando se integre.
+- `504 Gateway Timeout`: timeout de STT o del flujo conversacional.
+
+El body de error debe ser simple y depurable:
+
+```json
+{
+  "error": "audio_too_long",
+  "message": "Audio duration exceeds the 10 second limit."
+}
+```
+
+### Relación con `POST /chat`
+
+`POST /chat` permanece como contrato estable para texto manual y cliente web. El endpoint candidato de audio no reemplaza `/chat`.
+
+Flujo previsto cuando se implemente:
+
+```text
+Raspberry WAV -> POST /chat/audio -> STT backend -> texto -> lógica existente de /chat -> response -> espeak local
+```
+
+La intención es que `/chat/audio` sea una variante de entrada de chat por voz: transforma audio en texto y reutiliza la misma orquestación conversacional que ya sostiene `/chat`. Cualquier cambio al contrato de `/chat` queda fuera de esta decisión.
+
+### Fuera de Alcance
+
+- Implementar el endpoint en esta iteración de documentación.
+- Elegir o integrar proveedor STT.
+- Añadir dependencias.
+- STT local en Raspberry.
+- Wake word.
+- Streaming de audio.
+- Grabación continua.
+- Autenticación, usuarios o permisos.
+- Persistencia de archivos de audio.
+- Memoria avanzada.
+- Respuestas de audio generadas por el backend.
+- Cambios de arquitectura o separación en servicios.
+
+### Criterios de Aceptación del Contrato
+
+Antes de implementar el endpoint, el contrato se considera aprobado si:
+
+- Mantiene `POST /chat` como contrato estable de texto.
+- Permite a la Raspberry seguir como thin client: captura WAV, sube audio, reproduce `response` con `espeak`.
+- Usa `multipart/form-data` con un solo WAV y metadatos mínimos claros.
+- Acepta inicialmente WAV PCM S16_LE, 16 kHz, mono, alineado con la validación real en Raspberry.
+- Define límites de duración y tamaño compatibles con la demo y con una captura de 10 segundos.
+- Devuelve una respuesta textual speakable y, cuando exista STT, el transcript reconocido.
+- Define errores suficientes para depurar fallos de formato, tamaño, duración, STT y timeouts.
+- No introduce STT, wake word, dependencias, persistencia ni cambios de arquitectura.
+- Puede probarse primero con un archivo WAV grabado con `arecord` antes de integrarlo en el loop interactivo del cliente.
+
 ### TTS (Text-to-Speech)
 
 - **Generación**: Conversión de texto a audio localmente en la Raspberry Pi con `espeak`.

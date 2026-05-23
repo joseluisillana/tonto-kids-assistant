@@ -202,3 +202,9 @@ Output:
 - Do not describe backend STT as caused by proven Raspberry limitations unless a concrete test shows that.
 - Keep manual text input available as a fallback while voice is being built.
 - Do not introduce wake word, local audio models, persistence, auth, Arduino, or advanced memory in Week 03 kickoff.
+
+## Next Iteration: Audio Upload Contract Candidate
+
+After `v0.2.4-week3-microphone-validation`, the next design step documented `POST /chat/audio` as the minimum candidate contract for uploading one short WAV turn from Raspberry to the backend. The full candidate contract lives in `specs/audio-pipeline.md`.
+
+This is documentation only: `/chat` remains the stable text contract, no audio endpoint is implemented yet, and no STT provider, dependency, wake word, local STT, persistence, or architecture change is introduced.
