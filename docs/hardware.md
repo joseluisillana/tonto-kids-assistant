@@ -56,6 +56,8 @@ Validado y operativo:
 
 La preparacion reproducible y los pasos de recuperacion desde una tarjeta SD limpia viven en `docs/raspberry-pi-setup.md`.
 
+La validacion de captura de audio de Semana 3 confirmo que un microfono USB puede grabar una muestra WAV mono a 16 kHz y reproducirla localmente con `aplay` en la Raspberry. Todavia no hay contrato de STT activo.
+
 ### Limitaciones conocidas
 
 - 1 GB RAM,
@@ -142,6 +144,10 @@ Alta.
 - sin procesamiento complejo integrado.
 
 El MVP no necesita arrays de micrófonos avanzados ni hardware especializado.
+
+### Estado actual
+
+Validado en Semana 3 con Mini USB Microphone M-305. ALSA lo detecto como `USB PnP Sound Device`, `card 2`, `device 0`; la grabacion funciono con `arecord -D plughw:2,0 -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav` y la reproduccion local funciono con `aplay ~/tonto-mic-check.wav`.
 
 ---
 
@@ -233,8 +239,6 @@ Actualmente se ha validado correctamente:
 
 Todavía pendiente:
 
-- micrófono USB,
-- captura de audio,
 - pipeline voz completo,
 - integración Arduino,
 - estados físicos visuales.
@@ -301,12 +305,13 @@ el hardware probablemente no debe añadirse todavía.
 - SSH,
 - desarrollo remoto,
 - TTS local,
-- audio output.
+- audio output,
+- micrófono USB Mini USB Microphone M-305 detectado por ALSA,
+- captura y reproduccion local de WAV con `arecord` y `aplay`.
 
 ## Próximas prioridades
 
-- micrófono USB,
-- captura audio,
+- decidir contrato minimo de subida de audio,
 - primer pipeline voz completo.
 
 ## No prioritario actualmente

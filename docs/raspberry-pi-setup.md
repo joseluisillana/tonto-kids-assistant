@@ -363,7 +363,53 @@ Si `curl` o el cliente hacen timeout:
 
 Para Semana 1, esta prueba completa es opcional si el backend todavia no esta levantado. La validacion obligatoria de hardware es SSH, VSCode Remote SSH, audio y `espeak`.
 
-## 10. Configurar VSCode Remote SSH
+## 10. Validar Captura de Audio USB
+
+Semana 3 empieza validando captura de audio real antes de implementar STT o cambiar contratos HTTP.
+
+Conectar el microfono USB a la Raspberry y comprobar dispositivos de captura:
+
+```bash
+arecord -l
+```
+
+Debe aparecer al menos una tarjeta de captura. Anotar el nombre, numero de tarjeta y numero de dispositivo.
+
+Grabar una muestra WAV corta usando el dispositivo por defecto:
+
+```bash
+arecord -f S16_LE -r 16000 -c 1 -d 5 ~/tonto-mic-check.wav
+```
+
+Si el dispositivo por defecto no es el microfono USB, usar los numeros de `arecord -l`:
+
+```bash
+arecord -D plughw:<CARD>,<DEVICE> -f S16_LE -r 16000 -c 1 -d 5 ~/tonto-mic-check.wav
+```
+
+Reproducir la muestra:
+
+```bash
+aplay ~/tonto-mic-check.wav
+```
+
+Comprobar que se creo un archivo WAV no vacio:
+
+```bash
+ls -lh ~/tonto-mic-check.wav
+```
+
+Registrar:
+
+- comando exacto usado para grabar,
+- dispositivo detectado por `arecord -l`,
+- duracion de la muestra,
+- si la reproduccion se escucha,
+- notas de volumen, ruido, cortes o distorsion.
+
+No implementar endpoint de audio, proveedor STT ni dependencias nuevas hasta que esta prueba funcione de forma reproducible en la Raspberry.
+
+## 11. Configurar VSCode Remote SSH
 
 VSCode Remote SSH es el flujo recomendado para operar y desarrollar manualmente sobre la Raspberry durante el MVP.
 
@@ -430,7 +476,7 @@ tonto-pi-user
 
 El repositorio tambien quedo clonado y abierto desde el directorio remoto del proyecto.
 
-## 11. Checklist de Recuperacion
+## 12. Checklist de Recuperacion
 
 Usar esta lista despues de reinstalar o recuperar la Raspberry:
 
@@ -455,8 +501,11 @@ Usar esta lista despues de reinstalar o recuperar la Raspberry:
 - [ ] `client/requirements.txt` instalado dentro de `.venv`.
 - [ ] `TONTO_BACKEND_URL` apunta al backend real cuando se prueba el cliente.
 - [ ] El cliente puede arrancar con `.venv/bin/python client/main.py` cuando hay backend disponible.
+- [ ] El microfono USB aparece en `arecord -l` cuando se trabaja en Semana 3.
+- [ ] `arecord` graba `~/tonto-mic-check.wav` en Raspberry.
+- [ ] `aplay ~/tonto-mic-check.wav` reproduce la muestra localmente.
 
-## 12. Exportar a NotebookLM
+## 13. Exportar a NotebookLM
 
 Esta guia vive en `docs/`, por lo que entra automaticamente en el flujo de exportacion a NotebookLM.
 
@@ -485,3 +534,4 @@ NotebookLM debe leer la copia exportada, pero la fuente oficial sigue siendo est
 | 2026-05-15 | Semana 1 | Se valida VSCode Remote SSH, terminal remota, `which espeak` y repositorio clonado en `/home/tonto-pi-user/tonto-kids-assistant`. |
 | 2026-05-15 | Semana 1 | Se documenta uso de `.\scripts\dev.ps1 -Service backend -AllowLan` para que la Raspberry alcance el backend del PC Windows en la LAN. |
 | 2026-05-15 | Semana 1 | Se valida prueba punto a punto Raspberry -> backend LAN -> OpenAI -> TTS por salida de auriculares/jack. |
+| 2026-05-18 | Semana 3 | Se documentan comandos reproducibles para validar microfono USB con `arecord`, grabacion WAV corta y reproduccion local con `aplay` antes de implementar STT. |
