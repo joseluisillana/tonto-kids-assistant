@@ -32,16 +32,17 @@ La dirección provisional es procesar STT en el backend. Esto deriva de la arqui
 - **Preparación semana 3**: la captura WAV ya quedo validada; no se añade endpoint de audio hasta decidir el contrato mínimo.
 - **Comunicación actual**: Recibe mensajes HTTP/JSON del cliente y envía respuestas de texto para TTS local.
 
-## Contrato Mínimo Candidato de Subida de Audio
+## Contrato de Subida de Audio
 
-Esta sección define el contrato candidato para la siguiente iteración de voz. No implementa todavía un endpoint real ni activa STT; sirve para aprobar el contrato antes de escribir código.
+Esta sección define el contrato de subida de audio. El endpoint está implementado en `backend/audio_router.py` sin STT real: usa un transcript fijo `[audio input captured]` hasta que se integre un proveedor STT.
 
-### Endpoint Candidato
+### Endpoint
 
-- **Endpoint candidato**: `POST /chat/audio`
+- **Endpoint**: `POST /chat/audio`
 - **Método HTTP**: `POST`
-- **Estado**: candidato documentado, no implementado.
-- **Propósito**: recibir un turno corto de audio capturado por la Raspberry, transcribirlo en el backend cuando se añada STT, reutilizar el flujo conversacional existente de `/chat`, y devolver una respuesta textual speakable para que la Raspberry la reproduzca con `espeak`.
+- **Estado**: implementado en rama `feature/audio-upload-contract`.
+- **STT**: placeholder. El campo `transcript` devuelve `"[audio input captured]"` hasta que se decida e integre un proveedor STT.
+- **Propósito**: recibir un turno corto de audio capturado por la Raspberry, validar el formato WAV, reutilizar el flujo conversacional existente de `/chat`, y devolver una respuesta textual speakable para que la Raspberry la reproduzca con `espeak`.
 
 ### Request Recomendado
 
@@ -158,9 +159,8 @@ La intención es que `/chat/audio` sea una variante de entrada de chat por voz: 
 
 ### Fuera de Alcance
 
-- Implementar el endpoint en esta iteración de documentación.
 - Elegir o integrar proveedor STT.
-- Añadir dependencias.
+- STT real (el endpoint usa un placeholder `[audio input captured]`).
 - STT local en Raspberry.
 - Wake word.
 - Streaming de audio.
@@ -173,7 +173,7 @@ La intención es que `/chat/audio` sea una variante de entrada de chat por voz: 
 
 ### Criterios de Aceptación del Contrato
 
-Antes de implementar el endpoint, el contrato se considera aprobado si:
+El contrato se considera implementado cuando:
 
 - Mantiene `POST /chat` como contrato estable de texto.
 - Permite a la Raspberry seguir como thin client: captura WAV, sube audio, reproduce `response` con `espeak`.
@@ -182,8 +182,12 @@ Antes de implementar el endpoint, el contrato se considera aprobado si:
 - Define límites de duración y tamaño compatibles con la demo y con una captura de 10 segundos.
 - Devuelve una respuesta textual speakable y, cuando exista STT, el transcript reconocido.
 - Define errores suficientes para depurar fallos de formato, tamaño, duración, STT y timeouts.
-- No introduce STT, wake word, dependencias, persistencia ni cambios de arquitectura.
-- Puede probarse primero con un archivo WAV grabado con `arecord` antes de integrarlo en el loop interactivo del cliente.
+- No introduce STT real, wake word, persistencia ni cambios de arquitectura.
+- Puede probarse con un archivo WAV grabado con `arecord` o con tests automatizados.
+- El endpoint está implementado y devuelve transcript + response educativa.
+- El transcript es un placeholder fijo `[audio input captured]` hasta que se integre STT.
+- `python-multipart` es la única dependencia nueva añadida.
+- Tests automatizados cubren: upload válido, audio vacío, tamaño excedido, formato incorrecto, duración fuera de rango.
 
 ### TTS (Text-to-Speech)
 
@@ -246,6 +250,25 @@ aplay ~/tonto-mic-check.wav
 - Documentar cualquier bloqueo de hardware antes de implementar endpoints o dependencias. No hubo bloqueo de captura en la validacion de Semana 3.
 - Si se considera STT local, documentar la prueba concreta y el motivo técnico antes de cambiar el default.
 - Mantener `POST /chat` estable hasta decidir el contrato mínimo de audio.
+- El endpoint `POST /chat/audio` está implementado pero el cliente Raspberry no ha sido modificado: la captura y subida de audio no están automatizadas.
+- [ ] **Probar subida manual de WAV al backend** con `curl` desde la Raspberry, verificando que el backend responde con `session_id`, `transcript` y `response`:
+
+  ```bash
+  # 1. Grabar un turno corto desde la Raspberry
+  arecord -D plughw:2,0 -f S16_LE -r 16000 -c 1 -d 5 ~/tonto-turn.wav
+
+  # 2. Enviar el WAV al backend y mostrar la respuesta
+  curl -s -X POST http://<TONTO_BACKEND_IP>:8000/chat/audio \
+    -F "audio=@/home/tonto-pi-user/tonto-turn.wav" \
+    -F "session_id=demo-session" \
+    -F "duration_ms=5000" \
+    -F "sample_rate_hz=16000" \
+    -F "channels=1" | python -m json.tool
+  ```
+
+  Resultado esperado: `HTTP 200` con `{"session_id": "demo-session", "transcript": "[audio input captured]", "response": "..."}`.
+
+  Esta prueba es manual y no sustituye la integración automatizada en el cliente Raspberry, que queda como trabajo pendiente de la Fase 2.
 
 ## Riesgos Técnicos Principales
 

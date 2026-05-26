@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Persistent instructions for Codex and AI assistants working on TONTO Kids Assistant.
+Persistent instructions for OpenCode, Codex, and AI assistants working on TONTO Kids Assistant.
 
 ## Project Goal
 
@@ -72,7 +72,7 @@ Explicitly out of scope for this first milestone:
 - Frontend dependencies must stay local to `web/node_modules/`.
 - Use `npm ci` or `npm install` only inside `web/`; never use `npm install -g` unless the user explicitly approves it.
 - Keep dependency caches local to `.cache/` when scripts support it; do not rely on user-profile caches such as global pip/npm caches.
-- If Codex sandboxing blocks network access or writes inside `.venv/`, `web/node_modules/`, or `.cache/`, request escalation for the official script command instead of switching to global tools.
+- If OpenCode or Codex sandboxing blocks network access or writes inside `.venv/`, `web/node_modules/`, or `.cache/`, request escalation for the official script command instead of switching to global tools.
 - If the build, test, setup, or dev workflow changes, update the scripts and documentation in the same change.
 - CI, humans, and agents should share the same command surface whenever practical:
   - `.\scripts\setup-dev.ps1`
@@ -166,3 +166,8 @@ If implementation and documentation disagree, pause and make the decision explic
 - Ask before adding dependencies or changing architecture.
 - If a request conflicts with this file, follow the user's latest explicit instruction and update this file or the relevant docs if the decision is persistent.
 - When unsure, choose the smallest reversible change that advances the MVP.
+
+## Tool Environment
+
+OpenCode runs on Windows through WSL2 with the DevExpert provider
+(OpenAI-compatible API) using models `deepseek-v4-flash` and `deepseek-v4-pro`.

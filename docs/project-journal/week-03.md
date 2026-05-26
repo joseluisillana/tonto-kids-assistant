@@ -207,4 +207,89 @@ Output:
 
 After `v0.2.4-week3-microphone-validation`, the next design step documented `POST /chat/audio` as the minimum candidate contract for uploading one short WAV turn from Raspberry to the backend. The full candidate contract lives in `specs/audio-pipeline.md`.
 
-This is documentation only: `/chat` remains the stable text contract, no audio endpoint is implemented yet, and no STT provider, dependency, wake word, local STT, persistence, or architecture change is introduced.
+## Audio Upload Contract Implementation
+
+**Branch:** `feature/audio-upload-contract`.
+**Commit:** `71ad57c docs: define audio upload contract` → implementado en esta iteración.
+
+The audio upload contract was implemented in `backend/` without adding STT, wake word, or changing the `/chat` contract.
+
+### Changes
+
+| File | Type | Purpose |
+|---|---|---|
+| `backend/requirements.txt` | Modified | Added `python-multipart` (required by FastAPI for multipart form data) |
+| `backend/state.py` | New | Shared app state: `session_history` and `MAX_HISTORY_MESSAGES` |
+| `backend/openai_client.py` | New | Extracted OpenAI orchestration (`call_openai`, `build_openai_input`, `extract_response_text`) |
+| `backend/main.py` | Refactored | Uses `state.py` and `openai_client.py`; includes `audio_router` |
+| `backend/audio_router.py` | New | `POST /chat/audio` with WAV validation, fixed STT placeholder, and conversation flow |
+| `tests/conftest.py` | New | TestClient fixture mocking OpenAI calls |
+| `tests/test_audio.py` | New | 11 tests: valid upload, missing fields, empty file, size limit, format validation, duration bounds |
+| `specs/audio-pipeline.md` | Updated | Marked endpoint as implemented, STT as pending placeholder |
+| `docs/specs.md` | Updated | Reflects endpoint implementation status |
+| `scripts/test.ps1` | Fixed | Syntax check heredoc quoting (pre-existing bug) |
+
+### How it works
+
+```text
+Raspberry WAV → POST /chat/audio (multipart/form-data) → validate WAV → 
+transcript fijo "[audio input captured]" → call_openai() → 
+response educativa → {session_id, transcript, response}
+```
+
+STT is a placeholder. When a real STT provider is chosen, replacing the fixed transcript is a single-line change.
+
+### What was NOT done
+
+- No STT provider chosen or integrated.
+- No changes to `POST /chat` contract.
+- No changes to Raspberry client (`client/`).
+- No wake word, persistence, auth, Arduino, or architecture changes.
+- No new dependencies beyond `python-multipart`.
+
+### Guardrails
+
+- `/chat` remains stable.
+- Raspberry remains a thin client.
+- The endpoint validates WAV format, size, and duration before calling OpenAI.
+- Errors follow the spec: 400, 413, 415, 422, 502, 504.
+
+### Gap: client not updated
+
+The Raspberry client (`client/main.py`) has **not** been modified. WAV capture remains a manual `arecord` command via SSH. There is no automated capture-and-upload loop in the client code.
+
+### Manual test: audio upload to backend (pending)
+
+Test the endpoint from the Raspberry using `curl`:
+
+```bash
+# On the Raspberry Pi, after recording a sample:
+curl -s -X POST http://<TONTO_BACKEND_IP>:8000/chat/audio \
+  -F "audio=@/home/tonto-pi-user/tonto-turn.wav" \
+  -F "session_id=demo-session" \
+  -F "duration_ms=5000" \
+  -F "sample_rate_hz=16000" \
+  -F "channels=1" | python -m json.tool
+```
+
+Expected result:
+```json
+{
+  "session_id": "demo-session",
+  "transcript": "[audio input captured]",
+  "response": "..."
+}
+```
+
+This test is **not executed** — it documents the command for the next iteration when the client is updated and the test can be run from real hardware.
+
+## OpenCode Tooling Decision
+
+**Date:** 2026-05-26.
+**Tool:** OpenCode CLI (WSL2 en Windows).
+**Provider:** DevExpert (OpenAI-compatible).
+**Models:** `deepseek-v4-flash` (default) y `deepseek-v4-pro`.
+
+OpenCode se añade al stack de desarrollo como asistente principal para
+implementación, revisión y verificación, siguiendo las instrucciones de
+`AGENTS.md` y los workflows del repositorio.

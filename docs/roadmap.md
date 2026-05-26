@@ -112,22 +112,39 @@ Feature añadida como mejora no planificada del workflow documental, derivada de
 
 ## Objetivo
 
-Introducir input de voz real en el sistema.
+Introducir input de voz real en el sistema, en dos fases.
 
-## Entregables
+## Fase 1 — Captura y contrato de audio (completada)
 
-- Micrófono USB integrado y validado.
-- Captura básica de audio en Raspberry.
-- Pipeline simple de voz funcionando.
-- Primer flujo conversación por voz extremo a extremo.
+### Entregables
 
-## Prioridades
+- [x] Micrófono USB integrado y validado.
+- [x] Captura básica de audio en Raspberry (WAV PCM 16 kHz mono reproducible) — validada manualmente con comandos `arecord`, no automatizada en cliente.
+- [x] Contrato `POST /chat/audio` documentado en `specs/audio-pipeline.md`.
+- [x] Endpoint `POST /chat/audio` implementado con validación WAV, límites de tamaño/duración, y conexión al flujo conversacional existente.
+- [x] Tests automatizados del endpoint de audio.
+- [ ] Prueba manual de subida WAV con `curl` desde la Raspberry (paso documentado, no ejecutado).
+
+### Nota
+
+El endpoint usa un transcript fijo `[audio input captured]` como placeholder de STT. El reconocimiento de voz real se aborda en la Fase 2.
+
+## Fase 2 — Integración STT (siguiente)
+
+### Entregables pendientes
+
+- [ ] Elegir proveedor STT.
+- [ ] Integrar STT en el backend.
+- [ ] Pipeline de voz extremo a extremo: Raspberry captura → backend STT → respuesta → TTS.
+- [ ] Loop interactivo con captura desde el cliente Raspberry.
+
+### Prioridades
 
 1. Validar captura de audio estable.
 2. Mantener latencia razonable.
 3. Evitar reconocimiento de voz complejo local.
 
-## Riesgos
+### Riesgos
 
 - Problemas de drivers/audio USB.
 - Latencia excesiva.
@@ -260,8 +277,13 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 
 ## Audio
 
-- [ ] Comprar y validar micrófono USB.
-- [ ] Validar captura audio Raspberry.
+- [x] Comprar y validar micrófono USB.
+- [x] Validar captura WAV en Raspberry (manual, con `arecord`).
+- [x] Implementar endpoint `POST /chat/audio` con validación WAV.
+- [ ] Probar subida manual WAV con `curl` desde la Raspberry.
+- [ ] Actualizar cliente Raspberry para capturar y subir WAV automáticamente.
+- [ ] Integrar STT backend.
+- [ ] Loop interactivo de voz Raspberry → backend → TTS.
 - [ ] Medir latencia básica.
 - [ ] Mejorar calidad TTS progresivamente.
 

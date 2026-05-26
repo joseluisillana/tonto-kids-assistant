@@ -13,6 +13,7 @@ $VenvPython = if ($env:OS -eq "Windows_NT") {
 } else {
     Join-Path (Join-Path (Join-Path $RepoRoot ".venv") "bin") "python"
 }
+$Npm = if ($env:OS -eq "Windows_NT") { "npm.cmd" } else { "npm" }
 
 function Invoke-CheckedCommand {
     param(
@@ -36,16 +37,7 @@ function Invoke-PythonChecks {
     Push-Location $RepoRoot
     try {
         $env:PYTHONDONTWRITEBYTECODE = "1"
-        Invoke-CheckedCommand -FilePath $VenvPython -Arguments @("-c", @"
-import ast
-from pathlib import Path
-
-roots = [Path("backend"), Path("client"), Path("shared"), Path("tests")]
-for root in roots:
-    for path in root.rglob("*.py"):
-        ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-print("Python syntax OK")
-"@)
+        Invoke-CheckedCommand -FilePath $VenvPython -Arguments @(Join-Path (Join-Path $RepoRoot "scripts") "check_syntax.py")
         Invoke-CheckedCommand -FilePath $VenvPython -Arguments @("-m", "pytest", "-p", "no:cacheprovider", "tests")
     } finally {
         $env:PYTHONDONTWRITEBYTECODE = $PreviousDontWriteBytecode
@@ -60,7 +52,7 @@ function Invoke-WebChecks {
             throw "Web dependencies not found. Run ./scripts/setup-dev.ps1 first."
         }
 
-        Invoke-CheckedCommand -FilePath "npm" -Arguments @("run", "typecheck")
+        Invoke-CheckedCommand -FilePath $Npm -Arguments @("run", "typecheck")
     } finally {
         Pop-Location
     }

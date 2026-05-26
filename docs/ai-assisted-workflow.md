@@ -25,6 +25,18 @@ Codex should follow the repo instructions in `AGENTS.md` and prefer the official
 
 Codex can execute full repository changes, but the repository workflow is tool-agnostic. Codex-specific skills may help later, but they must not become the source of truth for project rules.
 
+## OpenCode
+
+OpenCode es un CLI interactivo que uso como asistente principal para implementación,
+inspección del repositorio, actualización de documentación y verificación de tests.
+Se ejecuta en Windows a través de WSL2.
+
+- **Provider**: DevExpert (API compatible con OpenAI).
+- **Modelos**: `deepseek-v4-flash` (default) y `deepseek-v4-pro`.
+
+OpenCode sigue las mismas reglas del repositorio definidas en `AGENTS.md`
+y los workflows documentados en este fichero.
+
 ## GitHub Copilot
 
 Use Copilot for local coding assistance:

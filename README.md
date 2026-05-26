@@ -98,7 +98,7 @@ Queda fuera del primer loop: STT, wake word, Arduino/LEDs, persistencia, autenti
 - **Audio futuro**: STT y wake word se decidirán después del primer loop
 - **Hardware**: Raspberry Pi 3B v1.2; Arduino Uno queda futuro para estados físicos
 - **Comunicación**: REST APIs (FastAPI)
-- **Desarrollo**: Codex, GitHub, GitHub Copilot, VSCode + Remote SSH
+- **Desarrollo**: OpenCode (WSL2/DevExpert), Codex, GitHub, GitHub Copilot, VSCode + Remote SSH
 - **Documentación**: Markdown en repo como fuente oficial; NotebookLM para síntesis; Codex para mantenimiento asistido
 
 **Tecnologías aparcadas**: Go para backend queda como evaluación futura, no como requisito activo del MVP ni como gate de CI.
@@ -164,6 +164,7 @@ tonto-kids-assistant/
 ## AI-Assisted Workflow
 
 - **Codex**: inspección del repo, implementación acotada, actualización de documentación y verificación.
+- **OpenCode**: CLI interactivo con provider DevExpert (deepseek-v4-flash/pro) en WSL2. Implementación, revisión y verificación de tests.
 - **GitHub Copilot**: asistencia dentro del editor para boilerplate y cambios pequeños.
 - **NotebookLM**: investigación, síntesis y borradores a partir de fuentes exportadas del repo.
 - **GitHub**: historial oficial de decisiones, código y documentación.
@@ -216,7 +217,9 @@ El flujo común para Codex, Copilot, Cursor, Claude u otras herramientas vive en
 - ✅ Scripts oficiales de setup/dev/test/build
 - ✅ Loop Raspberry → backend LAN → OpenAI → TTS validado manualmente
 - ✅ Varias interacciones seguidas validadas en hardware real
-- 🔄 Próximo: iniciar Semana 3 con pipeline de voz real
+- ✅ Captura WAV validada en Raspberry con micrófono USB
+- ✅ Endpoint `POST /chat/audio` implementado con validación y placeholder STT
+- 🔄 Semana 3 activa — siguiente: integración STT y loop de voz completo
 
 **Métricas MVP**:
 
