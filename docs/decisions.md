@@ -67,3 +67,9 @@ Use backend STT as the default direction for Week 03 voice work, but treat it as
 The rationale is simplicity: the Raspberry Pi remains a thin client that captures audio and plays TTS, while the backend owns orchestration, provider integration, and future STT changes. This keeps the client small and makes the STT provider easier to replace.
 
 This decision does not prove that local Raspberry Pi STT is infeasible. Local STT should only be ruled out after a concrete hardware test shows unacceptable CPU, memory, latency, quality, or setup complexity. Until then, local STT, wake word, and local audio models remain out of scope for the MVP kickoff, not technically disproven.
+
+## D017 - OpenCode as AI-assisted project tool
+
+Use OpenCode as an additional AI-assisted project tool for implementation, repository inspection, documentation updates, review, and verification. Codex remains the primary project assistant. OpenCode uses the DevExpert OpenAI-compatible provider at `https://inference.devexpert.io/v1`, with `deepseek-v4-flash` as the recommended model and `deepseek-v4-pro` as the alternative model.
+
+This is a workflow decision, not a product architecture change. OpenCode must follow the same repository rules as Codex: use official scripts, keep dependency installs local, follow project branch naming, avoid tool-owned branch prefixes, and promote durable decisions back into repository documentation. The AI-assisted workflow can incorporate more compatible tools over time under the same rules.

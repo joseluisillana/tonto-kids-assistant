@@ -288,8 +288,12 @@ This test is **not executed** — it documents the command for the next iteratio
 **Date:** 2026-05-26.
 **Tool:** OpenCode CLI (WSL2 en Windows).
 **Provider:** DevExpert (OpenAI-compatible).
-**Models:** `deepseek-v4-flash` (default) y `deepseek-v4-pro`.
+**Base URL:** `https://inference.devexpert.io/v1`.
+**Models:** `deepseek-v4-flash` (recommended) y `deepseek-v4-pro` (alternative).
+**Access note:** acceso activo durante 60 dias con limite semanal para evitar consumos accidentales.
 
-OpenCode se añade al stack de desarrollo como asistente principal para
-implementación, revisión y verificación, siguiendo las instrucciones de
-`AGENTS.md` y los workflows del repositorio.
+OpenCode se añade al stack de desarrollo como una herramienta mas para
+implementacion, revision y verificacion. Codex conserva el rol de asistente
+principal del proyecto. OpenCode sigue las instrucciones de `AGENTS.md` y los
+workflows del repositorio, igual que cualquier herramienta AI-assisted que se
+incorpore en el futuro.

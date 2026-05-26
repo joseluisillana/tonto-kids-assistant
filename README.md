@@ -30,7 +30,7 @@ El foco está en conversación natural persistente que adapta el aprendizaje al 
 - **Demo-first development**: Cada semana produce una demo tangible, no documentación.
 - **Thin client + heavy backend**: Raspberry Pi como I/O puro, backend como cerebro IA.
 - **Online-first con degradación offline**: IA requiere conectividad, pero fallback básico offline.
-- **IA como núcleo**: IA guía diseño de producto y acelera desarrollo (Copilot/Codex).
+- **IA como núcleo**: IA guía diseño de producto y acelera desarrollo (Copilot/Codex/OpenCode).
 - **Spec Driven Development**: Especificaciones claras pero adaptables, validadas por prototipos.
 - **Anti-scope-creep**: Solo features que contribuyen al MVP core. No "nice-to-haves".
 
@@ -47,7 +47,7 @@ Incluye ahora:
 - **Integración OpenAI** para generar respuestas educativas.
 - **TTS local** en Raspberry Pi mediante `espeak`.
 - **Memoria de sesión en proceso** solo para contexto corto.
-- **Documentación viva** en Markdown, asistida por Codex y NotebookLM.
+- **Documentación viva** en Markdown, asistida por Codex, OpenCode y NotebookLM.
 
 Queda fuera del primer loop: STT, wake word, Arduino/LEDs, persistencia, autenticación, multiusuario, memoria avanzada y UI de producto compleja.
 
@@ -98,8 +98,8 @@ Queda fuera del primer loop: STT, wake word, Arduino/LEDs, persistencia, autenti
 - **Audio futuro**: STT y wake word se decidirán después del primer loop
 - **Hardware**: Raspberry Pi 3B v1.2; Arduino Uno queda futuro para estados físicos
 - **Comunicación**: REST APIs (FastAPI)
-- **Desarrollo**: OpenCode (WSL2/DevExpert), Codex, GitHub, GitHub Copilot, VSCode + Remote SSH
-- **Documentación**: Markdown en repo como fuente oficial; NotebookLM para síntesis; Codex para mantenimiento asistido
+- **Desarrollo**: Codex, OpenCode (WSL2/DevExpert), GitHub, GitHub Copilot, VSCode + Remote SSH
+- **Documentación**: Markdown en repo como fuente oficial; NotebookLM para síntesis; Codex/OpenCode para mantenimiento asistido
 
 **Tecnologías aparcadas**: Go para backend queda como evaluación futura, no como requisito activo del MVP ni como gate de CI.
 
@@ -143,7 +143,7 @@ tonto-kids-assistant/
 
 1. **Spec semanal**: Actualizar `docs/specs.md` con objetivos semana.
 2. **Prototype**: Implementar feature mínima viable.
-3. **AI-Assisted**: Usar Copilot para boilerplate, Codex para lógica compleja.
+3. **AI-Assisted**: Usar Copilot para boilerplate, Codex/OpenCode para cambios completos.
 4. **Test físico**: Validar en Raspberry Pi real.
 5. **Demo**: Grabación corta mostrando progreso.
 
@@ -164,14 +164,14 @@ tonto-kids-assistant/
 ## AI-Assisted Workflow
 
 - **Codex**: inspección del repo, implementación acotada, actualización de documentación y verificación.
-- **OpenCode**: CLI interactivo con provider DevExpert (deepseek-v4-flash/pro) en WSL2. Implementación, revisión y verificación de tests.
+- **OpenCode**: CLI interactivo adicional con provider DevExpert (deepseek-v4-flash/pro) en WSL2. Implementación, revisión y verificación de tests siguiendo las mismas reglas.
 - **GitHub Copilot**: asistencia dentro del editor para boilerplate y cambios pequeños.
 - **NotebookLM**: investigación, síntesis y borradores a partir de fuentes exportadas del repo.
 - **GitHub**: historial oficial de decisiones, código y documentación.
 
 **Principio**: AI acelera, no reemplaza. Las decisiones estables vuelven al repo y se validan con scripts, tests o hardware real.
 
-El flujo común para Codex, Copilot, Cursor, Claude u otras herramientas vive en `docs/ai-assisted-workflow.md`. TONTO usa GitHub Flow ligero, ramas `<type>/<short-kebab-description>` y Conventional Commits.
+El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramientas vive en `docs/ai-assisted-workflow.md`. TONTO usa GitHub Flow ligero, ramas `<type>/<short-kebab-description>` y Conventional Commits.
 
 ## Spec Driven Development
 
@@ -234,7 +234,7 @@ El flujo común para Codex, Copilot, Cursor, Claude u otras herramientas vive en
 - [x] Crear cliente Raspberry de texto con TTS local
 - [x] Crear cliente web de validación
 - [x] Añadir scripts oficiales locales
-- [x] Documentar workflow Codex/NotebookLM/GitHub
+- [x] Documentar workflow Codex/OpenCode/NotebookLM/GitHub
 - [x] Validar conversación end-to-end con OpenAI real
 - [x] Ejecutar demo texto → backend → TTS en Raspberry
 - [x] Validar múltiples turnos Raspberry → backend LAN → OpenAI → TTS
@@ -316,7 +316,7 @@ La exportación de NotebookLM genera fuentes individuales y `exports/notebooklm/
 ### Desarrollo Diario
 
 - **Spec first**: Actualiza `docs/specs.md` antes de codear
-- **AI assist**: Copilot para editor, Codex para cambios completos, NotebookLM para síntesis
+- **AI assist**: Copilot para editor, Codex/OpenCode para cambios completos, NotebookLM para síntesis
 - **Test físico**: Siempre valida en Pi real
 - **Commit pequeño**: Ramas cortas, Conventional Commits y specs/docs incluidas cuando aplique
 

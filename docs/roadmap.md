@@ -30,7 +30,7 @@ Preparar el entorno completo de desarrollo y validar la arquitectura mínima del
 - Repositorio GitHub inicializado.
 - README y documentación fundacional creados.
 - Arquitectura MVP definida.
-- Workflow documental repo/Codex/NotebookLM definido.
+- Workflow documental repo/Codex/OpenCode/NotebookLM definido.
 
 ## Prioridades
 

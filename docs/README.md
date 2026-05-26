@@ -12,14 +12,14 @@ The repository is the source of truth. NotebookLM is a reading and synthesis too
 4. `roadmap.md` - 6-week delivery plan and MVP boundaries.
 5. `specs.md` - active behavior-level specification summary.
 6. `decisions.md` - compact record of technical decisions.
-7. `documentation-workflow.md` - how docs, NotebookLM, Codex, and GitHub stay aligned.
+7. `documentation-workflow.md` - how docs, NotebookLM, Codex, OpenCode, and GitHub stay aligned.
 
 ## Working Notes
 
 - `project-journal/` records weekly progress, decisions, blockers, and AI usage.
 - `research/` stores research notes and source guidance.
 - `final-report-outline.md` tracks the eventual course delivery document structure.
-- `ai-assisted-workflow.md` explains how Codex, GitHub Copilot, and NotebookLM are used responsibly.
+- `ai-assisted-workflow.md` explains how Codex, OpenCode, GitHub Copilot, and NotebookLM are used responsibly.
 
 ## Documentation Rule
 

@@ -38,7 +38,8 @@ It should evolve during the 6-week project, but the final content must be based 
 
 ## 5. AI-Assisted Development
 
-- How Codex was used.
+- How Codex and additional tools such as OpenCode were used.
+- How the DevExpert provider supported AI-assisted development.
 - How GitHub Copilot was used.
 - How NotebookLM was used.
 - What decisions remained human-owned.

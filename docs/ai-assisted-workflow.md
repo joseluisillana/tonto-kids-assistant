@@ -27,15 +27,72 @@ Codex can execute full repository changes, but the repository workflow is tool-a
 
 ## OpenCode
 
-OpenCode es un CLI interactivo que uso como asistente principal para implementación,
-inspección del repositorio, actualización de documentación y verificación de tests.
-Se ejecuta en Windows a través de WSL2.
+OpenCode is an additional interactive CLI used for implementation,
+repository inspection, documentation updates, review, and test verification.
 
-- **Provider**: DevExpert (API compatible con OpenAI).
-- **Modelos**: `deepseek-v4-flash` (default) y `deepseek-v4-pro`.
+It runs on Windows through WSL2.
 
-OpenCode sigue las mismas reglas del repositorio definidas en `AGENTS.md`
-y los workflows documentados en este fichero.
+- **Provider**: DevExpert (OpenAI-compatible API).
+- **Base URL**: `https://inference.devexpert.io/v1`.
+- **Recommended model**: `deepseek-v4-flash`.
+- **Alternative model**: `deepseek-v4-pro`.
+- **Access note**: course access is active for 60 days and has a weekly limit to avoid accidental usage spikes.
+
+Codex remains the primary project assistant. OpenCode is part of the same AI-assisted tool stack and can also be used for project-level work:
+
+- implement focused code changes,
+- inspect the repository,
+- update documentation,
+- maintain the weekly journal,
+- reconcile docs after implementation,
+- generate test ideas and run official checks.
+
+OpenCode should follow the repo instructions in `AGENTS.md` and prefer the official scripts in `scripts/`, as Codex does.
+
+OpenCode can execute full repository changes when used for that work, but the repository workflow is tool-agnostic and may include more compatible tools over time.
+
+### OpenCode Configuration Reference
+
+If OpenCode needs to be reconfigured on the Windows/WSL2 development machine, the local configuration file is expected at:
+
+```text
+C:\Users\[Usuario]\.config\opencode\opencode.jsonc
+```
+
+This file is local machine configuration, not repository configuration. Never commit a real API key. Keep `apiKey` masked in documentation and examples:
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "DevExpert/deepseek-v4-flash",
+  "provider": {
+    "DevExpert": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "DevExpert",
+      "options": {
+        "baseURL": "https://inference.devexpert.io/v1",
+        "apiKey": "xxxxxxxxx"
+      },
+      "models": {
+        "deepseek-v4-flash": {
+          "name": "DevExpert deepseek-v4-flash",
+          "limit": {
+            "context": 200000,
+            "output": 65536
+          }
+        },
+        "deepseek-v4-pro": {
+          "name": "DevExpert deepseek-v4-pro",
+          "limit": {
+            "context": 200000,
+            "output": 65536
+          }
+        }
+      }
+    }
+  }
+}
+```
 
 ## GitHub Copilot
 
