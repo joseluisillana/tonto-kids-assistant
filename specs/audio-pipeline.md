@@ -15,15 +15,15 @@ La dirección provisional es procesar STT en el backend. Esto deriva de la arqui
 - **Fuente**: Micrófono USB Mini USB Microphone M-305, validado como `USB PnP Sound Device` en ALSA.
 - **Captura**: Se realiza en el Raspberry Pi 3.
 - **Formato inicial**: WAV básico grabado en Raspberry para minimizar procesamiento y facilitar depuración.
-- **Precondición validada**: el dispositivo aparece en `arecord -l` como `card 2`, `device 0`, y puede grabar una muestra corta reproducible.
-- **Validación mínima cumplida**: se grabo un WAV mono de 10 segundos a 16 kHz con `arecord -D plughw:2,0 -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav` y se reprodujo localmente con `aplay`.
+- **Precondición validada**: el dispositivo aparece en `arecord -l` como `USB PnP Sound Device` y puede grabar una muestra corta reproducible. El numero de tarjeta ALSA puede variar entre arranques o conexiones USB; usar siempre el `card` y `device` observados en `arecord -l`.
+- **Validación mínima cumplida**: se grabo un WAV mono a 16 kHz con `arecord -D plughw:<CARD>,<DEVICE> -f S16_LE -r 16000 -c 1 ...` y se reprodujo localmente con `aplay`.
 
 ### Procesamiento
 
 - **Conversión prevista**: De audio a texto (STT) en el backend.
 - **Filtrado básico**: Eliminación de ruido simple si es necesario, priorizando estabilidad sobre calidad avanzada.
 - **No objetivo inicial**: STT local complejo en Raspberry, wake word o modelos locales de audio.
-- **Estado de decisión**: STT backend es el default provisional; proveedor, endpoint y formato de audio siguen pendientes.
+- **Estado de decisión**: STT backend es el default provisional. El contrato mínimo `POST /chat/audio` y el formato WAV PCM mono 16 kHz ya están definidos y validados manualmente desde Raspberry; el proveedor STT sigue pendiente.
 
 ### Backend
 
@@ -34,14 +34,14 @@ La dirección provisional es procesar STT en el backend. Esto deriva de la arqui
 
 ## Contrato de Subida de Audio
 
-Esta sección define el contrato de subida de audio. El endpoint está implementado en `backend/audio_router.py` sin STT real: usa un transcript fijo `[audio input captured]` hasta que se integre un proveedor STT.
+Esta sección define el contrato de subida de audio. El endpoint está implementado en `backend/audio_router.py` sin STT real: usa un transcript fijo `[audio input captured]` y una respuesta temporal fija en espanol hasta que se integre un proveedor STT.
 
 ### Endpoint
 
 - **Endpoint**: `POST /chat/audio`
 - **Método HTTP**: `POST`
 - **Estado**: implementado en rama `feature/audio-upload-contract`.
-- **STT**: placeholder. El campo `transcript` devuelve `"[audio input captured]"` hasta que se decida e integre un proveedor STT.
+- **STT**: placeholder. El campo `transcript` devuelve `"[audio input captured]"` hasta que se decida e integre un proveedor STT. Mientras el transcript sea placeholder, el backend devuelve una respuesta fija en espanol y no envia ese placeholder a OpenAI como si fuera contenido del usuario.
 - **Propósito**: recibir un turno corto de audio capturado por la Raspberry, validar el formato WAV, reutilizar el flujo conversacional existente de `/chat`, y devolver una respuesta textual speakable para que la Raspberry la reproduzca con `espeak`.
 
 ### Request Recomendado
@@ -81,8 +81,10 @@ Formato aceptado inicialmente:
 Comando de captura compatible con la validación de Semana 3:
 
 ```bash
-arecord -D plughw:2,0 -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-turn.wav
+arecord -D plughw:<CARD>,<DEVICE> -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-turn.wav
 ```
+
+Obtener `<CARD>,<DEVICE>` de `arecord -l` antes de grabar. En validaciones reales el mismo microfono USB aparecio como `card 2` y despues como `card 1`.
 
 No se aceptan inicialmente formatos comprimidos, streaming, múltiples archivos por request, ni audio estéreo salvo decisión explícita posterior.
 
@@ -129,9 +131,9 @@ La Raspberry no debe reproducir audio generado por el backend en esta etapa; deb
 
 Errores candidatos:
 
-- `400 Bad Request`: falta `audio`, falta `session_id`, metadatos inválidos, WAV mal formado o duración fuera de rango.
+- `400 Bad Request`: falta `audio`, falta `session_id`, metadatos inválidos, archivo vacío, archivo demasiado pequeño para ser WAV, WAV mal formado o duración fuera de rango.
 - `413 Payload Too Large`: archivo mayor que el límite aprobado.
-- `415 Unsupported Media Type`: formato distinto de WAV PCM mono 16 kHz inicial.
+- `415 Unsupported Media Type`: archivo RIFF/WAV reconocible pero no soportado, o WAV con codificación, canales, frecuencia o bits por muestra fuera del formato inicial.
 - `422 Unprocessable Entity`: audio válido pero sin habla reconocible o transcripción vacía.
 - `502 Bad Gateway`: fallo del proveedor STT cuando se integre.
 - `504 Gateway Timeout`: timeout de STT o del flujo conversacional.
@@ -184,10 +186,10 @@ El contrato se considera implementado cuando:
 - Define errores suficientes para depurar fallos de formato, tamaño, duración, STT y timeouts.
 - No introduce STT real, wake word, persistencia ni cambios de arquitectura.
 - Puede probarse con un archivo WAV grabado con `arecord` o con tests automatizados.
-- El endpoint está implementado y devuelve transcript + response educativa.
-- El transcript es un placeholder fijo `[audio input captured]` hasta que se integre STT.
+- El endpoint está implementado y devuelve transcript + response speakable.
+- El transcript es un placeholder fijo `[audio input captured]` hasta que se integre STT; mientras tanto, la respuesta es un fallback fijo en espanol para evitar respuestas aleatorias en ingles.
 - `python-multipart` es la única dependencia nueva añadida.
-- Tests automatizados cubren: upload válido, audio vacío, tamaño excedido, formato incorrecto, duración fuera de rango.
+- Tests automatizados cubren: upload válido, audio vacío, tamaño excedido, archivo demasiado pequeno para WAV, formato incorrecto, duración fuera de rango.
 
 ### TTS (Text-to-Speech)
 
@@ -232,7 +234,7 @@ El contrato se considera implementado cuando:
 - Grabar una muestra WAV corta. Validado con dispositivo explicito:
 
 ```bash
-arecord -D plughw:2,0 -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav
+arecord -D plughw:<CARD>,<DEVICE> -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav
 ```
 
 - Si hace falta seleccionar el dispositivo explícitamente, usar los números de `arecord -l`:
@@ -251,22 +253,39 @@ aplay ~/tonto-mic-check.wav
 - Si se considera STT local, documentar la prueba concreta y el motivo técnico antes de cambiar el default.
 - Mantener `POST /chat` estable hasta decidir el contrato mínimo de audio.
 - El endpoint `POST /chat/audio` está implementado pero el cliente Raspberry no ha sido modificado: la captura y subida de audio no están automatizadas.
-- [ ] **Probar subida manual de WAV al backend** con `curl` desde la Raspberry, verificando que el backend responde con `session_id`, `transcript` y `response`:
+- [x] **Probar subida manual de WAV al backend** con `curl` desde la Raspberry, verificando que el backend responde con `session_id`, `transcript` y `response`. Validado el 2026-05-27 desde `tonto-pi` contra backend LAN `192.168.1.91:8000`.
 
   ```bash
   # 1. Grabar un turno corto desde la Raspberry
-  arecord -D plughw:2,0 -f S16_LE -r 16000 -c 1 -d 5 ~/tonto-turn.wav
+  arecord -D plughw:<CARD>,<DEVICE> -f S16_LE -r 16000 -c 1 -d 4 ~/tonto-turn.wav
 
   # 2. Enviar el WAV al backend y mostrar la respuesta
   curl -s -X POST http://<TONTO_BACKEND_IP>:8000/chat/audio \
     -F "audio=@/home/tonto-pi-user/tonto-turn.wav" \
     -F "session_id=demo-session" \
-    -F "duration_ms=5000" \
+    -F "duration_ms=4000" \
     -F "sample_rate_hz=16000" \
     -F "channels=1" | python -m json.tool
   ```
 
   Resultado esperado: `HTTP 200` con `{"session_id": "demo-session", "transcript": "[audio input captured]", "response": "..."}`.
+
+  Resultado validado:
+
+  ```text
+  HTTP_STATUS=200
+  TOTAL_TIME=2.584502
+  session_id=demo-session
+  transcript=[audio input captured]
+  response=He recibido tu audio. Todavia no puedo entenderlo, pero la subida y reproduccion ya funcionan. Pronto podre responder a lo que digas.
+  ```
+
+  Una segunda subida guardada como JSON tambien devolvio `HTTP_STATUS=200` con `TOTAL_TIME=1.472030`.
+
+  Observaciones durante la validacion:
+
+  - `espeak -v es` reprodujo correctamente la respuesta JSON y se escucho con claridad, pero la shell mostro warnings/errores ALSA/JACK sobre PCMs no disponibles y servidor JACK ausente. No bloquean la salida audible, aunque conviene limpiarlos para una demo mas clara.
+  - La prueba negativa con un archivo de texto corto devuelve `400 File too small to be a valid WAV`; esta es la semantica decidida para archivos demasiado pequenos o mal formados.
 
   Esta prueba es manual y no sustituye la integración automatizada en el cliente Raspberry, que queda como trabajo pendiente de la Fase 2.
 

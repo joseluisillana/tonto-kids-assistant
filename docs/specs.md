@@ -39,7 +39,7 @@ La preparación de semana 3 no cambia todavía las interfaces públicas. La capt
 
 - POST /chat: Procesar una interacción conversacional con `session_id` y `message`
 
-Durante la preparación de semana 3, `/chat` sigue siendo el contrato estable. Tras validar la captura WAV en Raspberry, `specs/audio-pipeline.md` documentó `POST /chat/audio` como contrato mínimo candidato. Ahora el endpoint está implementado en `backend/audio_router.py` (rama `feature/audio-upload-contract`) sin STT real: usa un transcript fijo `[audio input captured]` como placeholder. El endpoint no reemplaza `/chat`.
+Durante la preparación de semana 3, `/chat` sigue siendo el contrato estable. Tras validar la captura WAV en Raspberry, `specs/audio-pipeline.md` documentó `POST /chat/audio` como contrato mínimo candidato. Ahora el endpoint está implementado en `backend/audio_router.py` (rama `feature/audio-upload-contract`) sin STT real: usa un transcript fijo `[audio input captured]` como placeholder y una respuesta temporal fija en espanol. La subida manual de un WAV desde Raspberry con `curl` quedó validada el 2026-05-27 contra el backend LAN. El endpoint no reemplaza `/chat`.
 
 ## Fuera de Alcance del Arranque de Semana 3
 
@@ -57,11 +57,12 @@ Durante la preparación de semana 3, `/chat` sigue siendo el contrato estable. T
 ## Checklist de Desbloqueo de Voz
 
 - Micrófono USB conectado a la Raspberry Pi. Validado en Semana 3.
-- Dispositivo visible con `arecord -l`. Validado como `USB PnP Sound Device`, `card 2`, `device 0`.
-- Grabación WAV corta validada con `arecord -D plughw:2,0 -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav`.
+- Dispositivo visible con `arecord -l`. Validado como `USB PnP Sound Device`; el numero `card` puede variar y debe leerse antes de grabar.
+- Grabación WAV corta validada con `arecord -D plughw:<CARD>,<DEVICE> -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav`.
 - Reproducción local validada con `aplay ~/tonto-mic-check.wav`.
 - Backend arrancado con `.\scripts\dev.ps1 -Service backend -AllowLan`.
 - Cliente Raspberry apuntando a `TONTO_BACKEND_URL`.
+- Subida manual a `POST /chat/audio` validada desde Raspberry con `curl` y respuesta `HTTP 200`.
 - Loop de texto de semana 2 confirmado antes de tocar audio input.
 
 ## Requisitos No Funcionales

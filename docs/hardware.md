@@ -147,7 +147,7 @@ El MVP no necesita arrays de micrófonos avanzados ni hardware especializado.
 
 ### Estado actual
 
-Validado en Semana 3 con Mini USB Microphone M-305. ALSA lo detecto como `USB PnP Sound Device`, `card 2`, `device 0`; la grabacion funciono con `arecord -D plughw:2,0 -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav` y la reproduccion local funciono con `aplay ~/tonto-mic-check.wav`.
+Validado en Semana 3 con Mini USB Microphone M-305. ALSA lo detecto como `USB PnP Sound Device`; el numero de `card` vario entre validaciones (`card 2` inicialmente y `card 1` despues), por lo que debe confirmarse con `arecord -l` antes de grabar. La grabacion funciono con `arecord -D plughw:<CARD>,<DEVICE> -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav` y la reproduccion local funciono con `aplay ~/tonto-mic-check.wav`.
 
 ---
 

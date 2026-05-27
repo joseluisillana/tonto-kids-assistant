@@ -123,11 +123,11 @@ Introducir input de voz real en el sistema, en dos fases.
 - [x] Contrato `POST /chat/audio` documentado en `specs/audio-pipeline.md`.
 - [x] Endpoint `POST /chat/audio` implementado con validación WAV, límites de tamaño/duración, y conexión al flujo conversacional existente.
 - [x] Tests automatizados del endpoint de audio.
-- [ ] Prueba manual de subida WAV con `curl` desde la Raspberry (paso documentado, no ejecutado).
+- [x] Prueba manual de subida WAV con `curl` desde la Raspberry validada el 2026-05-27 contra backend LAN (`HTTP 200`, transcript placeholder y `response` devuelta).
 
 ### Nota
 
-El endpoint usa un transcript fijo `[audio input captured]` como placeholder de STT. El reconocimiento de voz real se aborda en la Fase 2.
+El endpoint usa un transcript fijo `[audio input captured]` como placeholder de STT y devuelve una respuesta temporal fija en espanol hasta integrar STT real. El reconocimiento de voz real se aborda en la Fase 2. La validacion manual de subida esta cerrada para el contrato HTTP y la respuesta se reprodujo con `espeak`, aunque con salida ruidosa de ALSA/JACK en la shell. Quedan observaciones pendientes: limpieza de warnings ALSA/JACK para demo y confirmar siempre el `card/device` de ALSA con `arecord -l`.
 
 ## Fase 2 — Integración STT (siguiente)
 
@@ -280,7 +280,7 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [x] Comprar y validar micrófono USB.
 - [x] Validar captura WAV en Raspberry (manual, con `arecord`).
 - [x] Implementar endpoint `POST /chat/audio` con validación WAV.
-- [ ] Probar subida manual WAV con `curl` desde la Raspberry.
+- [x] Probar subida manual WAV con `curl` desde la Raspberry.
 - [ ] Actualizar cliente Raspberry para capturar y subir WAV automáticamente.
 - [ ] Integrar STT backend.
 - [ ] Loop interactivo de voz Raspberry → backend → TTS.

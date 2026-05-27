@@ -112,13 +112,14 @@ El cliente web no debe duplicar orquestación conversacional ni lógica de IA.
 ### Variante de audio (solo backend, cliente pendiente)
 
 ```
-WAV grabado manualmente (arecord) → POST /chat/audio (multipart) → 
-backend valida WAV → transcript fijo (placeholder STT) → 
-flujo conversacional → response → espeak local
+WAV grabado manualmente (arecord) → POST /chat/audio (multipart) →
+backend valida WAV → transcript fijo (placeholder STT) →
+fallback temporal en espanol → response → espeak local
 ```
 
 El endpoint `POST /chat/audio` está implementado en el backend.
-El transcript es un placeholder fijo — no hay STT real.
+El transcript es un placeholder fijo y la respuesta de audio usa un fallback temporal en espanol — no hay STT real.
+La subida manual desde Raspberry con `curl` fue validada el 2026-05-27 contra el backend LAN.
 El cliente Raspberry no ha sido modificado: la captura sigue siendo manual por SSH.
 
 ## Principios arquitectónicos
@@ -147,13 +148,14 @@ Componentes ya validados:
 - documentación fundacional
 - POST `/chat` estable
 - POST `/chat/audio` implementado en backend (con placeholder STT, cliente no modificado)
+- subida manual Raspberry -> backend a `POST /chat/audio` validada con `curl`
 
 Componentes en desarrollo:
 
 - backend conversacional inicial,
 - pipeline cliente-servidor,
 - integración OpenAI,
-- endpoint `POST /chat/audio` — validación WAV completa, transcript STT pendiente,
+- endpoint `POST /chat/audio` — transcript STT pendiente,
 - integración STT backend (siguiente fase),
 - cliente Raspberry: captura WAV automatizada y subida a `/chat/audio` (pendiente).
 

@@ -32,6 +32,10 @@ class TestChatAudioValidation:
         assert "response" in body
         assert body["session_id"] == "test-session"
         assert body["transcript"] == "[audio input captured]"
+        assert body["response"] == (
+            "He recibido tu audio. Todavia no puedo entenderlo, pero la subida y reproduccion ya funcionan. "
+            "Pronto podre responder a lo que digas."
+        )
 
     def test_missing_audio(self, client):
         resp = client.post("/chat/audio", data={"session_id": "s", "duration_ms": "1000", "sample_rate_hz": "16000", "channels": "1"})
@@ -59,6 +63,12 @@ class TestChatAudioValidation:
         data = _form_data(b"RIFF" + b"\x00" * 100)
         resp = client.post("/chat/audio", files={"audio": data.pop("audio")}, data=data)
         assert resp.status_code == 415
+
+    def test_not_a_wav_too_small(self, client):
+        data = _form_data(b"not a wav")
+        resp = client.post("/chat/audio", files={"audio": data.pop("audio")}, data=data)
+        assert resp.status_code == 400
+        assert resp.json()["detail"] == "File too small to be a valid WAV"
 
     def test_wrong_format_pcm_not_1(self, client):
         raw = bytearray(_make_wav(1000))

@@ -251,37 +251,143 @@ STT is a placeholder. When a real STT provider is chosen, replacing the fixed tr
 
 - `/chat` remains stable.
 - Raspberry remains a thin client.
-- The endpoint validates WAV format, size, and duration before calling OpenAI.
+- The endpoint validates WAV format, size, and duration before returning the temporary audio fallback or, later, calling STT/OpenAI with real text.
 - Errors follow the spec: 400, 413, 415, 422, 502, 504.
 
 ### Gap: client not updated
 
 The Raspberry client (`client/main.py`) has **not** been modified. WAV capture remains a manual `arecord` command via SSH. There is no automated capture-and-upload loop in the client code.
 
-### Manual test: audio upload to backend (pending)
+### Manual test: audio upload to backend (validated)
 
-Test the endpoint from the Raspberry using `curl`:
+**Date:** 2026-05-27.
+**Branch:** `feature/audio-upload-contract`.
+**Backend host:** Windows PC on LAN IP `192.168.1.91`, started with `.\scripts\dev.ps1 -Service backend -AllowLan`.
+**Raspberry host:** `tonto-pi`, user `tonto-pi-user`.
+**Status:** manual upload contract validated from real Raspberry hardware. A temporary Spanish fallback now prevents the placeholder transcript from producing random English responses.
+
+Pre-flight evidence:
+
+```text
+git branch --show-current -> feature/audio-upload-contract
+git status --short --branch -> ## feature/audio-upload-contract...origin/feature/audio-upload-contract
+.\scripts\setup-dev.ps1 -> Development environment is ready.
+.\scripts\test.ps1 -Target python -> 12 passed in 0.09s
+OPENAI_API_KEY -> configured in shell, not documented
+OPENAI_MODEL -> gpt-4o-mini
+PC LAN IPv4 -> 192.168.1.91
+Backend health from PC -> {"status":"ok"}
+Backend health from Raspberry -> {"status":"ok"}
+```
+
+Raspberry tooling evidence:
+
+```text
+hostname -> tonto-pi
+whoami -> tonto-pi-user
+pwd -> /home/tonto-pi-user
+which curl -> /usr/bin/curl
+which arecord -> /usr/bin/arecord
+which aplay -> /usr/bin/aplay
+which espeak -> /usr/bin/espeak
+python3 --version -> Python 3.13.5
+```
+
+Audio capture evidence:
+
+```text
+arecord -l
+**** List of CAPTURE Hardware Devices ****
+card 1: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+  Subdevices: 1/1
+  Subdevice #0: subdevice #0
+```
+
+Recording command used in this run:
 
 ```bash
-# On the Raspberry Pi, after recording a sample:
-curl -s -X POST http://<TONTO_BACKEND_IP>:8000/chat/audio \
-  -F "audio=@/home/tonto-pi-user/tonto-turn.wav" \
+arecord -D plughw:1,0 -f S16_LE -r 16000 -c 1 -d 4 ~/tonto-turn.wav
+```
+
+Recording output and file inspection:
+
+```text
+Recording WAVE '/home/tonto-pi-user/tonto-turn.wav' : Signed 16 bit Little Endian, Rate 16000 Hz, Mono
+-rw-r--r-- 1 tonto-pi-user tonto-pi-user 126K May 27 21:08 /home/tonto-pi-user/tonto-turn.wav
+/home/tonto-pi-user/tonto-turn.wav: RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 16000 Hz
+aplay ~/tonto-turn.wav -> Playing WAVE ... Signed 16 bit Little Endian, Rate 16000 Hz, Mono
+```
+
+Manual upload command used:
+
+```bash
+BACKEND_URL=http://192.168.1.91:8000
+
+curl -sS -X POST "$BACKEND_URL/chat/audio" \
+  -F "audio=@/home/tonto-pi-user/tonto-turn.wav;type=audio/wav" \
   -F "session_id=demo-session" \
-  -F "duration_ms=5000" \
+  -F "device_id=tonto-pi" \
+  -F "duration_ms=4000" \
   -F "sample_rate_hz=16000" \
-  -F "channels=1" | python -m json.tool
+  -F "channels=1" \
+  -F "language=es" \
+  -w "\nHTTP_STATUS=%{http_code}\nTOTAL_TIME=%{time_total}\n"
 ```
 
-Expected result:
-```json
-{
-  "session_id": "demo-session",
-  "transcript": "[audio input captured]",
-  "response": "..."
-}
+Result:
+
+```text
+{"session_id":"demo-session","transcript":"[audio input captured]","response":"He recibido tu audio. Todavia no puedo entenderlo, pero la subida y reproduccion ya funcionan. Pronto podre responder a lo que digas."}
+HTTP_STATUS=200
+TOTAL_TIME=2.584502
 ```
 
-This test is **not executed** — it documents the command for the next iteration when the client is updated and the test can be run from real hardware.
+A second JSON-file upload also passed:
+
+```text
+HTTP_STATUS=200
+TOTAL_TIME=1.472030
+session_id=demo-session-json
+transcript=[audio input captured]
+response=He recibido tu audio. Todavia no puedo entenderlo, pero la subida y reproduccion ya funcionan. Pronto podre responder a lo que digas.
+```
+
+Negative validation:
+
+```text
+text file upload -> {"detail":"File too small to be a valid WAV"} HTTP_STATUS=400
+11 second WAV upload -> {"detail":"Audio too long (11000 ms), maximum is 10000 ms"} HTTP_STATUS=400
+```
+
+Evidence mapping:
+
+| Validation step | Evidence | Result |
+|---|---|---|
+| Repo and branch gate | branch/status clean on `feature/audio-upload-contract` | Pass |
+| Local setup | `.\scripts\setup-dev.ps1` completed | Pass |
+| Automated backend tests | `12 passed in 0.09s` | Pass |
+| Backend LAN startup | Uvicorn on `0.0.0.0:8000` | Pass |
+| Backend health from PC | `{"status":"ok"}` | Pass |
+| Backend health from Raspberry | `{"status":"ok"}` | Pass |
+| Raspberry tools | `curl`, `arecord`, `aplay`, `espeak`, `python3` present | Pass |
+| Microphone detection | USB PnP Sound Device at `card 1`, `device 0` | Pass |
+| WAV capture | 4s, 126K, PCM 16-bit mono 16 kHz | Pass |
+| Local WAV playback | `aplay` accepted WAV | Pass; audibility not separately recorded |
+| Manual upload | `POST /chat/audio` uploaded `/home/tonto-pi-user/tonto-turn.wav` and returned `HTTP_STATUS=200` | Pass |
+| Response contract | `session_id`, `transcript`, `response` present | Pass |
+| Latency observation | `2.584502s` and `1.472030s` | Recorded |
+| Invalid short text upload | `HTTP_STATUS=400` | Pass as too small/malformed input |
+| Too-long WAV upload | `HTTP_STATUS=400` with audio-too-long detail | Pass |
+| Speak response locally | `espeak -v es` spoke the JSON response audibly; shell emitted ALSA/JACK warnings | Pass with noisy shell output |
+
+Remaining observations:
+
+| ID | Observation | Evidence | Impact | Suggested follow-up |
+|---|---|---|---|---|
+| O1 | TTS playback emits noisy ALSA/JACK warnings despite audible output | The JSON response was spoken clearly, but the shell printed unavailable PCM and missing JACK server messages | Voice-output works, but demo logs are noisy and could confuse debugging | Confirm default playback device with `aplay -l`, then configure ALSA/default device or suppress non-actionable stderr for demo scripts |
+| O2 | ALSA capture card number changed from previous evidence | Previous docs used `card 2`; current run detected `card 1` | Hard-coded `plughw:2,0` examples may fail across boots/devices | Use the `card` and `device` from `arecord -l`; future client automation should accept an explicit `TONTO_AUDIO_DEVICE` setting |
+
+Conclusion: the manual Raspberry-to-backend upload validates the `POST /chat/audio` multipart contract with real hardware. The returned response was also spoken locally with `espeak`, despite noisy ALSA/JACK shell output. The next implementation phase should not be considered full voice UX yet: STT is still placeholder, Raspberry client automation is pending, and audio logs should be cleaned up for demo clarity.
 
 ## OpenCode Tooling Decision
 
