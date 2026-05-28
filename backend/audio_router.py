@@ -6,15 +6,11 @@ from pydantic import BaseModel
 
 from backend.openai_client import call_openai
 from backend.state import MAX_HISTORY_MESSAGES, session_history
+from backend.stt_client import transcribe_audio
 
 MAX_AUDIO_SIZE = 512 * 1024
 MIN_DURATION_MS = 250
 MAX_DURATION_MS = 10_000
-AUDIO_PLACEHOLDER_TRANSCRIPT = "[audio input captured]"
-AUDIO_PLACEHOLDER_RESPONSE = (
-    "He recibido tu audio. Todavia no puedo entenderlo, pero la subida y reproduccion ya funcionan. "
-    "Pronto podre responder a lo que digas."
-)
 
 router = APIRouter()
 
@@ -116,14 +112,12 @@ async def chat_audio(
             detail=f"Audio too long ({wav_info['duration_ms']:.0f} ms), maximum is {MAX_DURATION_MS} ms",
         )
 
-    transcript = AUDIO_PLACEHOLDER_TRANSCRIPT
+    transcript = transcribe_audio(content, audio.filename or "audio.wav", language).strip()
+    if not transcript:
+        raise HTTPException(status_code=422, detail="Audio did not contain recognizable speech")
 
     history = session_history.setdefault(session_id, [])
-    response_text = (
-        AUDIO_PLACEHOLDER_RESPONSE
-        if transcript == AUDIO_PLACEHOLDER_TRANSCRIPT
-        else call_openai(history, transcript)
-    )
+    response_text = call_openai(history, transcript)
 
     history.extend(
         [

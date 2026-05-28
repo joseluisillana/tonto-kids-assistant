@@ -13,7 +13,9 @@ from backend.main import app
 def client(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     mock = unittest.mock.MagicMock(return_value="Mocked TONTO response.")
+    stt_mock = unittest.mock.MagicMock(return_value="hola tonto")
     monkeypatch.setattr("backend.audio_router.call_openai", mock)
+    monkeypatch.setattr("backend.audio_router.transcribe_audio", stt_mock)
     monkeypatch.setattr("backend.main.call_openai", mock)
     return TestClient(app)
 

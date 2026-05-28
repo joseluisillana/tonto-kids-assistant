@@ -95,7 +95,7 @@ Queda fuera del primer loop: STT, wake word, Arduino/LEDs, persistencia, autenti
 - **Web**: React, TypeScript, Vite, Tailwind CSS
 - **IA**: OpenAI API
 - **Audio actual**: espeak/espeak-ng para TTS local
-- **Audio futuro**: STT y wake word se decidirán después del primer loop
+- **Audio futuro**: STT inicial ya elegido para backend; wake word queda fuera del MVP inmediato
 - **Hardware**: Raspberry Pi 3B v1.2; Arduino Uno queda futuro para estados físicos
 - **Comunicación**: REST APIs (FastAPI)
 - **Desarrollo**: Codex, OpenCode (WSL2/DevExpert), GitHub, GitHub Copilot, VSCode + Remote SSH
@@ -193,7 +193,7 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 
 - **Backend language**: Python/FastAPI para MVP; Go queda aparcado hasta que una decisión futura lo reactive.
 - **Memoria futura**: solo después de validar el loop con memoria en proceso.
-- **STT y wake word**: proveedor/motor pendiente para fases posteriores.
+- **STT**: OpenAI `gpt-4o-mini-transcribe` elegido como proveedor inicial backend; wake word queda pendiente.
 - **Estados físicos**: Arduino/LEDs fuera del primer loop.
 - **Deployment**: ejecución local primero; despliegue reproducible después.
 
@@ -218,8 +218,8 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 - ✅ Loop Raspberry → backend LAN → OpenAI → TTS validado manualmente
 - ✅ Varias interacciones seguidas validadas en hardware real
 - ✅ Captura WAV validada en Raspberry con micrófono USB
-- ✅ Endpoint `POST /chat/audio` implementado con validación y placeholder STT
-- 🔄 Semana 3 activa — siguiente: integración STT y loop de voz completo
+- ✅ Endpoint `POST /chat/audio` implementado con validación y STT backend inicial
+- 🔄 Semana 3 activa — siguiente: validar STT con Raspberry real y automatizar captura/subida en el cliente
 
 **Métricas MVP**:
 

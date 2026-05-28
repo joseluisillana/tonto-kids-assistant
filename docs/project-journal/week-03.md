@@ -403,3 +403,19 @@ implementacion, revision y verificacion. Codex conserva el rol de asistente
 principal del proyecto. OpenCode sigue las instrucciones de `AGENTS.md` y los
 workflows del repositorio, igual que cualquier herramienta AI-assisted que se
 incorpore en el futuro.
+
+## Fase 2A: STT Provider Selection and Backend Integration
+
+**Branch:** `feature/audio-upload-contract`.
+**Status:** backend STT integration implemented; hardware validation with real STT still pending.
+
+OpenAI `gpt-4o-mini-transcribe` was selected as the initial STT provider for the Week 03 voice pipeline. The decision prioritizes demo stability, low implementation risk, and reuse of the existing `OPENAI_API_KEY`. The backend now supports `OPENAI_STT_MODEL` for changing the transcription model while keeping `OPENAI_MODEL` dedicated to response generation.
+
+Offline options remain documented but unimplemented:
+
+- Vosk Spanish: zero API cost and small model footprint, but needs real-sample accuracy validation.
+- `whisper.cpp`: offline Whisper-style transcription with CPU-only support, but needs setup and latency validation on the Windows backend host.
+
+The `POST /chat/audio` endpoint now validates the WAV, transcribes it in the backend, sends the real transcript through the existing conversation flow, and returns `{session_id, transcript, response}`. It returns `422` for valid audio with empty transcription, `502` for STT provider failures, and `504` for STT timeouts.
+
+Remaining Week 03 work: repeat Raspberry manual upload with real STT, measure latency and transcript quality, then automate capture and upload in the Raspberry client.

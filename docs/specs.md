@@ -16,7 +16,7 @@ El foco activo de la semana 3 es preparar y validar el primer pipeline de voz re
 voz -> captura Raspberry -> STT backend -> /chat -> respuesta -> TTS local en Raspberry
 ```
 
-La preparación de semana 3 no cambia todavía las interfaces públicas. La captura con micrófono USB ya fue validada en Raspberry con un WAV reproducible; antes de implementar nuevos endpoints o dependencias, hay que decidir el contrato mínimo de subida de audio.
+La preparación de semana 3 mantuvo estable `/chat` y añadió `POST /chat/audio` como entrada de voz. La captura con micrófono USB ya fue validada en Raspberry con un WAV reproducible.
 
 ## Arquitectura
 
@@ -39,15 +39,15 @@ La preparación de semana 3 no cambia todavía las interfaces públicas. La capt
 
 - POST /chat: Procesar una interacción conversacional con `session_id` y `message`
 
-Durante la preparación de semana 3, `/chat` sigue siendo el contrato estable. Tras validar la captura WAV en Raspberry, `specs/audio-pipeline.md` documentó `POST /chat/audio` como contrato mínimo candidato. Ahora el endpoint está implementado en `backend/audio_router.py` (rama `feature/audio-upload-contract`) sin STT real: usa un transcript fijo `[audio input captured]` como placeholder y una respuesta temporal fija en espanol. La subida manual de un WAV desde Raspberry con `curl` quedó validada el 2026-05-27 contra el backend LAN. El endpoint no reemplaza `/chat`.
+Durante semana 3, `/chat` sigue siendo el contrato estable. Tras validar la captura WAV en Raspberry, `specs/audio-pipeline.md` documentó `POST /chat/audio` como contrato mínimo candidato. Ahora el endpoint está implementado en `backend/audio_router.py` (rama `feature/audio-upload-contract`) con STT real en backend mediante OpenAI `gpt-4o-mini-transcribe` por defecto, configurable con `OPENAI_STT_MODEL`. La subida manual de un WAV desde Raspberry con `curl` quedó validada el 2026-05-27 contra el backend LAN antes de STT real; falta repetir esa validación con transcripción real. El endpoint no reemplaza `/chat`.
 
 ## Fuera de Alcance del Arranque de Semana 3
 
 - Wake word.
 - STT local complejo en Raspberry.
 - Modelos locales de audio.
+- Integración offline con Vosk, `whisper.cpp` u otro motor local sin spike técnico previo.
 - Nuevas dependencias sin decisión explícita.
-- Nuevos endpoints antes de decidir el contrato mínimo de audio.
 - Arduino/LEDs.
 - Persistencia.
 - Autenticación.

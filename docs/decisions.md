@@ -73,3 +73,11 @@ This decision does not prove that local Raspberry Pi STT is infeasible. Local ST
 Use OpenCode as an additional AI-assisted project tool for implementation, repository inspection, documentation updates, review, and verification. Codex remains the primary project assistant. OpenCode uses the DevExpert OpenAI-compatible provider at `https://inference.devexpert.io/v1`, with `deepseek-v4-flash` as the recommended model and `deepseek-v4-pro` as the alternative model.
 
 This is a workflow decision, not a product architecture change. OpenCode must follow the same repository rules as Codex: use official scripts, keep dependency installs local, follow project branch naming, avoid tool-owned branch prefixes, and promote durable decisions back into repository documentation. The AI-assisted workflow can incorporate more compatible tools over time under the same rules.
+
+## D018 - Initial STT provider
+
+Use OpenAI `gpt-4o-mini-transcribe` as the initial backend STT provider for the Week 03 voice pipeline.
+
+The rationale is demo stability and implementation efficiency: the backend already uses `OPENAI_API_KEY`, the audio endpoint already accepts short WAV uploads, and the integration can be implemented with the Python standard library without adding an SDK or a heavy local model dependency. The model can be overridden with `OPENAI_STT_MODEL`; `OPENAI_MODEL` remains dedicated to conversational response generation.
+
+Two offline options remain candidates for a later spike, not active implementation: Vosk Spanish for a small zero-API-cost recognizer, and `whisper.cpp` for offline Whisper-style transcription with CPU-only support. Both need real sample validation before they replace the online STT default because the current MVP priority is a stable demo loop, not proving offline STT.

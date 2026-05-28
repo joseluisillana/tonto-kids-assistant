@@ -1,6 +1,8 @@
 import struct
+import unittest.mock
 
 import pytest
+from fastapi import HTTPException
 
 from tests.conftest import _make_wav
 
@@ -31,11 +33,59 @@ class TestChatAudioValidation:
         assert "transcript" in body
         assert "response" in body
         assert body["session_id"] == "test-session"
-        assert body["transcript"] == "[audio input captured]"
-        assert body["response"] == (
-            "He recibido tu audio. Todavia no puedo entenderlo, pero la subida y reproduccion ya funcionan. "
-            "Pronto podre responder a lo que digas."
+        assert body["transcript"] == "hola tonto"
+        assert body["response"] == "Mocked TONTO response."
+
+    def test_valid_upload_calls_stt_and_chat(self, client, monkeypatch):
+        wav = _make_wav(1000)
+        data = _form_data(wav, language="es")
+        stt_mock = unittest.mock.MagicMock(return_value="que es una estrella")
+        chat_mock = unittest.mock.MagicMock(return_value="Una estrella es una bola de gas muy caliente.")
+        monkeypatch.setattr("backend.audio_router.transcribe_audio", stt_mock)
+        monkeypatch.setattr("backend.audio_router.call_openai", chat_mock)
+
+        resp = client.post("/chat/audio", files={"audio": data.pop("audio")}, data=data)
+
+        assert resp.status_code == 200, resp.text
+        body = resp.json()
+        assert body["transcript"] == "que es una estrella"
+        assert body["response"] == "Una estrella es una bola de gas muy caliente."
+        stt_mock.assert_called_once()
+        chat_mock.assert_called_once()
+
+    def test_empty_transcript_returns_422(self, client, monkeypatch):
+        wav = _make_wav(1000)
+        data = _form_data(wav)
+        monkeypatch.setattr("backend.audio_router.transcribe_audio", unittest.mock.MagicMock(return_value=""))
+
+        resp = client.post("/chat/audio", files={"audio": data.pop("audio")}, data=data)
+
+        assert resp.status_code == 422
+        assert resp.json()["detail"] == "Audio did not contain recognizable speech"
+
+    def test_stt_provider_error_returns_502(self, client, monkeypatch):
+        wav = _make_wav(1000)
+        data = _form_data(wav)
+        monkeypatch.setattr(
+            "backend.audio_router.transcribe_audio",
+            unittest.mock.MagicMock(side_effect=HTTPException(status_code=502, detail="OpenAI STT error: boom")),
         )
+
+        resp = client.post("/chat/audio", files={"audio": data.pop("audio")}, data=data)
+
+        assert resp.status_code == 502
+
+    def test_stt_timeout_returns_504(self, client, monkeypatch):
+        wav = _make_wav(1000)
+        data = _form_data(wav)
+        monkeypatch.setattr(
+            "backend.audio_router.transcribe_audio",
+            unittest.mock.MagicMock(side_effect=HTTPException(status_code=504, detail="OpenAI STT request timed out")),
+        )
+
+        resp = client.post("/chat/audio", files={"audio": data.pop("audio")}, data=data)
+
+        assert resp.status_code == 504
 
     def test_missing_audio(self, client):
         resp = client.post("/chat/audio", data={"session_id": "s", "duration_ms": "1000", "sample_rate_hz": "16000", "channels": "1"})

@@ -127,14 +127,14 @@ Introducir input de voz real en el sistema, en dos fases.
 
 ### Nota
 
-El endpoint usa un transcript fijo `[audio input captured]` como placeholder de STT y devuelve una respuesta temporal fija en espanol hasta integrar STT real. El reconocimiento de voz real se aborda en la Fase 2. La validacion manual de subida esta cerrada para el contrato HTTP y la respuesta se reprodujo con `espeak`, aunque con salida ruidosa de ALSA/JACK en la shell. Quedan observaciones pendientes: limpieza de warnings ALSA/JACK para demo y confirmar siempre el `card/device` de ALSA con `arecord -l`.
+El endpoint empezó con un transcript fijo `[audio input captured]` como placeholder de STT para cerrar el contrato HTTP. Esa validación manual quedó cerrada y la respuesta se reprodujo con `espeak`, aunque con salida ruidosa de ALSA/JACK en la shell. Quedan observaciones pendientes: limpieza de warnings ALSA/JACK para demo y confirmar siempre el `card/device` de ALSA con `arecord -l`.
 
 ## Fase 2 — Integración STT (siguiente)
 
 ### Entregables pendientes
 
-- [ ] Elegir proveedor STT.
-- [ ] Integrar STT en el backend.
+- [x] Elegir proveedor STT: OpenAI `gpt-4o-mini-transcribe` como default inicial; Vosk Spanish y `whisper.cpp` quedan como alternativas offline para spike posterior.
+- [x] Integrar STT en el backend con `OPENAI_STT_MODEL` opcional y sin SDK nuevo.
 - [ ] Pipeline de voz extremo a extremo: Raspberry captura → backend STT → respuesta → TTS.
 - [ ] Loop interactivo con captura desde el cliente Raspberry.
 

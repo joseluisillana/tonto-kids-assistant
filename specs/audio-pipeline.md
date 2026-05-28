@@ -23,25 +23,25 @@ La dirección provisional es procesar STT en el backend. Esto deriva de la arqui
 - **Conversión prevista**: De audio a texto (STT) en el backend.
 - **Filtrado básico**: Eliminación de ruido simple si es necesario, priorizando estabilidad sobre calidad avanzada.
 - **No objetivo inicial**: STT local complejo en Raspberry, wake word o modelos locales de audio.
-- **Estado de decisión**: STT backend es el default provisional. El contrato mínimo `POST /chat/audio` y el formato WAV PCM mono 16 kHz ya están definidos y validados manualmente desde Raspberry; el proveedor STT sigue pendiente.
+- **Estado de decisión**: STT backend sigue siendo el default. OpenAI `gpt-4o-mini-transcribe` es el proveedor inicial para Semana 3; Vosk Spanish y `whisper.cpp` quedan como alternativas offline para un spike posterior si coste, privacidad u offline real pasan a ser requisitos.
 
 ### Backend
 
 - **Tecnología MVP**: Python/FastAPI.
 - **Funciones actuales**: Maneja la lógica conversacional y la integración con OpenAI mediante `/chat`.
-- **Preparación semana 3**: la captura WAV ya quedo validada; no se añade endpoint de audio hasta decidir el contrato mínimo.
+- **Preparación semana 3**: la captura WAV ya quedo validada; `POST /chat/audio` está implementado y ahora usa STT real en backend.
 - **Comunicación actual**: Recibe mensajes HTTP/JSON del cliente y envía respuestas de texto para TTS local.
 
 ## Contrato de Subida de Audio
 
-Esta sección define el contrato de subida de audio. El endpoint está implementado en `backend/audio_router.py` sin STT real: usa un transcript fijo `[audio input captured]` y una respuesta temporal fija en espanol hasta que se integre un proveedor STT.
+Esta sección define el contrato de subida de audio. El endpoint está implementado en `backend/audio_router.py` con STT backend real mediante OpenAI `gpt-4o-mini-transcribe` por defecto.
 
 ### Endpoint
 
 - **Endpoint**: `POST /chat/audio`
 - **Método HTTP**: `POST`
 - **Estado**: implementado en rama `feature/audio-upload-contract`.
-- **STT**: placeholder. El campo `transcript` devuelve `"[audio input captured]"` hasta que se decida e integre un proveedor STT. Mientras el transcript sea placeholder, el backend devuelve una respuesta fija en espanol y no envia ese placeholder a OpenAI como si fuera contenido del usuario.
+- **STT**: OpenAI `gpt-4o-mini-transcribe` por defecto, configurable con `OPENAI_STT_MODEL`. El campo `transcript` devuelve texto reconocido; si el audio válido no produce texto, el backend responde `422`.
 - **Propósito**: recibir un turno corto de audio capturado por la Raspberry, validar el formato WAV, reutilizar el flujo conversacional existente de `/chat`, y devolver una respuesta textual speakable para que la Raspberry la reproduzca con `espeak`.
 
 ### Request Recomendado
@@ -151,7 +151,7 @@ El body de error debe ser simple y depurable:
 
 `POST /chat` permanece como contrato estable para texto manual y cliente web. El endpoint candidato de audio no reemplaza `/chat`.
 
-Flujo previsto cuando se implemente:
+Flujo implementado en backend:
 
 ```text
 Raspberry WAV -> POST /chat/audio -> STT backend -> texto -> lógica existente de /chat -> response -> espeak local
@@ -161,9 +161,8 @@ La intención es que `/chat/audio` sea una variante de entrada de chat por voz: 
 
 ### Fuera de Alcance
 
-- Elegir o integrar proveedor STT.
-- STT real (el endpoint usa un placeholder `[audio input captured]`).
 - STT local en Raspberry.
+- Integrar Vosk, `whisper.cpp` u otro STT offline en esta fase.
 - Wake word.
 - Streaming de audio.
 - Grabación continua.
@@ -184,12 +183,12 @@ El contrato se considera implementado cuando:
 - Define límites de duración y tamaño compatibles con la demo y con una captura de 10 segundos.
 - Devuelve una respuesta textual speakable y, cuando exista STT, el transcript reconocido.
 - Define errores suficientes para depurar fallos de formato, tamaño, duración, STT y timeouts.
-- No introduce STT real, wake word, persistencia ni cambios de arquitectura.
+- No introduce STT local, wake word, persistencia ni cambios de arquitectura.
 - Puede probarse con un archivo WAV grabado con `arecord` o con tests automatizados.
-- El endpoint está implementado y devuelve transcript + response speakable.
-- El transcript es un placeholder fijo `[audio input captured]` hasta que se integre STT; mientras tanto, la respuesta es un fallback fijo en espanol para evitar respuestas aleatorias en ingles.
+- El endpoint está implementado y devuelve transcript real + response speakable.
+- OpenAI `gpt-4o-mini-transcribe` es el proveedor inicial; `OPENAI_STT_MODEL` permite cambiar el modelo sin tocar el cliente Raspberry.
 - `python-multipart` es la única dependencia nueva añadida.
-- Tests automatizados cubren: upload válido, audio vacío, tamaño excedido, archivo demasiado pequeno para WAV, formato incorrecto, duración fuera de rango.
+- Tests automatizados cubren: upload válido, audio vacío, tamaño excedido, archivo demasiado pequeno para WAV, formato incorrecto, duración fuera de rango, transcript vacío, errores y timeouts de STT.
 
 ### TTS (Text-to-Speech)
 
@@ -203,8 +202,8 @@ El contrato se considera implementado cuando:
 
 ## Modos Offline
 
-- **Posibilidad**: Soporte básico para modos offline, procesando audio localmente en el Raspberry Pi si es factible.
-- **Limitaciones**: Dependiente de recursos disponibles; no priorizado en MVP.
+- **Posibilidad**: Vosk Spanish y `whisper.cpp` quedan como alternativas offline para evaluar en `experiment/local-stt-spike` si el coste API, privacidad u operación sin internet pasan a ser requisitos.
+- **Limitaciones**: no se integran en Semana 3. Requieren validar precisión con voz real, latencia en el PC Windows y complejidad de setup/modelos antes de sustituir OpenAI STT.
 
 ## Responsabilidades
 
@@ -220,7 +219,7 @@ El contrato se considera implementado cuando:
 - Lógica de conversación.
 - Integración con OpenAI.
 - Gestión de la conversación y estado.
-- STT backend como default provisional cuando se decida el contrato de audio.
+- STT backend con OpenAI `gpt-4o-mini-transcribe` por defecto.
 
 ## Checklist de Preparación Semana 3
 
@@ -251,7 +250,7 @@ aplay ~/tonto-mic-check.wav
 
 - Documentar cualquier bloqueo de hardware antes de implementar endpoints o dependencias. No hubo bloqueo de captura en la validacion de Semana 3.
 - Si se considera STT local, documentar la prueba concreta y el motivo técnico antes de cambiar el default.
-- Mantener `POST /chat` estable hasta decidir el contrato mínimo de audio.
+- Mantener `POST /chat` estable mientras `/chat/audio` añade entrada por voz.
 - El endpoint `POST /chat/audio` está implementado pero el cliente Raspberry no ha sido modificado: la captura y subida de audio no están automatizadas.
 - [x] **Probar subida manual de WAV al backend** con `curl` desde la Raspberry, verificando que el backend responde con `session_id`, `transcript` y `response`. Validado el 2026-05-27 desde `tonto-pi` contra backend LAN `192.168.1.91:8000`.
 
@@ -268,7 +267,7 @@ aplay ~/tonto-mic-check.wav
     -F "channels=1" | python -m json.tool
   ```
 
-  Resultado esperado: `HTTP 200` con `{"session_id": "demo-session", "transcript": "[audio input captured]", "response": "..."}`.
+  Resultado esperado tras la integración STT: `HTTP 200` con `{"session_id": "demo-session", "transcript": "<texto reconocido>", "response": "..."}`.
 
   Resultado validado:
 
@@ -292,7 +291,7 @@ aplay ~/tonto-mic-check.wav
 ## Riesgos Técnicos Principales
 
 - **Recursos limitados del Raspberry Pi 3**: Posible latencia o inestabilidad en procesamiento de audio.
-- **Micrófono USB validado inicialmente**: queda pendiente medir calidad suficiente para STT real y latencia end-to-end.
+- **Micrófono USB validado inicialmente**: queda pendiente medir calidad suficiente con STT real y latencia end-to-end.
 - **Latencia**: Procesamiento en tiempo real puede ser desafiante con hardware limitado.
 - **Estabilidad**: Priorizar simplicidad para evitar crashes o comportamientos impredecibles.
 
@@ -306,7 +305,7 @@ aplay ~/tonto-mic-check.wav
 - El audio input se captura correctamente con micrófono USB.
 - Una muestra WAV corta puede grabarse y reproducirse en Raspberry.
 - La validación de captura registra dispositivo, comando usado, duración y notas de calidad.
-- El contrato de STT backend queda decidido antes de añadir dependencias o endpoints.
+- El contrato de STT backend queda decidido: OpenAI `gpt-4o-mini-transcribe` por defecto, sin nueva dependencia de SDK.
 - Cualquier descarte de STT local queda respaldado por una prueba técnica, no por una suposición.
 - El TTS genera audio claro y comprensible.
 - El output audio se reproduce sin interrupciones.

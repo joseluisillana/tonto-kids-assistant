@@ -113,13 +113,13 @@ El cliente web no debe duplicar orquestación conversacional ni lógica de IA.
 
 ```
 WAV grabado manualmente (arecord) → POST /chat/audio (multipart) →
-backend valida WAV → transcript fijo (placeholder STT) →
-fallback temporal en espanol → response → espeak local
+backend valida WAV → OpenAI STT backend →
+transcript real → respuesta conversacional → espeak local
 ```
 
 El endpoint `POST /chat/audio` está implementado en el backend.
-El transcript es un placeholder fijo y la respuesta de audio usa un fallback temporal en espanol — no hay STT real.
-La subida manual desde Raspberry con `curl` fue validada el 2026-05-27 contra el backend LAN.
+El proveedor inicial de STT es OpenAI `gpt-4o-mini-transcribe`, configurable con `OPENAI_STT_MODEL`.
+La subida manual desde Raspberry con `curl` fue validada el 2026-05-27 contra el backend LAN antes de integrar STT real; falta repetir la validación manual con transcripción real.
 El cliente Raspberry no ha sido modificado: la captura sigue siendo manual por SSH.
 
 ## Principios arquitectónicos
@@ -147,7 +147,7 @@ Componentes ya validados:
 - estructura monorepo
 - documentación fundacional
 - POST `/chat` estable
-- POST `/chat/audio` implementado en backend (con placeholder STT, cliente no modificado)
+- POST `/chat/audio` implementado en backend (con STT real, cliente no modificado)
 - subida manual Raspberry -> backend a `POST /chat/audio` validada con `curl`
 
 Componentes en desarrollo:
@@ -155,11 +155,10 @@ Componentes en desarrollo:
 - backend conversacional inicial,
 - pipeline cliente-servidor,
 - integración OpenAI,
-- endpoint `POST /chat/audio` — transcript STT pendiente,
-- integración STT backend (siguiente fase),
+- validación manual de `POST /chat/audio` con STT real,
 - cliente Raspberry: captura WAV automatizada y subida a `/chat/audio` (pendiente).
 
-El objetivo actual es completar el pipeline de voz real integrando STT y actualizando el cliente Raspberry para capturar y subir audio automáticamente, manteniendo el loop de texto como fallback estable.
+El objetivo actual es completar el pipeline de voz real validando STT en hardware y actualizando el cliente Raspberry para capturar y subir audio automáticamente, manteniendo el loop de texto como fallback estable.
 
 La arquitectura está optimizada para velocidad de iteración y facilidad de depuración durante el MVP, no para escalabilidad de producción.
 
