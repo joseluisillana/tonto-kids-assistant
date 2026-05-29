@@ -81,3 +81,11 @@ Use OpenAI `gpt-4o-mini-transcribe` as the initial backend STT provider for the 
 The rationale is demo stability and implementation efficiency: the backend already uses `OPENAI_API_KEY`, the audio endpoint already accepts short WAV uploads, and the integration can be implemented with the Python standard library without adding an SDK or a heavy local model dependency. The model can be overridden with `OPENAI_STT_MODEL`; `OPENAI_MODEL` remains dedicated to conversational response generation.
 
 Two offline options remain candidates for a later spike, not active implementation: Vosk Spanish for a small zero-API-cost recognizer, and `whisper.cpp` for offline Whisper-style transcription with CPU-only support. Both need real sample validation before they replace the online STT default because the current MVP priority is a stable demo loop, not proving offline STT.
+
+## D019 - Week 03 Phase 3 web audio validation
+
+Use the existing React web validation client as the Week 03 Phase 3 surface for an interactive audio loop against `POST /chat/audio`, after the pending Phase 2 Raspberry capture/upload automation is addressed.
+
+The goal is to reduce integration risk and collect visible evidence from a browser after the Raspberry voice client automation has been tackled. The web path must reuse the existing backend audio contract and STT provider: it should send a compatible WAV, receive `{session_id, transcript, response}`, and display transcript, response, latency, status, and errors.
+
+This is a validation decision, not a product architecture change. The Raspberry Pi remains the physical MVP client, local `espeak` remains the target TTS path, and browser TTS, audio persistence, streaming, local STT, and backend transcoding of browser formats remain out of scope unless a later decision changes that.

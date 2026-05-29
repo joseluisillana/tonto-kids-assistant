@@ -33,6 +33,8 @@ The current milestone is the first minimal voice conversation loop after the tex
 - Use local `espeak` on the Raspberry client for TTS.
 - Backend STT with OpenAI `gpt-4o-mini-transcribe` is active for Semana 3 through `POST /chat/audio`.
 - Phase 2A was validated manually on real Raspberry hardware: captured WAV -> backend STT -> transcript -> response -> local `espeak`.
+- The next Week 03 implementation step is Phase 2B: automate Raspberry capture/upload/playback around the validated `POST /chat/audio` flow.
+- Phase 3 is planned after Phase 2B as a documentation-first web validation loop: browser microphone or WAV selection -> compatible WAV -> `POST /chat/audio` -> transcript -> response -> visible web evidence.
 - Keep state in memory only if state is needed at all.
 - Optimize for clarity, debuggability, and a real demo.
 
@@ -40,7 +42,7 @@ Explicitly out of scope for this first milestone:
 
 - No wake word.
 - No Arduino integration.
-- No advanced product UI beyond the web validation client.
+- No advanced product UI beyond the web validation client and its narrow Phase 3 audio validation surface.
 - No persistence.
 - No authentication.
 - No user accounts.
@@ -48,7 +50,8 @@ Explicitly out of scope for this first milestone:
 - No multi-agent architecture.
 - No local AI models.
 - No local STT or local audio models.
-- No automated audio capture/upload beyond the narrow Raspberry client work explicitly requested for the active milestone.
+- No backend transcoding of browser `webm`/`ogg` audio unless explicitly decided later.
+- No automated audio capture/upload beyond the narrow web validation loop or Raspberry client work explicitly requested for the active milestone.
 
 ## Coding Rules
 

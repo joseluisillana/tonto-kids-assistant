@@ -418,7 +418,7 @@ Offline options remain documented but unimplemented:
 
 The `POST /chat/audio` endpoint now validates the WAV, transcribes it in the backend, sends the real transcript through the existing conversation flow, and returns `{session_id, transcript, response}`. It returns `422` for valid audio with empty transcription, `502` for STT provider failures, and `504` for STT timeouts.
 
-Remaining Week 03 work: automate capture and upload in the Raspberry client.
+Remaining Week 03 work: automate capture and upload in the Raspberry client as Phase 2B, then implement Phase 3 web audio validation.
 
 ## Fase 2A Validation Evidence
 
@@ -501,4 +501,39 @@ Remaining observations:
 |---|---|---|---|
 | O1 | `espeak` playback still emits noisy ALSA/JACK warnings while audio works | Demo output can confuse debugging | Confirm default playback device and clean or suppress non-actionable audio stderr in client/demo scripts |
 | O2 | ALSA capture card changed across runs (`card 2` in earlier evidence, `card 1` in this validation) | Hard-coded `plughw` values can fail | Always read `arecord -l`; future client automation should accept explicit audio device configuration |
-| O3 | Client capture/upload is still manual | Phase 2A validates backend STT but not an interactive client voice loop | Next step is Raspberry client automation for capture, upload, response playback, and timeout handling |
+| O3 | Client capture/upload is still manual | Phase 2A validates backend STT but not an interactive client voice loop | Next step is Raspberry client automation for capture, upload, response playback, and timeout handling; Phase 3 web audio validation follows after that |
+
+## Fase 3: Web Audio Loop Planning
+
+**Date:** 2026-05-30.
+**Branch:** `feature/audio-upload-contract`.
+**Status:** planned in documentation only; no web or backend implementation in this iteration. Sequencing corrected: this phase follows the pending Raspberry client automation from Phase 2B.
+
+Phase 3 is added to Week 03 as a browser-driven validation loop:
+
+```text
+web microphone or WAV selection -> compatible WAV -> POST /chat/audio -> transcript -> response -> web evidence
+```
+
+The purpose is to validate the real STT backend from the web client after the Raspberry automation step is addressed. This keeps the text path stable, reuses the existing backend contract, and creates a faster demo/debug surface for transcript, response, latency and error evidence.
+
+Key implementation guardrails recorded for the next agent:
+
+- Reuse `POST /chat/audio`; do not add a web-only audio endpoint.
+- Send WAV compatible with the current backend contract: PCM 16-bit, 16 kHz, mono.
+- Do not upload browser `webm`/`ogg` directly unless a later decision adds backend transcoding.
+- Prefer native browser APIs and no new dependency.
+- Browser TTS, persistence, streaming, local STT and advanced product UI remain out of scope.
+- Preserve `/chat` as the stable text fallback.
+
+Documentation updated for this plan:
+
+- `specs/audio-pipeline-phase-3-web-loop.md`
+- `specs/audio-pipeline.md`
+- `specs/web-validation-client.md`
+- `docs/roadmap.md`
+- `docs/specs.md`
+- `docs/architecture.md`
+- `docs/decisions.md`
+- `README.md`
+- `AGENTS.md`

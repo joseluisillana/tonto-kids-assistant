@@ -18,6 +18,8 @@ voz -> captura Raspberry -> STT backend -> /chat -> respuesta -> TTS local en Ra
 
 La preparación de semana 3 mantuvo estable `/chat` y añadió `POST /chat/audio` como entrada de voz. La captura con micrófono USB ya fue validada en Raspberry con un WAV reproducible.
 
+El siguiente paso operativo de semana 3 sigue siendo automatizar captura/subida en el cliente Raspberry para cerrar Fase 2. Despues queda documentada la Fase 3: loop interactivo desde el cliente web, donde el navegador captura o selecciona un WAV compatible, llama a `POST /chat/audio`, muestra transcript real, respuesta, latencia y errores. Esta fase acelera validacion del backend STT, pero no reemplaza al loop fisico Raspberry como objetivo del MVP.
+
 ## Arquitectura
 
 - **Cliente físico**: Raspberry Pi 3 (Python)
@@ -31,15 +33,18 @@ La preparación de semana 3 mantuvo estable `/chat` y añadió `POST /chat/audio
 2. **TTS**: Text-to-Speech local con `espeak` en Raspberry.
 3. **Memoria de sesión**: historial corto en memoria de proceso.
 4. **Personalidad educativa**: respuestas breves, claras y adaptadas a niños.
-5. **Cliente web de validación**: interfaz mínima para probar el backend desde navegador.
+5. **Cliente web de validación**: interfaz mínima para probar el backend desde navegador; Fase 3 planifica validacion de voz contra `POST /chat/audio`.
 6. **Voz real**: foco activo de semana 3, con micrófono USB y captura WAV simple ya validados como base de la siguiente iteración.
 7. **Estados visuales e integración Arduino**: expansión futura, no parte del arranque de semana 3.
 
 ## APIs Base
 
 - POST /chat: Procesar una interacción conversacional con `session_id` y `message`
+- POST /chat/audio: Procesar un turno corto de audio WAV con STT backend, devolver `transcript` y `response`
 
 Durante semana 3, `/chat` sigue siendo el contrato estable. Tras validar la captura WAV en Raspberry, `specs/audio-pipeline.md` documentó `POST /chat/audio` como contrato mínimo candidato. Ahora el endpoint está implementado en `backend/audio_router.py` (rama `feature/audio-upload-contract`) con STT real en backend mediante OpenAI `gpt-4o-mini-transcribe` por defecto, configurable con `OPENAI_STT_MODEL`. La subida manual de un WAV desde Raspberry con `curl` quedó validada el 2026-05-30 contra el backend LAN con transcripción real, respuesta educativa y reproducción local con `espeak`. El endpoint no reemplaza `/chat`.
+
+Fase 3 queda planificada en `specs/audio-pipeline-phase-3-web-loop.md` y `specs/web-validation-client.md` para despues de la automatizacion Raspberry de Fase 2B. La web debe usar el contrato existente, enviar WAV compatible y registrar evidencia visible; no debe añadir un endpoint propio ni requerir cambios de proveedor STT.
 
 ## Fuera de Alcance del Arranque de Semana 3
 

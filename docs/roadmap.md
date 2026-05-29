@@ -112,7 +112,7 @@ Feature añadida como mejora no planificada del workflow documental, derivada de
 
 ## Objetivo
 
-Introducir input de voz real en el sistema, en dos fases.
+Introducir input de voz real en el sistema, empezando por captura real en Raspberry, STT backend y superficies de validacion que reduzcan riesgo antes del loop fisico automatizado.
 
 ## Fase 1 — Captura y contrato de audio (completada)
 
@@ -136,7 +136,7 @@ El endpoint empezó con un transcript fijo `[audio input captured]` como placeho
 - [x] Elegir proveedor STT: OpenAI `gpt-4o-mini-transcribe` como default inicial; Vosk Spanish y `whisper.cpp` quedan como alternativas offline para spike posterior.
 - [x] Integrar STT en el backend con `OPENAI_STT_MODEL` opcional y sin SDK nuevo.
 - [x] Pipeline de voz extremo a extremo manual: Raspberry captura → backend STT → respuesta → TTS.
-- [ ] Loop interactivo con captura desde el cliente Raspberry.
+- [ ] Fase 2B: loop interactivo con captura desde el cliente Raspberry.
 
 ### Prioridades
 
@@ -153,6 +153,32 @@ Validado el 2026-05-30 desde Raspberry real `tonto-pi` contra backend LAN `192.1
 - Problemas de drivers/audio USB.
 - Latencia excesiva.
 - Intentar optimizar prematuramente el pipeline.
+
+## Fase 3 — Loop interactivo desde cliente web (planificada)
+
+### Objetivo
+
+Usar el cliente web de validacion como superficie interactiva para probar el pipeline de voz contra `POST /chat/audio` despues de cerrar la automatizacion de captura/subida en el cliente Raspberry. Esta fase permite validar permisos de microfono, generacion/subida de WAV, transcript real, respuesta conversacional, latencia y errores desde navegador.
+
+### Entregables pendientes
+
+- [ ] Documentar la fase en `specs/audio-pipeline-phase-3-web-loop.md`.
+- [ ] Ampliar `specs/web-validation-client.md` con audio loop e instrumentacion.
+- [ ] Implementar captura o seleccion de WAV desde la web sin cambiar el contrato backend.
+- [ ] Mostrar transcript, response, latencia, estado tecnico y errores en la UI.
+- [ ] Validar que `/chat` de texto sigue funcionando como fallback.
+- [ ] Registrar evidencia en `docs/project-journal/week-03.md`.
+
+### Restricciones
+
+- Mantener `POST /chat/audio` como contrato unico de voz.
+- Enviar WAV compatible con el backend actual; no subir `webm`/`ogg` directamente.
+- No introducir STT local, streaming, persistencia, auth ni UI avanzada.
+- No sustituir la validacion final con Raspberry: la web acelera desarrollo, pero el producto fisico sigue siendo el objetivo MVP.
+
+### Riesgo principal
+
+El navegador no genera WAV PCM 16 kHz mono por defecto. La implementacion futura debe producir WAV en cliente con APIs nativas o empezar con un selector manual de WAV antes de ampliar captura de microfono.
 
 ---
 
@@ -289,6 +315,7 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [x] Integrar STT backend.
 - [x] Validar loop manual de voz Raspberry → backend → TTS.
 - [ ] Loop interactivo de voz Raspberry → backend → TTS automatizado en cliente.
+- [ ] Validar loop interactivo de voz desde cliente web contra `POST /chat/audio`.
 - [x] Medir latencia básica del loop manual (`TOTAL_TIME=5.395580`).
 - [ ] Mejorar calidad TTS progresivamente.
 
@@ -304,6 +331,8 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [x] Crear scaffold inicial React + TypeScript + Vite.
 - [x] Conectar con el endpoint `/chat` cuando el contrato esté estable.
 - [x] Añadir build/typecheck a integración continua.
+- [ ] Fase 3: añadir loop interactivo de voz contra `POST /chat/audio`.
+- [ ] Fase 3: mostrar evidencia tecnica de audio, transcript, response y latencia.
 - [ ] Desplegar preview web para pruebas rápidas.
 
 ## Backend

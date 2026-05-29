@@ -39,6 +39,7 @@ La Raspberry maneja la entrada local, la salida TTS y los estados físicos futur
 
 - ofrecer una superficie rápida para probar el backend sin usar siempre la Raspberry,
 - consumir los mismos contratos HTTP/JSON que el cliente Raspberry,
+- validar en Fase 3 el contrato `POST /chat/audio` desde navegador con evidencia visible de transcript, respuesta y latencia,
 - facilitar integración continua, builds y despliegues paralelos del frontend,
 - servir como herramienta de demo y depuración durante el MVP.
 
@@ -83,6 +84,7 @@ Contiene estructuras comunes que usan cliente y backend:
 ### Cliente web
 
 - entrada manual de texto desde navegador,
+- validacion planificada de un turno de audio web contra `POST /chat/audio`,
 - comunicación HTTP con el backend,
 - visualización de respuestas y estados básicos,
 - soporte para pruebas de integración y despliegue frontend.
@@ -122,6 +124,16 @@ El proveedor inicial de STT es OpenAI `gpt-4o-mini-transcribe`, configurable con
 La subida manual desde Raspberry con `curl` fue validada con transcripción real el 2026-05-30 contra el backend LAN: `HTTP_STATUS=200`, `TOTAL_TIME=5.395580`, transcript real, respuesta educativa y reproducción local con `espeak`.
 El cliente Raspberry no ha sido modificado: la captura sigue siendo manual por SSH.
 
+### Variante de audio web (Fase 3 planificada)
+
+```text
+navegador -> WAV compatible -> POST /chat/audio (multipart) ->
+backend valida WAV -> OpenAI STT backend ->
+transcript real -> respuesta conversacional -> UI web
+```
+
+Esta variante usa el cliente web como superficie de validacion, no como sustituto del producto fisico. La implementacion futura debe producir o seleccionar WAV compatible con el backend actual. No se debe ampliar el backend para formatos comprimidos de navegador ni anadir transcoding sin una decision explicita.
+
 ## Principios arquitectónicos
 
 - **Pragmatismo MVP:** construir lo mínimo necesario para demostrar la experiencia.
@@ -149,15 +161,17 @@ Componentes ya validados:
 - POST `/chat` estable
 - POST `/chat/audio` implementado en backend (con STT real, cliente no modificado)
 - subida manual Raspberry -> backend a `POST /chat/audio` validada con `curl` y STT real
+- Fase 3 de cliente web de audio documentada como trabajo planificado
 
 Componentes en desarrollo:
 
 - backend conversacional inicial,
 - pipeline cliente-servidor,
 - integración OpenAI,
+- cliente web: loop interactivo de voz contra `/chat/audio` (pendiente).
 - cliente Raspberry: captura WAV automatizada y subida a `/chat/audio` (pendiente).
 
-El objetivo actual es convertir la validación manual Phase 2A en un loop interactivo del cliente Raspberry que capture, suba audio y reproduzca la respuesta automáticamente, manteniendo el loop de texto como fallback estable.
+El objetivo actual es cerrar primero la Fase 2B: convertir la validacion manual Phase 2A en un loop interactivo del cliente Raspberry que capture, suba audio y reproduzca la respuesta automaticamente, manteniendo el loop de texto como fallback estable. Despues, la Fase 3 web podra instrumentar el mismo pipeline de audio desde navegador.
 
 La arquitectura está optimizada para velocidad de iteración y facilidad de depuración durante el MVP, no para escalabilidad de producción.
 

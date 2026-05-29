@@ -38,12 +38,13 @@ El foco está en conversación natural persistente que adapta el aprendizaje al 
 
 El MVP final de 6 semanas busca demostrar una conversación educativa básica sobre hardware real.
 
-El milestone inmediato ya validó el primer loop texto → backend → IA → respuesta → TTS local. Semana 3 añadió una validación manual de voz con Raspberry real: WAV capturado manualmente → `POST /chat/audio` → STT backend → respuesta → `espeak` local.
+El milestone inmediato ya validó el primer loop texto → backend → IA → respuesta → TTS local. Semana 3 añadió una validación manual de voz con Raspberry real: WAV capturado manualmente → `POST /chat/audio` → STT backend → respuesta → `espeak` local. El siguiente paso operativo sigue siendo automatizar captura/subida en el cliente Raspberry como cierre de Fase 2; la Fase 3 web queda documentada para ejecutarse despues.
 
 Incluye ahora:
 
 - **Entrada manual de texto** desde Raspberry Pi o cliente web de validación.
 - **Entrada de voz manual validada** mediante captura WAV en Raspberry y `POST /chat/audio`.
+- **Fase web de voz planificada** para validar `/chat/audio` desde navegador con transcript, respuesta y latencia visibles.
 - **Backend Python/FastAPI** con endpoint `/chat`.
 - **Integración OpenAI** para generar respuestas educativas.
 - **TTS local** en Raspberry Pi mediante `espeak`.
@@ -87,7 +88,7 @@ Queda fuera del primer loop automatizado: wake word, Arduino/LEDs, persistencia,
 ### Cliente Web de Validación
 
 - **Objetivo**: Probar el backend desde navegador sin depender siempre de la Raspberry Pi.
-- **Responsabilidades**: Entrada manual de texto, visualización de respuestas, panel técnico de demo y soporte para CI/despliegue frontend.
+- **Responsabilidades**: Entrada manual de texto, visualización de respuestas, panel técnico de demo, soporte para CI/despliegue frontend y Fase 3 planificada para validar audio contra `POST /chat/audio`.
 - **Tecnología**: React + TypeScript + Vite, con Tailwind CSS como base visual.
 
 ## Stack Tecnológico Confirmado
@@ -222,6 +223,7 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 - ✅ Endpoint `POST /chat/audio` implementado con validación y STT backend inicial
 - ✅ Phase 2A validada con Raspberry real: WAV manual → backend STT → respuesta → `espeak`
 - 🔄 Semana 3 activa — siguiente: automatizar captura/subida en el cliente Raspberry
+- ⏳ Después: Fase 3 loop interactivo desde cliente web contra `POST /chat/audio`
 
 **Métricas MVP**:
 
@@ -229,6 +231,7 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 - Respuesta backend en menos de 5 segundos como objetivo inicial
 - TTS local reproduce la respuesta de forma entendible
 - Web validation client permite probar el contrato sin hardware
+- Fase 3 web planificada para probar voz desde navegador sin cambiar el contrato backend
 
 ## Backlog Cerrado Semanas 1-2
 
