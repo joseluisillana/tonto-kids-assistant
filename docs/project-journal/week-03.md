@@ -1,7 +1,7 @@
 # Week 03 Kickoff
 
 **Date:** 2026-05-18
-**Status:** Repository kickoff prepared; USB microphone capture validated on Raspberry Pi.
+**Status:** Repository kickoff prepared; USB microphone capture validated on Raspberry Pi; Phase 2A backend STT validation passed with real Raspberry audio.
 
 ## Objective
 
@@ -407,7 +407,7 @@ incorpore en el futuro.
 ## Fase 2A: STT Provider Selection and Backend Integration
 
 **Branch:** `feature/audio-upload-contract`.
-**Status:** backend STT integration implemented; hardware validation with real STT still pending.
+**Status:** backend STT integration implemented and manually validated with real Raspberry audio.
 
 OpenAI `gpt-4o-mini-transcribe` was selected as the initial STT provider for the Week 03 voice pipeline. The decision prioritizes demo stability, low implementation risk, and reuse of the existing `OPENAI_API_KEY`. The backend now supports `OPENAI_STT_MODEL` for changing the transcription model while keeping `OPENAI_MODEL` dedicated to response generation.
 
@@ -418,4 +418,87 @@ Offline options remain documented but unimplemented:
 
 The `POST /chat/audio` endpoint now validates the WAV, transcribes it in the backend, sends the real transcript through the existing conversation flow, and returns `{session_id, transcript, response}`. It returns `422` for valid audio with empty transcription, `502` for STT provider failures, and `504` for STT timeouts.
 
-Remaining Week 03 work: repeat Raspberry manual upload with real STT, measure latency and transcript quality, then automate capture and upload in the Raspberry client.
+Remaining Week 03 work: automate capture and upload in the Raspberry client.
+
+## Fase 2A Validation Evidence
+
+**Date/time:** 2026-05-30, Europe/Madrid.
+**Operator:** Jose Luis Illana Ruiz.
+**Branch:** `feature/audio-upload-contract`.
+**Initial Git status:** `## feature/audio-upload-contract...origin/feature/audio-upload-contract`; no modified or untracked files before the temporary evidence log was created.
+**Conclusion:** pass. Phase 2A was validated with real Raspberry capture, backend STT through OpenAI `gpt-4o-mini-transcribe`, conversational response generation, and local playback with `espeak`.
+
+Pre-flight and setup:
+
+```text
+.\scripts\setup-dev.ps1 -> Development environment is ready.
+.\scripts\test.ps1 -Target python -> 23 passed in 0.21s
+OPENAI_API_KEY -> configured in shell, not documented
+OPENAI_STT_MODEL -> gpt-4o-mini-transcribe
+OPENAI_MODEL -> gpt-4o-mini
+Backend -> .\scripts\dev.ps1 -Service backend -AllowLan
+Backend health from Windows -> status ok
+Windows LAN IP used by Raspberry -> 192.168.1.91
+Backend health from Raspberry -> {"status":"ok"}
+```
+
+Raspberry evidence:
+
+```text
+hostname -> tonto-pi
+whoami -> tonto-pi-user
+pwd -> /home/tonto-pi-user/tonto-kids-assistant
+curl -> /usr/bin/curl
+arecord -> /usr/bin/arecord
+aplay -> /usr/bin/aplay
+espeak -> /usr/bin/espeak
+python3 --version -> Python 3.13.5
+```
+
+Microphone and WAV evidence:
+
+```text
+arecord -l -> card 1: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+Selected device -> plughw:1,0
+Recording command -> arecord -D plughw:1,0 -f S16_LE -r 16000 -c 1 -d 6 ~/tonto-stt-phase-2a.wav
+File size -> 188K
+WAV metadata -> RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 16000 Hz
+aplay result -> audible and sufficiently clear
+```
+
+`POST /chat/audio` evidence:
+
+```text
+session_id -> phase-2a-stt-validation
+device_id -> tonto-pi
+duration_ms -> 6000
+sample_rate_hz -> 16000
+channels -> 1
+language -> es
+HTTP_STATUS -> 200
+TOTAL_TIME -> 5.395580
+transcript -> Hola tonto, explícame qué es una estrella.
+response -> ¡Hola! Una estrella es una gran esfera de gas caliente en el espacio, principalmente compuesta de hidrógeno y helio. Produce luz y calor a través de reacciones nucleares en su interior. El Sol es una estrella que está muy cerca de nosotros y nos brinda luz y calor. ¡Esas luces que ves en el cielo de noche también son estrellas!
+```
+
+Manual quality judgment:
+
+- Transcript is real, not `[audio input captured]`, and reasonably matches `Hola TONTO, explicame que es una estrella`.
+- Response is educational, child-appropriate, and speakable by TTS.
+- `espeak -v es` playback was audible and understandable enough for demo, with robotic pronunciation.
+- ALSA/JACK warnings appeared during `espeak` playback, including unavailable PCM entries and missing JACK server messages. They were noisy shell output only and did not block playback.
+
+Negative validation:
+
+```text
+text file upload -> {"detail":"File too small to be a valid WAV"}
+HTTP_STATUS -> 400
+```
+
+Remaining observations:
+
+| ID | Observation | Impact | Suggested follow-up |
+|---|---|---|---|
+| O1 | `espeak` playback still emits noisy ALSA/JACK warnings while audio works | Demo output can confuse debugging | Confirm default playback device and clean or suppress non-actionable audio stderr in client/demo scripts |
+| O2 | ALSA capture card changed across runs (`card 2` in earlier evidence, `card 1` in this validation) | Hard-coded `plughw` values can fail | Always read `arecord -l`; future client automation should accept explicit audio device configuration |
+| O3 | Client capture/upload is still manual | Phase 2A validates backend STT but not an interactive client voice loop | Next step is Raspberry client automation for capture, upload, response playback, and timeout handling |

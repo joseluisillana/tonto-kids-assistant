@@ -26,16 +26,18 @@ The project is demo-first. Prefer working, understandable prototypes over broad 
 
 ## Current Implementation Milestone
 
-The current milestone is the first minimal text-to-speech conversation loop:
+The current milestone is the first minimal voice conversation loop after the text-to-speech loop:
 
+- Preserve the stable text path while turning the validated manual audio path into a simple client loop.
 - Build the smallest backend/client path needed to send a request and receive a speakable response.
 - Use local `espeak` on the Raspberry client for TTS.
+- Backend STT with OpenAI `gpt-4o-mini-transcribe` is active for Semana 3 through `POST /chat/audio`.
+- Phase 2A was validated manually on real Raspberry hardware: captured WAV -> backend STT -> transcript -> response -> local `espeak`.
 - Keep state in memory only if state is needed at all.
 - Optimize for clarity, debuggability, and a real demo.
 
 Explicitly out of scope for this first milestone:
 
-- No speech-to-text.
 - No wake word.
 - No Arduino integration.
 - No advanced product UI beyond the web validation client.
@@ -45,6 +47,8 @@ Explicitly out of scope for this first milestone:
 - No advanced memory.
 - No multi-agent architecture.
 - No local AI models.
+- No local STT or local audio models.
+- No automated audio capture/upload beyond the narrow Raspberry client work explicitly requested for the active milestone.
 
 ## Coding Rules
 

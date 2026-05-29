@@ -129,13 +129,13 @@ Introducir input de voz real en el sistema, en dos fases.
 
 El endpoint empezó con un transcript fijo `[audio input captured]` como placeholder de STT para cerrar el contrato HTTP. Esa validación manual quedó cerrada y la respuesta se reprodujo con `espeak`, aunque con salida ruidosa de ALSA/JACK en la shell. Quedan observaciones pendientes: limpieza de warnings ALSA/JACK para demo y confirmar siempre el `card/device` de ALSA con `arecord -l`.
 
-## Fase 2 — Integración STT (siguiente)
+## Fase 2 — Integración STT (parcialmente completada)
 
 ### Entregables pendientes
 
 - [x] Elegir proveedor STT: OpenAI `gpt-4o-mini-transcribe` como default inicial; Vosk Spanish y `whisper.cpp` quedan como alternativas offline para spike posterior.
 - [x] Integrar STT en el backend con `OPENAI_STT_MODEL` opcional y sin SDK nuevo.
-- [ ] Pipeline de voz extremo a extremo: Raspberry captura → backend STT → respuesta → TTS.
+- [x] Pipeline de voz extremo a extremo manual: Raspberry captura → backend STT → respuesta → TTS.
 - [ ] Loop interactivo con captura desde el cliente Raspberry.
 
 ### Prioridades
@@ -143,6 +143,10 @@ El endpoint empezó con un transcript fijo `[audio input captured]` como placeho
 1. Validar captura de audio estable.
 2. Mantener latencia razonable.
 3. Evitar reconocimiento de voz complejo local.
+
+### Evidencia Phase 2A
+
+Validado el 2026-05-30 desde Raspberry real `tonto-pi` contra backend LAN `192.168.1.91:8000`: captura WAV manual PCM 16-bit mono 16 kHz, `POST /chat/audio` con `HTTP_STATUS=200`, `TOTAL_TIME=5.395580`, transcript real `Hola tonto, explícame qué es una estrella.`, respuesta educativa, y reproducción local con `espeak`. La prueba negativa con archivo de texto devolvió `HTTP_STATUS=400`. El pipeline queda validado manualmente, pero el loop interactivo del cliente Raspberry sigue pendiente.
 
 ### Riesgos
 
@@ -282,9 +286,10 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [x] Implementar endpoint `POST /chat/audio` con validación WAV.
 - [x] Probar subida manual WAV con `curl` desde la Raspberry.
 - [ ] Actualizar cliente Raspberry para capturar y subir WAV automáticamente.
-- [ ] Integrar STT backend.
-- [ ] Loop interactivo de voz Raspberry → backend → TTS.
-- [ ] Medir latencia básica.
+- [x] Integrar STT backend.
+- [x] Validar loop manual de voz Raspberry → backend → TTS.
+- [ ] Loop interactivo de voz Raspberry → backend → TTS automatizado en cliente.
+- [x] Medir latencia básica del loop manual (`TOTAL_TIME=5.395580`).
 - [ ] Mejorar calidad TTS progresivamente.
 
 ## Cliente Raspberry

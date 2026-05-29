@@ -38,18 +38,19 @@ El foco está en conversación natural persistente que adapta el aprendizaje al 
 
 El MVP final de 6 semanas busca demostrar una conversación educativa básica sobre hardware real.
 
-El milestone inmediato es más pequeño: validar el primer loop texto → backend → IA → respuesta → TTS local.
+El milestone inmediato ya validó el primer loop texto → backend → IA → respuesta → TTS local. Semana 3 añadió una validación manual de voz con Raspberry real: WAV capturado manualmente → `POST /chat/audio` → STT backend → respuesta → `espeak` local.
 
 Incluye ahora:
 
 - **Entrada manual de texto** desde Raspberry Pi o cliente web de validación.
+- **Entrada de voz manual validada** mediante captura WAV en Raspberry y `POST /chat/audio`.
 - **Backend Python/FastAPI** con endpoint `/chat`.
 - **Integración OpenAI** para generar respuestas educativas.
 - **TTS local** en Raspberry Pi mediante `espeak`.
 - **Memoria de sesión en proceso** solo para contexto corto.
 - **Documentación viva** en Markdown, asistida por Codex, OpenCode y NotebookLM.
 
-Queda fuera del primer loop: STT, wake word, Arduino/LEDs, persistencia, autenticación, multiusuario, memoria avanzada y UI de producto compleja.
+Queda fuera del primer loop automatizado: wake word, Arduino/LEDs, persistencia, autenticación, multiusuario, memoria avanzada, UI de producto compleja y STT local.
 
 ## Arquitectura Actual
 
@@ -73,8 +74,8 @@ Queda fuera del primer loop: STT, wake word, Arduino/LEDs, persistencia, autenti
 
 - **Hardware confirmado**: Audio output validado y `espeak` funcionando.
 - **Desarrollo**: VSCode Remote SSH, acceso por SSH remoto.
-- **Responsabilidades actuales**: entrada manual de texto, llamadas HTTP al backend, TTS local y manejo básico de errores.
-- **Responsabilidades futuras**: captura de voz, wake word y control físico/Arduino.
+- **Responsabilidades actuales**: entrada manual de texto, llamadas HTTP al backend, TTS local y manejo básico de errores. La captura WAV manual ya fue validada en hardware.
+- **Responsabilidades futuras**: automatizar captura/subida de voz, wake word y control físico/Arduino.
 - **Tecnología**: Python estándar para el primer loop; dependencias de audio/GPIO se añadirán solo cuando entren en alcance.
 
 ### Backend (Windows PC)
@@ -95,7 +96,7 @@ Queda fuera del primer loop: STT, wake word, Arduino/LEDs, persistencia, autenti
 - **Web**: React, TypeScript, Vite, Tailwind CSS
 - **IA**: OpenAI API
 - **Audio actual**: espeak/espeak-ng para TTS local
-- **Audio futuro**: STT inicial ya elegido para backend; wake word queda fuera del MVP inmediato
+- **Audio actual**: STT backend con OpenAI `gpt-4o-mini-transcribe` validado manualmente desde Raspberry; wake word queda fuera del MVP inmediato
 - **Hardware**: Raspberry Pi 3B v1.2; Arduino Uno queda futuro para estados físicos
 - **Comunicación**: REST APIs (FastAPI)
 - **Desarrollo**: Codex, OpenCode (WSL2/DevExpert), GitHub, GitHub Copilot, VSCode + Remote SSH
@@ -193,7 +194,7 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 
 - **Backend language**: Python/FastAPI para MVP; Go queda aparcado hasta que una decisión futura lo reactive.
 - **Memoria futura**: solo después de validar el loop con memoria en proceso.
-- **STT**: OpenAI `gpt-4o-mini-transcribe` elegido como proveedor inicial backend; wake word queda pendiente.
+- **STT**: OpenAI `gpt-4o-mini-transcribe` elegido como proveedor inicial backend y validado manualmente desde Raspberry; wake word queda pendiente.
 - **Estados físicos**: Arduino/LEDs fuera del primer loop.
 - **Deployment**: ejecución local primero; despliegue reproducible después.
 
@@ -219,7 +220,8 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 - ✅ Varias interacciones seguidas validadas en hardware real
 - ✅ Captura WAV validada en Raspberry con micrófono USB
 - ✅ Endpoint `POST /chat/audio` implementado con validación y STT backend inicial
-- 🔄 Semana 3 activa — siguiente: validar STT con Raspberry real y automatizar captura/subida en el cliente
+- ✅ Phase 2A validada con Raspberry real: WAV manual → backend STT → respuesta → `espeak`
+- 🔄 Semana 3 activa — siguiente: automatizar captura/subida en el cliente Raspberry
 
 **Métricas MVP**:
 

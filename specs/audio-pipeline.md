@@ -4,7 +4,7 @@
 
 Este documento describe el pipeline de audio para la versión MVP de TONTO, un asistente para niños. El enfoque está en simplicidad y estabilidad, utilizando un Raspberry Pi 3 como thin client. El audio output ya está validado, y la captura inicial con micrófono USB quedó validada en Raspberry durante Semana 3.
 
-Semana 3 empieza con una fase de preparación: validar hardware de entrada y dejar el repositorio listo para implementar voz sin cambiar todavía contratos públicos ni añadir dependencias. El loop `/chat` de texto sigue siendo la referencia estable mientras se desbloquea la captura de audio.
+Semana 3 empieza con una fase de preparación: validar hardware de entrada y dejar el repositorio listo para implementar voz sin cambiar todavía contratos públicos ni añadir dependencias. El loop `/chat` de texto sigue siendo la referencia estable mientras se desbloquea la captura de audio. Phase 2A ya validó manualmente el camino Raspberry WAV -> `POST /chat/audio` -> STT backend OpenAI -> respuesta -> `espeak` local.
 
 La dirección provisional es procesar STT en el backend. Esto deriva de la arquitectura MVP de Raspberry Pi como thin client y de la necesidad de mantener el cliente simple, no de una limitación ya demostrada de la Raspberry. STT local solo se descartará si una prueba concreta demuestra problemas de CPU, memoria, latencia, calidad o complejidad de setup.
 
@@ -29,7 +29,7 @@ La dirección provisional es procesar STT en el backend. Esto deriva de la arqui
 
 - **Tecnología MVP**: Python/FastAPI.
 - **Funciones actuales**: Maneja la lógica conversacional y la integración con OpenAI mediante `/chat`.
-- **Preparación semana 3**: la captura WAV ya quedo validada; `POST /chat/audio` está implementado y ahora usa STT real en backend.
+- **Preparación semana 3**: la captura WAV ya quedo validada; `POST /chat/audio` está implementado y usa STT real en backend, validado manualmente desde Raspberry el 2026-05-30.
 - **Comunicación actual**: Recibe mensajes HTTP/JSON del cliente y envía respuestas de texto para TTS local.
 
 ## Contrato de Subida de Audio
@@ -40,7 +40,7 @@ Esta sección define el contrato de subida de audio. El endpoint está implement
 
 - **Endpoint**: `POST /chat/audio`
 - **Método HTTP**: `POST`
-- **Estado**: implementado en rama `feature/audio-upload-contract`.
+- **Estado**: implementado y validado manualmente en rama `feature/audio-upload-contract`.
 - **STT**: OpenAI `gpt-4o-mini-transcribe` por defecto, configurable con `OPENAI_STT_MODEL`. El campo `transcript` devuelve texto reconocido; si el audio válido no produce texto, el backend responde `422`.
 - **Propósito**: recibir un turno corto de audio capturado por la Raspberry, validar el formato WAV, reutilizar el flujo conversacional existente de `/chat`, y devolver una respuesta textual speakable para que la Raspberry la reproduzca con `espeak`.
 
@@ -174,7 +174,7 @@ La intención es que `/chat/audio` sea una variante de entrada de chat por voz: 
 
 ### Criterios de Aceptación del Contrato
 
-El contrato se considera implementado cuando:
+El contrato se considera implementado y Phase 2A validada cuando:
 
 - Mantiene `POST /chat` como contrato estable de texto.
 - Permite a la Raspberry seguir como thin client: captura WAV, sube audio, reproduce `response` con `espeak`.
@@ -189,6 +189,8 @@ El contrato se considera implementado cuando:
 - OpenAI `gpt-4o-mini-transcribe` es el proveedor inicial; `OPENAI_STT_MODEL` permite cambiar el modelo sin tocar el cliente Raspberry.
 - `python-multipart` es la única dependencia nueva añadida.
 - Tests automatizados cubren: upload válido, audio vacío, tamaño excedido, archivo demasiado pequeno para WAV, formato incorrecto, duración fuera de rango, transcript vacío, errores y timeouts de STT.
+- Validación manual Phase 2A pasada el 2026-05-30: Raspberry `tonto-pi` grabó un WAV PCM 16-bit mono 16 kHz de 188K con `arecord -D plughw:1,0`; `POST /chat/audio` devolvió `HTTP_STATUS=200`, `TOTAL_TIME=5.395580`, transcript real `Hola tonto, explícame qué es una estrella.`, y una respuesta educativa reproducida localmente con `espeak`.
+- Prueba negativa Phase 2A pasada: archivo de texto no audio devuelto como `HTTP_STATUS=400` con `File too small to be a valid WAV`.
 
 ### TTS (Text-to-Speech)
 
@@ -251,7 +253,7 @@ aplay ~/tonto-mic-check.wav
 - Documentar cualquier bloqueo de hardware antes de implementar endpoints o dependencias. No hubo bloqueo de captura en la validacion de Semana 3.
 - Si se considera STT local, documentar la prueba concreta y el motivo técnico antes de cambiar el default.
 - Mantener `POST /chat` estable mientras `/chat/audio` añade entrada por voz.
-- El endpoint `POST /chat/audio` está implementado pero el cliente Raspberry no ha sido modificado: la captura y subida de audio no están automatizadas.
+- El endpoint `POST /chat/audio` está implementado y validado con STT real, pero el cliente Raspberry no ha sido modificado: la captura y subida de audio no están automatizadas.
 - [x] **Probar subida manual de WAV al backend** con `curl` desde la Raspberry, verificando que el backend responde con `session_id`, `transcript` y `response`. Validado el 2026-05-27 desde `tonto-pi` contra backend LAN `192.168.1.91:8000`.
 
   ```bash
@@ -269,7 +271,19 @@ aplay ~/tonto-mic-check.wav
 
   Resultado esperado tras la integración STT: `HTTP 200` con `{"session_id": "demo-session", "transcript": "<texto reconocido>", "response": "..."}`.
 
-  Resultado validado:
+  Resultado validado con STT real el 2026-05-30:
+
+  ```text
+  HTTP_STATUS=200
+  TOTAL_TIME=5.395580
+  session_id=phase-2a-stt-validation
+  transcript=Hola tonto, explícame qué es una estrella.
+  response=¡Hola! Una estrella es una gran esfera de gas caliente en el espacio, principalmente compuesta de hidrógeno y helio. Produce luz y calor a través de reacciones nucleares en su interior. El Sol es una estrella que está muy cerca de nosotros y nos brinda luz y calor. ¡Esas luces que ves en el cielo de noche también son estrellas!
+  ```
+
+  La respuesta fue reproducida con `espeak -v es` y resultó audible y entendible para demo. La shell mostró warnings ALSA/JACK, pero no bloquearon la reproducción.
+
+  Resultado validado antes de STT real:
 
   ```text
   HTTP_STATUS=200
@@ -291,7 +305,7 @@ aplay ~/tonto-mic-check.wav
 ## Riesgos Técnicos Principales
 
 - **Recursos limitados del Raspberry Pi 3**: Posible latencia o inestabilidad en procesamiento de audio.
-- **Micrófono USB validado inicialmente**: queda pendiente medir calidad suficiente con STT real y latencia end-to-end.
+- **Micrófono USB validado inicialmente**: Phase 2A midió STT real con `TOTAL_TIME=5.395580`; queda pendiente automatizar el loop en el cliente y seguir midiendo latencia en flujo interactivo.
 - **Latencia**: Procesamiento en tiempo real puede ser desafiante con hardware limitado.
 - **Estabilidad**: Priorizar simplicidad para evitar crashes o comportamientos impredecibles.
 
@@ -306,6 +320,7 @@ aplay ~/tonto-mic-check.wav
 - Una muestra WAV corta puede grabarse y reproducirse en Raspberry.
 - La validación de captura registra dispositivo, comando usado, duración y notas de calidad.
 - El contrato de STT backend queda decidido: OpenAI `gpt-4o-mini-transcribe` por defecto, sin nueva dependencia de SDK.
+- Phase 2A queda validada con Raspberry real: captura WAV manual, subida a `POST /chat/audio`, transcript real, respuesta educativa y reproducción local con `espeak`.
 - Cualquier descarte de STT local queda respaldado por una prueba técnica, no por una suposición.
 - El TTS genera audio claro y comprensible.
 - El output audio se reproduce sin interrupciones.

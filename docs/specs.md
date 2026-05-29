@@ -39,7 +39,7 @@ La preparación de semana 3 mantuvo estable `/chat` y añadió `POST /chat/audio
 
 - POST /chat: Procesar una interacción conversacional con `session_id` y `message`
 
-Durante semana 3, `/chat` sigue siendo el contrato estable. Tras validar la captura WAV en Raspberry, `specs/audio-pipeline.md` documentó `POST /chat/audio` como contrato mínimo candidato. Ahora el endpoint está implementado en `backend/audio_router.py` (rama `feature/audio-upload-contract`) con STT real en backend mediante OpenAI `gpt-4o-mini-transcribe` por defecto, configurable con `OPENAI_STT_MODEL`. La subida manual de un WAV desde Raspberry con `curl` quedó validada el 2026-05-27 contra el backend LAN antes de STT real; falta repetir esa validación con transcripción real. El endpoint no reemplaza `/chat`.
+Durante semana 3, `/chat` sigue siendo el contrato estable. Tras validar la captura WAV en Raspberry, `specs/audio-pipeline.md` documentó `POST /chat/audio` como contrato mínimo candidato. Ahora el endpoint está implementado en `backend/audio_router.py` (rama `feature/audio-upload-contract`) con STT real en backend mediante OpenAI `gpt-4o-mini-transcribe` por defecto, configurable con `OPENAI_STT_MODEL`. La subida manual de un WAV desde Raspberry con `curl` quedó validada el 2026-05-30 contra el backend LAN con transcripción real, respuesta educativa y reproducción local con `espeak`. El endpoint no reemplaza `/chat`.
 
 ## Fuera de Alcance del Arranque de Semana 3
 
@@ -63,6 +63,7 @@ Durante semana 3, `/chat` sigue siendo el contrato estable. Tras validar la capt
 - Backend arrancado con `.\scripts\dev.ps1 -Service backend -AllowLan`.
 - Cliente Raspberry apuntando a `TONTO_BACKEND_URL`.
 - Subida manual a `POST /chat/audio` validada desde Raspberry con `curl` y respuesta `HTTP 200`.
+- STT backend validado manualmente desde Raspberry real el 2026-05-30: transcript `Hola tonto, explícame qué es una estrella.`, `TOTAL_TIME=5.395580`, respuesta educativa y TTS local audible.
 - Loop de texto de semana 2 confirmado antes de tocar audio input.
 
 ## Requisitos No Funcionales

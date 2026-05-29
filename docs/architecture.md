@@ -119,7 +119,7 @@ transcript real → respuesta conversacional → espeak local
 
 El endpoint `POST /chat/audio` está implementado en el backend.
 El proveedor inicial de STT es OpenAI `gpt-4o-mini-transcribe`, configurable con `OPENAI_STT_MODEL`.
-La subida manual desde Raspberry con `curl` fue validada el 2026-05-27 contra el backend LAN antes de integrar STT real; falta repetir la validación manual con transcripción real.
+La subida manual desde Raspberry con `curl` fue validada con transcripción real el 2026-05-30 contra el backend LAN: `HTTP_STATUS=200`, `TOTAL_TIME=5.395580`, transcript real, respuesta educativa y reproducción local con `espeak`.
 El cliente Raspberry no ha sido modificado: la captura sigue siendo manual por SSH.
 
 ## Principios arquitectónicos
@@ -148,17 +148,16 @@ Componentes ya validados:
 - documentación fundacional
 - POST `/chat` estable
 - POST `/chat/audio` implementado en backend (con STT real, cliente no modificado)
-- subida manual Raspberry -> backend a `POST /chat/audio` validada con `curl`
+- subida manual Raspberry -> backend a `POST /chat/audio` validada con `curl` y STT real
 
 Componentes en desarrollo:
 
 - backend conversacional inicial,
 - pipeline cliente-servidor,
 - integración OpenAI,
-- validación manual de `POST /chat/audio` con STT real,
 - cliente Raspberry: captura WAV automatizada y subida a `/chat/audio` (pendiente).
 
-El objetivo actual es completar el pipeline de voz real validando STT en hardware y actualizando el cliente Raspberry para capturar y subir audio automáticamente, manteniendo el loop de texto como fallback estable.
+El objetivo actual es convertir la validación manual Phase 2A en un loop interactivo del cliente Raspberry que capture, suba audio y reproduzca la respuesta automáticamente, manteniendo el loop de texto como fallback estable.
 
 La arquitectura está optimizada para velocidad de iteración y facilidad de depuración durante el MVP, no para escalabilidad de producción.
 
