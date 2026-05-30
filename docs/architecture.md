@@ -111,18 +111,18 @@ El cliente web no debe duplicar orquestación conversacional ni lógica de IA.
 6. La Raspberry reproduce el audio con `espeak` y mantiene el estado local de sesión.
 7. El ciclo puede repetirse mientras la sesión permanezca activa.
 
-### Variante de audio (solo backend, cliente pendiente)
+### Variante de audio Raspberry (Phase 2B)
 
 ```
-WAV grabado manualmente (arecord) → POST /chat/audio (multipart) →
-backend valida WAV → OpenAI STT backend →
-transcript real → respuesta conversacional → espeak local
+Enter en cliente -> arecord WAV -> POST /chat/audio (multipart) ->
+backend valida WAV -> OpenAI STT backend ->
+transcript real -> respuesta conversacional -> espeak local ajustado
 ```
 
 El endpoint `POST /chat/audio` está implementado en el backend.
 El proveedor inicial de STT es OpenAI `gpt-4o-mini-transcribe`, configurable con `OPENAI_STT_MODEL`.
 La subida manual desde Raspberry con `curl` fue validada con transcripción real el 2026-05-30 contra el backend LAN: `HTTP_STATUS=200`, `TOTAL_TIME=5.395580`, transcript real, respuesta educativa y reproducción local con `espeak`.
-El cliente Raspberry no ha sido modificado: la captura sigue siendo manual por SSH.
+El cliente Raspberry ya soporta `client/main.py --mode voice` para automatizar captura, subida, transcript/response y reproducción TTS. La validación inicial en hardware pasó, pero después se ajustó el TTS a `espeak -v es -s 135 -g 8`; queda pendiente revalidar Phase 2B en Raspberry real con ese ajuste antes de avanzar a Phase 3.
 
 ### Variante de audio web (Fase 3 planificada)
 
@@ -155,23 +155,24 @@ Componentes ya validados:
 - SSH y desarrollo remoto
 - audio output
 - TTS local (`espeak`)
-- captura WAV manual con micrófono USB (`arecord` en Raspberry, sin automatizar en cliente)
+- captura WAV manual con micrófono USB (`arecord` en Raspberry)
+- cliente Raspberry `--mode voice` para captura/subida/reproducción automatizada, con revalidación post-ajuste TTS pendiente
 - estructura monorepo
 - documentación fundacional
 - POST `/chat` estable
 - POST `/chat/audio` implementado en backend (con STT real, cliente no modificado)
 - subida manual Raspberry -> backend a `POST /chat/audio` validada con `curl` y STT real
-- Fase 3 de cliente web de audio documentada como trabajo planificado
+- Fase 3 de cliente web de audio documentada como trabajo planificado y bloqueada hasta revalidar Phase 2B con TTS ajustado
 
 Componentes en desarrollo:
 
 - backend conversacional inicial,
 - pipeline cliente-servidor,
 - integración OpenAI,
-- cliente web: loop interactivo de voz contra `/chat/audio` (pendiente).
-- cliente Raspberry: captura WAV automatizada y subida a `/chat/audio` (pendiente).
+- cliente web: loop interactivo de voz contra `/chat/audio` (pendiente y bloqueado por revalidación Phase 2B post-ajuste TTS).
+- cliente Raspberry: revalidación en hardware del TTS ajustado `espeak -v es -s 135 -g 8`.
 
-El objetivo actual es cerrar primero la Fase 2B: convertir la validacion manual Phase 2A en un loop interactivo del cliente Raspberry que capture, suba audio y reproduzca la respuesta automaticamente, manteniendo el loop de texto como fallback estable. Despues, la Fase 3 web podra instrumentar el mismo pipeline de audio desde navegador.
+El objetivo actual es cerrar la revalidación post-ajuste de Fase 2B: repetir el loop interactivo del cliente Raspberry con el TTS ajustado, manteniendo el loop de texto como fallback estable. Despues, la Fase 3 web podra instrumentar el mismo pipeline de audio desde navegador.
 
 La arquitectura está optimizada para velocidad de iteración y facilidad de depuración durante el MVP, no para escalabilidad de producción.
 

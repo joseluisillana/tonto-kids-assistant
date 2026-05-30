@@ -2,6 +2,8 @@
 
 This guide validates Phase 2B of `specs/audio-pipeline.md`: the automated Raspberry Pi voice client loop using `client/main.py --mode voice`.
 
+After the TTS tuning commit `fix: tune raspberry espeak demo speech`, the final Phase 2B gate is the post-adjustment revalidation in `specs/audio-pipeline-phase-2b-tts-revalidation.md`. Phase 3 remains blocked until that revalidation passes on real Raspberry hardware.
+
 The guide is intentionally command-oriented so another human or agent can execute it and collect evidence. Do not print, paste, or commit the value of `OPENAI_API_KEY`.
 
 ## Objective and Scope
@@ -9,7 +11,7 @@ The guide is intentionally command-oriented so another human or agent can execut
 Validate that the implemented Raspberry client can automate the voice turn that was validated manually in Phase 2A:
 
 ```text
-Enter in client -> arecord WAV -> POST /chat/audio -> transcript + response -> espeak local
+Enter in client -> arecord WAV -> POST /chat/audio -> transcript + response -> espeak -v es -s 135 -g 8
 ```
 
 In scope:
@@ -18,7 +20,8 @@ In scope:
 - Raspberry Pi connectivity to the backend over LAN.
 - Raspberry Pi microphone capture through the client using `arecord`.
 - Automated upload to `POST /chat/audio` from `client/main.py --mode voice`.
-- Transcript, response, and local `espeak` playback from the client loop.
+- Transcript, response, and local `espeak -v es -s 135 -g 8` playback from the client loop.
+- TTS intelligibility after the slower speed and word-gap tuning.
 - Typed-message fallback inside `--mode voice`, which should still use `/chat`.
 - Evidence collection for transcript, response, latency notes, TTS playback, and failures.
 - Final documentation update based on the evidence.
@@ -42,6 +45,7 @@ Out of scope:
 - Raspberry Pi has `curl`, `arecord`, `aplay`, `espeak`, and `python3`.
 - USB microphone is connected to Raspberry Pi.
 - The repository on Raspberry contains the Phase 2B client implementation.
+- The repository on Raspberry contains the TTS tuning commit `fix: tune raspberry espeak demo speech` or a later commit with equivalent default `TONTO_TTS_ARGS`.
 - The Raspberry client virtual environment exists and can run `.venv/bin/python client/main.py`.
 
 ## Evidence to Collect
@@ -56,12 +60,13 @@ Create a local evidence note while executing the guide. Include:
 - Raspberry hostname, user, repo path, and tooling output.
 - `arecord -l` microphone card/device.
 - Chosen `TONTO_AUDIO_DEVICE`.
-- Client environment values used: `TONTO_BACKEND_URL`, `TONTO_RECORD_SECONDS`, `TONTO_AUDIO_PATH`, and `TONTO_DEVICE_ID`.
+- Client environment values used: `TONTO_BACKEND_URL`, `TONTO_RECORD_SECONDS`, `TONTO_AUDIO_PATH`, `TONTO_DEVICE_ID`, and `TONTO_TTS_ARGS`.
 - WAV file metadata after the client records a turn.
 - Client output for `Transcript:` and `TONTO:`.
 - Whether the transcript is real and close enough to the spoken phrase.
 - Whether the response is child-friendly and speakable.
-- Whether `espeak` playback was audible.
+- Whether `espeak -v es -s 135 -g 8` playback was audible.
+- Whether a long response sounded slower, understandable, and not word-smeared.
 - Any ALSA/JACK warnings and whether they block the demo.
 - Typed-message fallback result inside `--mode voice`.
 - Clean exit result using `exit` or `quit`.
@@ -74,6 +79,7 @@ Run from the repository root on Windows:
 ```powershell
 git branch --show-current
 git status --short --branch
+git log -1 --oneline
 ```
 
 Evidence to record:
@@ -186,6 +192,7 @@ Evidence to record:
 - Tool paths.
 - Python version.
 - Raspberry repo branch and status.
+- Latest commit, confirming the TTS tuning commit is present.
 
 Acceptance:
 
@@ -245,6 +252,8 @@ export TONTO_AUDIO_DEVICE=plughw:<CARD>,<DEVICE>
 export TONTO_RECORD_SECONDS=6
 export TONTO_AUDIO_PATH=/tmp/tonto-turn-phase-2b.wav
 export TONTO_DEVICE_ID=tonto-pi
+export TONTO_TTS_ARGS="-v es -s 135 -g 8"
+printf 'TONTO_TTS_ARGS=%s\n' "$TONTO_TTS_ARGS"
 ```
 
 Optional: if the default ALSA capture device is already the USB microphone, leave `TONTO_AUDIO_DEVICE` unset and record that decision:
@@ -257,12 +266,14 @@ Evidence to record:
 
 - Exact environment values used.
 - Whether `TONTO_AUDIO_DEVICE` was explicit or unset.
+- Exact `TONTO_TTS_ARGS` value.
 
 Acceptance:
 
 - `TONTO_BACKEND_URL` points to the Windows backend LAN address, not `localhost`.
 - `TONTO_RECORD_SECONDS` stays within the supported `1..10` range.
 - `TONTO_AUDIO_PATH` points to a writable Raspberry path.
+- `TONTO_TTS_ARGS` is `-v es -s 135 -g 8`, unless explicitly testing an equivalent later tuning.
 
 ## 9. Run the Client in Voice Mode
 
@@ -299,7 +310,7 @@ At the client prompt, press Enter on an empty line.
 Suggested spoken phrase during recording:
 
 ```text
-Hola TONTO, explicame que es una estrella.
+Hola TONTO, explicame que es una estrella y por que brilla en el cielo.
 ```
 
 Expected client flow:
@@ -329,7 +340,9 @@ Evidence to record:
 - WAV metadata if available.
 - `Transcript:` line.
 - `TONTO:` line.
-- Whether `espeak` played the response.
+- Whether `espeak -v es -s 135 -g 8` played the response.
+- Whether the long response was slower and understandable enough for demo.
+- Whether words still sounded rushed or ran together.
 - Any ALSA/JACK warnings.
 
 Expected WAV format:
@@ -346,7 +359,8 @@ Acceptance:
 - Transcript is non-empty and not `[audio input captured]`.
 - Transcript is reasonably close to the spoken phrase.
 - Response is child-friendly and speakable.
-- `espeak` playback is audible and understandable enough for demo.
+- `espeak -v es -s 135 -g 8` playback is audible, slower than the previous `-v es` pass, and understandable enough for demo.
+- The long response does not noticeably smear words together.
 
 ## 11. Validate Typed-Message Fallback Inside Voice Mode
 
@@ -537,7 +551,8 @@ Check:
 
 ```bash
 which espeak
-espeak -v es "Prueba de audio"
+printf 'TONTO_TTS_ARGS=%s\n' "${TONTO_TTS_ARGS:-<unset>}"
+espeak -v es -s 135 -g 8 "Prueba de audio lenta y clara para TONTO"
 ```
 
 If needed:
@@ -559,7 +574,8 @@ Phase 2B validation passes only when all of these are true:
 - Client uploads to `POST /chat/audio` and receives a valid response.
 - Client prints a real non-empty `Transcript:` line.
 - Client prints a child-friendly `TONTO:` response.
-- `espeak` audibly plays the response.
+- `espeak -v es -s 135 -g 8` or equivalent `TONTO_TTS_ARGS` audibly plays the response.
+- The long response is slower, understandable, and does not noticeably run words together.
 - Typing a text message in voice mode still uses `/chat` successfully.
 - `exit` or `quit` closes cleanly.
 - ALSA/JACK warnings, if any, are recorded and judged non-blocking only if audio works.
@@ -596,19 +612,19 @@ Include:
 
 Update `specs/audio-pipeline.md`:
 
-- Mark real Phase 2B Raspberry validation as completed only if all acceptance criteria passed.
-- If validation failed, leave Phase 2B as implemented but not validated and document the blocker.
+- Mark post-adjustment Phase 2B Raspberry validation as completed only if all acceptance criteria passed.
+- If validation failed or was not rerun after the TTS tuning, leave Phase 2B as implemented and previously validated, but pending post-TTS revalidation.
 
 Update `docs/roadmap.md`:
 
-- Replace the pending real Raspberry validation note only after hardware validation passes.
-- Otherwise keep Phase 2B as implemented but pending real validation.
+- Replace the pending post-TTS revalidation note only after hardware validation passes.
+- Otherwise keep Phase 2B as implemented and Phase 3 blocked pending post-TTS revalidation.
 
 Update `docs/specs.md` and `docs/architecture.md` only if the validation result changes durable project status.
 
 Update `README.md` only if the public project status should change.
 
-Do not update `AGENTS.md` unless validation changes persistent instructions for future agents.
+Update `AGENTS.md` after the post-TTS revalidation passes or fails so future agents know whether Phase 3 is still blocked.
 
 Run final local checks from Windows after documentation updates:
 
@@ -639,6 +655,7 @@ Evidence to record:
 - [ ] `TONTO_RECORD_SECONDS` configured.
 - [ ] `TONTO_AUDIO_PATH` configured.
 - [ ] `TONTO_DEVICE_ID` configured.
+- [ ] `TONTO_TTS_ARGS=-v es -s 135 -g 8` confirmed.
 - [ ] Client starts with `.venv/bin/python client/main.py --mode voice`.
 - [ ] Enter starts recording.
 - [ ] Client prints `Recording...`.
@@ -647,13 +664,16 @@ Evidence to record:
 - [ ] WAV format verified when `file` is available.
 - [ ] Client prints real transcript.
 - [ ] Client prints response.
-- [ ] Response played with `espeak`.
+- [ ] Response played with `espeak -v es -s 135 -g 8`.
+- [ ] Long response is slower and understandable enough for demo.
+- [ ] Words do not noticeably run together in the long response.
 - [ ] ALSA/JACK warnings recorded if present.
 - [ ] Typed-message fallback works in `--mode voice`.
 - [ ] `exit` or `quit` closes cleanly.
 - [ ] `docs/project-journal/week-03.md` updated with evidence after validation.
 - [ ] `specs/audio-pipeline.md` updated with validation status after validation.
 - [ ] `docs/roadmap.md` updated after validation.
+- [ ] `AGENTS.md` updated with whether Phase 3 remains blocked.
 - [ ] Final `.\scripts\test.ps1 -Target python` passes after documentation updates.
 - [ ] Final `git diff --check` passes.
 - [ ] Final `git status --short --branch` recorded.

@@ -505,7 +505,7 @@ Remaining observations:
 
 ## Fase 2B: Raspberry Client Automation
 
-**Status:** validated on real Raspberry hardware. The `--mode voice` loop is now closed end to end for the MVP voice turn.
+**Status:** implemented and initially validated on real Raspberry hardware. After TTS tuning, the `--mode voice` loop requires one more Raspberry revalidation before Phase 3 starts.
 
 ### Changes
 
@@ -560,6 +560,8 @@ espeak -v es -s 135 -g 8 "<response>"
 
 This keeps the same local `espeak` path and adds no dependencies. The speed and word-gap values remain configurable with `TONTO_TTS_ARGS` so the next real Raspberry demo pass can tune them without code changes.
 
+This follow-up changes the Phase 2B status from "validated and ready for Phase 3" to "implemented and initially validated, pending post-TTS revalidation". The revalidation spec is `specs/audio-pipeline-phase-2b-tts-revalidation.md`; Phase 3 should not start until that pass confirms the tuned playback is understandable on real Raspberry hardware.
+
 ### Remaining
 
 Manual validation on Raspberry hardware is needed:
@@ -575,7 +577,8 @@ Acceptance criteria:
 - Enter starts capture
 - WAV is uploaded to /chat/audio
 - HTTP 200 with transcript and response
-- espeak plays the response
+- espeak plays the response with `-v es -s 135 -g 8`
+- long responses are understandable and words do not run together
 - exit or quit closes cleanly
 - --mode text still works
 
@@ -587,7 +590,7 @@ Tracking plan: `specs/audio-pipeline-phase-2b-validation-guide.md`.
 **Operator:** Jose Luis Illana Ruiz.
 **Branch:** `feature/audio-upload-contract`.
 **Initial Git status:** `## feature/audio-upload-contract...origin/feature/audio-upload-contract`; only the validation guide itself was untracked before documentation updates.
-**Conclusion:** pass. Phase 2B was validated on real Raspberry hardware with `client/main.py --mode voice`, `arecord`, backend upload to `POST /chat/audio`, transcript, speakable response, `espeak`, text fallback, and clean exit.
+**Conclusion:** pass for the initial Phase 2B validation. After the later TTS tuning to `espeak -v es -s 135 -g 8`, this evidence remains historical and must be followed by the post-adjustment revalidation in `specs/audio-pipeline-phase-2b-tts-revalidation.md`.
 
 Pre-flight and setup:
 
@@ -686,7 +689,7 @@ Validation notes:
 
 **Date:** 2026-05-30.
 **Branch:** `feature/audio-upload-contract`.
-**Status:** planned in documentation only; no web or backend implementation in this iteration. Sequencing corrected: this phase follows the pending Raspberry client automation from Phase 2B.
+**Status:** planned in documentation only; no web or backend implementation in this iteration. Sequencing corrected: this phase follows the pending Phase 2B post-TTS revalidation on Raspberry hardware.
 
 Phase 3 is added to Week 03 as a browser-driven validation loop:
 

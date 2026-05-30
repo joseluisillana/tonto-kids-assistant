@@ -4,7 +4,7 @@
 
 Este documento describe el pipeline de audio para la versión MVP de TONTO, un asistente para niños. El enfoque está en simplicidad y estabilidad, utilizando un Raspberry Pi 3 como thin client. El audio output ya está validado, y la captura inicial con micrófono USB quedó validada en Raspberry durante Semana 3.
 
-Semana 3 empieza con una fase de preparación: validar hardware de entrada y dejar el repositorio listo para implementar voz sin cambiar todavía contratos públicos ni añadir dependencias. El loop `/chat` de texto sigue siendo la referencia estable mientras se desbloquea la captura de audio. Phase 2A ya validó manualmente el camino Raspberry WAV -> `POST /chat/audio` -> STT backend OpenAI -> respuesta -> `espeak` local. Phase 2B validó el loop automatizado en `client/main.py --mode voice` sobre Raspberry real. Phase 3 queda planificada despues para validar el mismo contrato desde el cliente web mediante un loop interactivo de voz en navegador.
+Semana 3 empieza con una fase de preparación: validar hardware de entrada y dejar el repositorio listo para implementar voz sin cambiar todavía contratos públicos ni añadir dependencias. El loop `/chat` de texto sigue siendo la referencia estable mientras se desbloquea la captura de audio. Phase 2A ya validó manualmente el camino Raspberry WAV -> `POST /chat/audio` -> STT backend OpenAI -> respuesta -> `espeak` local. Phase 2B validó inicialmente el loop automatizado en `client/main.py --mode voice` sobre Raspberry real. Después se ajustó el TTS a `espeak -v es -s 135 -g 8` para mejorar inteligibilidad en respuestas largas, por lo que Phase 2B queda pendiente de revalidación post-ajuste antes de pasar a Phase 3.
 
 La dirección provisional es procesar STT en el backend. Esto deriva de la arquitectura MVP de Raspberry Pi como thin client y de la necesidad de mantener el cliente simple, no de una limitación ya demostrada de la Raspberry. STT local solo se descartará si una prueba concreta demuestra problemas de CPU, memoria, latencia, calidad o complejidad de setup.
 
@@ -161,7 +161,7 @@ La intención es que `/chat/audio` sea una variante de entrada de chat por voz: 
 
 ### Fase 3: Loop Web de Validacion
 
-La Fase 3 de Semana 3 queda documentada en `specs/audio-pipeline-phase-3-web-loop.md` para ejecutarse despues de la automatizacion Raspberry de Fase 2B. Su objetivo es usar el cliente web como superficie interactiva para validar el mismo `POST /chat/audio` ya implementado:
+La Fase 3 de Semana 3 queda documentada en `specs/audio-pipeline-phase-3-web-loop.md` para ejecutarse despues de la revalidacion Raspberry de Fase 2B post-ajuste TTS. Su objetivo es usar el cliente web como superficie interactiva para validar el mismo `POST /chat/audio` ya implementado:
 
 ```text
 navegador -> captura de microfono -> WAV compatible -> POST /chat/audio -> transcript -> response -> UI web
@@ -273,7 +273,8 @@ aplay ~/tonto-mic-check.wav
 - Si se considera STT local, documentar la prueba concreta y el motivo técnico antes de cambiar el default.
 - Mantener `POST /chat` estable mientras `/chat/audio` añade entrada por voz.
 - El endpoint `POST /chat/audio` está implementado y validado con STT real. El cliente Raspberry (Phase 2B) ya automatiza captura/subida: `client/main.py` soporta `--mode voice` con loop interactivo.
-- [x] Automatizar captura/subida en cliente Raspberry: Phase 2B validada en Raspberry real. `client/main.py` soporta `--mode voice` con loop interactivo (Enter inicia captura con `arecord`, sube WAV a `POST /chat/audio`, muestra transcript/response, reproduce con `espeak`). El modo texto `--mode text` preserva el comportamiento original. El tracking de la evidencia vive en `specs/audio-pipeline-phase-2b-validation-guide.md`. En esta validación, `espeak` sonó audible pero robótico y poco claro para la demo; los warnings ALSA/JACK no bloquearon el turno.
+- [x] Automatizar captura/subida en cliente Raspberry: Phase 2B validada inicialmente en Raspberry real. `client/main.py` soporta `--mode voice` con loop interactivo (Enter inicia captura con `arecord`, sube WAV a `POST /chat/audio`, muestra transcript/response, reproduce con `espeak`). El modo texto `--mode text` preserva el comportamiento original. El tracking de la evidencia vive en `specs/audio-pipeline-phase-2b-validation-guide.md`. En esta validación, `espeak` sonó audible pero robótico y poco claro para la demo; los warnings ALSA/JACK no bloquearon el turno.
+- [ ] Revalidar Phase 2B post-ajuste TTS: repetir en Raspberry real con `TONTO_TTS_ARGS="-v es -s 135 -g 8"` siguiendo `specs/audio-pipeline-phase-2b-tts-revalidation.md`. Phase 3 queda bloqueada hasta que esta revalidación confirme que respuestas largas son entendibles y no atropellan palabras.
 - [x] **Probar subida manual de WAV al backend** con `curl` desde la Raspberry, verificando que el backend responde con `session_id`, `transcript` y `response`. Validado el 2026-05-27 desde `tonto-pi` contra backend LAN `192.168.1.91:8000`.
 
   ```bash
@@ -320,12 +321,12 @@ aplay ~/tonto-mic-check.wav
   - `espeak -v es` reprodujo correctamente la respuesta JSON y se escucho con claridad, pero la shell mostro warnings/errores ALSA/JACK sobre PCMs no disponibles y servidor JACK ausente. No bloquean la salida audible, aunque conviene limpiarlos para una demo mas clara.
   - La prueba negativa con un archivo de texto corto devuelve `400 File too small to be a valid WAV`; esta es la semantica decidida para archivos demasiado pequenos o mal formados.
 
-  Esta prueba es manual y no sustituye la integración automatizada en el cliente Raspberry, que queda como trabajo pendiente de la Fase 2.
+  Esta prueba es manual y queda como evidencia de Phase 2A; la integración automatizada del cliente Raspberry se abordó después en Phase 2B.
 
 ## Riesgos Técnicos Principales
 
 - **Recursos limitados del Raspberry Pi 3**: Posible latencia o inestabilidad en procesamiento de audio.
-- **Micrófono USB validado inicialmente**: Phase 2A midió STT real con `TOTAL_TIME=5.395580`; queda pendiente automatizar el loop en el cliente y seguir midiendo latencia en flujo interactivo.
+- **Micrófono USB validado inicialmente**: Phase 2A midió STT real con `TOTAL_TIME=5.395580`; Phase 2B automatizó el loop en el cliente. Queda pendiente repetir la validación con el TTS ajustado y seguir midiendo latencia en flujo interactivo.
 - **Latencia**: Procesamiento en tiempo real puede ser desafiante con hardware limitado.
 - **Estabilidad**: Priorizar simplicidad para evitar crashes o comportamientos impredecibles.
 
@@ -341,7 +342,8 @@ aplay ~/tonto-mic-check.wav
 - La validación de captura registra dispositivo, comando usado, duración y notas de calidad.
 - El contrato de STT backend queda decidido: OpenAI `gpt-4o-mini-transcribe` por defecto, sin nueva dependencia de SDK.
 - Phase 2A queda validada con Raspberry real: captura WAV manual, subida a `POST /chat/audio`, transcript real, respuesta educativa y reproducción local con `espeak`.
-- Phase 2B completada: `client/main.py` con `--mode voice` automatiza captura, subida, transcript/response y TTS local. `--mode text` preserva el comportamiento original. Tests unitarios cubren send_message, send_audio, capture_audio y speak sin hardware real.
+- Phase 2B implementada y validada inicialmente: `client/main.py` con `--mode voice` automatiza captura, subida, transcript/response y TTS local. `--mode text` preserva el comportamiento original. Tests unitarios cubren send_message, send_audio, capture_audio y speak sin hardware real.
+- Phase 2B post-ajuste TTS pendiente: el cliente usa por defecto `espeak -v es -s 135 -g 8`, pero falta repetir validación en Raspberry real antes de avanzar a Phase 3.
 - Cualquier descarte de STT local queda respaldado por una prueba técnica, no por una suposición.
 - El TTS genera audio claro y comprensible.
 - El output audio se reproduce sin interrupciones.
