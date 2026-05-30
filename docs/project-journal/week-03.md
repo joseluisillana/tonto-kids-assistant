@@ -532,6 +532,7 @@ In voice mode, pressing Enter starts a recording with `arecord`, uploads the WAV
 | `TONTO_AUDIO_PATH` | `/tmp/tonto-turn.wav` | WAV file path |
 | `TONTO_DEVICE_ID` | `tonto-pi` | Client identifier |
 | `TONTO_TTS_COMMAND` | `espeak` | TTS binary |
+| `TONTO_TTS_ARGS` | `-v es -s 135 -g 8` | TTS arguments tuned before leaving Phase 2B: Spanish voice, slower speed, and word gap |
 
 ### Error handling
 
@@ -547,7 +548,17 @@ All specified error paths are handled without breaking the loop: backend unreach
 - HTTP errors and invalid JSON reported without breaking loop
 - Capture calls arecord with and without TONTO_AUDIO_DEVICE
 - Failed arecord or empty WAV does not attempt upload
-- TTS handles FileNotFoundError and non-zero exit codes
+- TTS defaults to `espeak -v es -s 135 -g 8`, allows custom TTS args, and handles FileNotFoundError and non-zero exit codes
+
+### Phase 2B follow-up: TTS intelligibility adjustment
+
+Before moving to the next phase, Phase 2B received a small TTS tuning fix. The previous validated command kept Spanish voice selection with `espeak -v es`, but long backend responses could sound rushed and words could run together. The Raspberry client now defaults to:
+
+```bash
+espeak -v es -s 135 -g 8 "<response>"
+```
+
+This keeps the same local `espeak` path and adds no dependencies. The speed and word-gap values remain configurable with `TONTO_TTS_ARGS` so the next real Raspberry demo pass can tune them without code changes.
 
 ### Remaining
 

@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import shlex
 import subprocess
 import sys
 import uuid
@@ -11,6 +12,7 @@ import urllib.request
 
 
 REQUEST_TIMEOUT_SECONDS = 10
+DEFAULT_TTS_ARGS = "-v es -s 135 -g 8"
 
 
 def main() -> int:
@@ -242,9 +244,10 @@ def send_audio(
 
 def speak(text: str) -> None:
     tts_command = os.environ.get("TONTO_TTS_COMMAND", "espeak")
+    tts_args = shlex.split(os.environ.get("TONTO_TTS_ARGS", DEFAULT_TTS_ARGS))
 
     try:
-        result = subprocess.run([tts_command, text], check=False)
+        result = subprocess.run([tts_command, *tts_args, text], check=False)
     except FileNotFoundError:
         print(f"TTS command not found: {tts_command}")
         return

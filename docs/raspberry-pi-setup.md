@@ -368,7 +368,7 @@ Para Semana 1, esta prueba completa es opcional si el backend todavia no esta le
 A partir de Phase 2B, el cliente soporta dos modos:
 
 - `--mode text` (default): comportamiento original, entrada manual, `POST /chat`, TTS local.
-- `--mode voice`: loop interactivo. Enter inicia captura con `arecord`, sube WAV a `POST /chat/audio`, muestra transcript y response, reproduce con `espeak`.
+- `--mode voice`: loop interactivo. Enter inicia captura con `arecord`, sube WAV a `POST /chat/audio`, muestra transcript y response, reproduce con `espeak -v es -s 135 -g 8`.
 
 Configuracion adicional para modo voz:
 
@@ -378,6 +378,8 @@ Configuracion adicional para modo voz:
 | `TONTO_RECORD_SECONDS` | `6` | Duracion captura (1..10) |
 | `TONTO_AUDIO_PATH` | `/tmp/tonto-turn.wav` | Ruta del WAV |
 | `TONTO_DEVICE_ID` | `tonto-pi` | Identificador del cliente |
+| `TONTO_TTS_COMMAND` | `espeak` | Binario TTS |
+| `TONTO_TTS_ARGS` | `-v es -s 135 -g 8` | Argumentos TTS de demo: voz espanola, velocidad reducida y pausa entre palabras |
 
 Ejemplo con microfono USB:
 
@@ -388,6 +390,20 @@ export TONTO_AUDIO_DEVICE=plughw:<CARD>,<DEVICE>
 ```
 
 El modo voz no requiere dependencias Python adicionales. Usa solo libreria estandar y `arecord`/`espeak` del sistema.
+
+### Ajuste de TTS antes de avanzar desde Phase 2B
+
+Tras la validacion de Phase 2B, el audio seguia siendo audible, pero en frases largas las palabras se atropellaban. Antes de pasar a las siguientes fases, el cliente se ajusta para usar por defecto:
+
+```bash
+espeak -v es -s 135 -g 8 "<respuesta>"
+```
+
+El objetivo del ajuste es mejorar inteligibilidad para MVP/demo sin cambiar la ruta de TTS local ni anadir dependencias. Si en Raspberry real el resultado necesita otro punto fino, cambiar solo `TONTO_TTS_ARGS`, por ejemplo:
+
+```bash
+export TONTO_TTS_ARGS="-v es -s 125 -g 10"
+```
 
 ## 10. Validar Captura de Audio USB
 

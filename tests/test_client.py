@@ -302,6 +302,7 @@ def test_speak_calls_espeak(monkeypatch):
     monkeypatch.setattr("client.main.subprocess.run", fake_run)
     speak("Hola mundo")
     assert "espeak" in args_captured or "espeak-ng" in args_captured
+    assert args_captured == ["espeak", "-v", "es", "-s", "135", "-g", "8", "Hola mundo"]
 
 
 def test_speak_uses_configured_command(monkeypatch):
@@ -315,6 +316,19 @@ def test_speak_uses_configured_command(monkeypatch):
     monkeypatch.setattr("client.main.subprocess.run", fake_run)
     speak("test")
     assert "custom-tts" in args_captured
+
+
+def test_speak_uses_configured_tts_args(monkeypatch):
+    monkeypatch.setenv("TONTO_TTS_ARGS", "-v es+m3 -s 140")
+    args_captured = []
+
+    def fake_run(cmd, **kwargs):
+        args_captured.extend(cmd)
+        return subprocess.CompletedProcess(args=cmd, returncode=0)
+
+    monkeypatch.setattr("client.main.subprocess.run", fake_run)
+    speak("test")
+    assert args_captured == ["espeak", "-v", "es+m3", "-s", "140", "test"]
 
 
 def test_speak_handles_file_not_found(monkeypatch):
