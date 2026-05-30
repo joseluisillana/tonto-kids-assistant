@@ -503,6 +503,71 @@ Remaining observations:
 | O2 | ALSA capture card changed across runs (`card 2` in earlier evidence, `card 1` in this validation) | Hard-coded `plughw` values can fail | Always read `arecord -l`; future client automation should accept explicit audio device configuration |
 | O3 | Client capture/upload is still manual | Phase 2A validates backend STT but not an interactive client voice loop | Next step is Raspberry client automation for capture, upload, response playback, and timeout handling; Phase 3 web audio validation follows after that |
 
+## Fase 2B: Raspberry Client Automation
+
+**Status:** implemented and unit-tested. Manual validation on Raspberry hardware remains pending.
+
+### Changes
+
+| File | Type | Purpose |
+|---|---|---|
+| `client/main.py` | Rewritten | `--mode text` preserves original chat; `--mode voice` adds interactive capture/upload/speak loop |
+| `tests/test_client.py` | New | 21 unit tests covering text mode, multipart audio upload, capture, and TTS without hardware |
+
+### How it works
+
+```text
+Enter -> arecord WAV -> POST /chat/audio (multipart) -> transcript + response -> espeak local
+```
+
+In voice mode, pressing Enter starts a recording with `arecord`, uploads the WAV via `urllib.request` multipart to `POST /chat/audio`, displays the transcript and response, then speaks the response with `espeak`. Non-empty text input falls back to `POST /chat` for typing.
+
+### Configuration
+
+| Variable | Default | Notes |
+|---|---|---|
+| `TONTO_BACKEND_URL` | (required) | Backend address |
+| `TONTO_AUDIO_DEVICE` | (none) | Optional ALSA device, e.g. `plughw:1,0` |
+| `TONTO_RECORD_SECONDS` | `6` | Clamped to 1..10 |
+| `TONTO_AUDIO_PATH` | `/tmp/tonto-turn.wav` | WAV file path |
+| `TONTO_DEVICE_ID` | `tonto-pi` | Client identifier |
+| `TONTO_TTS_COMMAND` | `espeak` | TTS binary |
+
+### Error handling
+
+All specified error paths are handled without breaking the loop: backend unreachable, timeout, arecord missing, capture failure, empty WAV, HTTP 400/413/415/422/502/504, invalid JSON, espeak missing, espeak non-zero exit.
+
+### Tests
+
+21 unit tests pass without real hardware:
+
+- Text mode preserves POST /chat contract
+- Multipart contains audio file and all required fields
+- Valid /chat/audio response extracts transcript and response
+- HTTP errors and invalid JSON reported without breaking loop
+- Capture calls arecord with and without TONTO_AUDIO_DEVICE
+- Failed arecord or empty WAV does not attempt upload
+- TTS handles FileNotFoundError and non-zero exit codes
+
+### Remaining
+
+Manual validation on Raspberry hardware is needed:
+
+```bash
+arecord -l
+export TONTO_BACKEND_URL=http://<PC_LAN_IP>:8000
+export TONTO_AUDIO_DEVICE=plughw:<CARD>,<DEVICE>
+.venv/bin/python client/main.py --mode voice
+```
+
+Acceptance criteria:
+- Enter starts capture
+- WAV is uploaded to /chat/audio
+- HTTP 200 with transcript and response
+- espeak plays the response
+- exit or quit closes cleanly
+- --mode text still works
+
 ## Fase 3: Web Audio Loop Planning
 
 **Date:** 2026-05-30.

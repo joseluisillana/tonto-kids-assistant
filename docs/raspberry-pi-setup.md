@@ -363,6 +363,32 @@ Si `curl` o el cliente hacen timeout:
 
 Para Semana 1, esta prueba completa es opcional si el backend todavia no esta levantado. La validacion obligatoria de hardware es SSH, VSCode Remote SSH, audio y `espeak`.
 
+### 9.1. Ejecutar Cliente en Modo Voz (Phase 2B)
+
+A partir de Phase 2B, el cliente soporta dos modos:
+
+- `--mode text` (default): comportamiento original, entrada manual, `POST /chat`, TTS local.
+- `--mode voice`: loop interactivo. Enter inicia captura con `arecord`, sube WAV a `POST /chat/audio`, muestra transcript y response, reproduce con `espeak`.
+
+Configuracion adicional para modo voz:
+
+| Variable | Default | Notas |
+|---|---|---|
+| `TONTO_AUDIO_DEVICE` | (none) | Dispositivo ALSA, ej. `plughw:1,0` |
+| `TONTO_RECORD_SECONDS` | `6` | Duracion captura (1..10) |
+| `TONTO_AUDIO_PATH` | `/tmp/tonto-turn.wav` | Ruta del WAV |
+| `TONTO_DEVICE_ID` | `tonto-pi` | Identificador del cliente |
+
+Ejemplo con microfono USB:
+
+```bash
+export TONTO_BACKEND_URL=http://<IP_DEL_PC_WINDOWS>:8000
+export TONTO_AUDIO_DEVICE=plughw:<CARD>,<DEVICE>
+.venv/bin/python client/main.py --mode voice
+```
+
+El modo voz no requiere dependencias Python adicionales. Usa solo libreria estandar y `arecord`/`espeak` del sistema.
+
 ## 10. Validar Captura de Audio USB
 
 Semana 3 empieza validando captura de audio real antes de implementar STT o cambiar contratos HTTP.

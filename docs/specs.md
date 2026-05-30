@@ -18,7 +18,7 @@ voz -> captura Raspberry -> STT backend -> /chat -> respuesta -> TTS local en Ra
 
 La preparación de semana 3 mantuvo estable `/chat` y añadió `POST /chat/audio` como entrada de voz. La captura con micrófono USB ya fue validada en Raspberry con un WAV reproducible.
 
-El siguiente paso operativo de semana 3 sigue siendo automatizar captura/subida en el cliente Raspberry para cerrar Fase 2. Despues queda documentada la Fase 3: loop interactivo desde el cliente web, donde el navegador captura o selecciona un WAV compatible, llama a `POST /chat/audio`, muestra transcript real, respuesta, latencia y errores. Esta fase acelera validacion del backend STT, pero no reemplaza al loop fisico Raspberry como objetivo del MVP.
+Fase 2B completada: el cliente Raspberry (`client/main.py`) automatiza captura y subida con `--mode voice`. Despues queda documentada la Fase 3: loop interactivo desde el cliente web, donde el navegador captura o selecciona un WAV compatible, llama a `POST /chat/audio`, muestra transcript real, respuesta, latencia y errores. Esta fase acelera validacion del backend STT, pero no reemplaza al loop fisico Raspberry como objetivo del MVP.
 
 ## Arquitectura
 

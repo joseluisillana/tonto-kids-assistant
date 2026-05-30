@@ -272,7 +272,8 @@ aplay ~/tonto-mic-check.wav
 - Documentar cualquier bloqueo de hardware antes de implementar endpoints o dependencias. No hubo bloqueo de captura en la validacion de Semana 3.
 - Si se considera STT local, documentar la prueba concreta y el motivo técnico antes de cambiar el default.
 - Mantener `POST /chat` estable mientras `/chat/audio` añade entrada por voz.
-- El endpoint `POST /chat/audio` está implementado y validado con STT real, pero el cliente Raspberry no ha sido modificado: la captura y subida de audio no están automatizadas.
+- El endpoint `POST /chat/audio` está implementado y validado con STT real. El cliente Raspberry (Phase 2B) ya automatiza captura/subida: `client/main.py` soporta `--mode voice` con loop interactivo.
+- [x] Automatizar captura/subida en cliente Raspberry: Phase 2B completada. `client/main.py` soporta `--mode voice` con loop interactivo (Enter inicia captura con `arecord`, sube WAV a `POST /chat/audio`, muestra transcript/response, reproduce con `espeak`). El modo texto `--mode text` preserva el comportamiento original.
 - [x] **Probar subida manual de WAV al backend** con `curl` desde la Raspberry, verificando que el backend responde con `session_id`, `transcript` y `response`. Validado el 2026-05-27 desde `tonto-pi` contra backend LAN `192.168.1.91:8000`.
 
   ```bash
@@ -340,6 +341,7 @@ aplay ~/tonto-mic-check.wav
 - La validación de captura registra dispositivo, comando usado, duración y notas de calidad.
 - El contrato de STT backend queda decidido: OpenAI `gpt-4o-mini-transcribe` por defecto, sin nueva dependencia de SDK.
 - Phase 2A queda validada con Raspberry real: captura WAV manual, subida a `POST /chat/audio`, transcript real, respuesta educativa y reproducción local con `espeak`.
+- Phase 2B completada: `client/main.py` con `--mode voice` automatiza captura, subida, transcript/response y TTS local. `--mode text` preserva el comportamiento original. Tests unitarios cubren send_message, send_audio, capture_audio y speak sin hardware real.
 - Cualquier descarte de STT local queda respaldado por una prueba técnica, no por una suposición.
 - El TTS genera audio claro y comprensible.
 - El output audio se reproduce sin interrupciones.
