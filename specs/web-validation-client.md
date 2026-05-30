@@ -12,7 +12,7 @@ Add a lightweight web client that helps validate the TONTO backend from a browse
 
 This client exists to speed up development, continuous integration, preview deployment, and demo preparation. It does not replace the Raspberry Pi client as the target product experience.
 
-For Week 03 Phase 3, after the pending Phase 2B Raspberry capture/upload automation, the web client is also the planned validation surface for a browser-driven audio loop against the already implemented `POST /chat/audio` backend contract.
+For Week 03 Phase 3, after the completed Phase 2B Raspberry capture/upload automation and post-TTS revalidation, the web client is also the planned validation surface for a browser-driven audio loop against the already implemented `POST /chat/audio` backend contract.
 
 ---
 
@@ -27,7 +27,7 @@ For Week 03 Phase 3, after the pending Phase 2B Raspberry capture/upload automat
 - Backend `/health` checks.
 - Project scripts for development, typecheck, build, and preview.
 - Clear folder structure for UI, API, and conversation state.
-- Planned Phase 3 after Phase 2B: browser audio validation loop using `POST /chat/audio`, visible transcript/response evidence, and latency/status instrumentation.
+- Planned Phase 3 after completed Phase 2B revalidation: browser audio validation loop using `POST /chat/audio`, visible transcript/response evidence, and latency/status instrumentation.
 
 ## Deferred
 

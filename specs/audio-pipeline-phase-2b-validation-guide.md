@@ -2,7 +2,7 @@
 
 This guide validates Phase 2B of `specs/audio-pipeline.md`: the automated Raspberry Pi voice client loop using `client/main.py --mode voice`.
 
-After the TTS tuning commit `fix: tune raspberry espeak demo speech`, the final Phase 2B gate is the post-adjustment revalidation in `specs/audio-pipeline-phase-2b-tts-revalidation.md`. Phase 3 remains blocked until that revalidation passes on real Raspberry hardware.
+After the TTS tuning commit `fix: tune raspberry espeak demo speech`, the final Phase 2B gate was the post-adjustment revalidation in `specs/audio-pipeline-phase-2b-tts-revalidation.md`. That revalidation passed on real Raspberry hardware on 2026-05-30, so Phase 3 is unblocked within its documented scope.
 
 The guide is intentionally command-oriented so another human or agent can execute it and collect evidence. Do not print, paste, or commit the value of `OPENAI_API_KEY`.
 

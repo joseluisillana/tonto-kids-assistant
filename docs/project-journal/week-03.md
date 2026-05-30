@@ -560,7 +560,7 @@ espeak -v es -s 135 -g 8 "<response>"
 
 This keeps the same local `espeak` path and adds no dependencies. The speed and word-gap values remain configurable with `TONTO_TTS_ARGS` so the next real Raspberry demo pass can tune them without code changes.
 
-This follow-up changes the Phase 2B status from "validated and ready for Phase 3" to "implemented and initially validated, pending post-TTS revalidation". The revalidation spec is `specs/audio-pipeline-phase-2b-tts-revalidation.md`; Phase 3 should not start until that pass confirms the tuned playback is understandable on real Raspberry hardware.
+This follow-up temporarily changed the Phase 2B status from "validated and ready for Phase 3" to "implemented and initially validated, pending post-TTS revalidation". That revalidation later passed on real Raspberry hardware on 2026-05-30; see `Fase 2B Post-TTS Revalidation Evidence` below.
 
 ### Remaining
 
@@ -590,7 +590,7 @@ Tracking plan: `specs/audio-pipeline-phase-2b-validation-guide.md`.
 **Operator:** Jose Luis Illana Ruiz.
 **Branch:** `feature/audio-upload-contract`.
 **Initial Git status:** `## feature/audio-upload-contract...origin/feature/audio-upload-contract`; only the validation guide itself was untracked before documentation updates.
-**Conclusion:** pass for the initial Phase 2B validation. After the later TTS tuning to `espeak -v es -s 135 -g 8`, this evidence remains historical and must be followed by the post-adjustment revalidation in `specs/audio-pipeline-phase-2b-tts-revalidation.md`.
+**Conclusion:** pass for the initial Phase 2B validation. After the later TTS tuning to `espeak -v es -s 135 -g 8`, this evidence remained historical until the post-adjustment revalidation in `specs/audio-pipeline-phase-2b-tts-revalidation.md` passed on 2026-05-30.
 
 Pre-flight and setup:
 
@@ -685,11 +685,127 @@ Validation notes:
 - The typed fallback stayed on the stable `/chat` path and did not trigger capture.
 - `exit` and `quit` both close the loop cleanly.
 
+## Fase 2B Post-TTS Revalidation Evidence
+
+Tracking spec: `specs/audio-pipeline-phase-2b-tts-revalidation.md`.
+
+**Date/time:** 2026-05-30, Europe/Madrid.
+**Operator:** Jose Luis Illana Ruiz.
+**Branch:** `feature/audio-upload-contract`.
+**Initial Git status:** `## feature/audio-upload-contract...origin/feature/audio-upload-contract`.
+**Conclusion:** pass. Phase 2B was revalidated on real Raspberry hardware after the TTS tuning to `espeak -v es -s 135 -g 8`; Phase 3 is unblocked for documentation-first web audio validation work.
+
+Windows pre-flight and backend:
+
+```text
+git branch --show-current -> feature/audio-upload-contract
+git status --short --branch -> ## feature/audio-upload-contract...origin/feature/audio-upload-contract
+git log -1 --oneline -> 86e99ef docs: add phase 2b tts revalidation gate
+.\scripts\test.ps1 -Target python -> 45 passed in 0.19s
+OPENAI_API_KEY -> configured in shell, not documented
+OPENAI_STT_MODEL -> gpt-4o-mini-transcribe
+OPENAI_MODEL -> gpt-4o-mini
+Backend -> .\scripts\dev.ps1 -Service backend -AllowLan
+Backend startup -> 0.0.0.0:8000 with LAN mode enabled
+Backend health from Windows -> status ok
+Windows LAN IP used by Raspberry -> 192.168.1.91
+```
+
+Raspberry pre-flight:
+
+```text
+hostname -> tonto-pi
+whoami -> tonto-pi-user
+pwd -> /home/tonto-pi-user/tonto-kids-assistant
+git branch --show-current -> feature/audio-upload-contract
+git status --short --branch -> ## feature/audio-upload-contract...origin/feature/audio-upload-contract
+git log -1 --oneline -> 86e99ef docs: add phase 2b tts revalidation gate
+which curl -> /usr/bin/curl
+which espeak -> /usr/bin/espeak
+which arecord -> /usr/bin/arecord
+which aplay -> /usr/bin/aplay
+python3 --version -> Python 3.13.5
+arecord -l -> card 1: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+Selected device -> plughw:1,0
+```
+
+Client environment and backend connectivity:
+
+```text
+TONTO_BACKEND_URL=http://192.168.1.91:8000
+TONTO_AUDIO_DEVICE=plughw:1,0
+TONTO_RECORD_SECONDS=6
+TONTO_AUDIO_PATH=/tmp/tonto-turn-phase-2b-tts.wav
+TONTO_DEVICE_ID=tonto-pi
+TONTO_TTS_ARGS=-v es -s 135 -g 8
+Raspberry backend health -> {"status":"ok"}
+```
+
+Voice-mode startup:
+
+```text
+.venv/bin/python client/main.py --mode voice
+TONTO Kids Assistant Client
+Session: local-session-21e0e688-0a1c-4d83-99e8-b61e73b6a73d
+Voice mode: press Enter to capture audio, or type a message.
+Type 'exit' or 'quit' to stop.
+```
+
+Long voice turn:
+
+```text
+Spoken prompt -> Hola TONTO, explícame qué es una estrella y por qué brilla en el cielo.
+Recording...
+Uploading...
+Transcript: Hola tonto, explícame qué es una estrella y por qué brilla en el cielo.
+TONTO: ¡Hola! Una estrella es una gran bola de gas caliente, principalmente hidrógeno y helio, que brilla en el cielo. Brillan porque en su interior ocurren reacciones nucleares que convierten hidrógeno en helio, liberando mucha energía en forma de luz y calor. Así, aunque están muy lejos de nosotros, su luz viaja a través del espacio y las vemos brillar en la noche. ¡Es mágico!
+```
+
+WAV evidence:
+
+```text
+ls -lh /tmp/tonto-turn-phase-2b-tts.wav -> 188K
+file /tmp/tonto-turn-phase-2b-tts.wav -> RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 16000 Hz
+```
+
+TTS and warnings:
+
+```text
+TTS command -> espeak -v es -s 135 -g 8
+Manual judgment -> audible, no longer rushed, words did not run together, sufficiently understandable for demo.
+Quality note -> still robotic, accepted as a current stack limitation.
+ALSA/JACK warnings -> appeared in shell output, including unavailable PCM entries and missing JACK server messages, but did not block playback.
+```
+
+Typed-message fallback inside `--mode voice`:
+
+```text
+> Explicame que es la Luna en una frase.
+TONTO: La Luna es un satélite natural de la Tierra que orbita a nuestro planeta y refleja la luz del sol, iluminando el cielo nocturno.
+```
+
+Clean exit:
+
+```text
+exit -> client returned to shell without traceback
+```
+
+Validation notes:
+
+- Raspberry reached the backend `/health` endpoint over LAN.
+- `--mode voice` started without dependency changes.
+- Pressing Enter recorded a non-empty WAV with `arecord` and uploaded it to `POST /chat/audio`.
+- The backend returned a real transcript and a child-friendly educational response.
+- The tuned `TONTO_TTS_ARGS=-v es -s 135 -g 8` made the long response sufficiently understandable for the MVP demo.
+- The typed fallback stayed on `/chat`, did not trigger audio capture, and returned a speakable response.
+- ALSA/JACK warnings remain noisy but non-blocking.
+- Phase 2B post-TTS revalidation is complete and Phase 3 can proceed within its documented scope.
+
 ## Fase 3: Web Audio Loop Planning
 
 **Date:** 2026-05-30.
 **Branch:** `feature/audio-upload-contract`.
-**Status:** planned in documentation only; no web or backend implementation in this iteration. Sequencing corrected: this phase follows the pending Phase 2B post-TTS revalidation on Raspberry hardware.
+**Status:** planned in documentation only; no web or backend implementation in this iteration. Sequencing corrected: this phase follows the completed Phase 2B post-TTS revalidation on Raspberry hardware.
 
 Phase 3 is added to Week 03 as a browser-driven validation loop:
 

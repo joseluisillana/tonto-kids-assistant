@@ -8,7 +8,7 @@ La Fase 3 de Semana 3 planifica el loop interactivo de voz desde el cliente web 
 navegador -> captura de microfono -> WAV compatible -> POST /chat/audio -> transcript -> response -> UI web
 ```
 
-Esta fase no sustituye al objetivo fisico con Raspberry. Su proposito es acelerar la validacion del backend STT ya activo, reducir friccion de demo y recoger evidencia desde navegador despues de abordar la automatizacion del cliente Raspberry pendiente en Fase 2B.
+Esta fase no sustituye al objetivo fisico con Raspberry. Su proposito es acelerar la validacion del backend STT ya activo, reducir friccion de demo y recoger evidencia desde navegador despues de cerrar la automatizacion del cliente Raspberry y su revalidacion post-TTS en Fase 2B.
 
 ## Alcance
 

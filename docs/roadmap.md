@@ -137,7 +137,7 @@ El endpoint empezó con un transcript fijo `[audio input captured]` como placeho
 - [x] Integrar STT en el backend con `OPENAI_STT_MODEL` opcional y sin SDK nuevo.
 - [x] Pipeline de voz extremo a extremo manual: Raspberry captura → backend STT → respuesta → TTS.
 - [x] Fase 2B: loop interactivo con captura desde el cliente Raspberry.
-- [ ] Revalidación Fase 2B post-ajuste TTS antes de pasar a Fase 3.
+- [x] Revalidación Fase 2B post-ajuste TTS antes de pasar a Fase 3.
 
 ### Evidencia Phase 2A
 
@@ -156,7 +156,7 @@ Validado el 2026-05-30 desde Raspberry real `tonto-pi` contra backend LAN `192.1
 - Después de esta evidencia se ajustó el cliente a `espeak -v es -s 135 -g 8` para mejorar inteligibilidad en frases largas.
 - `specs/audio-pipeline.md`, `docs/project-journal/week-03.md`, `docs/specs.md` y `README.md` se actualizaron para reflejar la validación real.
 
-Conclusión: Phase 2B está implementada y fue validada inicialmente. Queda pendiente repetir la validación en Raspberry real con el TTS ajustado siguiendo `specs/audio-pipeline-phase-2b-tts-revalidation.md`; Fase 3 web queda bloqueada hasta que esta revalidación pase.
+Conclusión: Phase 2B está implementada, fue validada inicialmente y quedó revalidada post-ajuste TTS el 2026-05-30 en Raspberry real siguiendo `specs/audio-pipeline-phase-2b-tts-revalidation.md`. Con `TONTO_TTS_ARGS="-v es -s 135 -g 8"`, la respuesta larga fue audible, más pausada, sin palabras atropelladas y suficientemente entendible para demo. Los warnings ALSA/JACK siguieron apareciendo, pero no bloquearon el audio. Fase 3 web queda desbloqueada dentro de su alcance documentado.
 
 ### Riesgos
 
@@ -168,7 +168,7 @@ Conclusión: Phase 2B está implementada y fue validada inicialmente. Queda pend
 
 ### Objetivo
 
-Usar el cliente web de validacion como superficie interactiva para probar el pipeline de voz contra `POST /chat/audio` despues de cerrar la revalidacion Phase 2B post-ajuste TTS en el cliente Raspberry. Esta fase permite validar permisos de microfono, generacion/subida de WAV, transcript real, respuesta conversacional, latencia y errores desde navegador.
+Usar el cliente web de validacion como superficie interactiva para probar el pipeline de voz contra `POST /chat/audio` despues de cerrar la revalidacion Phase 2B post-ajuste TTS en el cliente Raspberry, completada el 2026-05-30. Esta fase permite validar permisos de microfono, generacion/subida de WAV, transcript real, respuesta conversacional, latencia y errores desde navegador.
 
 ### Entregables pendientes
 
@@ -185,7 +185,7 @@ Usar el cliente web de validacion como superficie interactiva para probar el pip
 - Enviar WAV compatible con el backend actual; no subir `webm`/`ogg` directamente.
 - No introducir STT local, streaming, persistencia, auth ni UI avanzada.
 - No sustituir la validacion final con Raspberry: la web acelera desarrollo, pero el producto fisico sigue siendo el objetivo MVP.
-- No iniciar implementacion de Fase 3 hasta que `specs/audio-pipeline-phase-2b-tts-revalidation.md` quede aprobado en Raspberry real, salvo decision explicita posterior.
+- Mantener Fase 3 dentro de `specs/audio-pipeline-phase-3-web-loop.md`: cliente web como superficie de validacion, WAV compatible y sin ampliar el backend a formatos comprimidos salvo decision explicita posterior.
 
 ### Riesgo principal
 
@@ -326,7 +326,7 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [x] Integrar STT backend.
 - [x] Validar loop manual de voz Raspberry → backend → TTS.
 - [x] Loop interactivo de voz Raspberry → backend → TTS automatizado en cliente.
-- [ ] Revalidar loop interactivo Raspberry → backend → TTS tras ajuste `espeak -v es -s 135 -g 8`.
+- [x] Revalidar loop interactivo Raspberry → backend → TTS tras ajuste `espeak -v es -s 135 -g 8`.
 - [ ] Validar loop interactivo de voz desde cliente web contra `POST /chat/audio` despues de la revalidacion TTS de Phase 2B.
 - [x] Medir latencia básica del loop manual (`TOTAL_TIME=5.395580`).
 - [ ] Mejorar calidad TTS progresivamente.

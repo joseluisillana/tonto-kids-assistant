@@ -84,8 +84,8 @@ Two offline options remain candidates for a later spike, not active implementati
 
 ## D019 - Week 03 Phase 3 web audio validation
 
-Use the existing React web validation client as the Week 03 Phase 3 surface for an interactive audio loop against `POST /chat/audio`, after the pending Phase 2 Raspberry capture/upload automation is addressed.
+Use the existing React web validation client as the Week 03 Phase 3 surface for an interactive audio loop against `POST /chat/audio`, after the Phase 2 Raspberry capture/upload automation and post-TTS revalidation are addressed.
 
-The goal is to reduce integration risk and collect visible evidence from a browser after the Raspberry voice client automation has been tackled. The web path must reuse the existing backend audio contract and STT provider: it should send a compatible WAV, receive `{session_id, transcript, response}`, and display transcript, response, latency, status, and errors.
+The goal is to reduce integration risk and collect visible evidence from a browser after the Raspberry voice client automation has been validated. The web path must reuse the existing backend audio contract and STT provider: it should send a compatible WAV, receive `{session_id, transcript, response}`, and display transcript, response, latency, status, and errors.
 
 This is a validation decision, not a product architecture change. The Raspberry Pi remains the physical MVP client, local `espeak` remains the target TTS path, and browser TTS, audio persistence, streaming, local STT, and backend transcoding of browser formats remain out of scope unless a later decision changes that.

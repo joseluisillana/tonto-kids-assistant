@@ -1,5 +1,7 @@
 # Phase 2B TTS Revalidation After Speech Tuning
 
+**Status:** Passed on real Raspberry hardware on 2026-05-30. Evidence is recorded in `docs/project-journal/week-03.md`.
+
 This spec defines the required revalidation pass after the Raspberry client TTS tuning committed as `fix: tune raspberry espeak demo speech`.
 
 Phase 2B was previously validated on real Raspberry hardware, but that pass found the `espeak` playback audible yet robotic and unclear for demo. The client now defaults to:
@@ -8,7 +10,7 @@ Phase 2B was previously validated on real Raspberry hardware, but that pass foun
 espeak -v es -s 135 -g 8 "<response>"
 ```
 
-Phase 3 must not begin until this adjusted Phase 2B loop is revalidated on real Raspberry hardware.
+Phase 3 was gated on this adjusted Phase 2B loop being revalidated on real Raspberry hardware. That gate passed on 2026-05-30, so Phase 3 may proceed within its documented scope.
 
 ## Objective
 

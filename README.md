@@ -38,14 +38,14 @@ El foco está en conversación natural persistente que adapta el aprendizaje al 
 
 El MVP final de 6 semanas busca demostrar una conversación educativa básica sobre hardware real.
 
-El milestone inmediato ya validó el primer loop texto → backend → IA → respuesta → TTS local. Semana 3 validó voz real con Raspberry: WAV capturado manualmente → `POST /chat/audio` → STT backend → respuesta → `espeak` local, y Fase 2B validó inicialmente el loop automatizado en `client/main.py --mode voice`. Tras detectar que frases largas se atropellaban, el cliente se ajustó a `espeak -v es -s 135 -g 8`; el siguiente paso operativo es repetir la validación Phase 2B en Raspberry real antes de pasar a la Fase 3 web ya documentada.
+El milestone inmediato ya validó el primer loop texto → backend → IA → respuesta → TTS local. Semana 3 validó voz real con Raspberry: WAV capturado manualmente → `POST /chat/audio` → STT backend → respuesta → `espeak` local, y Fase 2B validó inicialmente el loop automatizado en `client/main.py --mode voice`. Tras detectar que frases largas se atropellaban, el cliente se ajustó a `espeak -v es -s 135 -g 8`; esa revalidación pasó en Raspberry real el 2026-05-30 y desbloquea la Fase 3 web ya documentada.
 
 Incluye ahora:
 
 - **Entrada manual de texto** desde Raspberry Pi o cliente web de validación.
 - **Entrada de voz validada inicialmente** mediante captura WAV en Raspberry y `POST /chat/audio`, más el loop automatizado `--mode voice` en la misma Raspberry.
-- **Revalidación TTS pendiente** para comprobar en Raspberry real que `espeak -v es -s 135 -g 8` hace más entendibles las respuestas largas.
-- **Fase web de voz planificada y bloqueada** hasta completar la revalidación Phase 2B post-ajuste TTS.
+- **Revalidación TTS completada** en Raspberry real: `espeak -v es -s 135 -g 8` hace las respuestas largas suficientemente entendibles para demo, aunque siguen sonando robóticas.
+- **Fase web de voz planificada y desbloqueada** tras completar la revalidación Phase 2B post-ajuste TTS.
 - **Backend Python/FastAPI** con endpoint `/chat`.
 - **Integración OpenAI** para generar respuestas educativas.
 - **TTS local** en Raspberry Pi mediante `espeak`.
@@ -224,16 +224,16 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 - ✅ Endpoint `POST /chat/audio` implementado con validación y STT backend inicial
 - ✅ Phase 2A validada con Raspberry real: WAV manual → backend STT → respuesta → `espeak`
 - ✅ Phase 2B validada inicialmente con Raspberry real: `client/main.py --mode voice` automatiza captura, subida, transcript/response y TTS local
-- ⏳ Phase 2B post-ajuste TTS pendiente: repetir validación con `espeak -v es -s 135 -g 8`
-- ⏳ Después de esa revalidación: Fase 3 loop interactivo desde cliente web contra `POST /chat/audio`
+- ✅ Phase 2B post-ajuste TTS revalidada con Raspberry real: `espeak -v es -s 135 -g 8` es suficientemente entendible para demo
+- ⏳ Siguiente paso: Fase 3 loop interactivo desde cliente web contra `POST /chat/audio`
 
 **Métricas MVP**:
 
 - Varias interacciones de texto seguidas sin crashes
 - Respuesta backend en menos de 5 segundos como objetivo inicial
-- TTS local reproduce la respuesta; la inteligibilidad de respuestas largas queda pendiente de revalidación con el ajuste `-s 135 -g 8`
+- TTS local reproduce la respuesta; las respuestas largas quedaron revalidadas con el ajuste `-s 135 -g 8` como suficientemente entendibles para demo
 - Web validation client permite probar el contrato sin hardware
-- Fase 3 web planificada para probar voz desde navegador sin cambiar el contrato backend, bloqueada hasta cerrar la revalidación TTS de Phase 2B
+- Fase 3 web planificada para probar voz desde navegador sin cambiar el contrato backend, desbloqueada tras cerrar la revalidación TTS de Phase 2B
 
 ## Backlog Cerrado Semanas 1-2
 
