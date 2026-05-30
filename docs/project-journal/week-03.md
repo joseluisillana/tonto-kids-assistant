@@ -485,7 +485,7 @@ Manual quality judgment:
 
 - Transcript is real, not `[audio input captured]`, and reasonably matches `Hola TONTO, explicame que es una estrella`.
 - Response is educational, child-appropriate, and speakable by TTS.
-- `espeak -v es` playback was audible and understandable enough for demo, with robotic pronunciation.
+- `espeak -v es` playback was audible, but in this run it sounded robotic and was not easy to understand; still usable for the demo.
 - ALSA/JACK warnings appeared during `espeak` playback, including unavailable PCM entries and missing JACK server messages. They were noisy shell output only and did not block playback.
 
 Negative validation:
@@ -505,7 +505,7 @@ Remaining observations:
 
 ## Fase 2B: Raspberry Client Automation
 
-**Status:** implemented and unit-tested. Manual validation on Raspberry hardware remains pending.
+**Status:** validated on real Raspberry hardware. The `--mode voice` loop is now closed end to end for the MVP voice turn.
 
 ### Changes
 
@@ -567,6 +567,107 @@ Acceptance criteria:
 - espeak plays the response
 - exit or quit closes cleanly
 - --mode text still works
+
+## Fase 2B Validation Evidence
+
+**Date/time:** 2026-05-30, Europe/Madrid.
+**Operator:** Jose Luis Illana Ruiz.
+**Branch:** `feature/audio-upload-contract`.
+**Initial Git status:** `## feature/audio-upload-contract...origin/feature/audio-upload-contract`; only the validation guide itself was untracked before documentation updates.
+**Conclusion:** pass. Phase 2B was validated on real Raspberry hardware with `client/main.py --mode voice`, `arecord`, backend upload to `POST /chat/audio`, transcript, speakable response, `espeak`, text fallback, and clean exit.
+
+Pre-flight and setup:
+
+```text
+.\scripts\setup-dev.ps1 -> Development environment is ready.
+.\scripts\test.ps1 -Target python -> 44 passed in 0.24s
+OPENAI_API_KEY -> configured in shell, not documented
+OPENAI_STT_MODEL -> gpt-4o-mini-transcribe
+OPENAI_MODEL -> gpt-4o-mini
+Backend -> .\scripts\dev.ps1 -Service backend -AllowLan
+Backend startup -> 0.0.0.0:8000 with LAN mode enabled
+Backend health from Windows -> status ok
+Windows LAN IP used by Raspberry -> 192.168.1.91
+Backend health from Raspberry -> {"status":"ok"}
+```
+
+Raspberry evidence:
+
+```text
+hostname -> tonto-pi
+whoami -> tonto-pi-user
+pwd -> /home/tonto-pi-user/tonto-kids-assistant
+curl -> /usr/bin/curl
+arecord -> /usr/bin/arecord
+aplay -> /usr/bin/aplay
+espeak -> /usr/bin/espeak
+python3 --version -> Python 3.13.5
+git branch --show-current -> feature/audio-upload-contract
+git status --short --branch -> ## feature/audio-upload-contract...origin/feature/audio-upload-contract
+```
+
+Microphone and WAV evidence:
+
+```text
+arecord -l -> card 1: Device [USB PnP Sound Device], device 0: USB Audio [USB Audio]
+Selected device -> plughw:1,0
+Recording command -> arecord -D plughw:1,0 -f S16_LE -r 16000 -c 1 -d 6 /tmp/tonto-turn-phase-2b.wav
+File size -> 188K
+WAV metadata -> RIFF (little-endian) data, WAVE audio, Microsoft PCM, 16 bit, mono 16000 Hz
+```
+
+Voice-mode evidence:
+
+```text
+TONTO_BACKEND_URL=http://192.168.1.91:8000
+TONTO_AUDIO_DEVICE=plughw:1,0
+TONTO_RECORD_SECONDS=6
+TONTO_AUDIO_PATH=/tmp/tonto-turn-phase-2b.wav
+TONTO_DEVICE_ID=tonto-pi
+
+TONTO Kids Assistant Client
+Session: local-session-b5bda2ca-31b5-4c8b-a0b7-bfae899e88af
+Voice mode: press Enter to capture audio, or type a message.
+Type 'exit' or 'quit' to stop.
+```
+
+Recorded turn evidence:
+
+```text
+Recording...
+Uploading...
+Transcript: Hola tonto, explícame qué es una estrella.
+TONTO: ¡Hola! Una estrella es un gran cuerpo celeste que brilla en el cielo. Está hecho de gas caliente, principalmente hidrógeno y helio. Las estrellas producen luz y calor a través de reacciones nucleares en su interior. Nuestro Sol es una estrella, y hay millones de otras en el universo. ¡Son fascinantes!
+```
+
+TTS and warnings:
+
+```text
+espeak playback was audible.
+ALSA/JACK warnings appeared in the shell but did not block playback.
+```
+
+Typed-message fallback:
+
+```text
+> Explicame que es la Luna en una frase.
+TONTO: La Luna es el satélite natural de la Tierra, que brilla en el cielo nocturno y orbita a nuestro planeta.
+```
+
+Clean exit:
+
+```text
+exit -> client returned to shell without traceback
+```
+
+Validation notes:
+
+- The transcript was real and close enough to the spoken phrase for the demo.
+- The response was child-friendly and speakable.
+- The WAV file existed, was non-empty, and matched the expected mono 16 kHz PCM format.
+- ALSA/JACK warnings were noisy but non-blocking because `espeak` remained audible.
+- The typed fallback stayed on the stable `/chat` path and did not trigger capture.
+- `exit` and `quit` both close the loop cleanly.
 
 ## Fase 3: Web Audio Loop Planning
 

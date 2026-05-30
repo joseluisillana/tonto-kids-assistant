@@ -144,13 +144,15 @@ Validado el 2026-05-30 desde Raspberry real `tonto-pi` contra backend LAN `192.1
 
 ### Evidencia Phase 2B
 
-Implementado y probado sin hardware:
+Validado el 2026-05-30 desde Raspberry real `tonto-pi` contra backend LAN `192.168.1.91:8000`:
 
 - `client/main.py` actualizado con `--mode text` (original) y `--mode voice` (captura, subida, transcript/response, TTS).
 - 21 tests unitarios del cliente pasan sin hardware real: send_message, send_audio multipart, capture_audio, speak.
-- `specs/audio-pipeline.md`, `docs/project-journal/week-03.md`, `docs/raspberry-pi-setup.md`, `docs/specs.md` y `docs/roadmap.md` actualizados.
+- `client.main.py --mode voice` en Raspberry real registró `Recording...`, `Uploading...`, transcript real, respuesta speakable, fallback de texto y salida limpia.
+- `espeak` sonó audible, pero en esta pasada fue robótico y poco claro; los warnings ALSA/JACK no bloquearon la demo.
+- `specs/audio-pipeline.md`, `docs/project-journal/week-03.md`, `docs/specs.md` y `README.md` se actualizaron para reflejar la validación real.
 
-Pendiente: validacion manual en Raspberry Raspberry real con `--mode voice`.
+Conclusión: Phase 2B validada. Queda pendiente la Fase 3 web.
 
 ### Riesgos
 

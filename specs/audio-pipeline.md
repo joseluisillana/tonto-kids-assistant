@@ -4,7 +4,7 @@
 
 Este documento describe el pipeline de audio para la versión MVP de TONTO, un asistente para niños. El enfoque está en simplicidad y estabilidad, utilizando un Raspberry Pi 3 como thin client. El audio output ya está validado, y la captura inicial con micrófono USB quedó validada en Raspberry durante Semana 3.
 
-Semana 3 empieza con una fase de preparación: validar hardware de entrada y dejar el repositorio listo para implementar voz sin cambiar todavía contratos públicos ni añadir dependencias. El loop `/chat` de texto sigue siendo la referencia estable mientras se desbloquea la captura de audio. Phase 2A ya validó manualmente el camino Raspberry WAV -> `POST /chat/audio` -> STT backend OpenAI -> respuesta -> `espeak` local. El siguiente paso de Fase 2 es automatizar captura/subida en el cliente Raspberry. Phase 3 queda planificada despues para validar el mismo contrato desde el cliente web mediante un loop interactivo de voz en navegador.
+Semana 3 empieza con una fase de preparación: validar hardware de entrada y dejar el repositorio listo para implementar voz sin cambiar todavía contratos públicos ni añadir dependencias. El loop `/chat` de texto sigue siendo la referencia estable mientras se desbloquea la captura de audio. Phase 2A ya validó manualmente el camino Raspberry WAV -> `POST /chat/audio` -> STT backend OpenAI -> respuesta -> `espeak` local. Phase 2B validó el loop automatizado en `client/main.py --mode voice` sobre Raspberry real. Phase 3 queda planificada despues para validar el mismo contrato desde el cliente web mediante un loop interactivo de voz en navegador.
 
 La dirección provisional es procesar STT en el backend. Esto deriva de la arquitectura MVP de Raspberry Pi como thin client y de la necesidad de mantener el cliente simple, no de una limitación ya demostrada de la Raspberry. STT local solo se descartará si una prueba concreta demuestra problemas de CPU, memoria, latencia, calidad o complejidad de setup.
 
@@ -193,7 +193,7 @@ Restricciones iniciales de Fase 3:
 
 ### Criterios de Aceptación del Contrato
 
-El contrato se considera implementado y Phase 2A validada cuando:
+El contrato se considera implementado y validado en Raspberry real cuando:
 
 - Mantiene `POST /chat` como contrato estable de texto.
 - Permite a la Raspberry seguir como thin client: captura WAV, sube audio, reproduce `response` con `espeak`.
@@ -273,7 +273,7 @@ aplay ~/tonto-mic-check.wav
 - Si se considera STT local, documentar la prueba concreta y el motivo técnico antes de cambiar el default.
 - Mantener `POST /chat` estable mientras `/chat/audio` añade entrada por voz.
 - El endpoint `POST /chat/audio` está implementado y validado con STT real. El cliente Raspberry (Phase 2B) ya automatiza captura/subida: `client/main.py` soporta `--mode voice` con loop interactivo.
-- [x] Automatizar captura/subida en cliente Raspberry: Phase 2B completada. `client/main.py` soporta `--mode voice` con loop interactivo (Enter inicia captura con `arecord`, sube WAV a `POST /chat/audio`, muestra transcript/response, reproduce con `espeak`). El modo texto `--mode text` preserva el comportamiento original.
+- [x] Automatizar captura/subida en cliente Raspberry: Phase 2B validada en Raspberry real. `client/main.py` soporta `--mode voice` con loop interactivo (Enter inicia captura con `arecord`, sube WAV a `POST /chat/audio`, muestra transcript/response, reproduce con `espeak`). El modo texto `--mode text` preserva el comportamiento original. En esta validación, `espeak` sonó audible pero robótico y poco claro para la demo; los warnings ALSA/JACK no bloquearon el turno.
 - [x] **Probar subida manual de WAV al backend** con `curl` desde la Raspberry, verificando que el backend responde con `session_id`, `transcript` y `response`. Validado el 2026-05-27 desde `tonto-pi` contra backend LAN `192.168.1.91:8000`.
 
   ```bash

@@ -38,12 +38,12 @@ El foco está en conversación natural persistente que adapta el aprendizaje al 
 
 El MVP final de 6 semanas busca demostrar una conversación educativa básica sobre hardware real.
 
-El milestone inmediato ya validó el primer loop texto → backend → IA → respuesta → TTS local. Semana 3 añadió una validación manual de voz con Raspberry real: WAV capturado manualmente → `POST /chat/audio` → STT backend → respuesta → `espeak` local. El siguiente paso operativo sigue siendo automatizar captura/subida en el cliente Raspberry como cierre de Fase 2; la Fase 3 web queda documentada para ejecutarse despues.
+El milestone inmediato ya validó el primer loop texto → backend → IA → respuesta → TTS local. Semana 3 validó voz real con Raspberry: WAV capturado manualmente → `POST /chat/audio` → STT backend → respuesta → `espeak` local, y Fase 2B cerró el loop automatizado en `client/main.py --mode voice`. El siguiente paso operativo es la Fase 3 web, ya documentada para ejecutarse despues.
 
 Incluye ahora:
 
 - **Entrada manual de texto** desde Raspberry Pi o cliente web de validación.
-- **Entrada de voz manual validada** mediante captura WAV en Raspberry y `POST /chat/audio`.
+- **Entrada de voz validada** mediante captura WAV en Raspberry y `POST /chat/audio`, más el loop automatizado `--mode voice` en la misma Raspberry.
 - **Fase web de voz planificada** para validar `/chat/audio` desde navegador con transcript, respuesta y latencia visibles.
 - **Backend Python/FastAPI** con endpoint `/chat`.
 - **Integración OpenAI** para generar respuestas educativas.
@@ -222,7 +222,7 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 - ✅ Captura WAV validada en Raspberry con micrófono USB
 - ✅ Endpoint `POST /chat/audio` implementado con validación y STT backend inicial
 - ✅ Phase 2A validada con Raspberry real: WAV manual → backend STT → respuesta → `espeak`
-- 🔄 Semana 3 activa — siguiente: automatizar captura/subida en el cliente Raspberry
+- ✅ Phase 2B validada con Raspberry real: `client/main.py --mode voice` automatiza captura, subida, transcript/response y TTS local
 - ⏳ Después: Fase 3 loop interactivo desde cliente web contra `POST /chat/audio`
 
 **Métricas MVP**:
