@@ -38,7 +38,7 @@ El foco está en conversación natural persistente que adapta el aprendizaje al 
 
 El MVP final de 6 semanas busca demostrar una conversación educativa básica sobre hardware real.
 
-El milestone inmediato ya validó el primer loop texto → backend → IA → respuesta → TTS local. Semana 3 validó voz real con Raspberry: WAV capturado manualmente → `POST /chat/audio` → STT backend → respuesta → `espeak` local, y Fase 2B cerró el loop automatizado en `client/main.py --mode voice`. El siguiente paso operativo es la Fase 3 web, ya documentada para ejecutarse despues.
+El milestone inmediato ya validó el primer loop texto → backend → IA → respuesta → TTS local. Semana 3 validó voz real con Raspberry: WAV capturado manualmente → `POST /chat/audio` → STT backend → respuesta → `espeak` local, y Fase 2B cerró el loop automatizado en `client/main.py --mode voice`. El tracking de esa validación vive en `specs/audio-pipeline-phase-2b-validation-guide.md`. El siguiente paso operativo es la Fase 3 web, ya documentada para ejecutarse despues.
 
 Incluye ahora:
 

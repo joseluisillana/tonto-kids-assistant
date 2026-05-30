@@ -273,7 +273,7 @@ aplay ~/tonto-mic-check.wav
 - Si se considera STT local, documentar la prueba concreta y el motivo técnico antes de cambiar el default.
 - Mantener `POST /chat` estable mientras `/chat/audio` añade entrada por voz.
 - El endpoint `POST /chat/audio` está implementado y validado con STT real. El cliente Raspberry (Phase 2B) ya automatiza captura/subida: `client/main.py` soporta `--mode voice` con loop interactivo.
-- [x] Automatizar captura/subida en cliente Raspberry: Phase 2B validada en Raspberry real. `client/main.py` soporta `--mode voice` con loop interactivo (Enter inicia captura con `arecord`, sube WAV a `POST /chat/audio`, muestra transcript/response, reproduce con `espeak`). El modo texto `--mode text` preserva el comportamiento original. En esta validación, `espeak` sonó audible pero robótico y poco claro para la demo; los warnings ALSA/JACK no bloquearon el turno.
+- [x] Automatizar captura/subida en cliente Raspberry: Phase 2B validada en Raspberry real. `client/main.py` soporta `--mode voice` con loop interactivo (Enter inicia captura con `arecord`, sube WAV a `POST /chat/audio`, muestra transcript/response, reproduce con `espeak`). El modo texto `--mode text` preserva el comportamiento original. El tracking de la evidencia vive en `specs/audio-pipeline-phase-2b-validation-guide.md`. En esta validación, `espeak` sonó audible pero robótico y poco claro para la demo; los warnings ALSA/JACK no bloquearon el turno.
 - [x] **Probar subida manual de WAV al backend** con `curl` desde la Raspberry, verificando que el backend responde con `session_id`, `transcript` y `response`. Validado el 2026-05-27 desde `tonto-pi` contra backend LAN `192.168.1.91:8000`.
 
   ```bash

@@ -570,6 +570,8 @@ Acceptance criteria:
 
 ## Fase 2B Validation Evidence
 
+Tracking plan: `specs/audio-pipeline-phase-2b-validation-guide.md`.
+
 **Date/time:** 2026-05-30, Europe/Madrid.
 **Operator:** Jose Luis Illana Ruiz.
 **Branch:** `feature/audio-upload-contract`.

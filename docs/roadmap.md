@@ -146,6 +146,8 @@ Validado el 2026-05-30 desde Raspberry real `tonto-pi` contra backend LAN `192.1
 
 Validado el 2026-05-30 desde Raspberry real `tonto-pi` contra backend LAN `192.168.1.91:8000`:
 
+- Plan de tracking de la validación: `specs/audio-pipeline-phase-2b-validation-guide.md`.
+
 - `client/main.py` actualizado con `--mode text` (original) y `--mode voice` (captura, subida, transcript/response, TTS).
 - 21 tests unitarios del cliente pasan sin hardware real: send_message, send_audio multipart, capture_audio, speak.
 - `client.main.py --mode voice` en Raspberry real registró `Recording...`, `Uploading...`, transcript real, respuesta speakable, fallback de texto y salida limpia.
