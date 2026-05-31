@@ -57,27 +57,34 @@ Queda fuera del primer loop automatizado: wake word, Arduino/LEDs, persistencia,
 ## Arquitectura Actual
 
 ```
-┌─────────────────┐    HTTP APIs    ┌─────────────────┐
-│   Raspberry Pi  │◄──────────────►│   Windows PC    │
-│   (Thin Client) │                │   (Backend IA)  │
-│   v1.2          │                │ Python/FastAPI  │
-│                 │                │                 │
-│ • Text input    │                │ • OpenAI API    │
-│ • TTS (espeak)  │                │ • Session memory│
-│ • HTTP client   │                │ • Orquestación  │
-│ • Thin client   │                │ • Personalidad  │
-└─────────────────┘                └─────────────────┘
-        ▲                                  ▲
-        │                                  │
-        └──────── Web Validation Client ───┘
+┌──────────────────────┐       HTTP /chat + /chat/audio       ┌──────────────────────┐
+│     Raspberry Pi     │──────────────────────────────────────►│      Windows PC      │
+│    Thin Client v1.2  │                                       │      Backend IA      │
+│                      │                                       │   Python/FastAPI     │
+│ • Text input         │                                       │                      │
+│ • arecord WAV        │                                       │ • POST /chat         │
+│ • HTTP client        │                                       │ • POST /chat/audio   │
+│ • TTS espeak         │                                       │ • OpenAI chat        │
+│ • Thin client        │                                       │ • OpenAI STT         │
+│ • No IA local        │                                       │ • Session memory     │
+└──────────────────────┘                                       │ • Orquestación       │
+┌──────────────────────┐       HTTP /health + /chat            │ • Personalidad       │
+│ Web Validation Client│──────────────────────────────────────►│                      │
+│ React/TypeScript/Vite│   Fase 3 plan: /chat/audio WAV        └──────────────────────┘
+│                      │
+│ • Text validation    │
+│ • UI evidence        │
+│ • Audio web planned  │
+│ • No Raspberry link  │
+└──────────────────────┘
 ```
 
 ### Cliente (Raspberry Pi 3 Model B v1.2)
 
 - **Hardware confirmado**: Audio output validado y `espeak` funcionando.
 - **Desarrollo**: VSCode Remote SSH, acceso por SSH remoto.
-- **Responsabilidades actuales**: entrada manual de texto, llamadas HTTP al backend, TTS local y manejo básico de errores. La captura WAV manual ya fue validada en hardware.
-- **Responsabilidades futuras**: automatizar captura/subida de voz, wake word y control físico/Arduino.
+- **Responsabilidades actuales**: entrada manual de texto, llamadas HTTP al backend, TTS local, manejo básico de errores y loop de voz automatizado con `client/main.py --mode voice`.
+- **Responsabilidades futuras**: wake word, control físico/Arduino y otras capacidades fuera del MVP inmediato.
 - **Tecnología**: Python estándar para el primer loop; dependencias de audio/GPIO se añadirán solo cuando entren en alcance.
 
 ### Backend (Windows PC)
@@ -89,7 +96,7 @@ Queda fuera del primer loop automatizado: wake word, Arduino/LEDs, persistencia,
 ### Cliente Web de Validación
 
 - **Objetivo**: Probar el backend desde navegador sin depender siempre de la Raspberry Pi.
-- **Responsabilidades**: Entrada manual de texto, visualización de respuestas, panel técnico de demo, soporte para CI/despliegue frontend y Fase 3 planificada para validar audio contra `POST /chat/audio`.
+- **Responsabilidades**: Entrada manual de texto, visualización de respuestas, panel técnico de demo y soporte para CI/despliegue frontend. No depende de la Raspberry; la Fase 3 web planifica validar audio contra el mismo backend `POST /chat/audio`.
 - **Tecnología**: React + TypeScript + Vite, con Tailwind CSS como base visual.
 
 ## Stack Tecnológico Confirmado
