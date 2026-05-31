@@ -219,6 +219,10 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 
 **Semanas 1 y 2 cerradas**: estructura monorepo, hardware base validado, backend conversacional mínimo, cliente Raspberry con TTS local, cliente web de validación y automatización local inicial.
 
+**Semana actual: Semana 3 - Pipeline de voz real**. El proyecto ya cerró la captura WAV, el endpoint `POST /chat/audio`, la integración STT backend y la automatización de voz en Raspberry. El trabajo abierto de esta semana es la Fase 3: validar el mismo contrato de audio desde el cliente web, manteniendo el loop de texto como fallback estable.
+
+**Hitos generales conseguidos**:
+
 - ✅ Raspberry Pi 3B v1.2 configurado con SSH/VSCode Remote
 - ✅ Audio output y `espeak` funcionando
 - ✅ Backend Python/FastAPI con `/chat`
