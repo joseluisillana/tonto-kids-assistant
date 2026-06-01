@@ -407,7 +407,7 @@ export TONTO_TTS_ARGS="-v es -s 125 -g 10"
 
 ## 10. Validar Captura de Audio USB
 
-Semana 3 empieza validando captura de audio real antes de implementar STT o cambiar contratos HTTP.
+Semana 3 ya validó captura de audio real, STT backend y el contrato `POST /chat/audio`. Estos pasos siguen siendo la comprobacion reproducible cuando se recupera o cambia la Raspberry antes de usar `client/main.py --mode voice`.
 
 Conectar el microfono USB a la Raspberry y comprobar dispositivos de captura:
 
@@ -449,7 +449,7 @@ Registrar:
 - si la reproduccion se escucha,
 - notas de volumen, ruido, cortes o distorsion.
 
-No implementar endpoint de audio, proveedor STT ni dependencias nuevas hasta que esta prueba funcione de forma reproducible en la Raspberry.
+No cambiar proveedor STT, contrato de audio ni dependencias nuevas si esta prueba deja de funcionar de forma reproducible en la Raspberry; primero documentar el bloqueo y corregir la configuracion de dispositivo.
 
 ## 11. Configurar VSCode Remote SSH
 
@@ -543,7 +543,7 @@ Usar esta lista despues de reinstalar o recuperar la Raspberry:
 - [ ] `client/requirements.txt` instalado dentro de `.venv`.
 - [ ] `TONTO_BACKEND_URL` apunta al backend real cuando se prueba el cliente.
 - [ ] El cliente puede arrancar con `.venv/bin/python client/main.py` cuando hay backend disponible.
-- [ ] El microfono USB aparece en `arecord -l` cuando se trabaja en Semana 3.
+- [ ] El microfono USB aparece en `arecord -l` cuando se valida o recupera el flujo de voz.
 - [ ] `arecord` graba `~/tonto-mic-check.wav` en Raspberry.
 - [ ] `aplay ~/tonto-mic-check.wav` reproduce la muestra localmente.
 

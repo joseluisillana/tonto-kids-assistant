@@ -39,7 +39,7 @@ Cliente físico principal del sistema.
 
 - reproducción de audio,
 - TTS local,
-- captura de audio futura,
+- captura de audio,
 - comunicación con backend,
 - control de estados físicos simples,
 - ejecución del cliente TONTO.
@@ -56,7 +56,7 @@ Validado y operativo:
 
 La preparacion reproducible y los pasos de recuperacion desde una tarjeta SD limpia viven en `docs/raspberry-pi-setup.md`.
 
-La validacion de captura de audio de Semana 3 confirmo que un microfono USB puede grabar una muestra WAV mono a 16 kHz y reproducirla localmente con `aplay` en la Raspberry. Todavia no hay contrato de STT activo.
+La validacion de Semana 3 confirmo captura WAV mono a 16 kHz con microfono USB, subida a `POST /chat/audio`, STT backend con OpenAI `gpt-4o-mini-transcribe`, respuesta educativa y reproduccion local con `espeak`. Phase 2B automatizo ese flujo en el cliente Raspberry y Phase 3 validó el mismo contrato desde navegador.
 
 ### Limitaciones conocidas
 
@@ -235,11 +235,13 @@ Actualmente se ha validado correctamente:
 - integración VSCode Remote SSH validada,
 - reproducción audio local,
 - TTS local mediante `espeak` validado por jack con voz española,
+- captura WAV con microfono USB en Raspberry,
+- cliente Raspberry `--mode voice` para captura, subida a `POST /chat/audio`, respuesta y TTS local,
+- contrato web de voz Phase 3 contra `POST /chat/audio` desde navegador,
 - estructura básica del entorno de desarrollo.
 
 Todavía pendiente:
 
-- pipeline voz completo,
 - integración Arduino,
 - estados físicos visuales.
 
@@ -307,12 +309,14 @@ el hardware probablemente no debe añadirse todavía.
 - TTS local,
 - audio output,
 - micrófono USB Mini USB Microphone M-305 detectado por ALSA,
-- captura y reproduccion local de WAV con `arecord` y `aplay`.
+- captura y reproduccion local de WAV con `arecord` y `aplay`,
+- pipeline de voz de Semana 3: Raspberry `--mode voice` -> `POST /chat/audio` -> STT backend -> respuesta -> `espeak`,
+- validacion web Phase 3 del mismo contrato de audio desde navegador.
 
 ## Próximas prioridades
 
-- decidir contrato minimo de subida de audio,
-- primer pipeline voz completo.
+- seleccionar el siguiente hito del MVP antes de añadir nuevo comportamiento,
+- mejorar experiencia demo y estados físicos solo si desbloquean la demo final.
 
 ## No prioritario actualmente
 
@@ -323,4 +327,4 @@ el hardware probablemente no debe añadirse todavía.
 
 ---
 
-_Última actualización: Mayo 2026_
+_Última actualización: Junio 2026_
