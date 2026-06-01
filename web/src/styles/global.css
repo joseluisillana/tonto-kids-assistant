@@ -25,3 +25,154 @@ button,
 input {
   font: inherit;
 }
+
+@keyframes tonto-eye-blink {
+  0%,
+  88%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  92%,
+  94% {
+    transform: scaleY(0.08);
+  }
+}
+
+.tonto-eye-blink {
+  animation: tonto-eye-blink 4.5s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.tonto-eye-listening {
+  box-shadow: 0 0 0.85rem rgb(103 232 249 / 0.42);
+}
+
+@keyframes tonto-speaking-mouth-fill {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scaleX(0.82) scaleY(0.12);
+  }
+
+  28% {
+    opacity: 1;
+    transform: scaleX(1.08) scaleY(1);
+  }
+
+  52% {
+    opacity: 0.85;
+    transform: scaleX(0.94) scaleY(0.42);
+  }
+
+  78% {
+    opacity: 1;
+    transform: scaleX(1.02) scaleY(0.84);
+  }
+}
+
+@keyframes tonto-speaking-mouth-lip {
+  0%,
+  100% {
+    transform: scaleX(0.92);
+  }
+
+  28%,
+  78% {
+    transform: scaleX(1.08);
+  }
+}
+
+.tonto-speaking-mouth-fill {
+  animation: tonto-speaking-mouth-fill 620ms ease-in-out infinite;
+  border-radius: 0.4rem 0.4rem 1.2rem 1.2rem;
+  clip-path: polygon(6% 0, 94% 0, 78% 100%, 22% 100%);
+  transform-origin: top center;
+}
+
+.tonto-speaking-mouth-lip {
+  animation: tonto-speaking-mouth-lip 620ms ease-in-out infinite;
+  transform-origin: center;
+}
+
+@keyframes tonto-brow-speaking {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  35% {
+    translate: 0 -0.18rem;
+  }
+}
+
+@keyframes tonto-brow-thinking {
+  0%,
+  100% {
+    opacity: 0.75;
+    translate: 0 0;
+  }
+
+  50% {
+    opacity: 1;
+    translate: 0 0.12rem;
+  }
+}
+
+.tonto-thinking-mouth {
+  transform: rotate(-3deg) scaleX(0.82);
+  transform-origin: center;
+}
+
+.tonto-brow-speaking {
+  animation: tonto-brow-speaking 620ms ease-in-out infinite;
+}
+
+.tonto-brow-thinking {
+  animation: tonto-brow-thinking 900ms ease-in-out infinite;
+}
+
+@keyframes tonto-brow-listening {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -0.08rem;
+  }
+}
+
+@keyframes tonto-listening-mouth {
+  0%,
+  100% {
+    opacity: 0.78;
+    transform: rotate(-3deg) scaleX(0.82);
+  }
+
+  50% {
+    opacity: 1;
+    transform: rotate(2deg) scaleX(0.94);
+  }
+}
+
+.tonto-brow-listening {
+  animation: tonto-brow-listening 1.8s ease-in-out infinite;
+}
+
+.tonto-listening-mouth {
+  animation: tonto-listening-mouth 1.4s ease-in-out infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tonto-eye-blink,
+  .tonto-speaking-mouth-fill,
+  .tonto-speaking-mouth-lip,
+  .tonto-brow-speaking,
+  .tonto-brow-thinking,
+  .tonto-brow-listening,
+  .tonto-listening-mouth {
+    animation: none;
+  }
+}

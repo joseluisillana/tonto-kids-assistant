@@ -17,6 +17,7 @@ $VenvPython = if ($env:OS -eq "Windows_NT") {
 } else {
     Join-Path (Join-Path $VenvDir "bin") "python"
 }
+$Npm = if ($env:OS -eq "Windows_NT") { "npm.cmd" } else { "npm" }
 
 function Invoke-CheckedCommand {
     param(
@@ -118,10 +119,10 @@ try {
         try {
             if (Test-Path (Join-Path $WebDir "package-lock.json")) {
                 Write-Host "Installing web dependencies with npm ci"
-                Invoke-CheckedCommand -FilePath "npm" -Arguments @("ci", "--cache", $NpmCacheDir)
+                Invoke-CheckedCommand -FilePath $Npm -Arguments @("ci", "--cache", $NpmCacheDir)
             } else {
                 Write-Host "Installing web dependencies with npm install"
-                Invoke-CheckedCommand -FilePath "npm" -Arguments @("install", "--cache", $NpmCacheDir)
+                Invoke-CheckedCommand -FilePath $Npm -Arguments @("install", "--cache", $NpmCacheDir)
             }
         } finally {
             Pop-Location

@@ -24,6 +24,7 @@ web/node_modules/
 web/dist/
 web/.vite/
 web/coverage/
+web/.tmp-test/
 
 # Python caches and build artifacts
 __pycache__/

@@ -1,9 +1,9 @@
-import { ActivityTimeline } from "../components/ActivityTimeline";
-import { ChatComposer } from "../components/ChatComposer";
-import { StatusPill } from "../components/StatusPill";
-import { TontoBot } from "../components/TontoBot";
-import { TontoLogo } from "../components/TontoLogo";
-import type { useConversation } from "../features/conversation/useConversation";
+import { ActivityTimeline } from "../components/ActivityTimeline.js";
+import { ChatComposer } from "../components/ChatComposer.js";
+import { TontoBot } from "../components/TontoBot.js";
+import { TontoLogo } from "../components/TontoLogo.js";
+import type { useConversation } from "../features/conversation/useConversation.js";
+import type { BackendStatus } from "../types/conversation.js";
 
 type TontoPageProps = {
   conversation: ReturnType<typeof useConversation>;
@@ -16,8 +16,17 @@ export function TontoPage({ conversation }: TontoPageProps) {
   const lastUserMessage = [...conversation.messages]
     .reverse()
     .find((message) => message.role === "user");
+  const voiceBusy =
+    conversation.voice.captureStatus === "requesting-permission" ||
+    conversation.voice.captureStatus === "recording" ||
+    conversation.voice.captureStatus === "encoding" ||
+    conversation.voice.captureStatus === "uploading" ||
+    conversation.voice.captureStatus === "transcribing" ||
+    conversation.status === "speaking";
   const sending =
-    conversation.status === "sending" || conversation.status === "thinking";
+    conversation.status === "sending" ||
+    conversation.status === "thinking" ||
+    voiceBusy;
 
   return (
     <main className="min-h-screen bg-slate-950 p-5 pt-24 text-white">
@@ -26,7 +35,7 @@ export function TontoPage({ conversation }: TontoPageProps) {
           <div className="absolute inset-x-0 top-0 h-48 bg-mint-200/10" />
           <div className="relative z-10 flex flex-wrap items-center justify-between gap-4">
             <TontoLogo />
-            <StatusPill status={conversation.backendStatus} />
+            <VoiceStatusSummary conversation={conversation} />
           </div>
 
           <div className="relative z-10 mt-10 grid items-center gap-8 lg:grid-cols-[22rem_minmax(0,1fr)]">
@@ -41,7 +50,7 @@ export function TontoPage({ conversation }: TontoPageProps) {
               </h1>
               <div className="mt-6 rounded-3xl bg-slate-100 p-6 text-xl leading-9 text-blue-950">
                 {lastAssistantMessage?.text ??
-                  "Usa el panel inferior para probar el mismo flujo que usa la Raspberry Pi."}
+                  "Pulsa Escuchar y cuentame tu pregunta. Estoy listo para aprender contigo."}
               </div>
               {conversation.error ? (
                 <p className="mt-4 rounded-2xl bg-rose-50 px-5 py-3 text-sm font-semibold text-rose-700">
@@ -62,23 +71,27 @@ export function TontoPage({ conversation }: TontoPageProps) {
 
           <div className="relative z-10 mt-7 grid gap-4 md:grid-cols-4">
             <ActionButton
+              hint="Pulsa y habla"
               label="Escuchar"
-              onClick={() => conversation.setStatus("listening")}
+              onClick={() => void conversation.startVoiceTurn()}
               tone="mint"
             />
             <ActionButton
-              label="Hablar"
-              onClick={() => conversation.setStatus("listening")}
+              hint="Cuando termines"
+              label="Enviar voz"
+              onClick={() => void conversation.stopVoiceTurn()}
               tone="coral"
             />
             <ActionButton
+              hint="Oir otra vez"
               label="Repetir"
               onClick={conversation.repeatLatest}
               tone="purple"
             />
             <ActionButton
+              hint="Cancelar"
               label="Parar"
-              onClick={() => conversation.setStatus("idle")}
+              onClick={conversation.cancelVoiceTurn}
               tone="navy"
             />
           </div>
@@ -104,11 +117,118 @@ export function TontoPage({ conversation }: TontoPageProps) {
   );
 }
 
+function VoiceStatusSummary({
+  conversation,
+}: {
+  conversation: ReturnType<typeof useConversation>;
+}) {
+  const { voice } = conversation;
+  const overallTone = getOverallStatusTone(conversation);
+
+  return (
+    <details className="group w-full max-w-full sm:w-auto">
+      <summary className="flex cursor-pointer list-none flex-wrap items-center gap-2 rounded-2xl border border-white/15 bg-white/8 px-4 py-3 text-xs font-bold text-white shadow-sm backdrop-blur transition hover:bg-white/12">
+        <StatusDot label="Estado" tone={overallTone} />
+      </summary>
+
+      <div className="mt-3 grid gap-2 rounded-2xl border border-white/15 bg-slate-950/90 p-4 text-sm text-white shadow-xl shadow-black/20 backdrop-blur sm:min-w-80">
+        <StatusDetail
+          label="Backend"
+          value={getBackendStatusLabel(conversation.backendStatus)}
+        />
+        <StatusDetail label="Captura" value={voice.captureStatus} />
+        <StatusDetail label="Speech" value={voice.speechStatus} />
+        <StatusDetail label="Permiso mic" value={voice.microphonePermission} />
+        <StatusDetail label="Contrato" value={`${voice.sampleRateHz} Hz / ${voice.channels} ch`} />
+        <StatusDetail label="HTTP audio" value={voice.httpStatus === null ? "--" : String(voice.httpStatus)} />
+        <StatusDetail label="Latencia" value={voice.latencyMs === null ? "--" : `${voice.latencyMs} ms`} />
+      </div>
+    </details>
+  );
+}
+
+function getOverallStatusTone(
+  conversation: ReturnType<typeof useConversation>,
+) {
+  const { voice } = conversation;
+  const backendOk = conversation.backendStatus === "connected";
+  const backendBad = conversation.backendStatus === "disconnected";
+  const microphoneOk = voice.microphoneSupported;
+  const microphoneBad =
+    !voice.microphoneSupported ||
+    voice.microphonePermission === "denied" ||
+    voice.captureStatus === "error";
+  const speechOk = voice.speechSupported && voice.speechStatus !== "error";
+  const speechBad = !voice.speechSupported || voice.speechStatus === "error";
+
+  if (backendOk && microphoneOk && speechOk) {
+    return "green";
+  }
+
+  if (backendBad && microphoneBad && speechBad) {
+    return "rose";
+  }
+
+  return "amber";
+}
+
+function getBackendStatusLabel(status: BackendStatus) {
+  const labels: Record<BackendStatus, string> = {
+    checking: "Backend comprobando",
+    connected: "Backend conectado",
+    disconnected: "Backend desconectado",
+  };
+
+  return labels[status];
+}
+
+function getBackendStatusTone(status: BackendStatus) {
+  if (status === "connected") {
+    return "green";
+  }
+  if (status === "checking") {
+    return "amber";
+  }
+  return "rose";
+}
+
+function StatusDot({
+  label,
+  tone,
+}: {
+  label: string;
+  tone: "green" | "amber" | "rose";
+}) {
+  const dotClass = {
+    green: "bg-emerald-400",
+    amber: "bg-amber-300",
+    rose: "bg-rose-400",
+  }[tone];
+
+  return (
+    <span className="inline-flex items-center gap-2 whitespace-nowrap">
+      <span className={`h-2.5 w-2.5 rounded-full ${dotClass}`} />
+      {label}
+    </span>
+  );
+}
+
+function StatusDetail({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3">
+      <span className="text-white/55">{label}</span>
+      <span className="break-words font-semibold text-white">{value}</span>
+    </div>
+  );
+}
+
 function ActionButton({
+  hint,
   label,
   onClick,
   tone,
 }: {
+  hint: string;
   label: string;
   onClick: () => void;
   tone: "mint" | "coral" | "purple" | "navy";
@@ -122,11 +242,16 @@ function ActionButton({
 
   return (
     <button
-      className={`min-h-24 rounded-3xl px-5 py-5 text-xl font-black shadow-xl transition hover:-translate-y-0.5 ${toneClass}`}
+      aria-label={`${label}: ${hint}`}
+      className={`flex min-h-24 flex-col items-center justify-center rounded-3xl px-4 py-4 text-center shadow-xl transition hover:-translate-y-0.5 ${toneClass}`}
       onClick={onClick}
+      title={`${label}: ${hint}`}
       type="button"
     >
-      {label}
+      <span className="text-xl font-black leading-tight">{label}</span>
+      <span className="mt-2 text-sm font-bold leading-tight opacity-80">
+        {hint}
+      </span>
     </button>
   );
 }

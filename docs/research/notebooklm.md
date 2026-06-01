@@ -96,5 +96,5 @@ exports/notebooklm/NOTEBOOKLM_COMBINED.md
 The return path is human-reviewed:
 
 ```text
-NotebookLM idea -> Codex/developer review -> repo docs
+NotebookLM idea -> Codex/OpenCode/developer review -> repo docs
 ```

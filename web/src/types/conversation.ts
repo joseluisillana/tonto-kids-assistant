@@ -19,9 +19,13 @@ export type ChatMessage = {
 
 export type ActivityKind =
   | "listening"
+  | "recording"
+  | "uploading"
+  | "transcribing"
   | "user-message"
   | "thinking"
   | "response"
+  | "speaking"
   | "error";
 
 export type ActivityEvent = {
@@ -40,4 +44,45 @@ export type ChatRequest = {
 export type ChatResponse = {
   success: true;
   response_text: string;
+};
+
+export type MicrophonePermissionState =
+  | "unsupported"
+  | "unknown"
+  | "prompt"
+  | "granted"
+  | "denied";
+
+export type VoiceCaptureStatus =
+  | "idle"
+  | "requesting-permission"
+  | "recording"
+  | "encoding"
+  | "uploading"
+  | "transcribing"
+  | "complete"
+  | "error";
+
+export type SpeechPlaybackStatus = "idle" | "speaking" | "complete" | "error";
+
+export type VoiceLoopState = {
+  backendUrl: string;
+  microphoneSupported: boolean;
+  microphonePermission: MicrophonePermissionState;
+  speechSupported: boolean;
+  captureStatus: VoiceCaptureStatus;
+  speechStatus: SpeechPlaybackStatus;
+  durationMs: number | null;
+  wavBytes: number | null;
+  wavMimeType: string | null;
+  httpStatus: number | null;
+  latencyMs: number | null;
+  transcript: string | null;
+  response: string | null;
+  deviceId: string;
+  language: string;
+  sampleRateHz: number;
+  channels: number;
+  speechVoice: string | null;
+  error: string | null;
 };

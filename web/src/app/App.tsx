@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useConversation } from "../features/conversation/useConversation";
-import { AdminPage } from "../pages/AdminPage";
-import { TontoPage } from "../pages/TontoPage";
-import type { AppRoute } from "./routes";
-import { getPathnameForRoute, getRouteFromPathname } from "./routes";
+import { useConversation } from "../features/conversation/useConversation.js";
+import { AdminPage } from "../pages/AdminPage.js";
+import { TontoPage } from "../pages/TontoPage.js";
+import type { AppRoute } from "./routes.js";
+import { getPathnameForRoute, getRouteFromPathname } from "./routes.js";
 
 export function App() {
   const conversation = useConversation();

@@ -1,4 +1,4 @@
-import type { ChatMessage } from "../types/conversation";
+import type { ChatMessage } from "../types/conversation.js";
 
 type ConversationPanelProps = {
   messages: ChatMessage[];

@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Persistent instructions for Codex and AI assistants working on TONTO Kids Assistant.
+Persistent instructions for Codex, OpenCode, and AI assistants working on TONTO Kids Assistant.
 
 ## Project Goal
 
@@ -26,25 +26,36 @@ The project is demo-first. Prefer working, understandable prototypes over broad 
 
 ## Current Implementation Milestone
 
-The current milestone is the first minimal text-to-speech conversation loop:
+The Week 03 voice milestone is complete. It established the first minimal voice conversation loop after the text-to-speech loop:
 
+- Preserve the stable text path while turning the validated manual audio path into a simple client loop.
 - Build the smallest backend/client path needed to send a request and receive a speakable response.
-- Use local `espeak` on the Raspberry client for TTS.
+- Use local `espeak` on the Raspberry client for TTS. The current demo-tuned default is `espeak -v es -s 135 -g 8`.
+- Backend STT with OpenAI `gpt-4o-mini-transcribe` is active for Semana 3 through `POST /chat/audio`.
+- Phase 2A was validated manually on real Raspberry hardware: captured WAV -> backend STT -> transcript -> response -> local `espeak`.
+- Phase 2B automated Raspberry capture/upload/playback around the validated `POST /chat/audio` flow and was validated once on real Raspberry hardware.
+- After Phase 2B, TTS was tuned for demo intelligibility because long responses sounded rushed. Phase 2B was revalidated on real Raspberry hardware on 2026-05-30 with `TONTO_TTS_ARGS="-v es -s 135 -g 8"`; long responses are still robotic but sufficiently understandable for demo, with words no longer running together.
+- Phase 3 Web Voice Loop was implemented and validated on 2026-06-01 using the documented, narrow web validation loop: browser microphone -> compatible WAV -> `POST /chat/audio` -> transcript -> response text -> audible browser speech plus visible web evidence.
+- A real browser validation issue where `/chat/audio` returned `422 Audio did not contain recognizable speech` was resolved by selecting the correct physical microphone in the browser site settings.
+- The next milestone should be selected explicitly before adding new product behavior beyond the validated Week 03 voice loop.
+- Do not expose a manual WAV upload/file picker as part of the Phase 3 product/demo UI; WAV files are only acceptable as test fixtures or integration helpers.
 - Keep state in memory only if state is needed at all.
 - Optimize for clarity, debuggability, and a real demo.
 
 Explicitly out of scope for this first milestone:
 
-- No speech-to-text.
 - No wake word.
 - No Arduino integration.
-- No advanced product UI beyond the web validation client.
+- No advanced product UI beyond the web validation client and its narrow Phase 3 audio validation surface.
 - No persistence.
 - No authentication.
 - No user accounts.
 - No advanced memory.
 - No multi-agent architecture.
 - No local AI models.
+- No local STT or local audio models.
+- No backend transcoding of browser `webm`/`ogg` audio unless explicitly decided later.
+- No automated audio capture/upload beyond the narrow web validation loop or Raspberry client work explicitly requested for the active milestone.
 
 ## Coding Rules
 
@@ -72,7 +83,7 @@ Explicitly out of scope for this first milestone:
 - Frontend dependencies must stay local to `web/node_modules/`.
 - Use `npm ci` or `npm install` only inside `web/`; never use `npm install -g` unless the user explicitly approves it.
 - Keep dependency caches local to `.cache/` when scripts support it; do not rely on user-profile caches such as global pip/npm caches.
-- If Codex sandboxing blocks network access or writes inside `.venv/`, `web/node_modules/`, or `.cache/`, request escalation for the official script command instead of switching to global tools.
+- If Codex or OpenCode sandboxing blocks network access or writes inside `.venv/`, `web/node_modules/`, or `.cache/`, request escalation for the official script command instead of switching to global tools.
 - If the build, test, setup, or dev workflow changes, update the scripts and documentation in the same change.
 - CI, humans, and agents should share the same command surface whenever practical:
   - `.\scripts\setup-dev.ps1`
@@ -157,6 +168,8 @@ Use:
 - `docs/specs.md` or files in `specs/` for behavior and implementation specs,
 - `README.md` only for high-level project orientation and setup guidance.
 
+When a spec is created or materially changed, also create or update its execution plan in `docs/plans/`. A material spec change is any change to behavior, scope, contracts, architecture, validation, or acceptance criteria. The plan must include an implementation prompt ready for Codex/OpenCode handoff. Purely editorial spec changes may skip a new plan, but the change summary must say that no implementation behavior changed.
+
 If implementation and documentation disagree, pause and make the decision explicit before continuing.
 
 ## Assistant Behavior
@@ -166,3 +179,14 @@ If implementation and documentation disagree, pause and make the decision explic
 - Ask before adding dependencies or changing architecture.
 - If a request conflicts with this file, follow the user's latest explicit instruction and update this file or the relevant docs if the decision is persistent.
 - When unsure, choose the smallest reversible change that advances the MVP.
+
+## Tool Environment
+
+OpenCode runs on Windows through WSL2 with the DevExpert provider
+(OpenAI-compatible API) at `https://inference.devexpert.io/v1`.
+
+Use `deepseek-v4-flash` as the recommended model and `deepseek-v4-pro`
+as the alternative model. OpenCode follows the same repository rules as
+Codex: use official scripts, keep dependencies local, stay on project
+branches, and do not change architecture or milestone scope without an
+explicit decision.

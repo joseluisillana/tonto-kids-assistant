@@ -23,11 +23,11 @@ Stable information belongs in Markdown files tracked by Git:
 - weekly project journal,
 - final report drafts.
 
-## Codex
+## Codex and OpenCode
 
-Codex helps maintain documentation while the project evolves.
+Codex is the primary project assistant. OpenCode is an additional tool that can also help maintain documentation while the project evolves.
 
-Useful Codex tasks:
+Useful Codex/OpenCode tasks:
 
 - summarize recent changes,
 - update the weekly journal,
@@ -35,7 +35,7 @@ Useful Codex tasks:
 - identify contradictions between README, specs, roadmap, and decisions,
 - prepare source exports for NotebookLM.
 
-Codex output is not final until it is reviewed and committed.
+Codex and OpenCode output is not final until it is reviewed and committed.
 
 ## GitHub
 
@@ -75,11 +75,19 @@ Avoid:
 
 Use this routine at the end of meaningful work sessions:
 
-1. Ask Codex to update the journal and docs affected by the work.
+1. Ask Codex or OpenCode to update the journal and docs affected by the work.
 2. Run tests or checks relevant to the change.
 3. Commit code and documentation together.
 4. Let the `pre-commit` hook regenerate `exports/notebooklm/`.
 5. Refresh NotebookLM sources from that export when you want deeper synthesis.
+
+## Spec Handoff Routine
+
+When a spec is created or materially changed, create or update its execution plan in `docs/plans/` during the same documentation pass.
+
+Use `docs/plans/TEMPLATE-spec-implementation-plan.md` as the default structure. Each plan should include the source spec, scope, implementation outline, acceptance criteria, verification commands, and an implementation prompt ready for Codex/OpenCode.
+
+This keeps implementation handoff details in the repository instead of leaving them only in an AI chat. Purely editorial spec changes can skip a plan update when they do not change behavior, contracts, scope, validation, or acceptance criteria.
 
 ## Manual Export
 

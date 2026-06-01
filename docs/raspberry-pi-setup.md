@@ -363,9 +363,51 @@ Si `curl` o el cliente hacen timeout:
 
 Para Semana 1, esta prueba completa es opcional si el backend todavia no esta levantado. La validacion obligatoria de hardware es SSH, VSCode Remote SSH, audio y `espeak`.
 
+### 9.1. Ejecutar Cliente en Modo Voz (Phase 2B)
+
+A partir de Phase 2B, el cliente soporta dos modos:
+
+- `--mode text` (default): comportamiento original, entrada manual, `POST /chat`, TTS local.
+- `--mode voice`: loop interactivo. Enter inicia captura con `arecord`, sube WAV a `POST /chat/audio`, muestra transcript y response, reproduce con `espeak -v es -s 135 -g 8`.
+
+Configuracion adicional para modo voz:
+
+| Variable | Default | Notas |
+|---|---|---|
+| `TONTO_AUDIO_DEVICE` | (none) | Dispositivo ALSA, ej. `plughw:1,0` |
+| `TONTO_RECORD_SECONDS` | `6` | Duracion captura (1..10) |
+| `TONTO_AUDIO_PATH` | `/tmp/tonto-turn.wav` | Ruta del WAV |
+| `TONTO_DEVICE_ID` | `tonto-pi` | Identificador del cliente |
+| `TONTO_TTS_COMMAND` | `espeak` | Binario TTS |
+| `TONTO_TTS_ARGS` | `-v es -s 135 -g 8` | Argumentos TTS de demo: voz espanola, velocidad reducida y pausa entre palabras |
+
+Ejemplo con microfono USB:
+
+```bash
+export TONTO_BACKEND_URL=http://<IP_DEL_PC_WINDOWS>:8000
+export TONTO_AUDIO_DEVICE=plughw:<CARD>,<DEVICE>
+.venv/bin/python client/main.py --mode voice
+```
+
+El modo voz no requiere dependencias Python adicionales. Usa solo libreria estandar y `arecord`/`espeak` del sistema.
+
+### Ajuste de TTS validado para Phase 2B
+
+Tras la validacion inicial de Phase 2B, el audio seguia siendo audible, pero en frases largas las palabras se atropellaban. El cliente se ajusto para usar por defecto:
+
+```bash
+espeak -v es -s 135 -g 8 "<respuesta>"
+```
+
+El ajuste fue revalidado en Raspberry real el 2026-05-30: la voz sigue sonando robotica, pero las respuestas largas ya no se atropellan y son suficientemente entendibles para demo. Si en una demo futura el resultado necesita otro punto fino, cambiar solo `TONTO_TTS_ARGS`, por ejemplo:
+
+```bash
+export TONTO_TTS_ARGS="-v es -s 125 -g 10"
+```
+
 ## 10. Validar Captura de Audio USB
 
-Semana 3 empieza validando captura de audio real antes de implementar STT o cambiar contratos HTTP.
+Semana 3 ya validó captura de audio real, STT backend y el contrato `POST /chat/audio`. Estos pasos siguen siendo la comprobacion reproducible cuando se recupera o cambia la Raspberry antes de usar `client/main.py --mode voice`.
 
 Conectar el microfono USB a la Raspberry y comprobar dispositivos de captura:
 
@@ -407,7 +449,7 @@ Registrar:
 - si la reproduccion se escucha,
 - notas de volumen, ruido, cortes o distorsion.
 
-No implementar endpoint de audio, proveedor STT ni dependencias nuevas hasta que esta prueba funcione de forma reproducible en la Raspberry.
+No cambiar proveedor STT, contrato de audio ni dependencias nuevas si esta prueba deja de funcionar de forma reproducible en la Raspberry; primero documentar el bloqueo y corregir la configuracion de dispositivo.
 
 ## 11. Configurar VSCode Remote SSH
 
@@ -501,7 +543,7 @@ Usar esta lista despues de reinstalar o recuperar la Raspberry:
 - [ ] `client/requirements.txt` instalado dentro de `.venv`.
 - [ ] `TONTO_BACKEND_URL` apunta al backend real cuando se prueba el cliente.
 - [ ] El cliente puede arrancar con `.venv/bin/python client/main.py` cuando hay backend disponible.
-- [ ] El microfono USB aparece en `arecord -l` cuando se trabaja en Semana 3.
+- [ ] El microfono USB aparece en `arecord -l` cuando se valida o recupera el flujo de voz.
 - [ ] `arecord` graba `~/tonto-mic-check.wav` en Raspberry.
 - [ ] `aplay ~/tonto-mic-check.wav` reproduce la muestra localmente.
 

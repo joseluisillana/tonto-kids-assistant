@@ -1,4 +1,4 @@
-import type { BackendStatus } from "../types/conversation";
+import type { BackendStatus } from "../types/conversation.js";
 
 type StatusPillProps = {
   status: BackendStatus;

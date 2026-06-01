@@ -8,6 +8,7 @@ Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
 $RepoRoot = Split-Path -Parent $PSScriptRoot
+$Npm = if ($env:OS -eq "Windows_NT") { "npm.cmd" } else { "npm" }
 
 function Invoke-CheckedCommand {
     param(
@@ -28,7 +29,7 @@ function Invoke-WebBuild {
             throw "Web dependencies not found. Run ./scripts/setup-dev.ps1 first."
         }
 
-        Invoke-CheckedCommand -FilePath "npm" -Arguments @("run", "build")
+        Invoke-CheckedCommand -FilePath $Npm -Arguments @("run", "build")
     } finally {
         Pop-Location
     }

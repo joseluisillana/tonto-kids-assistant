@@ -25,6 +25,75 @@ Codex should follow the repo instructions in `AGENTS.md` and prefer the official
 
 Codex can execute full repository changes, but the repository workflow is tool-agnostic. Codex-specific skills may help later, but they must not become the source of truth for project rules.
 
+## OpenCode
+
+OpenCode is an additional interactive CLI used for implementation,
+repository inspection, documentation updates, review, and test verification.
+
+It runs on Windows through WSL2.
+
+- **Provider**: DevExpert (OpenAI-compatible API).
+- **Base URL**: `https://inference.devexpert.io/v1`.
+- **Recommended model**: `deepseek-v4-flash`.
+- **Alternative model**: `deepseek-v4-pro`.
+- **Access note**: course access is active for 60 days and has a weekly limit to avoid accidental usage spikes.
+
+Codex remains the primary project assistant. OpenCode is part of the same AI-assisted tool stack and can also be used for project-level work:
+
+- implement focused code changes,
+- inspect the repository,
+- update documentation,
+- maintain the weekly journal,
+- reconcile docs after implementation,
+- generate test ideas and run official checks.
+
+OpenCode should follow the repo instructions in `AGENTS.md` and prefer the official scripts in `scripts/`, as Codex does.
+
+OpenCode can execute full repository changes when used for that work, but the repository workflow is tool-agnostic and may include more compatible tools over time.
+
+### OpenCode Configuration Reference
+
+If OpenCode needs to be reconfigured on the Windows/WSL2 development machine, the local configuration file is expected at:
+
+```text
+C:\Users\[Usuario]\.config\opencode\opencode.jsonc
+```
+
+This file is local machine configuration, not repository configuration. Never commit a real API key. Keep `apiKey` masked in documentation and examples:
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "DevExpert/deepseek-v4-flash",
+  "provider": {
+    "DevExpert": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "DevExpert",
+      "options": {
+        "baseURL": "https://inference.devexpert.io/v1",
+        "apiKey": "xxxxxxxxx"
+      },
+      "models": {
+        "deepseek-v4-flash": {
+          "name": "DevExpert deepseek-v4-flash",
+          "limit": {
+            "context": 200000,
+            "output": 65536
+          }
+        },
+        "deepseek-v4-pro": {
+          "name": "DevExpert deepseek-v4-pro",
+          "limit": {
+            "context": 200000,
+            "output": 65536
+          }
+        }
+      }
+    }
+  }
+}
+```
+
 ## GitHub Copilot
 
 Use Copilot for local coding assistance:
@@ -94,6 +163,53 @@ experiment/local-stt-spike
 ```
 
 Avoid tool-owned prefixes such as `codex/` for project branches. Branch names should describe the work, not the assistant that helped with it.
+
+## Spec Handoff Workflow
+
+Whenever a spec is created or materially changed, the same change should also create or update an execution plan in `docs/plans/`.
+
+A material spec change is any change to:
+
+- behavior,
+- milestone scope,
+- public API or request/response contract,
+- architecture,
+- validation workflow,
+- acceptance criteria.
+
+Purely editorial changes can skip a new execution plan, but the change summary should say that no implementation behavior changed.
+
+The expected flow is:
+
+```text
+spec -> execution plan -> implementation prompt -> implementation -> validation evidence
+```
+
+Execution plans should use `docs/plans/TEMPLATE-spec-implementation-plan.md` unless an existing phase-specific plan already provides the same structure. The plan should include:
+
+- objective and source spec,
+- included and excluded scope,
+- implementation outline,
+- acceptance criteria,
+- verification commands,
+- an implementation prompt ready to paste into Codex, OpenCode, or another project assistant.
+
+Naming convention:
+
+```text
+specs/<feature-name>.md
+docs/plans/<feature-name>-implementation-plan.md
+```
+
+Existing phase plans may keep their established names, for example:
+
+```text
+docs/plans/week-03-phase-3-web-loop.md
+```
+
+The prompt belongs inside the plan file by default. Create separate prompt files only if one spec truly needs multiple distinct implementation handoffs.
+
+Codex and OpenCode should treat this as project workflow, not as a model-specific skill. GitHub Copilot can help draft implementation details, but durable decisions and prompts must live in the repository.
 
 ## Pre-Edit Gate for AI Assistants
 

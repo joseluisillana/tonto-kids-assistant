@@ -30,7 +30,7 @@ El foco está en conversación natural persistente que adapta el aprendizaje al 
 - **Demo-first development**: Cada semana produce una demo tangible, no documentación.
 - **Thin client + heavy backend**: Raspberry Pi como I/O puro, backend como cerebro IA.
 - **Online-first con degradación offline**: IA requiere conectividad, pero fallback básico offline.
-- **IA como núcleo**: IA guía diseño de producto y acelera desarrollo (Copilot/Codex).
+- **IA como núcleo**: IA guía diseño de producto y acelera desarrollo (Copilot/Codex/OpenCode).
 - **Spec Driven Development**: Especificaciones claras pero adaptables, validadas por prototipos.
 - **Anti-scope-creep**: Solo features que contribuyen al MVP core. No "nice-to-haves".
 
@@ -38,43 +38,53 @@ El foco está en conversación natural persistente que adapta el aprendizaje al 
 
 El MVP final de 6 semanas busca demostrar una conversación educativa básica sobre hardware real.
 
-El milestone inmediato es más pequeño: validar el primer loop texto → backend → IA → respuesta → TTS local.
+El milestone inmediato ya validó el primer loop texto → backend → IA → respuesta → TTS local. Semana 3 queda completada: voz real con Raspberry, Fase 2B automatizada con `client/main.py --mode voice`, TTS ajustado a `espeak -v es -s 135 -g 8` y Fase 3 web validada el 2026-06-01 con microfono de navegador → WAV PCM 16 kHz mono → `POST /chat/audio` → transcript → respuesta → speech audible en browser.
 
 Incluye ahora:
 
 - **Entrada manual de texto** desde Raspberry Pi o cliente web de validación.
+- **Entrada de voz validada inicialmente** mediante captura WAV en Raspberry y `POST /chat/audio`, más el loop automatizado `--mode voice` en la misma Raspberry.
+- **Revalidación TTS completada** en Raspberry real: `espeak -v es -s 135 -g 8` hace las respuestas largas suficientemente entendibles para demo, aunque siguen sonando robóticas.
+- **Fase web de voz completada**: el cliente web captura microfono, genera WAV compatible, usa `POST /chat/audio`, muestra evidencia y reproduce la respuesta con Web Speech API.
 - **Backend Python/FastAPI** con endpoint `/chat`.
 - **Integración OpenAI** para generar respuestas educativas.
 - **TTS local** en Raspberry Pi mediante `espeak`.
 - **Memoria de sesión en proceso** solo para contexto corto.
-- **Documentación viva** en Markdown, asistida por Codex y NotebookLM.
+- **Documentación viva** en Markdown, asistida por Codex, OpenCode y NotebookLM.
 
-Queda fuera del primer loop: STT, wake word, Arduino/LEDs, persistencia, autenticación, multiusuario, memoria avanzada y UI de producto compleja.
+Queda fuera del primer loop automatizado: wake word, Arduino/LEDs, persistencia, autenticación, multiusuario, memoria avanzada, UI de producto compleja y STT local.
 
 ## Arquitectura Actual
 
 ```
-┌─────────────────┐    HTTP APIs    ┌─────────────────┐
-│   Raspberry Pi  │◄──────────────►│   Windows PC    │
-│   (Thin Client) │                │   (Backend IA)  │
-│   v1.2          │                │ Python/FastAPI  │
-│                 │                │                 │
-│ • Text input    │                │ • OpenAI API    │
-│ • TTS (espeak)  │                │ • Session memory│
-│ • HTTP client   │                │ • Orquestación  │
-│ • Thin client   │                │ • Personalidad  │
-└─────────────────┘                └─────────────────┘
-        ▲                                  ▲
-        │                                  │
-        └──────── Web Validation Client ───┘
+┌──────────────────────┐       HTTP /chat + /chat/audio       ┌──────────────────────┐
+│     Raspberry Pi     │──────────────────────────────────────►│      Windows PC      │
+│    Thin Client v1.2  │                                       │      Backend IA      │
+│                      │                                       │   Python/FastAPI     │
+│ • Text input         │                                       │                      │
+│ • arecord WAV        │                                       │ • POST /chat         │
+│ • HTTP client        │                                       │ • POST /chat/audio   │
+│ • TTS espeak         │                                       │ • OpenAI chat        │
+│ • Thin client        │                                       │ • OpenAI STT         │
+│ • No IA local        │                                       │ • Session memory     │
+└──────────────────────┘                                       │ • Orquestación       │
+┌──────────────────────┐       HTTP /health + /chat            │ • Personalidad       │
+│ Web Validation Client│──────────────────────────────────────►│                      │
+│ React/TypeScript/Vite│   Voice: mic -> WAV -> /chat/audio    └──────────────────────┘
+│                      │
+│ • Text validation    │
+│ • UI evidence        │
+│ • Audio web loop     │
+│ • No Raspberry link  │
+└──────────────────────┘
 ```
 
 ### Cliente (Raspberry Pi 3 Model B v1.2)
 
 - **Hardware confirmado**: Audio output validado y `espeak` funcionando.
 - **Desarrollo**: VSCode Remote SSH, acceso por SSH remoto.
-- **Responsabilidades actuales**: entrada manual de texto, llamadas HTTP al backend, TTS local y manejo básico de errores.
-- **Responsabilidades futuras**: captura de voz, wake word y control físico/Arduino.
+- **Responsabilidades actuales**: entrada manual de texto, llamadas HTTP al backend, TTS local, manejo básico de errores y loop de voz automatizado con `client/main.py --mode voice`.
+- **Responsabilidades futuras**: wake word, control físico/Arduino y otras capacidades fuera del MVP inmediato.
 - **Tecnología**: Python estándar para el primer loop; dependencias de audio/GPIO se añadirán solo cuando entren en alcance.
 
 ### Backend (Windows PC)
@@ -86,7 +96,7 @@ Queda fuera del primer loop: STT, wake word, Arduino/LEDs, persistencia, autenti
 ### Cliente Web de Validación
 
 - **Objetivo**: Probar el backend desde navegador sin depender siempre de la Raspberry Pi.
-- **Responsabilidades**: Entrada manual de texto, visualización de respuestas, panel técnico de demo y soporte para CI/despliegue frontend.
+- **Responsabilidades**: Entrada manual de texto, visualización de respuestas, panel técnico de demo y soporte para CI/despliegue frontend. No depende de la Raspberry; la Fase 3 web ya valida audio contra el mismo backend `POST /chat/audio`, con captura de microfono, transcript, respuesta textual y speech output del navegador.
 - **Tecnología**: React + TypeScript + Vite, con Tailwind CSS como base visual.
 
 ## Stack Tecnológico Confirmado
@@ -95,11 +105,11 @@ Queda fuera del primer loop: STT, wake word, Arduino/LEDs, persistencia, autenti
 - **Web**: React, TypeScript, Vite, Tailwind CSS
 - **IA**: OpenAI API
 - **Audio actual**: espeak/espeak-ng para TTS local
-- **Audio futuro**: STT y wake word se decidirán después del primer loop
+- **Audio actual**: STT backend con OpenAI `gpt-4o-mini-transcribe` validado manualmente desde Raspberry; wake word queda fuera del MVP inmediato
 - **Hardware**: Raspberry Pi 3B v1.2; Arduino Uno queda futuro para estados físicos
 - **Comunicación**: REST APIs (FastAPI)
-- **Desarrollo**: Codex, GitHub, GitHub Copilot, VSCode + Remote SSH
-- **Documentación**: Markdown en repo como fuente oficial; NotebookLM para síntesis; Codex para mantenimiento asistido
+- **Desarrollo**: Codex, OpenCode (WSL2/DevExpert), GitHub, GitHub Copilot, VSCode + Remote SSH
+- **Documentación**: Markdown en repo como fuente oficial; NotebookLM para síntesis; Codex/OpenCode para mantenimiento asistido
 
 **Tecnologías aparcadas**: Go para backend queda como evaluación futura, no como requisito activo del MVP ni como gate de CI.
 
@@ -143,7 +153,7 @@ tonto-kids-assistant/
 
 1. **Spec semanal**: Actualizar `docs/specs.md` con objetivos semana.
 2. **Prototype**: Implementar feature mínima viable.
-3. **AI-Assisted**: Usar Copilot para boilerplate, Codex para lógica compleja.
+3. **AI-Assisted**: Usar Copilot para boilerplate, Codex/OpenCode para cambios completos.
 4. **Test físico**: Validar en Raspberry Pi real.
 5. **Demo**: Grabación corta mostrando progreso.
 
@@ -164,13 +174,14 @@ tonto-kids-assistant/
 ## AI-Assisted Workflow
 
 - **Codex**: inspección del repo, implementación acotada, actualización de documentación y verificación.
+- **OpenCode**: CLI interactivo adicional con provider DevExpert (deepseek-v4-flash/pro) en WSL2. Implementación, revisión y verificación de tests siguiendo las mismas reglas.
 - **GitHub Copilot**: asistencia dentro del editor para boilerplate y cambios pequeños.
 - **NotebookLM**: investigación, síntesis y borradores a partir de fuentes exportadas del repo.
 - **GitHub**: historial oficial de decisiones, código y documentación.
 
 **Principio**: AI acelera, no reemplaza. Las decisiones estables vuelven al repo y se validan con scripts, tests o hardware real.
 
-El flujo común para Codex, Copilot, Cursor, Claude u otras herramientas vive en `docs/ai-assisted-workflow.md`. TONTO usa GitHub Flow ligero, ramas `<type>/<short-kebab-description>` y Conventional Commits.
+El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramientas vive en `docs/ai-assisted-workflow.md`. TONTO usa GitHub Flow ligero, ramas `<type>/<short-kebab-description>` y Conventional Commits.
 
 ## Spec Driven Development
 
@@ -192,7 +203,7 @@ El flujo común para Codex, Copilot, Cursor, Claude u otras herramientas vive en
 
 - **Backend language**: Python/FastAPI para MVP; Go queda aparcado hasta que una decisión futura lo reactive.
 - **Memoria futura**: solo después de validar el loop con memoria en proceso.
-- **STT y wake word**: proveedor/motor pendiente para fases posteriores.
+- **STT**: OpenAI `gpt-4o-mini-transcribe` elegido como proveedor inicial backend y validado manualmente desde Raspberry; wake word queda pendiente.
 - **Estados físicos**: Arduino/LEDs fuera del primer loop.
 - **Deployment**: ejecución local primero; despliegue reproducible después.
 
@@ -208,6 +219,10 @@ El flujo común para Codex, Copilot, Cursor, Claude u otras herramientas vive en
 
 **Semanas 1 y 2 cerradas**: estructura monorepo, hardware base validado, backend conversacional mínimo, cliente Raspberry con TTS local, cliente web de validación y automatización local inicial.
 
+**Semana 3 - Pipeline de voz real completada**. El proyecto cerró la captura WAV, el endpoint `POST /chat/audio`, la integración STT backend, la automatización de voz en Raspberry y la Fase 3 web. El cliente web valida el mismo contrato de audio, mantiene el loop de texto como fallback estable y reproduce de forma audible la respuesta desde navegador.
+
+**Hitos generales conseguidos**:
+
 - ✅ Raspberry Pi 3B v1.2 configurado con SSH/VSCode Remote
 - ✅ Audio output y `espeak` funcionando
 - ✅ Backend Python/FastAPI con `/chat`
@@ -216,14 +231,20 @@ El flujo común para Codex, Copilot, Cursor, Claude u otras herramientas vive en
 - ✅ Scripts oficiales de setup/dev/test/build
 - ✅ Loop Raspberry → backend LAN → OpenAI → TTS validado manualmente
 - ✅ Varias interacciones seguidas validadas en hardware real
-- 🔄 Próximo: iniciar Semana 3 con pipeline de voz real
+- ✅ Captura WAV validada en Raspberry con micrófono USB
+- ✅ Endpoint `POST /chat/audio` implementado con validación y STT backend inicial
+- ✅ Phase 2A validada con Raspberry real: WAV manual → backend STT → respuesta → `espeak`
+- ✅ Phase 2B validada inicialmente con Raspberry real: `client/main.py --mode voice` automatiza captura, subida, transcript/response y TTS local
+- ✅ Phase 2B post-ajuste TTS revalidada con Raspberry real: `espeak -v es -s 135 -g 8` es suficientemente entendible para demo
+- ✅ Phase 3 Web Voice Loop validada: microfono web → WAV PCM 16 kHz mono → `POST /chat/audio` → transcript → response → speech audible en navegador
 
 **Métricas MVP**:
 
 - Varias interacciones de texto seguidas sin crashes
 - Respuesta backend en menos de 5 segundos como objetivo inicial
-- TTS local reproduce la respuesta de forma entendible
-- Web validation client permite probar el contrato sin hardware
+- TTS local reproduce la respuesta; las respuestas largas quedaron revalidadas con el ajuste `-s 135 -g 8` como suficientemente entendibles para demo
+- Web validation client permite probar texto y voz contra el backend sin hardware Raspberry
+- Fase 3 web completada sin cambiar el contrato backend, sin selector WAV visible y con respuesta audible mediante APIs nativas del browser
 
 ## Backlog Cerrado Semanas 1-2
 
@@ -231,7 +252,7 @@ El flujo común para Codex, Copilot, Cursor, Claude u otras herramientas vive en
 - [x] Crear cliente Raspberry de texto con TTS local
 - [x] Crear cliente web de validación
 - [x] Añadir scripts oficiales locales
-- [x] Documentar workflow Codex/NotebookLM/GitHub
+- [x] Documentar workflow Codex/OpenCode/NotebookLM/GitHub
 - [x] Validar conversación end-to-end con OpenAI real
 - [x] Ejecutar demo texto → backend → TTS en Raspberry
 - [x] Validar múltiples turnos Raspberry → backend LAN → OpenAI → TTS
@@ -313,7 +334,7 @@ La exportación de NotebookLM genera fuentes individuales y `exports/notebooklm/
 ### Desarrollo Diario
 
 - **Spec first**: Actualiza `docs/specs.md` antes de codear
-- **AI assist**: Copilot para editor, Codex para cambios completos, NotebookLM para síntesis
+- **AI assist**: Copilot para editor, Codex/OpenCode para cambios completos, NotebookLM para síntesis
 - **Test físico**: Siempre valida en Pi real
 - **Commit pequeño**: Ramas cortas, Conventional Commits y specs/docs incluidas cuando aplique
 

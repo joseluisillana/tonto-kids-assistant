@@ -13,6 +13,7 @@ $VenvPython = if ($env:OS -eq "Windows_NT") {
 } else {
     Join-Path (Join-Path (Join-Path $RepoRoot ".venv") "bin") "python"
 }
+$Npm = if ($env:OS -eq "Windows_NT") { "npm.cmd" } else { "npm" }
 
 function Invoke-CheckedCommand {
     param(
@@ -31,23 +32,36 @@ function Invoke-PythonChecks {
         throw "Python virtual environment not found. Run ./scripts/setup-dev.ps1 first."
     }
 
+    $LocalTempDir = Join-Path $RepoRoot ".cache\pytest-temp"
+    New-Item -ItemType Directory -Force -Path $LocalTempDir | Out-Null
+    $BaseTempDir = Join-Path $LocalTempDir ("basetemp-" + ([guid]::NewGuid().ToString("N")))
+    New-Item -ItemType Directory -Force -Path $BaseTempDir | Out-Null
+
+    $PreviousTemp = $env:TEMP
+    $PreviousTmp = $env:TMP
+    $PreviousTmpDir = $env:TMPDIR
     $PreviousDontWriteBytecode = $env:PYTHONDONTWRITEBYTECODE
 
     Push-Location $RepoRoot
     try {
+        $env:TEMP = $LocalTempDir
+        $env:TMP = $LocalTempDir
+        $env:TMPDIR = $LocalTempDir
         $env:PYTHONDONTWRITEBYTECODE = "1"
-        Invoke-CheckedCommand -FilePath $VenvPython -Arguments @("-c", @"
-import ast
-from pathlib import Path
-
-roots = [Path("backend"), Path("client"), Path("shared"), Path("tests")]
-for root in roots:
-    for path in root.rglob("*.py"):
-        ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
-print("Python syntax OK")
-"@)
-        Invoke-CheckedCommand -FilePath $VenvPython -Arguments @("-m", "pytest", "-p", "no:cacheprovider", "tests")
+        Invoke-CheckedCommand -FilePath $VenvPython -Arguments @(Join-Path (Join-Path $RepoRoot "scripts") "check_syntax.py")
+        Invoke-CheckedCommand -FilePath $VenvPython -Arguments @(
+            "-m",
+            "pytest",
+            "-p",
+            "no:cacheprovider",
+            "--basetemp",
+            $BaseTempDir,
+            "tests"
+        )
     } finally {
+        $env:TEMP = $PreviousTemp
+        $env:TMP = $PreviousTmp
+        $env:TMPDIR = $PreviousTmpDir
         $env:PYTHONDONTWRITEBYTECODE = $PreviousDontWriteBytecode
         Pop-Location
     }
@@ -60,7 +74,7 @@ function Invoke-WebChecks {
             throw "Web dependencies not found. Run ./scripts/setup-dev.ps1 first."
         }
 
-        Invoke-CheckedCommand -FilePath "npm" -Arguments @("run", "typecheck")
+        Invoke-CheckedCommand -FilePath $Npm -Arguments @("run", "test")
     } finally {
         Pop-Location
     }

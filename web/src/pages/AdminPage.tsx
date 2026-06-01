@@ -1,18 +1,28 @@
-import { ChatComposer } from "../components/ChatComposer";
-import { ConversationPanel } from "../components/ConversationPanel";
-import { MetricCard } from "../components/MetricCard";
-import { SessionCard } from "../components/SessionCard";
-import { TontoBot } from "../components/TontoBot";
-import { TontoLogo } from "../components/TontoLogo";
-import type { useConversation } from "../features/conversation/useConversation";
+import { ChatComposer } from "../components/ChatComposer.js";
+import { ConversationPanel } from "../components/ConversationPanel.js";
+import { MetricCard } from "../components/MetricCard.js";
+import { SessionCard } from "../components/SessionCard.js";
+import { VoiceLoopPanel } from "../components/VoiceLoopPanel.js";
+import { TontoBot } from "../components/TontoBot.js";
+import { TontoLogo } from "../components/TontoLogo.js";
+import type { useConversation } from "../features/conversation/useConversation.js";
 
 type AdminPageProps = {
   conversation: ReturnType<typeof useConversation>;
 };
 
 export function AdminPage({ conversation }: AdminPageProps) {
+  const voiceBusy =
+    conversation.voice.captureStatus === "requesting-permission" ||
+    conversation.voice.captureStatus === "recording" ||
+    conversation.voice.captureStatus === "encoding" ||
+    conversation.voice.captureStatus === "uploading" ||
+    conversation.voice.captureStatus === "transcribing" ||
+    conversation.status === "speaking";
   const sending =
-    conversation.status === "sending" || conversation.status === "thinking";
+    conversation.status === "sending" ||
+    conversation.status === "thinking" ||
+    voiceBusy;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-sky-100 via-white to-coral-50 p-5 pt-24 text-slate-950">
@@ -64,6 +74,8 @@ export function AdminPage({ conversation }: AdminPageProps) {
             questionCount={conversation.questionCount}
             sessionId={conversation.sessionId}
           />
+
+          <VoiceLoopPanel compact conversation={conversation} />
 
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-xl font-bold text-blue-950">Rendimiento</h2>
