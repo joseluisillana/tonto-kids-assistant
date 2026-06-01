@@ -4,7 +4,7 @@
 
 Este documento describe el pipeline de audio para la versión MVP de TONTO, un asistente para niños. El enfoque está en simplicidad y estabilidad, utilizando un Raspberry Pi 3 como thin client. El audio output ya está validado, y la captura inicial con micrófono USB quedó validada en Raspberry durante Semana 3.
 
-Semana 3 empieza con una fase de preparación: validar hardware de entrada y dejar el repositorio listo para implementar voz sin cambiar todavía contratos públicos ni añadir dependencias. El loop `/chat` de texto sigue siendo la referencia estable mientras se desbloquea la captura de audio. Phase 2A ya validó manualmente el camino Raspberry WAV -> `POST /chat/audio` -> STT backend OpenAI -> respuesta -> `espeak` local. Phase 2B validó inicialmente el loop automatizado en `client/main.py --mode voice` sobre Raspberry real. Después se ajustó el TTS a `espeak -v es -s 135 -g 8` para mejorar inteligibilidad en respuestas largas, y Phase 2B quedó revalidada post-ajuste en Raspberry real el 2026-05-30. Phase 3 web queda desbloqueada dentro del alcance documentado.
+Semana 3 validó hardware de entrada, STT backend y superficies de voz sin cambiar el contrato estable de texto `/chat`. Phase 2A validó manualmente el camino Raspberry WAV -> `POST /chat/audio` -> STT backend OpenAI -> respuesta -> `espeak` local. Phase 2B validó el loop automatizado en `client/main.py --mode voice` sobre Raspberry real. Después se ajustó el TTS a `espeak -v es -s 135 -g 8` para mejorar inteligibilidad en respuestas largas, y Phase 2B quedó revalidada post-ajuste en Raspberry real el 2026-05-30. Phase 3 web quedó implementada y validada el 2026-06-01 dentro del alcance documentado.
 
 La dirección provisional es procesar STT en el backend. Esto deriva de la arquitectura MVP de Raspberry Pi como thin client y de la necesidad de mantener el cliente simple, no de una limitación ya demostrada de la Raspberry. STT local solo se descartará si una prueba concreta demuestra problemas de CPU, memoria, latencia, calidad o complejidad de setup.
 
@@ -161,13 +161,13 @@ La intención es que `/chat/audio` sea una variante de entrada de chat por voz: 
 
 ### Fase 3: Loop Web de Validacion
 
-La Fase 3 de Semana 3 queda documentada en `specs/audio-pipeline-phase-3-web-loop.md` para ejecutarse despues de la revalidacion Raspberry de Fase 2B post-ajuste TTS, completada el 2026-05-30. Su objetivo es usar el cliente web como superficie interactiva para validar el mismo `POST /chat/audio` ya implementado:
+La Fase 3 de Semana 3 queda documentada en `specs/audio-pipeline-phase-3-web-loop.md` y fue validada el 2026-06-01 despues de la revalidacion Raspberry de Fase 2B post-ajuste TTS, completada el 2026-05-30. Usa el cliente web como superficie interactiva para validar el mismo `POST /chat/audio` ya implementado:
 
 ```text
 navegador -> captura de microfono -> WAV PCM 16 kHz mono -> POST /chat/audio -> transcript -> response text -> browser speech
 ```
 
-Esta fase no cambia el contrato backend ni sustituye al cliente Raspberry como objetivo del producto fisico. Sirve para acelerar validacion, observar latencia y depurar STT desde navegador, y ahora incluye como requisito reproducir de forma audible la respuesta desde el propio browser.
+Esta fase no cambia el contrato backend ni sustituye al cliente Raspberry como objetivo del producto fisico. Sirve para acelerar validacion, observar latencia y depurar STT desde navegador, e incluye reproducir de forma audible la respuesta desde el propio browser.
 
 Restricciones iniciales de Fase 3:
 
@@ -177,6 +177,8 @@ Restricciones iniciales de Fase 3:
 - La respuesta audible de Fase 3 debe usar APIs nativas del navegador, preferentemente Web Speech API (`speechSynthesis`).
 - No debe existir un selector o subida manual de WAV como flujo visible de producto/demo; WAV pregrabados solo pueden usarse como fixtures o helpers de testing.
 - La evidencia debe quedar visible en UI/logs y promoverse despues a `docs/project-journal/week-03.md`.
+
+Evidencia de cierre: la validacion humana del 2026-06-01 confirmó el loop web contra backend real. El fallo inicial `422 Audio did not contain recognizable speech` se resolvió al seleccionar el microfono fisico correcto en los ajustes del navegador, por lo que la selección de input queda como precondición de demo.
 
 ### Fuera de Alcance
 
@@ -276,7 +278,7 @@ aplay ~/tonto-mic-check.wav
 - Mantener `POST /chat` estable mientras `/chat/audio` añade entrada por voz.
 - El endpoint `POST /chat/audio` está implementado y validado con STT real. El cliente Raspberry (Phase 2B) ya automatiza captura/subida: `client/main.py` soporta `--mode voice` con loop interactivo.
 - [x] Automatizar captura/subida en cliente Raspberry: Phase 2B validada inicialmente en Raspberry real. `client/main.py` soporta `--mode voice` con loop interactivo (Enter inicia captura con `arecord`, sube WAV a `POST /chat/audio`, muestra transcript/response, reproduce con `espeak`). El modo texto `--mode text` preserva el comportamiento original. El tracking de la evidencia vive en `specs/audio-pipeline-phase-2b-validation-guide.md`. En esta validación, `espeak` sonó audible pero robótico y poco claro para la demo; los warnings ALSA/JACK no bloquearon el turno.
-- [x] Revalidar Phase 2B post-ajuste TTS: repetida en Raspberry real con `TONTO_TTS_ARGS="-v es -s 135 -g 8"` siguiendo `specs/audio-pipeline-phase-2b-tts-revalidation.md`. La evidencia vive en `docs/project-journal/week-03.md`: respuesta larga audible, más pausada, palabras no atropelladas, suficientemente entendible para demo, fallback de texto y salida limpia. Phase 3 queda desbloqueada dentro del alcance documentado.
+- [x] Revalidar Phase 2B post-ajuste TTS: repetida en Raspberry real con `TONTO_TTS_ARGS="-v es -s 135 -g 8"` siguiendo `specs/audio-pipeline-phase-2b-tts-revalidation.md`. La evidencia vive en `docs/project-journal/week-03.md`: respuesta larga audible, más pausada, palabras no atropelladas, suficientemente entendible para demo, fallback de texto y salida limpia. Esa revalidacion desbloqueó Phase 3, que ya quedó validada dentro del alcance documentado.
 - [x] **Probar subida manual de WAV al backend** con `curl` desde la Raspberry, verificando que el backend responde con `session_id`, `transcript` y `response`. Validado el 2026-05-27 desde `tonto-pi` contra backend LAN `192.168.1.91:8000`.
 
   ```bash
@@ -328,7 +330,7 @@ aplay ~/tonto-mic-check.wav
 ## Riesgos Técnicos Principales
 
 - **Recursos limitados del Raspberry Pi 3**: Posible latencia o inestabilidad en procesamiento de audio.
-- **Micrófono USB validado inicialmente**: Phase 2A midió STT real con `TOTAL_TIME=5.395580`; Phase 2B automatizó el loop en el cliente y fue revalidada post-ajuste TTS en Raspberry real el 2026-05-30. Conviene seguir midiendo latencia en flujo interactivo durante la Fase 3 web y futuras demos.
+- **Micrófono USB validado inicialmente**: Phase 2A midió STT real con `TOTAL_TIME=5.395580`; Phase 2B automatizó el loop en el cliente y fue revalidada post-ajuste TTS en Raspberry real el 2026-05-30. Phase 3 web quedó validada el 2026-06-01; conviene seguir midiendo latencia en futuras demos.
 - **Latencia**: Procesamiento en tiempo real puede ser desafiante con hardware limitado.
 - **Estabilidad**: Priorizar simplicidad para evitar crashes o comportamientos impredecibles.
 
@@ -346,6 +348,7 @@ aplay ~/tonto-mic-check.wav
 - Phase 2A queda validada con Raspberry real: captura WAV manual, subida a `POST /chat/audio`, transcript real, respuesta educativa y reproducción local con `espeak`.
 - Phase 2B implementada y validada inicialmente: `client/main.py` con `--mode voice` automatiza captura, subida, transcript/response y TTS local. `--mode text` preserva el comportamiento original. Tests unitarios cubren send_message, send_audio, capture_audio y speak sin hardware real.
 - Phase 2B post-ajuste TTS completada: el cliente usa por defecto `espeak -v es -s 135 -g 8` y fue revalidado en Raspberry real con respuesta larga audible, más pausada y suficientemente entendible para demo.
+- Phase 3 web completada: el cliente web captura microfono, genera WAV PCM 16 kHz mono, llama a `POST /chat/audio`, muestra transcript/response/latencia/estado y reproduce la respuesta con Web Speech API sin selector WAV visible.
 - Cualquier descarte de STT local queda respaldado por una prueba técnica, no por una suposición.
 - El TTS genera audio claro y comprensible.
 - El output audio se reproduce sin interrupciones.

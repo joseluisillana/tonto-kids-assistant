@@ -1,4 +1,4 @@
-import type { ActivityEvent } from "../types/conversation";
+import type { ActivityEvent } from "../types/conversation.js";
 
 type ActivityTimelineProps = {
   events: ActivityEvent[];
@@ -6,9 +6,13 @@ type ActivityTimelineProps = {
 
 const toneByKind: Record<ActivityEvent["kind"], string> = {
   listening: "border-mint-300 bg-mint-300",
+  recording: "border-sky-300 bg-sky-300",
+  uploading: "border-amber-300 bg-amber-300",
+  transcribing: "border-emerald-300 bg-emerald-300",
   "user-message": "border-coral-300 bg-coral-300",
   thinking: "border-purple-300 bg-purple-300",
   response: "border-sky-300 bg-sky-300",
+  speaking: "border-indigo-300 bg-indigo-300",
   error: "border-rose-300 bg-rose-300",
 };
 

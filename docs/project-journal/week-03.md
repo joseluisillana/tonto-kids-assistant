@@ -693,7 +693,7 @@ Tracking spec: `specs/audio-pipeline-phase-2b-tts-revalidation.md`.
 **Operator:** Jose Luis Illana Ruiz.
 **Branch:** `feature/audio-upload-contract`.
 **Initial Git status:** `## feature/audio-upload-contract...origin/feature/audio-upload-contract`.
-**Conclusion:** pass. Phase 2B was revalidated on real Raspberry hardware after the TTS tuning to `espeak -v es -s 135 -g 8`; Phase 3 is unblocked for documentation-first web audio validation work.
+**Conclusion:** pass. Phase 2B was revalidated on real Raspberry hardware after the TTS tuning to `espeak -v es -s 135 -g 8`; at that point Phase 3 became ready for documentation-first web audio validation work.
 
 Windows pre-flight and backend:
 
@@ -849,3 +849,86 @@ Documentation updated for this plan:
 - `docs/decisions.md`
 - `README.md`
 - `AGENTS.md`
+
+## Phase 3 Web Voice Loop Implementation
+
+**Date:** 2026-06-01.
+**Branch:** `feature/audio-upload-contract`.
+
+The Phase 3 browser validation loop is now implemented in the web client:
+
+```text
+browser microphone -> WAV PCM 16 kHz mono -> POST /chat/audio -> transcript -> response text -> browser speech
+```
+
+### Changes
+
+- Added browser microphone capture and WAV encoding helpers in `web/src/lib/audio.ts`.
+- Added multipart `/chat/audio` client support in `web/src/api/backendClient.ts`.
+- Added a dedicated `VoiceLoopPanel` to expose capture, send, transcript, response, latency, technical status, and readable errors.
+- Kept the `/chat` text path as the stable fallback.
+- Added focused web tests for the pure audio helpers and backend client request/response behavior.
+
+### Verification
+
+- `.\scripts\test.ps1 -Target python`
+- `.\scripts\test.ps1 -Target web`
+- `.\scripts\build.ps1 -Target web`
+- `git diff --check`
+
+### Status
+
+Implementation is complete and local test/build checks passed. Browser-level manual validation against a live `/chat/audio` backend remains the next evidence step.
+
+### Browser Microphone Selection Note
+
+During manual browser validation, a `422` response with `Audio did not contain recognizable speech` was traced to the host/browser using the wrong microphone input. Selecting the correct microphone in the browser site settings made the audio loop work. This confirms that a valid WAV upload can still fail STT if the browser captures silence or the wrong input, so the manual validation docs now call out microphone selection as an explicit precondition and troubleshooting step.
+
+## Fase 3 Web Loop Validation Evidence
+
+**Date:** 2026-06-01.
+**Branch:** `feature/audio-upload-contract`.
+**Commit or working tree note:** validation recorded before final commit for the Phase 3 Web Voice Loop PR.
+**Browser and version:** local browser validation performed by human tester; exact version not recorded.
+**Web URL:** `http://localhost:5173/`.
+**Backend URL:** local development backend used by the web client.
+**Backend health:** reachable from the web UI during validation.
+**OPENAI_STT_MODEL:** `gpt-4o-mini-transcribe`.
+**OPENAI_MODEL:** configured development OpenAI chat model.
+
+Text fallback result:
+
+- `/chat` text flow remained available as the stable fallback.
+- The normal TONTO page kept the original button-first experience, while Admin kept the technical validation panel.
+
+Voice loop result:
+
+```text
+browser microphone -> WAV PCM 16 kHz mono -> POST /chat/audio -> transcript -> response text -> browser speech
+```
+
+- The browser captured microphone audio and generated a WAV compatible with the existing backend contract.
+- The web client sent `multipart/form-data` to `POST /chat/audio` using `device_id=web-validation-client`, `sample_rate_hz=16000`, `channels=1`, and `language=es`.
+- The backend returned a real transcript and response after the correct browser microphone input was selected.
+- The response was visible in the UI and played audibly with browser speech synthesis.
+- The UI exposed useful status indicators for backend, microphone and speech support without adding the technical panel back to the normal non-admin site.
+- No visible WAV file picker or manual upload path was present in the product/demo UI.
+
+Negative/error evidence:
+
+- A `422 Audio did not contain recognizable speech` response occurred when the browser was using the wrong microphone input. Selecting the correct microphone in browser settings resolved the issue.
+- The UI keeps readable error surfaces for permission denied, unsupported microphone, empty audio, HTTP/backend failures, timeout/STT failures and speech support failures.
+- Automated Browser validation in Codex could not capture a real microphone because its environment reported microphone permission denied; this is recorded as a tooling limitation, not a product blocker, because human browser validation passed with the correct input selected.
+
+Final checks requested for the closure:
+
+- `.\scripts\test.ps1 -Target python`
+- `.\scripts\test.ps1 -Target web`
+- `.\scripts\build.ps1 -Target web`
+- `git diff --check`
+- `git status --short --branch`
+
+Overall result: `PASS`.
+Blockers: none.
+
+Conclusion: Phase 3 Web Voice Loop is validated and the Week 03 voice milestone is complete.

@@ -1,6 +1,7 @@
 import io
 import json
 import os
+from pathlib import Path
 import subprocess
 import urllib.error
 import uuid
@@ -211,8 +212,14 @@ def _make_fake_completed_process(returncode: int = 0, stderr: str = ""):
     )
 
 
-def test_capture_audio_calls_arecord_with_device(monkeypatch, tmp_path):
-    wav_path = str(tmp_path / "turn.wav")
+def _audio_test_path(filename: str) -> str:
+    root = Path(".cache") / "client-audio-tests"
+    root.mkdir(parents=True, exist_ok=True)
+    return str(root / filename)
+
+
+def test_capture_audio_calls_arecord_with_device(monkeypatch):
+    wav_path = _audio_test_path("turn-device.wav")
     with open(wav_path, "wb") as f:
         f.write(b"RIFF....WAVE....")
 
@@ -230,8 +237,8 @@ def test_capture_audio_calls_arecord_with_device(monkeypatch, tmp_path):
     assert "plughw:1,0" in args_captured
 
 
-def test_capture_audio_calls_arecord_without_device(monkeypatch, tmp_path):
-    wav_path = str(tmp_path / "turn.wav")
+def test_capture_audio_calls_arecord_without_device(monkeypatch):
+    wav_path = _audio_test_path("turn-default.wav")
     with open(wav_path, "wb") as f:
         f.write(b"WAV data")
 
@@ -276,8 +283,8 @@ def test_capture_audio_wav_not_created(monkeypatch, tmp_path):
     assert capture_audio(None, 5, wav_path) is None
 
 
-def test_capture_audio_wav_empty(monkeypatch, tmp_path):
-    wav_path = str(tmp_path / "empty.wav")
+def test_capture_audio_wav_empty(monkeypatch):
+    wav_path = _audio_test_path("empty.wav")
     with open(wav_path, "wb") as f:
         f.write(b"")
 

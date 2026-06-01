@@ -1,12 +1,21 @@
 import io
+import pathlib
 import struct
 import unittest.mock
+import tempfile
 import wave
 
 import pytest
 from fastapi.testclient import TestClient
 
 from backend.main import app
+
+
+@pytest.fixture
+def tmp_path():
+    root = pathlib.Path(tempfile.gettempdir()) / "tonto-pytest-fixtures"
+    root.mkdir(parents=True, exist_ok=True)
+    return pathlib.Path(tempfile.mkdtemp(dir=root))
 
 
 @pytest.fixture

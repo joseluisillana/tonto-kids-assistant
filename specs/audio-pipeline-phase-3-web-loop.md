@@ -2,13 +2,13 @@
 
 ## Objetivo
 
-La Fase 3 de Semana 3 planifica el loop interactivo de voz desde el cliente web de validacion:
+La Fase 3 de Semana 3 valida el loop interactivo de voz desde el cliente web de validacion:
 
 ```text
 navegador -> captura de microfono -> WAV PCM 16 kHz mono -> POST /chat/audio -> transcript -> response text -> browser speech
 ```
 
-Esta fase no sustituye al objetivo fisico con Raspberry. Su proposito es acelerar la validacion del backend STT ya activo, reducir friccion de demo y recoger evidencia desde navegador despues de cerrar la automatizacion del cliente Raspberry y su revalidacion post-TTS en Fase 2B.
+Esta fase no sustituye al objetivo fisico con Raspberry. Su proposito es acelerar la validacion del backend STT ya activo, reducir friccion de demo y recoger evidencia desde navegador despues de cerrar la automatizacion del cliente Raspberry y su revalidacion post-TTS en Fase 2B. La validacion final pasó el 2026-06-01 contra backend real.
 
 La mision revisada de Fase 3 incluye respuesta audible desde el navegador. No basta con mostrar evidencia textual: la web debe capturar audio por microfono, mostrar la transcripcion, mostrar la respuesta textual y reproducir esa respuesta de forma audible y entendible usando APIs nativas del navegador.
 
@@ -43,26 +43,37 @@ Los archivos WAV pregrabados pueden usarse como fixtures o helpers internos de t
 
 El backend `POST /chat/audio` acepta inicialmente WAV PCM 16-bit, 16 kHz y mono. Los navegadores suelen producir `webm` u `ogg` con `MediaRecorder`, por lo que la Fase 3 debe evitar subir esos formatos directamente.
 
-La implementacion debe producir WAV en el navegador usando APIs nativas (`getUserMedia`, Web Audio API y codificacion WAV propia pequena), sin dependencia nueva. La captura de microfono es requisito de esta fase; un selector manual de WAV no es un sustituto aceptable para la UI de producto/demo.
+La implementacion produce WAV en el navegador usando APIs nativas (`getUserMedia`, Web Audio API y codificacion WAV propia pequena), sin dependencia nueva. La captura de microfono es requisito de esta fase; un selector manual de WAV no es un sustituto aceptable para la UI de producto/demo.
 
 La respuesta audible debe hacerse en el navegador con Web Speech API (`speechSynthesis`) u otra API nativa equivalente disponible en el browser. No se debe ampliar el backend para generar audio, aceptar formatos comprimidos ni introducir `ffmpeg`/transcoding salvo decision explicita posterior.
 
+## Estado de Cierre
+
+Fase 3 queda cerrada como validada el 2026-06-01. La evidencia registrada confirma:
+
+- `/chat` se conserva como fallback estable.
+- La web captura microfono, genera WAV PCM 16-bit 16 kHz mono y envia `multipart/form-data` a `POST /chat/audio`.
+- El backend devuelve transcript real y respuesta educativa.
+- La respuesta se muestra en UI y se reproduce audiblemente mediante Web Speech API.
+- No hay endpoint nuevo, selector WAV visible, backend transcoding, backend TTS, STT local, streaming, persistencia, auth ni dependencia nueva.
+- El incidente `422 Audio did not contain recognizable speech` se resolvio seleccionando el microfono correcto en los ajustes del navegador.
+
 ## Cambios Documentales Requeridos
 
-Antes de implementar codigo, mantener alineados:
+Los documentos de estado deben mantenerse alineados con este cierre:
 
-- `docs/roadmap.md`: registrar Fase 3 como trabajo pendiente de Semana 3 posterior a Fase 2B, incluyendo respuesta audible web.
+- `docs/roadmap.md`: registrar Fase 3 como completada, incluyendo respuesta audible web.
 - `specs/audio-pipeline.md`: referenciar este plan como extension web del contrato `/chat/audio`.
 - `specs/web-validation-client.md`: ampliar el rol del cliente web a validacion de audio y speech output.
 - `docs/specs.md`: resumir el nuevo alcance activo.
 - `docs/architecture.md`: describir la variante web de audio sin cambiar la arquitectura principal.
-- `docs/project-journal/week-03.md`: registrar plan revisado y, despues de validar, evidencia.
+- `docs/project-journal/week-03.md`: registrar plan revisado y evidencia de cierre.
 - `README.md`: reflejar estado actual de Semana 3.
 - `AGENTS.md`: indicar a agentes que la web debe validar captura de microfono, transcript, respuesta textual y respuesta audible, manteniendo el producto fisico y Raspberry como objetivo MVP.
 
-## Instrumentacion Esperada
+## Instrumentacion Implementada
 
-La implementacion futura deberia exponer evidencia visible en la web o en logs de desarrollo:
+La implementacion expone evidencia visible en la web o en logs de desarrollo:
 
 - `backendUrl` usado.
 - Estado `/health`.
@@ -114,7 +125,9 @@ Respuesta esperada:
 }
 ```
 
-## Validacion Manual Prevista
+## Validacion Manual
+
+La validacion manual final y los criterios de cierre viven en `specs/audio-pipeline-phase-3-browser-manual-validation.md`. La validacion de cierre quedó aceptada el 2026-06-01 por prueba humana contra backend real.
 
 Comandos base en Windows:
 
@@ -175,7 +188,7 @@ Evidencia a recoger:
 
 ## Paso Final Documental
 
-Cuando la Fase 3 se implemente y valide, actualizar:
+Tras la validacion de cierre, actualizar:
 
 - `docs/project-journal/week-03.md`: seccion `Fase 3 Web Loop Validation Evidence`.
 - `specs/audio-pipeline.md`: marcar Fase 3 como implementada o documentar bloqueo.

@@ -156,7 +156,7 @@ Validado el 2026-05-30 desde Raspberry real `tonto-pi` contra backend LAN `192.1
 - Después de esta evidencia se ajustó el cliente a `espeak -v es -s 135 -g 8` para mejorar inteligibilidad en frases largas.
 - `specs/audio-pipeline.md`, `docs/project-journal/week-03.md`, `docs/specs.md` y `README.md` se actualizaron para reflejar la validación real.
 
-Conclusión: Phase 2B está implementada, fue validada inicialmente y quedó revalidada post-ajuste TTS el 2026-05-30 en Raspberry real siguiendo `specs/audio-pipeline-phase-2b-tts-revalidation.md`. Con `TONTO_TTS_ARGS="-v es -s 135 -g 8"`, la respuesta larga fue audible, más pausada, sin palabras atropelladas y suficientemente entendible para demo. Los warnings ALSA/JACK siguieron apareciendo, pero no bloquearon el audio. Fase 3 web queda desbloqueada dentro de su alcance documentado.
+Conclusión: Phase 2B está implementada, fue validada inicialmente y quedó revalidada post-ajuste TTS el 2026-05-30 en Raspberry real siguiendo `specs/audio-pipeline-phase-2b-tts-revalidation.md`. Con `TONTO_TTS_ARGS="-v es -s 135 -g 8"`, la respuesta larga fue audible, más pausada, sin palabras atropelladas y suficientemente entendible para demo. Los warnings ALSA/JACK siguieron apareciendo, pero no bloquearon el audio. Esa revalidación desbloqueó Fase 3 web, que ya queda completada dentro de su alcance documentado.
 
 ### Riesgos
 
@@ -164,21 +164,21 @@ Conclusión: Phase 2B está implementada, fue validada inicialmente y quedó rev
 - Latencia excesiva.
 - Intentar optimizar prematuramente el pipeline.
 
-## Fase 3 — Loop interactivo desde cliente web (planificada)
+## Fase 3 — Loop interactivo desde cliente web (completada)
 
 ### Objetivo
 
-Usar el cliente web de validacion como superficie interactiva para probar el pipeline de voz contra `POST /chat/audio` despues de cerrar la revalidacion Phase 2B post-ajuste TTS en el cliente Raspberry, completada el 2026-05-30. Esta fase permite validar permisos de microfono, generacion/subida de WAV, transcript real, respuesta conversacional, latencia, errores y reproduccion audible de la respuesta desde navegador.
+Usar el cliente web de validacion como superficie interactiva para probar el pipeline de voz contra `POST /chat/audio` despues de cerrar la revalidacion Phase 2B post-ajuste TTS en el cliente Raspberry, completada el 2026-05-30. Esta fase validó permisos de microfono, generacion/subida de WAV, transcript real, respuesta conversacional, latencia, errores y reproduccion audible de la respuesta desde navegador.
 
-### Entregables pendientes
+### Entregables
 
-- [ ] Documentar la fase en `specs/audio-pipeline-phase-3-web-loop.md`.
-- [ ] Ampliar `specs/web-validation-client.md` con audio loop e instrumentacion.
-- [ ] Implementar captura de microfono y generacion WAV desde la web sin cambiar el contrato backend.
-- [ ] Mostrar transcript, response, latencia, estado tecnico y errores en la UI.
-- [ ] Reproducir de forma audible y entendible la respuesta desde el navegador.
-- [ ] Validar que `/chat` de texto sigue funcionando como fallback.
-- [ ] Registrar evidencia en `docs/project-journal/week-03.md`.
+- [x] Documentar la fase en `specs/audio-pipeline-phase-3-web-loop.md`.
+- [x] Ampliar `specs/web-validation-client.md` con audio loop e instrumentacion.
+- [x] Implementar captura de microfono y generacion WAV desde la web sin cambiar el contrato backend.
+- [x] Mostrar transcript, response, latencia, estado tecnico y errores en la UI.
+- [x] Reproducir de forma audible y entendible la respuesta desde el navegador.
+- [x] Validar que `/chat` de texto sigue funcionando como fallback.
+- [x] Registrar evidencia en `docs/project-journal/week-03.md`.
 
 ### Restricciones
 
@@ -190,9 +190,9 @@ Usar el cliente web de validacion como superficie interactiva para probar el pip
 - No sustituir la validacion final con Raspberry: la web acelera desarrollo, pero el producto fisico sigue siendo el objetivo MVP.
 - Mantener Fase 3 dentro de `specs/audio-pipeline-phase-3-web-loop.md`: cliente web como superficie de validacion, WAV compatible y sin ampliar el backend a formatos comprimidos salvo decision explicita posterior.
 
-### Riesgo principal
+### Evidencia
 
-El navegador no genera WAV PCM 16 kHz mono por defecto. La implementacion futura debe producir WAV en cliente con APIs nativas y mantener la captura de microfono como requisito de Fase 3. Un selector manual de WAV no forma parte de la UI de producto/demo.
+Validado el 2026-06-01 contra backend real desde navegador local. El loop completo `browser microphone -> WAV PCM 16 kHz mono -> POST /chat/audio -> transcript -> response -> browser speech` quedó aceptado por validación humana. Un fallo inicial `422 Audio did not contain recognizable speech` se resolvió seleccionando el microfono correcto en los ajustes del navegador, por lo que queda documentado como precondición de demo.
 
 ---
 
@@ -330,8 +330,8 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [x] Validar loop manual de voz Raspberry → backend → TTS.
 - [x] Loop interactivo de voz Raspberry → backend → TTS automatizado en cliente.
 - [x] Revalidar loop interactivo Raspberry → backend → TTS tras ajuste `espeak -v es -s 135 -g 8`.
-- [ ] Validar loop interactivo de voz desde cliente web contra `POST /chat/audio` despues de la revalidacion TTS de Phase 2B.
-- [ ] Validar respuesta audible desde navegador para el loop web de Fase 3.
+- [x] Validar loop interactivo de voz desde cliente web contra `POST /chat/audio` despues de la revalidacion TTS de Phase 2B.
+- [x] Validar respuesta audible desde navegador para el loop web de Fase 3.
 - [x] Medir latencia básica del loop manual (`TOTAL_TIME=5.395580`).
 - [ ] Mejorar calidad TTS progresivamente.
 
@@ -347,8 +347,8 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [x] Crear scaffold inicial React + TypeScript + Vite.
 - [x] Conectar con el endpoint `/chat` cuando el contrato esté estable.
 - [x] Añadir build/typecheck a integración continua.
-- [ ] Fase 3: añadir loop interactivo de voz contra `POST /chat/audio`.
-- [ ] Fase 3: mostrar evidencia tecnica de audio, transcript, response, latencia y speech output.
+- [x] Fase 3: añadir loop interactivo de voz contra `POST /chat/audio`.
+- [x] Fase 3: mostrar evidencia tecnica de audio, transcript, response, latencia y speech output.
 - [ ] Desplegar preview web para pruebas rápidas.
 
 ## Backend

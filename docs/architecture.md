@@ -39,7 +39,7 @@ La Raspberry maneja la entrada local, la salida TTS y los estados físicos futur
 
 - ofrecer una superficie rápida para probar el backend sin usar siempre la Raspberry,
 - consumir los mismos contratos HTTP/JSON que el cliente Raspberry,
-- validar en Fase 3 el contrato `POST /chat/audio` desde navegador con captura de microfono, evidencia visible de transcript, respuesta, latencia y reproduccion audible,
+- validar el contrato `POST /chat/audio` desde navegador con captura de microfono, evidencia visible de transcript, respuesta, latencia y reproduccion audible,
 - facilitar integración continua, builds y despliegues paralelos del frontend,
 - servir como herramienta de demo y depuración durante el MVP.
 
@@ -84,8 +84,8 @@ Contiene estructuras comunes que usan cliente y backend:
 ### Cliente web
 
 - entrada manual de texto desde navegador,
-- validacion planificada de un turno de audio web contra `POST /chat/audio`,
-- reproduccion audible de la respuesta en navegador durante Fase 3 usando APIs nativas,
+- validacion de un turno de audio web contra `POST /chat/audio`,
+- reproduccion audible de la respuesta en navegador usando APIs nativas,
 - comunicación HTTP con el backend,
 - visualización de respuestas y estados básicos,
 - soporte para pruebas de integración y despliegue frontend.
@@ -123,9 +123,9 @@ transcript real -> respuesta conversacional -> espeak local ajustado
 El endpoint `POST /chat/audio` está implementado en el backend.
 El proveedor inicial de STT es OpenAI `gpt-4o-mini-transcribe`, configurable con `OPENAI_STT_MODEL`.
 La subida manual desde Raspberry con `curl` fue validada con transcripción real el 2026-05-30 contra el backend LAN: `HTTP_STATUS=200`, `TOTAL_TIME=5.395580`, transcript real, respuesta educativa y reproducción local con `espeak`.
-El cliente Raspberry ya soporta `client/main.py --mode voice` para automatizar captura, subida, transcript/response y reproducción TTS. La validación inicial en hardware pasó, después se ajustó el TTS a `espeak -v es -s 135 -g 8`, y Phase 2B quedó revalidada en Raspberry real el 2026-05-30 con respuesta larga suficientemente entendible para demo. Phase 3 web queda desbloqueada dentro del alcance documentado.
+El cliente Raspberry ya soporta `client/main.py --mode voice` para automatizar captura, subida, transcript/response y reproducción TTS. La validación inicial en hardware pasó, después se ajustó el TTS a `espeak -v es -s 135 -g 8`, y Phase 2B quedó revalidada en Raspberry real el 2026-05-30 con respuesta larga suficientemente entendible para demo. Phase 3 web quedó implementada y validada el 2026-06-01 dentro del alcance documentado.
 
-### Variante de audio web (Fase 3 planificada)
+### Variante de audio web (Fase 3 validada)
 
 ```text
 navegador -> WAV compatible -> POST /chat/audio (multipart) ->
@@ -133,7 +133,7 @@ backend valida WAV -> OpenAI STT backend ->
 transcript real -> respuesta conversacional -> UI web -> speech del navegador
 ```
 
-Esta variante usa el cliente web como superficie de validacion, no como sustituto del producto fisico. La implementacion futura debe producir WAV compatible desde captura de microfono con APIs nativas y reproducir la respuesta con speech del navegador. No se debe ampliar el backend para formatos comprimidos de navegador, anadir transcoding, anadir backend TTS ni exponer un selector WAV visible sin una decision explicita.
+Esta variante usa el cliente web como superficie de validacion, no como sustituto del producto fisico. Produce WAV compatible desde captura de microfono con APIs nativas y reproduce la respuesta con speech del navegador. No se debe ampliar el backend para formatos comprimidos de navegador, anadir transcoding, anadir backend TTS ni exponer un selector WAV visible sin una decision explicita.
 
 ## Principios arquitectónicos
 
@@ -163,17 +163,16 @@ Componentes ya validados:
 - POST `/chat` estable
 - POST `/chat/audio` implementado en backend (con STT real, cliente no modificado)
 - subida manual Raspberry -> backend a `POST /chat/audio` validada con `curl` y STT real
-- Fase 3 de cliente web de audio documentada como trabajo planificado y desbloqueada tras revalidar Phase 2B con TTS ajustado; la mision revisada exige microfono web y respuesta audible desde navegador
+- Fase 3 de cliente web de audio implementada y validada tras revalidar Phase 2B con TTS ajustado; usa microfono web, WAV compatible y respuesta audible desde navegador
 
 Componentes en desarrollo:
 
 - backend conversacional inicial,
 - pipeline cliente-servidor,
 - integración OpenAI,
-- cliente web: loop interactivo de voz contra `/chat/audio` (pendiente, ya desbloqueado por revalidación Phase 2B post-ajuste TTS).
 - cliente Raspberry: futuras pasadas de demo con el TTS ajustado `espeak -v es -s 135 -g 8`.
 
-El objetivo actual es avanzar a Fase 3 web: instrumentar el mismo pipeline de audio desde navegador, manteniendo el loop de texto como fallback estable, reproduciendo la respuesta con APIs nativas del browser y sin ampliar el backend a formatos comprimidos salvo decisión explícita.
+La Semana 3 queda cerrada a nivel de arquitectura: el mismo pipeline de audio funciona desde Raspberry y desde navegador, manteniendo el loop de texto como fallback estable, reproduciendo la respuesta con APIs nativas del browser y sin ampliar el backend a formatos comprimidos.
 
 La arquitectura está optimizada para velocidad de iteración y facilidad de depuración durante el MVP, no para escalabilidad de producción.
 
