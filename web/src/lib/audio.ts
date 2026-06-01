@@ -252,6 +252,18 @@ export function hasSpeechSynthesisSupport(): boolean {
   );
 }
 
+export type SpeechPlaybackResult =
+  | {
+      played: true;
+      voiceName: string | null;
+      voiceLang: string | null;
+    }
+  | {
+      played: false;
+      reason: "unsupported" | "error";
+      error: string;
+    };
+
 export function selectSpanishVoice(
   voices: SpeechSynthesisVoice[],
 ): SpeechSynthesisVoice | null {
@@ -299,6 +311,33 @@ export async function speakText(
     };
     speech.speak(utterance);
   });
+}
+
+export async function speakTextIfSupported(
+  text: string,
+): Promise<SpeechPlaybackResult> {
+  if (!hasSpeechSynthesisSupport()) {
+    return {
+      played: false,
+      reason: "unsupported",
+      error: "Speech synthesis is not supported in this browser",
+    };
+  }
+
+  try {
+    const result = await speakText(text);
+    return {
+      played: true,
+      voiceName: result.voiceName,
+      voiceLang: result.voiceLang,
+    };
+  } catch (error) {
+    return {
+      played: false,
+      reason: "error",
+      error: error instanceof Error ? error.message : "Speech synthesis failed",
+    };
+  }
 }
 
 async function waitForSpanishVoice(

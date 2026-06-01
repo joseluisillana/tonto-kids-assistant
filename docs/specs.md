@@ -33,7 +33,7 @@ Fase 2B fue validada inicialmente en Raspberry real: el cliente Raspberry (`clie
 2. **TTS**: Text-to-Speech local con `espeak` en Raspberry.
 3. **Memoria de sesión**: historial corto en memoria de proceso.
 4. **Personalidad educativa**: respuestas breves, claras y adaptadas a niños.
-5. **Cliente web de validación**: interfaz mínima para probar el backend desde navegador; Fase 3 valida voz contra `POST /chat/audio` con captura de microfono, transcript, respuesta textual y speech output del navegador.
+5. **Cliente web de validación**: interfaz mínima para probar el backend desde navegador; Fase 3 valida voz contra `POST /chat/audio` con captura de microfono, transcript, respuesta textual y speech output del navegador. El chat de texto web mantiene `/chat` como contrato estable y reproduce tambien la respuesta con speech nativo cuando el navegador lo soporta.
 6. **Voz real**: semana 3 completada con micrófono USB/Raspberry, cliente Raspberry automatizado y loop web de voz validado.
 7. **Estados visuales e integración Arduino**: expansión futura, no parte del arranque de semana 3.
 
@@ -44,7 +44,7 @@ Fase 2B fue validada inicialmente en Raspberry real: el cliente Raspberry (`clie
 
 Durante semana 3, `/chat` sigue siendo el contrato estable. Tras validar la captura WAV en Raspberry, `specs/audio-pipeline.md` documentó `POST /chat/audio` como contrato mínimo candidato. Ahora el endpoint está implementado en `backend/audio_router.py` (rama `feature/audio-upload-contract`) con STT real en backend mediante OpenAI `gpt-4o-mini-transcribe` por defecto, configurable con `OPENAI_STT_MODEL`. La subida manual de un WAV desde Raspberry con `curl` quedó validada el 2026-05-30 contra el backend LAN con transcripción real, respuesta educativa y reproducción local con `espeak`. El endpoint no reemplaza `/chat`.
 
-Fase 3 queda cerrada como validada en `specs/audio-pipeline-phase-3-web-loop.md`, `specs/web-validation-client.md` y `specs/audio-pipeline-phase-3-browser-manual-validation.md`. La web usa el contrato existente, captura desde microfono, envia WAV compatible, muestra transcript/response, reproduce la response de forma audible desde el navegador y registra evidencia visible; no añade endpoint propio, no cambia proveedor STT, no introduce dependencias ni expone subida manual de WAV como flujo de producto/demo.
+Fase 3 queda cerrada como validada en `specs/audio-pipeline-phase-3-web-loop.md`, `specs/web-validation-client.md` y `specs/audio-pipeline-phase-3-browser-manual-validation.md`. La web usa el contrato existente, captura desde microfono, envia WAV compatible, muestra transcript/response, reproduce la response de forma audible desde el navegador y registra evidencia visible; no añade endpoint propio, no cambia proveedor STT, no introduce dependencias ni expone subida manual de WAV como flujo de producto/demo. Como mejora posterior de UX web, las respuestas recibidas por el chat de texto `/chat` tambien se reproducen con Web Speech API cuando esta disponible, degradando a texto visible si speech falla o no esta soportado.
 
 ## Fuera de Alcance del Arranque de Semana 3
 

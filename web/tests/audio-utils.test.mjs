@@ -10,6 +10,7 @@ import {
   normalizePeak,
   prepareSpeechSamples,
   selectSpanishVoice,
+  speakTextIfSupported,
   trimSilence,
 } from "../.tmp-test/src/lib/audio.js";
 
@@ -113,4 +114,67 @@ function assertAlmostEqual(actual, expected, tolerance = 0.001) {
     { lang: "es-ES", name: "Spanish", default: false },
   ]);
   assert.equal(voice?.name, "Spanish");
+}
+
+{
+  const originalWindow = globalThis.window;
+  const originalUtterance = globalThis.SpeechSynthesisUtterance;
+  const spokenTexts = [];
+
+  class TestUtterance {
+    constructor(text) {
+      this.text = text;
+      this.lang = "";
+      this.voice = null;
+      this.onend = null;
+      this.onerror = null;
+    }
+  }
+
+  const speechSynthesis = {
+    getVoices: () => [{ lang: "es-ES", name: "Spanish", default: false }],
+    cancel: () => {},
+    speak: (utterance) => {
+      spokenTexts.push(utterance.text);
+      utterance.onend();
+    },
+  };
+
+  globalThis.SpeechSynthesisUtterance = TestUtterance;
+  globalThis.window = {
+    speechSynthesis,
+    SpeechSynthesisUtterance: TestUtterance,
+  };
+
+  try {
+    const result = await speakTextIfSupported("Hola desde texto");
+
+    assert.deepEqual(spokenTexts, ["Hola desde texto"]);
+    assert.deepEqual(result, {
+      played: true,
+      voiceName: "Spanish",
+      voiceLang: "es-ES",
+    });
+  } finally {
+    globalThis.window = originalWindow;
+    globalThis.SpeechSynthesisUtterance = originalUtterance;
+  }
+}
+
+{
+  const originalWindow = globalThis.window;
+  const originalUtterance = globalThis.SpeechSynthesisUtterance;
+
+  try {
+    delete globalThis.window;
+    delete globalThis.SpeechSynthesisUtterance;
+
+    const result = await speakTextIfSupported("Hola sin speech");
+
+    assert.equal(result.played, false);
+    assert.equal(result.reason, "unsupported");
+  } finally {
+    globalThis.window = originalWindow;
+    globalThis.SpeechSynthesisUtterance = originalUtterance;
+  }
 }
