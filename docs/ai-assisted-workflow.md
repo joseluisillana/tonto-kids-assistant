@@ -164,6 +164,53 @@ experiment/local-stt-spike
 
 Avoid tool-owned prefixes such as `codex/` for project branches. Branch names should describe the work, not the assistant that helped with it.
 
+## Spec Handoff Workflow
+
+Whenever a spec is created or materially changed, the same change should also create or update an execution plan in `docs/plans/`.
+
+A material spec change is any change to:
+
+- behavior,
+- milestone scope,
+- public API or request/response contract,
+- architecture,
+- validation workflow,
+- acceptance criteria.
+
+Purely editorial changes can skip a new execution plan, but the change summary should say that no implementation behavior changed.
+
+The expected flow is:
+
+```text
+spec -> execution plan -> implementation prompt -> implementation -> validation evidence
+```
+
+Execution plans should use `docs/plans/TEMPLATE-spec-implementation-plan.md` unless an existing phase-specific plan already provides the same structure. The plan should include:
+
+- objective and source spec,
+- included and excluded scope,
+- implementation outline,
+- acceptance criteria,
+- verification commands,
+- an implementation prompt ready to paste into Codex, OpenCode, or another project assistant.
+
+Naming convention:
+
+```text
+specs/<feature-name>.md
+docs/plans/<feature-name>-implementation-plan.md
+```
+
+Existing phase plans may keep their established names, for example:
+
+```text
+docs/plans/week-03-phase-3-web-loop.md
+```
+
+The prompt belongs inside the plan file by default. Create separate prompt files only if one spec truly needs multiple distinct implementation handoffs.
+
+Codex and OpenCode should treat this as project workflow, not as a model-specific skill. GitHub Copilot can help draft implementation details, but durable decisions and prompts must live in the repository.
+
 ## Pre-Edit Gate for AI Assistants
 
 Before any repository edit, AI assistants must verify the Git context and align with the project branch workflow.

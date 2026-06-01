@@ -166,6 +166,8 @@ Use:
 - `docs/specs.md` or files in `specs/` for behavior and implementation specs,
 - `README.md` only for high-level project orientation and setup guidance.
 
+When a spec is created or materially changed, also create or update its execution plan in `docs/plans/`. A material spec change is any change to behavior, scope, contracts, architecture, validation, or acceptance criteria. The plan must include an implementation prompt ready for Codex/OpenCode handoff. Purely editorial spec changes may skip a new plan, but the change summary must say that no implementation behavior changed.
+
 If implementation and documentation disagree, pause and make the decision explicit before continuing.
 
 ## Assistant Behavior

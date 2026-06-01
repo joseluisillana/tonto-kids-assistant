@@ -81,6 +81,14 @@ Use this routine at the end of meaningful work sessions:
 4. Let the `pre-commit` hook regenerate `exports/notebooklm/`.
 5. Refresh NotebookLM sources from that export when you want deeper synthesis.
 
+## Spec Handoff Routine
+
+When a spec is created or materially changed, create or update its execution plan in `docs/plans/` during the same documentation pass.
+
+Use `docs/plans/TEMPLATE-spec-implementation-plan.md` as the default structure. Each plan should include the source spec, scope, implementation outline, acceptance criteria, verification commands, and an implementation prompt ready for Codex/OpenCode.
+
+This keeps implementation handoff details in the repository instead of leaving them only in an AI chat. Purely editorial spec changes can skip a plan update when they do not change behavior, contracts, scope, validation, or acceptance criteria.
+
 ## Manual Export
 
 Run this whenever you want to refresh NotebookLM sources outside a commit:
