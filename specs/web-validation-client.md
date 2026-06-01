@@ -1,7 +1,7 @@
 # Web Validation Client - MVP Specification
 
 **Version:** 0.2
-**Status:** Active MVP Implementation; Phase 3 audio loop planned
+**Status:** Active MVP Implementation; Phase 3 microphone audio loop planned
 **Last Updated:** May 2026
 
 ---
@@ -12,7 +12,7 @@ Add a lightweight web client that helps validate the TONTO backend from a browse
 
 This client exists to speed up development, continuous integration, preview deployment, and demo preparation. It does not replace the Raspberry Pi client as the target product experience.
 
-For Week 03 Phase 3, after the completed Phase 2B Raspberry capture/upload automation and post-TTS revalidation, the web client is also the planned validation surface for a browser-driven audio loop against the already implemented `POST /chat/audio` backend contract.
+For Week 03 Phase 3, after the completed Phase 2B Raspberry capture/upload automation and post-TTS revalidation, the web client is also the planned validation surface for a browser-driven audio loop against the already implemented `POST /chat/audio` backend contract. The revised Phase 3 mission includes browser microphone capture, visible transcript, visible text response, and audible browser playback of the response.
 
 ---
 
@@ -27,12 +27,13 @@ For Week 03 Phase 3, after the completed Phase 2B Raspberry capture/upload autom
 - Backend `/health` checks.
 - Project scripts for development, typecheck, build, and preview.
 - Clear folder structure for UI, API, and conversation state.
-- Planned Phase 3 after completed Phase 2B revalidation: browser audio validation loop using `POST /chat/audio`, visible transcript/response evidence, and latency/status instrumentation.
+- Planned Phase 3 after completed Phase 2B revalidation: browser microphone audio validation loop using `POST /chat/audio`, visible transcript/response evidence, browser speech output, and latency/status instrumentation.
+- Browser speech output for Phase 3 using native Web Speech API.
 
 ## Deferred
 
-- Browser TTS.
 - Backend transcoding of `webm`, `ogg`, or other compressed browser audio formats.
+- Visible WAV file picker or manual audio upload UI for product/demo use.
 - Authentication.
 - Persistence.
 - Advanced routing.
@@ -66,10 +67,10 @@ The first real feature should be a chat validation screen that sends the same re
 The Phase 3 audio feature should use the existing backend audio contract instead of adding a web-only endpoint:
 
 ```text
-browser microphone or WAV file -> WAV PCM mono -> POST /chat/audio -> transcript -> response -> UI evidence
+browser microphone -> WAV PCM mono -> POST /chat/audio -> transcript -> response text -> browser speech + UI evidence
 ```
 
-The browser must not upload `webm` or `ogg` directly unless a later backend decision explicitly adds transcoding support. The preferred implementation path is a small native browser WAV path with `getUserMedia` and Web Audio APIs, without adding a dependency. A manual WAV file picker is an acceptable first fallback if it helps validate instrumentation before live microphone capture.
+The browser must not upload `webm` or `ogg` directly unless a later backend decision explicitly adds transcoding support. The implementation path is a small native browser WAV path with `getUserMedia` and Web Audio APIs, without adding a dependency. A manual WAV file picker is not part of the visible product/demo UI; WAV files may only be used as test fixtures or integration helpers.
 
 ---
 
@@ -84,6 +85,7 @@ The browser must not upload `webm` or `ogg` directly unless a later backend deci
 - Do not add routing until there is more than one meaningful screen.
 - Keep audio evidence in memory/UI only; do not persist recordings or transcripts by default.
 - Reuse `OPENAI_STT_MODEL` backend behavior through `/chat/audio`; the web client must not know provider internals.
+- Use native browser speech (`speechSynthesis`) for audible Phase 3 response playback; do not add backend TTS or frontend dependencies.
 
 ---
 
@@ -94,6 +96,7 @@ The planned web loop should make these values visible for manual evidence captur
 - Backend URL and `/health` state.
 - Browser microphone support and permission state.
 - Recording/encoding/upload/transcription status.
+- Browser speech support and playback status.
 - Recording duration.
 - Generated WAV size and MIME type.
 - `session_id`, `device_id=web-validation-client`, and `language=es`.
@@ -101,6 +104,7 @@ The planned web loop should make these values visible for manual evidence captur
 - Total browser-observed latency.
 - Returned `transcript`.
 - Returned `response`.
+- Audible playback result for the returned response.
 - Human-readable error message for permission, format, timeout, STT, and backend failures.
 
 ---
@@ -113,5 +117,7 @@ The planned web loop should make these values visible for manual evidence captur
 - [x] CI can run web typecheck/build.
 - [x] The web client can use the same backend `/chat` contract as the Raspberry Pi client.
 - [x] The web client can check backend health.
-- [ ] Phase 3 planned: the web client can validate `POST /chat/audio` with a WAV compatible with the backend contract.
+- [ ] Phase 3 planned: the web client captures audio from the browser microphone and validates `POST /chat/audio` with a generated WAV compatible with the backend contract.
 - [ ] Phase 3 planned: the web client displays transcript, response, latency, and enough evidence to update `docs/project-journal/week-03.md`.
+- [ ] Phase 3 planned: the web client speaks the returned response audibly and understandably from the browser.
+- [ ] Phase 3 planned: the product/demo UI does not expose a manual WAV upload path.

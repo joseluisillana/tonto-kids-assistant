@@ -810,10 +810,23 @@ Validation notes:
 Phase 3 is added to Week 03 as a browser-driven validation loop:
 
 ```text
-web microphone or WAV selection -> compatible WAV -> POST /chat/audio -> transcript -> response -> web evidence
+web microphone -> compatible WAV -> POST /chat/audio -> transcript -> response text -> browser speech + web evidence
 ```
 
-The purpose is to validate the real STT backend from the web client after the Raspberry automation step is addressed. This keeps the text path stable, reuses the existing backend contract, and creates a faster demo/debug surface for transcript, response, latency and error evidence.
+The purpose is to validate the real STT backend from the web client after the Raspberry automation step is addressed. This keeps the text path stable, reuses the existing backend contract, and creates a faster demo/debug surface for transcript, response, latency, audible playback and error evidence.
+
+### Fase 3 Planning Revision
+
+**Date:** 2026-06-01.
+**Status:** documentation/spec revision only; no code implementation in this pass.
+
+The original Phase 3 plan was too narrow because it treated the browser loop mainly as visible UI evidence and explicitly left Browser TTS out of scope. The human decision for the next implementation pass is that Phase 3 must validate the full browser voice loop:
+
+```text
+browser microphone -> WAV PCM 16 kHz mono -> POST /chat/audio -> transcript -> response text -> browser speech
+```
+
+The web product/demo UI must not expose a manual WAV upload path. WAV files may be used only as fixtures or helpers for unit/integration tests. Microphone capture is the required user-facing path.
 
 Key implementation guardrails recorded for the next agent:
 
@@ -821,7 +834,8 @@ Key implementation guardrails recorded for the next agent:
 - Send WAV compatible with the current backend contract: PCM 16-bit, 16 kHz, mono.
 - Do not upload browser `webm`/`ogg` directly unless a later decision adds backend transcoding.
 - Prefer native browser APIs and no new dependency.
-- Browser TTS, persistence, streaming, local STT and advanced product UI remain out of scope.
+- Use native browser speech output for the returned response; do not add backend TTS or a new dependency.
+- Visible WAV file picker/manual upload UI, persistence, streaming, local STT and advanced product UI remain out of scope.
 - Preserve `/chat` as the stable text fallback.
 
 Documentation updated for this plan:

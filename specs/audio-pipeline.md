@@ -164,17 +164,18 @@ La intención es que `/chat/audio` sea una variante de entrada de chat por voz: 
 La Fase 3 de Semana 3 queda documentada en `specs/audio-pipeline-phase-3-web-loop.md` para ejecutarse despues de la revalidacion Raspberry de Fase 2B post-ajuste TTS, completada el 2026-05-30. Su objetivo es usar el cliente web como superficie interactiva para validar el mismo `POST /chat/audio` ya implementado:
 
 ```text
-navegador -> captura de microfono -> WAV compatible -> POST /chat/audio -> transcript -> response -> UI web
+navegador -> captura de microfono -> WAV PCM 16 kHz mono -> POST /chat/audio -> transcript -> response text -> browser speech
 ```
 
-Esta fase no cambia el contrato backend ni sustituye al cliente Raspberry como objetivo del producto fisico. Sirve para acelerar validacion, observar latencia y depurar STT desde navegador.
+Esta fase no cambia el contrato backend ni sustituye al cliente Raspberry como objetivo del producto fisico. Sirve para acelerar validacion, observar latencia y depurar STT desde navegador, y ahora incluye como requisito reproducir de forma audible la respuesta desde el propio browser.
 
 Restricciones iniciales de Fase 3:
 
 - La web debe enviar WAV compatible con el formato actual: PCM 16-bit, 16 kHz, mono.
 - No se debe subir `webm`, `ogg` u otro formato comprimido salvo que una decision posterior amplie el backend.
 - No se debe introducir transcoding backend ni dependencias nuevas sin aprobacion explicita.
-- Browser TTS queda fuera de alcance inicial; la respuesta puede mostrarse como texto en la UI.
+- La respuesta audible de Fase 3 debe usar APIs nativas del navegador, preferentemente Web Speech API (`speechSynthesis`).
+- No debe existir un selector o subida manual de WAV como flujo visible de producto/demo; WAV pregrabados solo pueden usarse como fixtures o helpers de testing.
 - La evidencia debe quedar visible en UI/logs y promoverse despues a `docs/project-journal/week-03.md`.
 
 ### Fuera de Alcance
@@ -184,7 +185,8 @@ Restricciones iniciales de Fase 3:
 - Wake word.
 - Streaming de audio.
 - Grabación continua.
-- Browser TTS en Fase 3 inicial.
+- Backend TTS o audio generado por el backend para Fase 3.
+- Selector WAV visible como flujo de producto/demo web.
 - Autenticación, usuarios o permisos.
 - Persistencia de archivos de audio.
 - Memoria avanzada.

@@ -39,7 +39,7 @@ La Raspberry maneja la entrada local, la salida TTS y los estados físicos futur
 
 - ofrecer una superficie rápida para probar el backend sin usar siempre la Raspberry,
 - consumir los mismos contratos HTTP/JSON que el cliente Raspberry,
-- validar en Fase 3 el contrato `POST /chat/audio` desde navegador con evidencia visible de transcript, respuesta y latencia,
+- validar en Fase 3 el contrato `POST /chat/audio` desde navegador con captura de microfono, evidencia visible de transcript, respuesta, latencia y reproduccion audible,
 - facilitar integración continua, builds y despliegues paralelos del frontend,
 - servir como herramienta de demo y depuración durante el MVP.
 
@@ -85,6 +85,7 @@ Contiene estructuras comunes que usan cliente y backend:
 
 - entrada manual de texto desde navegador,
 - validacion planificada de un turno de audio web contra `POST /chat/audio`,
+- reproduccion audible de la respuesta en navegador durante Fase 3 usando APIs nativas,
 - comunicación HTTP con el backend,
 - visualización de respuestas y estados básicos,
 - soporte para pruebas de integración y despliegue frontend.
@@ -129,10 +130,10 @@ El cliente Raspberry ya soporta `client/main.py --mode voice` para automatizar c
 ```text
 navegador -> WAV compatible -> POST /chat/audio (multipart) ->
 backend valida WAV -> OpenAI STT backend ->
-transcript real -> respuesta conversacional -> UI web
+transcript real -> respuesta conversacional -> UI web -> speech del navegador
 ```
 
-Esta variante usa el cliente web como superficie de validacion, no como sustituto del producto fisico. La implementacion futura debe producir o seleccionar WAV compatible con el backend actual. No se debe ampliar el backend para formatos comprimidos de navegador ni anadir transcoding sin una decision explicita.
+Esta variante usa el cliente web como superficie de validacion, no como sustituto del producto fisico. La implementacion futura debe producir WAV compatible desde captura de microfono con APIs nativas y reproducir la respuesta con speech del navegador. No se debe ampliar el backend para formatos comprimidos de navegador, anadir transcoding, anadir backend TTS ni exponer un selector WAV visible sin una decision explicita.
 
 ## Principios arquitectónicos
 
@@ -162,7 +163,7 @@ Componentes ya validados:
 - POST `/chat` estable
 - POST `/chat/audio` implementado en backend (con STT real, cliente no modificado)
 - subida manual Raspberry -> backend a `POST /chat/audio` validada con `curl` y STT real
-- Fase 3 de cliente web de audio documentada como trabajo planificado y desbloqueada tras revalidar Phase 2B con TTS ajustado
+- Fase 3 de cliente web de audio documentada como trabajo planificado y desbloqueada tras revalidar Phase 2B con TTS ajustado; la mision revisada exige microfono web y respuesta audible desde navegador
 
 Componentes en desarrollo:
 
@@ -172,7 +173,7 @@ Componentes en desarrollo:
 - cliente web: loop interactivo de voz contra `/chat/audio` (pendiente, ya desbloqueado por revalidación Phase 2B post-ajuste TTS).
 - cliente Raspberry: futuras pasadas de demo con el TTS ajustado `espeak -v es -s 135 -g 8`.
 
-El objetivo actual es avanzar a Fase 3 web: instrumentar el mismo pipeline de audio desde navegador, manteniendo el loop de texto como fallback estable y sin ampliar el backend a formatos comprimidos salvo decisión explícita.
+El objetivo actual es avanzar a Fase 3 web: instrumentar el mismo pipeline de audio desde navegador, manteniendo el loop de texto como fallback estable, reproduciendo la respuesta con APIs nativas del browser y sin ampliar el backend a formatos comprimidos salvo decisión explícita.
 
 La arquitectura está optimizada para velocidad de iteración y facilidad de depuración durante el MVP, no para escalabilidad de producción.
 

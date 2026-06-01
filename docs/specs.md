@@ -18,7 +18,7 @@ voz -> captura Raspberry -> STT backend -> /chat -> respuesta -> TTS local en Ra
 
 La preparación de semana 3 mantuvo estable `/chat` y añadió `POST /chat/audio` como entrada de voz. La captura con micrófono USB ya fue validada en Raspberry con un WAV reproducible.
 
-Fase 2B fue validada inicialmente en Raspberry real: el cliente Raspberry (`client/main.py`) automatiza captura y subida con `--mode voice`. Después de esa validación se ajustó el TTS a `espeak -v es -s 135 -g 8` para mejorar inteligibilidad en respuestas largas. La revalidación post-ajuste pasó en Raspberry real el 2026-05-30 siguiendo `specs/audio-pipeline-phase-2b-tts-revalidation.md`: respuesta larga audible, más pausada, no atropellada y suficientemente entendible para demo. Fase 3 queda desbloqueada dentro del alcance documentado.
+Fase 2B fue validada inicialmente en Raspberry real: el cliente Raspberry (`client/main.py`) automatiza captura y subida con `--mode voice`. Después de esa validación se ajustó el TTS a `espeak -v es -s 135 -g 8` para mejorar inteligibilidad en respuestas largas. La revalidación post-ajuste pasó en Raspberry real el 2026-05-30 siguiendo `specs/audio-pipeline-phase-2b-tts-revalidation.md`: respuesta larga audible, más pausada, no atropellada y suficientemente entendible para demo. Fase 3 queda desbloqueada dentro del alcance documentado y ahora requiere captura desde microfono web, transcript visible, respuesta textual visible y respuesta audible desde navegador.
 
 ## Arquitectura
 
@@ -33,7 +33,7 @@ Fase 2B fue validada inicialmente en Raspberry real: el cliente Raspberry (`clie
 2. **TTS**: Text-to-Speech local con `espeak` en Raspberry.
 3. **Memoria de sesión**: historial corto en memoria de proceso.
 4. **Personalidad educativa**: respuestas breves, claras y adaptadas a niños.
-5. **Cliente web de validación**: interfaz mínima para probar el backend desde navegador; Fase 3 planifica validacion de voz contra `POST /chat/audio`.
+5. **Cliente web de validación**: interfaz mínima para probar el backend desde navegador; Fase 3 planifica validacion de voz contra `POST /chat/audio` con captura de microfono, transcript, respuesta textual y speech output del navegador.
 6. **Voz real**: foco activo de semana 3, con micrófono USB y captura WAV simple ya validados como base de la siguiente iteración.
 7. **Estados visuales e integración Arduino**: expansión futura, no parte del arranque de semana 3.
 
@@ -44,7 +44,7 @@ Fase 2B fue validada inicialmente en Raspberry real: el cliente Raspberry (`clie
 
 Durante semana 3, `/chat` sigue siendo el contrato estable. Tras validar la captura WAV en Raspberry, `specs/audio-pipeline.md` documentó `POST /chat/audio` como contrato mínimo candidato. Ahora el endpoint está implementado en `backend/audio_router.py` (rama `feature/audio-upload-contract`) con STT real en backend mediante OpenAI `gpt-4o-mini-transcribe` por defecto, configurable con `OPENAI_STT_MODEL`. La subida manual de un WAV desde Raspberry con `curl` quedó validada el 2026-05-30 contra el backend LAN con transcripción real, respuesta educativa y reproducción local con `espeak`. El endpoint no reemplaza `/chat`.
 
-Fase 3 queda planificada en `specs/audio-pipeline-phase-3-web-loop.md` y `specs/web-validation-client.md` para despues de la revalidacion Raspberry de Fase 2B post-ajuste TTS, completada el 2026-05-30. La web debe usar el contrato existente, enviar WAV compatible y registrar evidencia visible; no debe añadir un endpoint propio ni requerir cambios de proveedor STT.
+Fase 3 queda planificada en `specs/audio-pipeline-phase-3-web-loop.md` y `specs/web-validation-client.md` para despues de la revalidacion Raspberry de Fase 2B post-ajuste TTS, completada el 2026-05-30. La web debe usar el contrato existente, capturar desde microfono, enviar WAV compatible, mostrar transcript/response, reproducir la response de forma audible desde el navegador y registrar evidencia visible; no debe añadir un endpoint propio, requerir cambios de proveedor STT, introducir dependencias ni exponer subida manual de WAV como flujo de producto/demo.
 
 ## Fuera de Alcance del Arranque de Semana 3
 

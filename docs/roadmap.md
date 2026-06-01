@@ -168,14 +168,15 @@ Conclusión: Phase 2B está implementada, fue validada inicialmente y quedó rev
 
 ### Objetivo
 
-Usar el cliente web de validacion como superficie interactiva para probar el pipeline de voz contra `POST /chat/audio` despues de cerrar la revalidacion Phase 2B post-ajuste TTS en el cliente Raspberry, completada el 2026-05-30. Esta fase permite validar permisos de microfono, generacion/subida de WAV, transcript real, respuesta conversacional, latencia y errores desde navegador.
+Usar el cliente web de validacion como superficie interactiva para probar el pipeline de voz contra `POST /chat/audio` despues de cerrar la revalidacion Phase 2B post-ajuste TTS en el cliente Raspberry, completada el 2026-05-30. Esta fase permite validar permisos de microfono, generacion/subida de WAV, transcript real, respuesta conversacional, latencia, errores y reproduccion audible de la respuesta desde navegador.
 
 ### Entregables pendientes
 
 - [ ] Documentar la fase en `specs/audio-pipeline-phase-3-web-loop.md`.
 - [ ] Ampliar `specs/web-validation-client.md` con audio loop e instrumentacion.
-- [ ] Implementar captura o seleccion de WAV desde la web sin cambiar el contrato backend.
+- [ ] Implementar captura de microfono y generacion WAV desde la web sin cambiar el contrato backend.
 - [ ] Mostrar transcript, response, latencia, estado tecnico y errores en la UI.
+- [ ] Reproducir de forma audible y entendible la respuesta desde el navegador.
 - [ ] Validar que `/chat` de texto sigue funcionando como fallback.
 - [ ] Registrar evidencia en `docs/project-journal/week-03.md`.
 
@@ -183,13 +184,15 @@ Usar el cliente web de validacion como superficie interactiva para probar el pip
 
 - Mantener `POST /chat/audio` como contrato unico de voz.
 - Enviar WAV compatible con el backend actual; no subir `webm`/`ogg` directamente.
+- No exponer selector o subida manual de WAV como flujo visible de producto/demo; solo se permite para fixtures o helpers de tests.
+- Usar APIs nativas del navegador para speech output; no añadir backend TTS ni dependencias.
 - No introducir STT local, streaming, persistencia, auth ni UI avanzada.
 - No sustituir la validacion final con Raspberry: la web acelera desarrollo, pero el producto fisico sigue siendo el objetivo MVP.
 - Mantener Fase 3 dentro de `specs/audio-pipeline-phase-3-web-loop.md`: cliente web como superficie de validacion, WAV compatible y sin ampliar el backend a formatos comprimidos salvo decision explicita posterior.
 
 ### Riesgo principal
 
-El navegador no genera WAV PCM 16 kHz mono por defecto. La implementacion futura debe producir WAV en cliente con APIs nativas o empezar con un selector manual de WAV antes de ampliar captura de microfono.
+El navegador no genera WAV PCM 16 kHz mono por defecto. La implementacion futura debe producir WAV en cliente con APIs nativas y mantener la captura de microfono como requisito de Fase 3. Un selector manual de WAV no forma parte de la UI de producto/demo.
 
 ---
 
@@ -328,6 +331,7 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [x] Loop interactivo de voz Raspberry → backend → TTS automatizado en cliente.
 - [x] Revalidar loop interactivo Raspberry → backend → TTS tras ajuste `espeak -v es -s 135 -g 8`.
 - [ ] Validar loop interactivo de voz desde cliente web contra `POST /chat/audio` despues de la revalidacion TTS de Phase 2B.
+- [ ] Validar respuesta audible desde navegador para el loop web de Fase 3.
 - [x] Medir latencia básica del loop manual (`TOTAL_TIME=5.395580`).
 - [ ] Mejorar calidad TTS progresivamente.
 
@@ -344,7 +348,7 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [x] Conectar con el endpoint `/chat` cuando el contrato esté estable.
 - [x] Añadir build/typecheck a integración continua.
 - [ ] Fase 3: añadir loop interactivo de voz contra `POST /chat/audio`.
-- [ ] Fase 3: mostrar evidencia tecnica de audio, transcript, response y latencia.
+- [ ] Fase 3: mostrar evidencia tecnica de audio, transcript, response, latencia y speech output.
 - [ ] Desplegar preview web para pruebas rápidas.
 
 ## Backend

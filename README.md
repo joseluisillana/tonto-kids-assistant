@@ -38,7 +38,7 @@ El foco está en conversación natural persistente que adapta el aprendizaje al 
 
 El MVP final de 6 semanas busca demostrar una conversación educativa básica sobre hardware real.
 
-El milestone inmediato ya validó el primer loop texto → backend → IA → respuesta → TTS local. Semana 3 validó voz real con Raspberry: WAV capturado manualmente → `POST /chat/audio` → STT backend → respuesta → `espeak` local, y Fase 2B validó inicialmente el loop automatizado en `client/main.py --mode voice`. Tras detectar que frases largas se atropellaban, el cliente se ajustó a `espeak -v es -s 135 -g 8`; esa revalidación pasó en Raspberry real el 2026-05-30 y desbloquea la Fase 3 web ya documentada.
+El milestone inmediato ya validó el primer loop texto → backend → IA → respuesta → TTS local. Semana 3 validó voz real con Raspberry: WAV capturado manualmente → `POST /chat/audio` → STT backend → respuesta → `espeak` local, y Fase 2B validó inicialmente el loop automatizado en `client/main.py --mode voice`. Tras detectar que frases largas se atropellaban, el cliente se ajustó a `espeak -v es -s 135 -g 8`; esa revalidación pasó en Raspberry real el 2026-05-30 y desbloquea la Fase 3 web ya documentada. La Fase 3 revisada debe capturar microfono desde navegador, mostrar transcript y respuesta textual, y reproducir la respuesta de forma audible desde el browser.
 
 Incluye ahora:
 
@@ -70,7 +70,7 @@ Queda fuera del primer loop automatizado: wake word, Arduino/LEDs, persistencia,
 └──────────────────────┘                                       │ • Orquestación       │
 ┌──────────────────────┐       HTTP /health + /chat            │ • Personalidad       │
 │ Web Validation Client│──────────────────────────────────────►│                      │
-│ React/TypeScript/Vite│   Fase 3 plan: /chat/audio WAV        └──────────────────────┘
+│ React/TypeScript/Vite│   Fase 3 plan: mic -> /chat/audio     └──────────────────────┘
 │                      │
 │ • Text validation    │
 │ • UI evidence        │
@@ -96,7 +96,7 @@ Queda fuera del primer loop automatizado: wake word, Arduino/LEDs, persistencia,
 ### Cliente Web de Validación
 
 - **Objetivo**: Probar el backend desde navegador sin depender siempre de la Raspberry Pi.
-- **Responsabilidades**: Entrada manual de texto, visualización de respuestas, panel técnico de demo y soporte para CI/despliegue frontend. No depende de la Raspberry; la Fase 3 web planifica validar audio contra el mismo backend `POST /chat/audio`.
+- **Responsabilidades**: Entrada manual de texto, visualización de respuestas, panel técnico de demo y soporte para CI/despliegue frontend. No depende de la Raspberry; la Fase 3 web planifica validar audio contra el mismo backend `POST /chat/audio`, con captura de microfono, transcript, respuesta textual y speech output del navegador.
 - **Tecnología**: React + TypeScript + Vite, con Tailwind CSS como base visual.
 
 ## Stack Tecnológico Confirmado
@@ -219,7 +219,7 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 
 **Semanas 1 y 2 cerradas**: estructura monorepo, hardware base validado, backend conversacional mínimo, cliente Raspberry con TTS local, cliente web de validación y automatización local inicial.
 
-**Semana actual: Semana 3 - Pipeline de voz real**. El proyecto ya cerró la captura WAV, el endpoint `POST /chat/audio`, la integración STT backend y la automatización de voz en Raspberry. El trabajo abierto de esta semana es la Fase 3: validar el mismo contrato de audio desde el cliente web, manteniendo el loop de texto como fallback estable.
+**Semana actual: Semana 3 - Pipeline de voz real**. El proyecto ya cerró la captura WAV, el endpoint `POST /chat/audio`, la integración STT backend y la automatización de voz en Raspberry. El trabajo abierto de esta semana es la Fase 3: validar el mismo contrato de audio desde el cliente web, manteniendo el loop de texto como fallback estable y reproduciendo de forma audible la respuesta desde navegador.
 
 **Hitos generales conseguidos**:
 
@@ -236,7 +236,7 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 - ✅ Phase 2A validada con Raspberry real: WAV manual → backend STT → respuesta → `espeak`
 - ✅ Phase 2B validada inicialmente con Raspberry real: `client/main.py --mode voice` automatiza captura, subida, transcript/response y TTS local
 - ✅ Phase 2B post-ajuste TTS revalidada con Raspberry real: `espeak -v es -s 135 -g 8` es suficientemente entendible para demo
-- ⏳ Siguiente paso: Fase 3 loop interactivo desde cliente web contra `POST /chat/audio`
+- ⏳ Siguiente paso: Fase 3 loop interactivo desde cliente web contra `POST /chat/audio`, con microfono web y respuesta audible en navegador
 
 **Métricas MVP**:
 
@@ -244,7 +244,7 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 - Respuesta backend en menos de 5 segundos como objetivo inicial
 - TTS local reproduce la respuesta; las respuestas largas quedaron revalidadas con el ajuste `-s 135 -g 8` como suficientemente entendibles para demo
 - Web validation client permite probar el contrato sin hardware
-- Fase 3 web planificada para probar voz desde navegador sin cambiar el contrato backend, desbloqueada tras cerrar la revalidación TTS de Phase 2B
+- Fase 3 web planificada para probar voz desde navegador sin cambiar el contrato backend, desbloqueada tras cerrar la revalidación TTS de Phase 2B; el alcance revisado no incluye selector WAV visible y exige respuesta audible con APIs nativas del browser
 
 ## Backlog Cerrado Semanas 1-2
 

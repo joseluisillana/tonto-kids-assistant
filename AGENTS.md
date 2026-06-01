@@ -35,7 +35,8 @@ The current milestone is the first minimal voice conversation loop after the tex
 - Phase 2A was validated manually on real Raspberry hardware: captured WAV -> backend STT -> transcript -> response -> local `espeak`.
 - Phase 2B automated Raspberry capture/upload/playback around the validated `POST /chat/audio` flow and was validated once on real Raspberry hardware.
 - After Phase 2B, TTS was tuned for demo intelligibility because long responses sounded rushed. Phase 2B was revalidated on real Raspberry hardware on 2026-05-30 with `TONTO_TTS_ARGS="-v es -s 135 -g 8"`; long responses are still robotic but sufficiently understandable for demo, with words no longer running together.
-- Phase 3 is now unblocked and should follow the documented, narrow web validation loop: browser microphone or WAV selection -> compatible WAV -> `POST /chat/audio` -> transcript -> response -> visible web evidence.
+- Phase 3 is now unblocked and should follow the documented, narrow web validation loop: browser microphone -> compatible WAV -> `POST /chat/audio` -> transcript -> response text -> audible browser speech plus visible web evidence.
+- Do not expose a manual WAV upload/file picker as part of the Phase 3 product/demo UI; WAV files are only acceptable as test fixtures or integration helpers.
 - Keep state in memory only if state is needed at all.
 - Optimize for clarity, debuggability, and a real demo.
 
