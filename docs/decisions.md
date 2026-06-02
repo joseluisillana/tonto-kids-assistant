@@ -89,3 +89,13 @@ Use the existing React web validation client as the Week 03 Phase 3 surface for 
 The goal is to reduce integration risk and collect visible evidence from a browser after the Raspberry voice client automation has been validated. The web path must reuse the existing backend audio contract and STT provider: it should send a compatible WAV, receive `{session_id, transcript, response}`, and display transcript, response, latency, status, and errors.
 
 This is a validation decision, not a product architecture change. The Raspberry Pi remains the physical MVP client, local `espeak` remains the target TTS path, and browser TTS, audio persistence, streaming, local STT, and backend transcoding of browser formats remain out of scope unless a later decision changes that.
+
+## D020 - Week 04 stabilization-first scope
+
+Prepare Week 04 as a stabilization and demo-readiness milestone before adding new behavior.
+
+The original roadmap theme of memory and physical states is narrowed for the MVP. Memory means validating and, only if necessary, lightly calibrating the existing short in-memory session context. It does not mean persistence, vector memory, user profiles, or advanced personalization.
+
+Physical states are a decision gate, not automatic Arduino work. Arduino/LED implementation may be considered only after the current voice demo is run repeatedly and a human decision confirms that physical indicators directly improve the final demo. If accepted, Arduino work needs its own narrow spec and plan before code changes.
+
+The Week 04 kickoff itself is documentation-only: spec, implementation plan, roadmap alignment, and journal setup for AI-assisted agents.
