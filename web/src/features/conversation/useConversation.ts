@@ -13,6 +13,7 @@ import {
   hasSpeechSynthesisSupport,
   prepareSpeechSamples,
   speakText,
+  speakTextIfSupported,
   WEB_VALIDATION_BACKEND_DEVICE_ID,
   WEB_VALIDATION_CHANNELS,
   WEB_VALIDATION_LANGUAGE,
@@ -142,7 +143,63 @@ export function useConversation() {
         setLatestLatencyMs(latency);
         setBackendStatus("connected");
         setStatus("speaking");
-        globalThis.setTimeout(() => setStatus("idle"), 900);
+        setVoice((current) => ({
+          ...current,
+          speechStatus: hasSpeechSynthesisSupport() ? "speaking" : "idle",
+          speechVoice: null,
+        }));
+
+        const speechResult = await speakTextIfSupported(response.response_text);
+        if (!mountedRef.current) {
+          return;
+        }
+
+        if (speechResult.played) {
+          setVoice((current) => ({
+            ...current,
+            speechStatus: "complete",
+            speechVoice: speechResult.voiceName,
+            error: null,
+          }));
+          setActivity((current) =>
+            pushActivity(
+              current,
+              createActivity("speaking", "Voz", "Respuesta reproducida"),
+            ),
+          );
+        } else {
+          setVoice((current) => ({
+            ...current,
+            speechSupported:
+              speechResult.reason === "unsupported"
+                ? false
+                : current.speechSupported,
+            speechStatus:
+              speechResult.reason === "unsupported" ? "idle" : "error",
+            error:
+              speechResult.reason === "unsupported"
+                ? current.error
+                : speechResult.error,
+          }));
+          setActivity((current) =>
+            pushActivity(
+              current,
+              createActivity(
+                "speaking",
+                "Voz",
+                speechResult.reason === "unsupported"
+                  ? "Speech no soportado"
+                  : "Speech no disponible",
+              ),
+            ),
+          );
+        }
+
+        globalThis.setTimeout(() => {
+          if (mountedRef.current) {
+            setStatus("idle");
+          }
+        }, 900);
       } catch (chatError) {
         const message = getErrorMessage(chatError);
         setError(message);

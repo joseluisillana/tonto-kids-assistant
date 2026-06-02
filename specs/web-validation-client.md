@@ -1,7 +1,7 @@
 # Web Validation Client - MVP Specification
 
-**Version:** 0.2
-**Status:** Active MVP Implementation; Phase 3 microphone audio loop validated
+**Version:** 0.3
+**Status:** Active MVP Implementation; Phase 3 microphone audio loop validated; text chat spoken response enabled
 **Last Updated:** June 2026
 
 ---
@@ -13,6 +13,8 @@ Add a lightweight web client that helps validate the TONTO backend from a browse
 This client exists to speed up development, continuous integration, preview deployment, and demo preparation. It does not replace the Raspberry Pi client as the target product experience.
 
 For Week 03 Phase 3, after the completed Phase 2B Raspberry capture/upload automation and post-TTS revalidation, the web client validated a browser-driven audio loop against the already implemented `POST /chat/audio` backend contract. The validated Phase 3 mission includes browser microphone capture, visible transcript, visible text response, and audible browser playback of the response.
+
+After the Week 03 voice milestone, the web text chat flow also speaks backend responses aloud. A typed `/chat` turn still uses the stable JSON chat contract, displays the returned `response_text`, and then reuses native browser speech synthesis to play that same answer audibly. If speech synthesis is unsupported or playback fails, the written response remains available and the chat does not block.
 
 ---
 
@@ -29,6 +31,7 @@ For Week 03 Phase 3, after the completed Phase 2B Raspberry capture/upload autom
 - Clear folder structure for UI, API, and conversation state.
 - Validated Phase 3 after completed Phase 2B revalidation: browser microphone audio validation loop using `POST /chat/audio`, visible transcript/response evidence, browser speech output, and latency/status instrumentation.
 - Browser speech output for Phase 3 using native Web Speech API.
+- Browser speech output for typed `/chat` responses using the same native Web Speech API path.
 
 ## Deferred
 
@@ -64,6 +67,12 @@ The first real feature should be a chat validation screen that sends the same re
 }
 ```
 
+Typed chat responses are rendered in the conversation history and spoken from the browser when `speechSynthesis` is available:
+
+```text
+typed message -> POST /chat -> response_text -> visible chat response + browser speech
+```
+
 The Phase 3 audio feature uses the existing backend audio contract instead of adding a web-only endpoint:
 
 ```text
@@ -86,6 +95,7 @@ The browser must not upload `webm` or `ogg` directly unless a later backend deci
 - Keep audio evidence in memory/UI only; do not persist recordings or transcripts by default.
 - Reuse `OPENAI_STT_MODEL` backend behavior through `/chat/audio`; the web client must not know provider internals.
 - Use native browser speech (`speechSynthesis`) for audible Phase 3 response playback; do not add backend TTS or frontend dependencies.
+- Use the same native browser speech path for typed `/chat` responses; unsupported or failed speech playback degrades to text-only chat instead of failing the conversation.
 
 ---
 
@@ -112,6 +122,20 @@ The final browser validation runbook and closure criteria are defined in `specs/
 
 ---
 
+# Text Chat Spoken Response
+
+The web text composer remains the stable fallback and validation path for `POST /chat`. When a typed message receives a successful backend response, the client must:
+
+- Keep the visible chat transcript as the source of truth for the response.
+- Automatically speak the returned `response_text` with native browser speech synthesis.
+- Show the existing speaking state while playback is active.
+- Preserve the visible response and return the UI to an idle state even when browser speech is unsupported or playback fails.
+- Keep `repeatLatest()` able to replay the latest assistant response whether it came from typed chat or microphone input.
+
+This behavior does not add backend TTS, a new endpoint, a settings toggle, persistence, or extra dependencies.
+
+---
+
 # Acceptance Criteria
 
 - [x] A `web/` project exists in the monorepo.
@@ -124,3 +148,5 @@ The final browser validation runbook and closure criteria are defined in `specs/
 - [x] Phase 3 validated: the web client displays transcript, response, latency, and enough evidence to update `docs/project-journal/week-03.md`.
 - [x] Phase 3 validated: the web client speaks the returned response audibly and understandably from the browser.
 - [x] Phase 3 validated: the product/demo UI does not expose a manual WAV upload path.
+- [x] Typed `/chat` responses are displayed and then spoken aloud automatically when browser speech synthesis is available.
+- [x] Typed `/chat` remains usable as text-only fallback when browser speech synthesis is unavailable or playback fails.
