@@ -196,29 +196,41 @@ Validado el 2026-06-01 contra backend real desde navegador local. El loop comple
 
 ---
 
-# Semana 4 - Memoria simple y estados físicos
+# Semana 4 - Estabilidad de demo y decisión de estados físicos
 
 ## Objetivo
 
-Dar personalidad mínima y persistencia básica a TONTO.
+Convertir el loop de voz validado en Semana 3 en una demo más repetible antes de añadir comportamiento nuevo.
+
+La preparación de Semana 4 es documentación-first: specs, planes, roadmap y journal deben dejar claro el orden de trabajo para agentes IA. La memoria y los estados físicos se tratan como calibración y decisión de alcance, no como implementación automática.
 
 ## Entregables
 
-- Historial simple de conversación.
-- Estados físicos básicos con Arduino y LEDs.
-- Manejo básico de errores.
-- Flujo reproducible varias veces seguidas.
+- Kickoff documental de Semana 4 con spec, plan y journal.
+- Validación reproducible del loop actual varias veces seguidas.
+- Manejo de errores mejorado solo si la validación detecta bloqueos reales de demo.
+- Calibración de conversación usando la memoria corta en proceso ya existente, sin persistencia.
+- Gate de decisión para estados físicos mínimos: implementar LEDs/Arduino, deferirlos o cubrirlos con estados visibles existentes.
+
+## Fases
+
+0. Kickoff documental y handoff para agentes.
+1. Baseline de demo reproducible sobre el sistema actual.
+2. Resiliencia y errores observados durante la demo.
+3. Calibración conversacional y memoria corta.
+4. Decisión explícita sobre estados físicos.
+5. Closeout con evidencia y próximos riesgos.
 
 ## Prioridades
 
-1. Hacer la experiencia más “viva”.
-2. Mejorar estabilidad del sistema.
-3. Mantener simplicidad en memoria y estado.
+1. Repetibilidad antes que nuevas funcionalidades.
+2. Estabilidad y claridad de operación.
+3. Mantener memoria y estados dentro del alcance MVP.
 
 ## Riesgos
 
 - Introducir demasiada lógica de memoria.
-- Complejidad innecesaria en integración Arduino.
+- Implementar Arduino antes de demostrar que desbloquea la demo final.
 - Scope creep por nuevas ideas.
 
 ---

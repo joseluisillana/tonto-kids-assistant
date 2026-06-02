@@ -35,7 +35,8 @@ Fase 2B fue validada inicialmente en Raspberry real: el cliente Raspberry (`clie
 4. **Personalidad educativa**: respuestas breves, claras y adaptadas a niños.
 5. **Cliente web de validación**: interfaz mínima para probar el backend desde navegador; Fase 3 valida voz contra `POST /chat/audio` con captura de microfono, transcript, respuesta textual y speech output del navegador. El chat de texto web mantiene `/chat` como contrato estable y reproduce tambien la respuesta con speech nativo cuando el navegador lo soporta.
 6. **Voz real**: semana 3 completada con micrófono USB/Raspberry, cliente Raspberry automatizado y loop web de voz validado.
-7. **Estados visuales e integración Arduino**: expansión futura, no parte del arranque de semana 3.
+7. **Semana 4 demo stability**: kickoff documental y fases para convertir el loop de voz validado en una demo repetible antes de añadir comportamiento nuevo.
+8. **Estados visuales e integración Arduino**: expansión futura sujeta a gate de decisión en Semana 4, no implementación automática.
 
 ## APIs Base
 
@@ -46,14 +47,28 @@ Durante semana 3, `/chat` sigue siendo el contrato estable. Tras validar la capt
 
 Fase 3 queda cerrada como validada en `specs/audio-pipeline-phase-3-web-loop.md`, `specs/web-validation-client.md` y `specs/audio-pipeline-phase-3-browser-manual-validation.md`. La web usa el contrato existente, captura desde microfono, envia WAV compatible, muestra transcript/response, reproduce la response de forma audible desde el navegador y registra evidencia visible; no añade endpoint propio, no cambia proveedor STT, no introduce dependencias ni expone subida manual de WAV como flujo de producto/demo. Como mejora posterior de UX web, las respuestas recibidas por el chat de texto `/chat` tambien se reproducen con Web Speech API cuando esta disponible, degradando a texto visible si speech falla o no esta soportado.
 
-## Fuera de Alcance del Arranque de Semana 3
+## Semana 4 - Kickoff y Alcance Activo
+
+La spec activa de preparación para Semana 4 vive en `specs/week-04-demo-stability.md`, con plan emparejado en `docs/plans/week-04-demo-stability.md`.
+
+Semana 4 empieza como una preparación documental para agentes IA y después debe avanzar por fases:
+
+1. Baseline reproducible de la demo actual.
+2. Resiliencia y errores observados.
+3. Calibración conversacional con la memoria corta en proceso ya existente.
+4. Decisión explícita sobre estados físicos mínimos.
+5. Closeout con evidencia.
+
+La memoria de Semana 4 no implica persistencia, perfiles, memoria vectorial ni multiusuario. Los estados físicos no implican Arduino automático; Arduino/LEDs requieren una decisión humana y una spec/plan separados antes de código.
+
+## Fuera de Alcance del Arranque de Semana 4
 
 - Wake word.
 - STT local complejo en Raspberry.
 - Modelos locales de audio.
 - Integración offline con Vosk, `whisper.cpp` u otro motor local sin spike técnico previo.
 - Nuevas dependencias sin decisión explícita.
-- Arduino/LEDs.
+- Arduino/LEDs sin gate de decisión explícito.
 - Persistencia.
 - Autenticación.
 - Multiusuario.

@@ -14,6 +14,8 @@ The repository is the source of truth. NotebookLM is a reading and synthesis too
 6. `decisions.md` - compact record of technical decisions.
 7. `documentation-workflow.md` - how docs, NotebookLM, Codex, OpenCode, and GitHub stay aligned.
 
+For the current Week 04 kickoff, read `../specs/week-04-demo-stability.md`, `plans/week-04-demo-stability.md`, and `project-journal/week-04.md` before starting implementation work.
+
 ## Working Notes
 
 - `project-journal/` records weekly progress, decisions, blockers, and AI usage.
