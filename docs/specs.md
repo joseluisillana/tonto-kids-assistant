@@ -51,13 +51,14 @@ Fase 3 queda cerrada como validada en `specs/audio-pipeline-phase-3-web-loop.md`
 
 La spec activa de preparación para Semana 4 vive en `specs/week-04-demo-stability.md`, con plan emparejado en `docs/plans/week-04-demo-stability.md`.
 
-Semana 4 empieza como una preparación documental para agentes IA y después debe avanzar por fases:
+Semana 4 empieza como una preparación documental para agentes IA y después avanza por fases:
 
-1. Baseline reproducible de la demo actual.
-2. Resiliencia y errores observados.
-3. Calibración conversacional con la memoria corta en proceso ya existente.
-4. Decisión explícita sobre estados físicos mínimos.
-5. Closeout con evidencia.
+1. ~~Kickoff documental~~ — completado 2026-06-02.
+2. **Baseline reproducible de la demo actual** — completado 2026-06-05. 3 voice turns en Raspberry real validados, memoria corta confirmada, `/chat` y `/chat/audio` funcionando.
+3. Resiliencia y errores observados.
+4. Calibración conversacional con la memoria corta en proceso ya existente.
+5. Decisión explícita sobre estados físicos mínimos.
+6. Closeout con evidencia.
 
 La memoria de Semana 4 no implica persistencia, perfiles, memoria vectorial ni multiusuario. Los estados físicos no implican Arduino automático; Arduino/LEDs requieren una decisión humana y una spec/plan separados antes de código.
 

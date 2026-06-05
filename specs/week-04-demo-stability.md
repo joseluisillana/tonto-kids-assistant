@@ -1,8 +1,8 @@
 # Week 04 Demo Stability and Scope Kickoff
 
-**Version:** 0.1
-**Status:** Kickoff spec
-**Last Updated:** 2026-06-02
+**Version:** 0.2
+**Status:** Phase 1 complete
+**Last Updated:** 2026-06-05
 
 ## Objective
 
@@ -79,7 +79,7 @@ Acceptance:
 - Roadmap and specs summary point to this kickoff.
 - Journal captures the state and recommended next step.
 
-### Phase 1 - Reproducible Demo Baseline
+### Phase 1 - Reproducible Demo Baseline (completed 2026-06-05)
 
 Purpose: prove the current system can be run repeatedly before adding behavior.
 
@@ -105,6 +105,20 @@ Acceptance:
 - At least three consecutive voice turns complete on Raspberry or each failure is documented with a clear cause.
 - Text fallback remains usable.
 - Any blocker is classified as setup, backend, STT, client capture, TTS, or network.
+
+Evidence:
+
+- 45 Python tests passed, TypeScript typecheck clean.
+- Backend started on `0.0.0.0:8000` (LAN mode).
+- `/health` returned 200 from Windows and Raspberry.
+- `/chat` returned 200 with educational response.
+- `/chat/audio` validated (WAV + STT integration confirmed).
+- 3 voice turns on Raspberry real (`tonto-pi`) against `192.168.1.91:8000`:
+  - Turn 1: "Hola tonto, ¿cómo estás?" -> greeting response, espeak audible.
+  - Turn 2: "¿Qué tal te ves?" -> response maintaining context, espeak audible.
+  - Turn 3: "¿Qué te he preguntado al principio?" -> TONTO recalled turn 1, espeak audible.
+- In-memory session history validated (TONTO recalled initial greeting in turn 3).
+- Blockers: ALSA/JACK warnings (expected, documented from Week 03, do not block audio).
 
 ### Phase 2 - Demo Resilience and Error Handling
 

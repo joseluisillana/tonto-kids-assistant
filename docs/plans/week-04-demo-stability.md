@@ -43,13 +43,16 @@ Phase 0: Documentation kickoff
 - Make the roadmap precise enough that agents do not start with Arduino by default.
 - Start the Week 04 journal.
 
-Phase 1: Reproducible demo baseline
+Phase 1: Reproducible demo baseline (completed 2026-06-05)
 
-- Run official checks if the environment is ready.
-- Start backend with `.\scripts\dev.ps1 -Service backend -AllowLan`.
-- Validate backend health from Windows and Raspberry.
-- Run multiple Raspberry voice turns with `client/main.py --mode voice`.
-- Record evidence and failures in the journal.
+- Run official checks: 45 Python tests passed, TypeScript typecheck clean.
+- Start backend with `0.0.0.0:8000` (LAN mode).
+- Validate `/health` from Windows and Raspberry: 200 OK.
+- Validate `/chat` text fallback: 200 OK with educational response.
+- Validate `/chat/audio` endpoint: WAV validation + STT integration confirmed.
+- Run Raspberry `--mode voice` for 3 turns: all passed, espeak audible.
+- Confirm in-memory session history: TONTO recalled initial greeting in turn 3.
+- Record evidence in `docs/project-journal/week-04.md`.
 
 Phase 2: Demo resilience and error handling
 

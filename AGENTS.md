@@ -26,18 +26,11 @@ The project is demo-first. Prefer working, understandable prototypes over broad 
 
 ## Current Implementation Milestone
 
-The Week 03 voice milestone is complete. It established the first minimal voice conversation loop after the text-to-speech loop:
+The Week 04 Phase 1 (Reproducible Demo Baseline) is complete. The system has been validated end-to-end on real hardware:
 
-- Preserve the stable text path while turning the validated manual audio path into a simple client loop.
-- Build the smallest backend/client path needed to send a request and receive a speakable response.
-- Use local `espeak` on the Raspberry client for TTS. The current demo-tuned default is `espeak -v es -s 135 -g 8`.
-- Backend STT with OpenAI `gpt-4o-mini-transcribe` is active for Semana 3 through `POST /chat/audio`.
-- Phase 2A was validated manually on real Raspberry hardware: captured WAV -> backend STT -> transcript -> response -> local `espeak`.
-- Phase 2B automated Raspberry capture/upload/playback around the validated `POST /chat/audio` flow and was validated once on real Raspberry hardware.
-- After Phase 2B, TTS was tuned for demo intelligibility because long responses sounded rushed. Phase 2B was revalidated on real Raspberry hardware on 2026-05-30 with `TONTO_TTS_ARGS="-v es -s 135 -g 8"`; long responses are still robotic but sufficiently understandable for demo, with words no longer running together.
-- Phase 3 Web Voice Loop was implemented and validated on 2026-06-01 using the documented, narrow web validation loop: browser microphone -> compatible WAV -> `POST /chat/audio` -> transcript -> response text -> audible browser speech plus visible web evidence.
-- A real browser validation issue where `/chat/audio` returned `422 Audio did not contain recognizable speech` was resolved by selecting the correct physical microphone in the browser site settings.
-- The next milestone should be selected explicitly before adding new product behavior beyond the validated Week 03 voice loop.
+- Week 03 voice milestone was complete: text loop, voice loop from Raspberry, voice loop from web.
+- Week 04 Phase 1 validated on 2026-06-05: 3 consecutive voice turns on Raspberry real (`tonto-pi`) against backend LAN (`192.168.1.91:8000`), in-memory session history confirmed (TONTO recalled initial greeting in turn 3), `/chat` and `/chat/audio` working.
+- The next milestone is Week 04 Phase 2: Demo Resilience and Error Handling.
 - Do not expose a manual WAV upload/file picker as part of the Phase 3 product/demo UI; WAV files are only acceptable as test fixtures or integration helpers.
 - Keep state in memory only if state is needed at all.
 - Optimize for clarity, debuggability, and a real demo.

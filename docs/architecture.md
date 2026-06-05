@@ -148,31 +148,23 @@ Esta variante usa el cliente web como superficie de validacion, no como sustitut
 
 ## Estado actual de la arquitectura
 
-Actualmente la arquitectura se encuentra en fase temprana de validación técnica.
+La arquitectura se encuentra en fase de estabilización de demo (Semana 4, Phase 1 completado).
 
-Componentes ya validados:
+Componentes validados:
 
 - Raspberry Pi operativa
 - SSH y desarrollo remoto
 - audio output
-- TTS local (`espeak`)
+- TTS local (`espeak -v es -s 135 -g 8`)
 - captura WAV manual con micrófono USB (`arecord` en Raspberry)
-- cliente Raspberry `--mode voice` para captura/subida/reproducción automatizada, con revalidación post-ajuste TTS completada
-- estructura monorepo
-- documentación fundacional
+- cliente Raspberry `--mode voice` para captura/subida/reproducción automatizada
 - POST `/chat` estable
-- POST `/chat/audio` implementado en backend (con STT real, cliente no modificado)
+- POST `/chat/audio` implementado en backend con STT real (OpenAI `gpt-4o-mini-transcribe`)
 - subida manual Raspberry -> backend a `POST /chat/audio` validada con `curl` y STT real
-- Fase 3 de cliente web de audio implementada y validada tras revalidar Phase 2B con TTS ajustado; usa microfono web, WAV compatible y respuesta audible desde navegador
+- Fase 3 de cliente web de audio implementada y validada
+- **Validación en hardware real (2026-06-05):** 3 voice turns consecutivos en `tonto-pi` contra backend LAN `192.168.1.91:8000`, memoria corta de sesión confirmada (TONTO recordó pregunta inicial en turno 3)
 
-Componentes en desarrollo:
-
-- backend conversacional inicial,
-- pipeline cliente-servidor,
-- integración OpenAI,
-- cliente Raspberry: futuras pasadas de demo con el TTS ajustado `espeak -v es -s 135 -g 8`.
-
-La Semana 3 queda cerrada a nivel de arquitectura: el mismo pipeline de audio funciona desde Raspberry y desde navegador, manteniendo el loop de texto como fallback estable, reproduciendo la respuesta con APIs nativas del browser y sin ampliar el backend a formatos comprimidos.
+La Semana 4 Phase 1 queda cerrada: el sistema completo funciona en hardware real con el loop voz -> backend STT -> respuesta -> TTS local.
 
 La arquitectura está optimizada para velocidad de iteración y facilidad de depuración durante el MVP, no para escalabilidad de producción.
 

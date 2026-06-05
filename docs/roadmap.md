@@ -214,8 +214,8 @@ La preparación de Semana 4 es documentación-first: specs, planes, roadmap y jo
 
 ## Fases
 
-0. Kickoff documental y handoff para agentes.
-1. Baseline de demo reproducible sobre el sistema actual.
+0. Kickoff documental y handoff para agentes — completado 2026-06-02.
+1. Baseline de demo reproducible sobre el sistema actual — completado 2026-06-05. 3 voice turns en Raspberry real, memoria corta validada, `/chat` y `/chat/audio` funcionando.
 2. Resiliencia y errores observados durante la demo.
 3. Calibración conversacional y memoria corta.
 4. Decisión explícita sobre estados físicos.
