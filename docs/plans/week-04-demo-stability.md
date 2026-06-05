@@ -54,18 +54,51 @@ Phase 1: Reproducible demo baseline (completed 2026-06-05)
 - Confirm in-memory session history: TONTO recalled initial greeting in turn 3.
 - Record evidence in `docs/project-journal/week-04.md`.
 
-Phase 2: Demo resilience and error handling
+Phase 2: Demo resilience and error handling (completed 2026-06-05)
 
-- Only after Phase 1 evidence, decide whether code fixes are needed.
-- Keep fixes small and covered by focused tests.
-- Preserve existing contracts and the text fallback.
-- Update docs and journal.
+- Client timeout split: TEXT 10s, VOICE 30s.
+- URLError timeout handling added to send_message and send_audio.
+- 48/48 tests passed (3 new timeout tests).
+- Journal updated.
 
-Phase 3: Conversation and memory calibration
+Phase 3: Conversation and memory calibration (ready for implementation)
 
-- Validate existing in-memory context.
-- Tune only if the demo shows a clear issue.
-- Do not add persistence or advanced memory.
+Purpose: make TONTO feel coherent enough for a short educational demo without adding memory architecture.
+
+Execution plan:
+
+1. Validate in-memory context across 5+ related turns on Raspberry.
+2. Use child-friendly educational questions in Spanish.
+3. Check if TONTO maintains context without losing coherence.
+4. If prompt tuning is needed:
+   a. Adjust instructions in `backend/openai_client.py` (Spanish, shorter answers, child-friendly).
+   b. Optionally reduce `max_output_tokens` if responses are too long.
+   c. Keep changes small and reversible.
+5. If no tuning is needed: document in journal that validation passed.
+
+Validation commands (Raspberry):
+
+```bash
+export TONTO_BACKEND_URL=http://192.168.1.91:8000
+export TONTO_AUDIO_DEVICE=plughw:CARD=Device,DEV=0
+source .venv/bin/activate
+python3 client/main.py --mode voice
+```
+
+Suggested test sequence (5 turns):
+
+1. "Hola TONTO, ¿qué es una estrella?"
+2. "¿Y el sol es una estrella?"
+3. "¿De qué está hecho el sol?"
+4. "¿Por qué brilla?"
+5. "¿Qué pasaría si el sol no existiera?"
+
+Acceptance criteria:
+
+- TONTO answers all 5 questions without losing context.
+- If context is lost, the issue is classified (prompt, token limit, or model behavior).
+- Any code change is documented and tested.
+- If no change is needed, journal says so.
 
 Phase 4: Physical state decision gate
 

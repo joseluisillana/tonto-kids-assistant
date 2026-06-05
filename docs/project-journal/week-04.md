@@ -1,7 +1,7 @@
 # Week 04 Kickoff
 
 **Date:** 2026-06-05
-**Status:** Phase 2 complete; ready for Phase 3.
+**Status:** Phase 2 complete; Phase 3 planned, ready for implementation.
 
 ## Objective
 
@@ -64,7 +64,7 @@ Phase 5: Week 04 closeout.
 
 ## Recommended Next Action
 
-Phase 2 complete. Start Phase 3: Conversation and memory calibration.
+Phase 2 complete. Phase 3 planned. Next: validate on Raspberry (5 turns) and decide if prompt tuning is needed.
 
 ## Phase 1 — Reproducible Demo Baseline (2026-06-05)
 
@@ -168,6 +168,73 @@ Phase 1 acceptance criteria are met. Next: Phase 2 — Demo Resilience and Error
 ### Phase 2 Complete — Ready for Phase 3
 
 Phase 2 acceptance criteria are met. Next: Phase 3 — Conversation and Memory Calibration.
+
+## Phase 3 — Conversation and Memory Calibration (planned, not implemented)
+
+**Branch:** pending (will be created when implementation starts)
+
+### Objective
+
+Make TONTO feel coherent enough for a short educational demo without adding memory architecture.
+
+### Execution Plan
+
+1. Validate in-memory context across 5+ related turns on Raspberry.
+2. Use child-friendly educational questions in Spanish.
+3. Check if TONTO maintains context without losing coherence.
+4. If prompt tuning is needed:
+   a. Adjust instructions in `backend/openai_client.py` (Spanish, shorter answers, child-friendly).
+   b. Optionally reduce `max_output_tokens` if responses are too long.
+   c. Keep changes small and reversible.
+5. If no tuning is needed: document in journal that validation passed.
+
+### Validation Setup (Raspberry)
+
+```bash
+export TONTO_BACKEND_URL=http://192.168.1.91:8000
+export TONTO_AUDIO_DEVICE=plughw:CARD=Device,DEV=0
+source .venv/bin/activate
+python3 client/main.py --mode voice
+```
+
+### Suggested Test Sequence (5 turns)
+
+1. "Hola TONTO, ¿qué es una estrella?"
+2. "¿Y el sol es una estrella?"
+3. "¿De qué está hecho el sol?"
+4. "¿Por qué brilla?"
+5. "¿Qué pasaría si el sol no existiera?"
+
+### Acceptance Criteria
+
+- [ ] TONTO answers all 5 questions without losing context.
+- [ ] If context is lost, the issue is classified (prompt, token limit, or model behavior).
+- [ ] Any code change is documented and tested.
+- [ ] If no change is needed, journal says so.
+
+### Current Prompt (for reference)
+
+```python
+instructions: (
+    "You are TONTO, a friendly educational assistant for children. "
+    "Answer clearly, briefly, and helpfully."
+)
+max_output_tokens: 300
+```
+
+### Potential Changes (if needed)
+
+- Convert prompt to Spanish
+- Add specific instructions for shorter, child-friendly educational answers
+- Reduce `max_output_tokens` from 300 to 150-200
+
+### Status
+
+- [ ] Validation on Raspberry (5 turns)
+- [ ] Decision: prompt tuning needed or not
+- [ ] Implementation (if needed)
+- [ ] Tests updated (if needed)
+- [ ] Journal updated with evidence
 
 ## AI Tools Used
 
