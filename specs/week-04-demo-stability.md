@@ -1,7 +1,7 @@
 # Week 04 Demo Stability and Scope Kickoff
 
-**Version:** 0.2
-**Status:** Phase 1 complete
+**Version:** 0.3
+**Status:** Phase 2 complete, Phase 3 ready for implementation
 **Last Updated:** 2026-06-05
 
 ## Objective
@@ -145,7 +145,15 @@ Acceptance:
 - Official relevant tests pass.
 - Documentation records what changed and why.
 
-### Phase 3 - Conversation and Memory Calibration
+Evidence:
+
+- Client timeout split: `TEXT_TIMEOUT_SECONDS=10`, `VOICE_TIMEOUT_SECONDS=30`.
+- URLError timeout handling added to `send_message()` and `send_audio()`.
+- `_is_timeout_reason()` helper added (matches `stt_client.py` pattern).
+- 48/48 tests passed (3 new timeout tests added).
+- Journal updated with Phase 2 changes.
+
+### Phase 3 - Conversation and Memory Calibration (ready for implementation)
 
 Purpose: make TONTO feel coherent enough for a short educational demo without adding memory architecture.
 
