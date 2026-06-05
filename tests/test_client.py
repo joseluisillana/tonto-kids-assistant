@@ -1,6 +1,7 @@
 import io
 import json
 import os
+import socket
 from pathlib import Path
 import subprocess
 import urllib.error
@@ -77,6 +78,14 @@ def test_send_message_url_error(monkeypatch):
 def test_send_message_timeout(monkeypatch):
     def fake_urlopen(request, timeout):
         raise TimeoutError("timed out")
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    assert send_message("http://localhost:8000/chat", "s1", "hola") is None
+
+
+def test_send_message_url_error_timeout(monkeypatch):
+    def fake_urlopen(request, timeout):
+        raise urllib.error.URLError(socket.timeout("timed out"))
 
     monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
     assert send_message("http://localhost:8000/chat", "s1", "hola") is None
@@ -181,6 +190,22 @@ def test_send_audio_http_error(monkeypatch):
         raise urllib.error.HTTPError(
             request.full_url, 413, "Too Large", hdrs=None, fp=io.BytesIO(b'{"detail":"too big"}')
         )
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    assert send_audio("http://localhost:8000/chat/audio", "s1", "d1", b"data", 3000) is None
+
+
+def test_send_audio_timeout(monkeypatch):
+    def fake_urlopen(request, timeout):
+        raise TimeoutError("timed out")
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    assert send_audio("http://localhost:8000/chat/audio", "s1", "d1", b"data", 3000) is None
+
+
+def test_send_audio_url_error_timeout(monkeypatch):
+    def fake_urlopen(request, timeout):
+        raise urllib.error.URLError(socket.timeout("timed out"))
 
     monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
     assert send_audio("http://localhost:8000/chat/audio", "s1", "d1", b"data", 3000) is None
