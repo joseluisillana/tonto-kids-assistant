@@ -3,6 +3,7 @@ import argparse
 import json
 import os
 import shlex
+import socket
 import subprocess
 import sys
 import uuid
@@ -11,7 +12,8 @@ import urllib.error
 import urllib.request
 
 
-REQUEST_TIMEOUT_SECONDS = 10
+TEXT_TIMEOUT_SECONDS = 10
+VOICE_TIMEOUT_SECONDS = 30
 DEFAULT_TTS_ARGS = "-v es -s 135 -g 8"
 
 
@@ -152,14 +154,17 @@ def send_message(chat_url: str, session_id: str, message: str) -> Optional[str]:
     )
 
     try:
-        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+        with urllib.request.urlopen(request, timeout=TEXT_TIMEOUT_SECONDS) as response:
             data = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace")
         print(f"Backend error {exc.code}: {detail}")
         return None
     except urllib.error.URLError as exc:
-        print(f"Could not reach backend: {exc.reason}")
+        if _is_timeout_reason(exc.reason):
+            print("Backend request timed out")
+        else:
+            print(f"Could not reach backend: {exc.reason}")
         return None
     except TimeoutError:
         print("Backend request timed out")
@@ -217,14 +222,17 @@ def send_audio(
     )
 
     try:
-        with urllib.request.urlopen(request, timeout=REQUEST_TIMEOUT_SECONDS) as response:
+        with urllib.request.urlopen(request, timeout=VOICE_TIMEOUT_SECONDS) as response:
             data = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace")
         print(f"Backend error {exc.code}: {detail}")
         return None
     except urllib.error.URLError as exc:
-        print(f"Could not reach backend: {exc.reason}")
+        if _is_timeout_reason(exc.reason):
+            print("Backend request timed out")
+        else:
+            print(f"Could not reach backend: {exc.reason}")
         return None
     except TimeoutError:
         print("Backend request timed out")
@@ -254,6 +262,10 @@ def speak(text: str) -> None:
 
     if result.returncode != 0:
         print(f"TTS command failed with exit code {result.returncode}")
+
+
+def _is_timeout_reason(reason: object) -> bool:
+    return isinstance(reason, (TimeoutError, socket.timeout)) or "timed out" in str(reason).lower()
 
 
 if __name__ == "__main__":

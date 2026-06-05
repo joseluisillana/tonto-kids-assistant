@@ -1,7 +1,7 @@
 # Week 04 Kickoff
 
-**Date:** 2026-06-02
-**Status:** Phase 0 complete; Phase 1 in progress.
+**Date:** 2026-06-05
+**Status:** Phase 2 complete; ready for Phase 3.
 
 ## Objective
 
@@ -64,7 +64,7 @@ Phase 5: Week 04 closeout.
 
 ## Recommended Next Action
 
-Phase 1 complete. Start Phase 2: Demo resilience and error handling.
+Phase 2 complete. Start Phase 3: Conversation and memory calibration.
 
 ## Phase 1 — Reproducible Demo Baseline (2026-06-05)
 
@@ -129,6 +129,45 @@ python3 client/main.py --mode voice
 ### Phase 1 Complete — Ready for Phase 2
 
 Phase 1 acceptance criteria are met. Next: Phase 2 — Demo Resilience and Error Handling.
+
+## Phase 2 — Demo Resilience and Error Handling (2026-06-05)
+
+**Branch:** `fix/week-04-phase2-demo-resilience`
+
+### Issues Identified from Phase 1
+
+1. **Client timeout too short for voice mode** — `REQUEST_TIMEOUT_SECONDS = 10` was shared for text and voice. Voice mode does STT + OpenAI + response, which can exceed 10s.
+2. **URLError timeout not caught** — client caught `TimeoutError` but `urlopen` also raises `URLError` with timeout reason. The STT client handled this but the main client did not.
+3. **Error messages unclear for demo** — technical messages not suitable for operators.
+
+### Changes Made
+
+**`client/main.py`:**
+- Split timeout into `TEXT_TIMEOUT_SECONDS = 10` and `VOICE_TIMEOUT_SECONDS = 30`
+- Added `_is_timeout_reason()` helper (matches `stt_client.py` pattern)
+- `send_message()` now handles `URLError` timeout reasons
+- `send_audio()` now handles `URLError` timeout reasons
+- Added `socket` import for `socket.timeout` detection
+
+**`tests/test_client.py`:**
+- Added `test_send_message_url_error_timeout` — URLError with socket.timeout
+- Added `test_send_audio_timeout` — TimeoutError in voice mode
+- Added `test_send_audio_url_error_timeout` — URLError with socket.timeout in voice mode
+
+### Test Results
+
+- 48/48 tests passed (3 new tests added)
+- TypeScript typecheck: clean (no web changes)
+
+### Acceptance Status
+
+- [x] Observed critical failures have a fix or documented workaround
+- [x] Official relevant tests pass (48/48)
+- [x] Documentation records what changed and why
+
+### Phase 2 Complete — Ready for Phase 3
+
+Phase 2 acceptance criteria are met. Next: Phase 3 — Conversation and Memory Calibration.
 
 ## AI Tools Used
 
