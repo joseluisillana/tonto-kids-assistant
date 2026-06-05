@@ -1,7 +1,7 @@
 # Week 04 Kickoff
 
 **Date:** 2026-06-02
-**Status:** Documentation kickoff prepared; implementation not started.
+**Status:** Phase 0 complete; Phase 1 in progress.
 
 ## Objective
 
@@ -64,20 +64,75 @@ Phase 5: Week 04 closeout.
 
 ## Recommended Next Action
 
-Start Phase 1.
+Phase 1 complete. Start Phase 2: Demo resilience and error handling.
 
-Run the current system several times before adding behavior:
+## Phase 1 — Reproducible Demo Baseline (2026-06-05)
 
-1. Run official checks if the local environment is ready.
-2. Start backend with LAN access.
-3. Validate `/health` from Windows and Raspberry.
-4. Run at least three Raspberry `--mode voice` turns.
-5. Confirm typed fallback still works.
-6. Record latency, microphone device, TTS quality, and any failures here.
+**Branch:** `feature/week-04-phase1-demo-baseline`
+
+### Validation Results
+
+| Check | Result | Notes |
+|---|---|---|
+| Python tests (`pytest`) | 45/45 passed | backend, client, STT, audio tests |
+| TypeScript typecheck | Clean | No errors |
+| Backend start | OK | Binds to `0.0.0.0:8000` (LAN mode) |
+| `/health` endpoint | 200 OK | `{"status":"ok"}` from Windows and Raspberry |
+| `/chat` text fallback | 200 OK | `OPENAI_API_KEY` configured, response received |
+| `/chat/audio` endpoint | Working | WAV validation + STT integration confirmed |
+| Raspberry `/health` | 200 OK | `curl -s "$TONTO_BACKEND_URL/health"` from `tonto-pi` |
+| Raspberry voice turns | 3/3 OK | All turns completed successfully |
+| Memory (in-session) | Validated | TONTO recalled initial greeting in turn 3 |
+
+### Hardware Validation Evidence
+
+**Environment:**
+- Windows backend: `192.168.1.91:8000` (WiFi, LAN mode)
+- Raspberry Pi: `tonto-pi` with USB PnP Sound Device (card 1, device 0)
+- Mic device: `plughw:CARD=Device,DEV=0`
+- TTS: `espeak -v es -s 135 -g 8` (default)
+- Backend API key: configured via User env var
+
+**Setup commands (Raspberry):**
+```bash
+export TONTO_BACKEND_URL=http://192.168.1.91:8000
+export TONTO_AUDIO_DEVICE=plughw:CARD=Device,DEV=0
+source .venv/bin/activate
+python3 client/main.py --mode voice
+```
+
+**Turn 1:**
+- Input: `Hola tonto, ¿cómo estás? ¿Estás bien?`
+- Response: `¡Hola! Estoy muy bien, gracias. ¿Y tú? ¿Cómo te va?`
+- espeak: Audible, understandable ✅
+
+**Turn 2:**
+- Input: `Según va iteración en las pruebas. ¿Qué tal te ves?`
+- Response: `¡Me veo genial! Siempre listo para ayudar. ¿Tienes alguna pregunta o tema del que quieras hablar?`
+- espeak: Audible ✅
+
+**Turn 3:**
+- Input: `¿Qué te he preguntado al principio de la sesión? ¿Te acuerdas?`
+- Response: `Sí, me preguntaste cómo estaba y si estaba bien. ¡Gracias por preguntar! ✨ ¿Hay algo más en lo que te pueda ayudar?`
+- espeak: Audible ✅
+- Memory: TONTO correctly recalled turn 1 question ✅
+
+**Warnings:** ALSA/JACK warnings appeared on every turn (same as Week 03). They do not block audio capture or playback.
+
+### Acceptance Status
+
+- [x] At least one failure documented with clear cause (setup: missing API key — resolved)
+- [x] At least three consecutive voice turns on Raspberry (3/3 passed)
+- [x] Text fallback usable end-to-end
+- [x] Blocker classified and resolved: **setup** (API key) + **hardware** (Raspberry access — validated)
+
+### Phase 1 Complete — Ready for Phase 2
+
+Phase 1 acceptance criteria are met. Next: Phase 2 — Demo Resilience and Error Handling.
 
 ## AI Tools Used
 
-Codex inspected repository instructions, roadmap, architecture, specs, plans, journal, hardware docs, and backend implementation. Codex prepared documentation-only kickoff artifacts and avoided code changes per the human request.
+Codex: documentation kickoff (Phase 0). OpenCode: Phase 1 validation execution — repo inspection, test runs, backend startup, endpoint validation, journal update.
 
 ## Human Decisions
 
@@ -85,17 +140,7 @@ Codex inspected repository instructions, roadmap, architecture, specs, plans, jo
 - Week 04 should be phased before implementation.
 - Arduino should not be treated as automatic implementation work.
 
-## Validation
-
-Documentation-only validation for this kickoff:
-
-```powershell
-git diff --check
-git status --short --branch
-```
-
-No code tests are required for the kickoff because no implementation behavior changes.
-
 ## Notes
 
-The local branch was created as `docs-week-4-kickoff` because the sandboxed environment blocked writing slash-prefixed branch refs. The project convention remains `<type>/<short-kebab-description>` in normal Git workflows.
+- The local branch was created as `docs-week-4-kickoff` because the sandboxed environment blocked writing slash-prefixed branch refs. The project convention remains `<type>/<short-kebab-description>` in normal Git workflows.
+- Phase 1 branch follows project convention: `feature/week-04-phase1-demo-baseline`.
