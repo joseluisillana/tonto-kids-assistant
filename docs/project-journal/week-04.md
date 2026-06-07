@@ -496,43 +496,67 @@ The following code is already on `main`:
 
 5. Record evidence below.
 
-### Evidence (to be filled after hardware validation)
+### Evidence (2026-06-07)
 
 **Environment:**
-- Branch: `main` (or commit hash: ___)
-- Backend: `___`
-- Raspberry audio device: `___`
-- Commands used: `___`
+- Branch: `main` (synced with `origin/main`)
+- Backend: `http://192.168.1.91:8000` (Windows, LAN mode)
+- Raspberry audio device: `plughw:CARD=Device,DEV=0`
+- Session: `local-session-9f5600d5-e159-484f-a961-d078753e8f9f`
+- Commands used:
+  ```bash
+  git checkout main && git pull
+  source .venv/bin/activate
+  export TONTO_BACKEND_URL=http://192.168.1.91:8000
+  export TONTO_AUDIO_DEVICE=plughw:CARD=Device,DEV=0
+  python3 client/main.py --mode voice
+  ```
+
+**Turn 1:**
+- Indicator visible: `Listening for 6s...` then `Listening: 1/6s` through `Listening: 6/6s` ✅
+- `Listening complete.` appeared after capture ✅
+- `Uploading...` transition clear ✅
+- Transcript: `Esta es una prueba, esta es una prueba, esta es una prueba, esta es una prueba.`
+- TONTO: `¡Hola! ¿Cómo te puedo ayudar hoy? Si tienes alguna pregunta o algo que quieras aprender, aquí estoy.`
+- espeak: Audible ✅
+
+**Turn 2:**
+- Indicator visible: `Listening for 6s...` then `Listening: 1/6s` through `Listening: 6/6s` ✅
+- `Listening complete.` appeared after capture ✅
+- `Uploading...` transition clear ✅
+- Transcript: `¿Cuál es la última película que se ha hecho sobre Superman?`
+- TONTO: `La última película de Superman que se lanzó fue "Zack Snyder's Justice League" en 2021. También hay una nueva película de Superman en camino llamada "Superman: Legacy". ¿Te gusta Superman?`
+- espeak: Audible ✅
 
 **Observations:**
 
 | Check | Result | Notes |
 |---|---|---|
-| Indicator visible during capture | | |
-| Timer updates live | | |
-| Transition to uploading clear | | |
-| Transcript works | | |
-| Response works | | |
-| espeak works | | |
-| ALSA/JACK warnings | | |
+| Indicator visible during capture | ✅ | `Listening for 6s...` + live counter |
+| Timer updates live | ✅ | 1/6s through 6/6s, 1 per second |
+| Transition to uploading clear | ✅ | `Listening complete.` → `Uploading...` |
+| Transcript works | ✅ | Both turns accurate |
+| Response works | ✅ | Both turns coherent |
+| espeak works | ✅ | Audible and understandable |
+| ALSA/JACK warnings | ✅ Known, non-blocking | Same warnings as previous validations, do not affect capture or playback |
 
 **Human judgment:**
-- Does the indicator improve the demo operator experience? ___
-- Any errors observed? ___
+- Does the indicator improve the demo operator experience? **Yes.** The operator now has clear visual feedback for when the child should stop speaking and when capture is complete. This directly addresses the Phase 3 UX gap.
+- Any errors observed? **No.** Only the known ALSA/JACK warnings that have been present since Week 03.
 
 ### Acceptance Criteria
 
-- [ ] Listening indicator visible in terminal during audio capture.
-- [ ] Elapsed or remaining time updates live while recording.
-- [ ] Transition from listening to uploading is clear in the terminal.
-- [ ] Existing voice loop (transcript, response, espeak) still works.
-- [ ] Text mode (`--mode text`) is unchanged.
-- [ ] Evidence recorded in this journal section.
+- [x] Listening indicator visible in terminal during audio capture.
+- [x] Elapsed or remaining time updates live while recording.
+- [x] Transition from listening to uploading is clear in the terminal.
+- [x] Existing voice loop (transcript, response, espeak) still works.
+- [x] Text mode (`--mode text`) is unchanged.
+- [x] Evidence recorded in this journal section.
 
 ### Status
 
-- [ ] Raspberry hardware validation completed.
-- [ ] Evidence recorded above.
+- [x] Raspberry hardware validation completed.
+- [x] Evidence recorded above.
 - [ ] Issue #27 closed.
 
 ## AI Tools Used
