@@ -61,7 +61,7 @@ Phase 2: Demo resilience and error handling (completed 2026-06-05)
 - 48/48 tests passed (3 new timeout tests).
 - Journal updated.
 
-Phase 3: Conversation and memory calibration (ready for implementation)
+Phase 3: Conversation and memory calibration (completed 2026-06-07)
 
 Purpose: make TONTO feel coherent enough for a short educational demo without adding memory architecture.
 
@@ -100,10 +100,20 @@ Acceptance criteria:
 - Any code change is documented and tested.
 - If no change is needed, journal says so.
 
+Result:
+
+- Prompt calibration was needed and was implemented in `backend/openai_client.py`.
+- Python tests passed: 49/49.
+- Raspberry real validation passed: 5/5 related voice turns returned 200 OK through `POST /chat/audio`.
+- Responses were coherent, Spanish, child-friendly, and audible enough through Raspberry `espeak` for MVP.
+- Non-blocking ALSA/JACK warnings persisted.
+- Follow-up candidate: decide whether to add time/listening/progress indicators to Raspberry and web clients.
+
 Phase 4: Physical state decision gate
 
 - Define state vocabulary.
 - Decide whether LED/Arduino implementation is worth it for the MVP demo.
+- Decide whether non-physical time/listening/progress indicators should be implemented first for Raspberry and web.
 - If yes, create a separate spec and plan before code.
 - If no, document the deferral and use existing status surfaces.
 
