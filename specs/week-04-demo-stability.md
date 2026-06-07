@@ -222,6 +222,7 @@ Excluded:
 Acceptance:
 
 - A human decision is recorded: Arduino/LEDs are deferred outside the 6-week MVP, and non-physical indicators are approved first.
+- The web recording limit follow-up #23 records the behavior decision before implementation: auto-stop, simple warning, and manual send.
 - Separate specs and plans exist before code changes:
   - `specs/raspberry-listening-indicator.md`
   - `docs/plans/raspberry-listening-indicator.md`
@@ -235,7 +236,7 @@ Decision options:
 1. Defer physical and non-physical state work and keep current terminal/web messages.
 2. Implement non-physical time/listening indicators first:
    - Raspberry terminal countdown/progress during recording.
-   - Web visible recording time/progress against the audio limit.
+   - Web visible recording time/progress against the audio limit, with auto-stop at the configured limit, a simple warning, and manual `Enviar voz`.
 3. Prepare Arduino/LED physical states through a separate spec and plan.
 
 Recommendation:
@@ -248,6 +249,7 @@ Human decision:
 - Arduino and LED integration are deferred outside the 6-week MVP and treated as future TONTO work.
 - Non-physical time/listening indicators are the approved Phase 4 implementation path.
 - Raspberry and web indicators must each have their own spec and plan so they can be implemented in parallel.
+- Web recording limit behavior is decided for follow-up #23: stop capture automatically at the configured limit, warn that time is up, and keep upload manual.
 
 ### Phase 5 - Week 04 Closeout
 
