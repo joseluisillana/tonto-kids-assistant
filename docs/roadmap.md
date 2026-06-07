@@ -244,10 +244,19 @@ Convertir el sistema en una demo estable y repetible.
 ## Entregables
 
 - Flujo completo funcionando de forma consistente.
-- Scripts simples de arranque.
+- Runbook de operador y scripts de arranque.
 - Ajustes de UX conversacional.
 - Corrección de errores críticos.
 - Demo ejecutada múltiples veces con éxito.
+
+## Fases
+
+0. Kickoff documental y handoff para agentes — completado 2026-06-08.
+1. Runbook de demo y scripts de arranque.
+2. Pulido de UX conversacional.
+3. Resiliencia ante errores.
+4. Ensayo de demo (3+ ejecuciones consecutivas).
+5. Closeout con evidencia.
 
 ## Prioridades
 
