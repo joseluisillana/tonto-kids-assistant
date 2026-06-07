@@ -50,23 +50,7 @@ Known gaps:
 ## Recommended Next Action
 
 Phase 1: create a demo runbook and startup script to reduce operator friction.
-
-## AI Tools Used
-
-(none yet â€” kickoff phase)
-
-## Human Decisions
-
-(none yet)
-
-## Notes
-
-- Week 05 applies the MVP rule: no new features unless they directly unblock the demo.
-- ALSA/JACK warnings are a known non-blocking issue from Week 03-04; they should be documented or suppressed, not "fixed" with architecture changes.
-
-
-
-## Phase 1 — Demo Runbook and Startup Scripts (implemented 2026-06-08)
+## Phase 1 — Demo Runbook and Startup Scripts (implemented 2026-06-07)
 
 **Branch:** `feature/week-05-phase1-demo-runbook`
 **Tracking:** GitHub issue #35
@@ -82,6 +66,7 @@ Reduce the friction of starting a TONTO demo so an operator can start with 1-2 c
 - Default env vars: `TONTO_BACKEND_URL`, `TONTO_AUDIO_DEVICE`, `TONTO_RECORD_SECONDS`.
 - Health check with 5 retries and 2s delay before starting.
 - Activates venv and starts client in voice mode.
+- Tracked as executable in git (mode 100755).
 
 **`docs/demo-runbook.md`** (new):
 - Prerequisites section.
@@ -98,37 +83,47 @@ Reduce the friction of starting a TONTO demo so an operator can start with 1-2 c
 - Backend: `http://192.168.1.91:8000` (Windows, LAN mode)
 - Raspberry audio device: `plughw:CARD=Device,DEV=0`
 - Commands used:
-  `ash
-  chmod +x scripts/demo-raspberry.sh
-  ./scripts/demo-raspberry.sh
-  `
 
-**Observations:**
+```bash
+chmod +x scripts/demo-raspberry.sh
+./scripts/demo-raspberry.sh
+```
+**Observations (voice turns):**
 
 | Check | Result | Notes |
 |---|---|---|
 | Health check (curl /health) | OK (1/5) | Backend responded immediately |
 | Venv activation | OK | Activate found and sourced |
 | Client starts in voice mode | OK | `--mode voice` launched correctly |
-| Turn 1: indicator visible | OK | `Listening for 6s...` + `Listening: 1/6s` ... `6/6s` |
-| Turn 1: transcript | `Esto es una prueba con el nuevo script de arranque.` | Accurate |
-| Turn 1: response | `¡Hola! ¿Cómo puedo ayudarte hoy?` | Coherent |
+| Turn 1: indicator visible | OK | Live countdown 1-6s |
+| Turn 1: transcript | Accurate | Transcription worked |
+| Turn 1: response | Coherent | Spanish, child-friendly |
 | Turn 1: espeak | Audible | Standard quality |
 | Turn 2: indicator visible | OK | Same as turn 1 |
-| Turn 2: transcript | `Estoy haciendo un trabajo sobre el circo. ¿Conoces algún payaso famoso?` | Accurate |
-| Turn 2: response | `¡Sí! Uno de los payasos más famosos es Emmett Kelly...` | Educational, coherent |
+| Turn 2: transcript | Accurate | Transcription worked |
+| Turn 2: response | Educational, coherent | Spanish, child-friendly |
 | Turn 2: espeak | Audible | Standard quality |
 | ALSA/JACK warnings | Known, non-blocking | Same as previous validations |
-| Script shebang BOM | Fixed | Removed UTF-8 BOM after validation |
+
+**Observations (health check retries):**
+
+| Scenario | Result | Notes |
+|---|---|---|
+| Backend stopped | ERROR after 5 retries | Clear error message with instructions |
+| Backend started mid-retries | Connected on attempt 5/5 | Recovery works correctly |
+| Retry interval | 2s delay, ~7s total | `--connect-timeout 5` prevents hangs |
+| Script executable in git | Fixed | Tracked as 100755, no manual chmod needed |
 
 **Issues found and fixed during validation:**
-- UTF-8 BOM at start of script caused `﻿#!/usr/bin/env: No such file or directory` warning (non-blocking). Fixed by saving without BOM.
-- Venv setup instructions in script referenced PowerShell command (`setup-dev.ps1`). Fixed to show bash instructions.
+- UTF-8 BOM at start of script caused warning (non-blocking). Fixed by saving without BOM.
+- Venv setup instructions in script referenced PowerShell command. Fixed to show bash instructions.
 - Backend requirements incorrectly included in venv setup message. Fixed to only include client requirements.
+- `curl` hung without `--connect-timeout` when backend was unreachable. Fixed with 5s timeout.
+- Script lost execute permissions after `git pull`. Fixed by tracking as 100755 in git.
 
 **Human judgment:**
 - The script reduces demo startup from 4 manual commands to 1.
-- Health check provides clear feedback before starting.
+- Health check provides clear feedback before starting, with retries and recovery.
 - The operator experience is smoother than the previous manual setup.
 
 ### Acceptance Criteria
@@ -143,6 +138,5 @@ Reduce the friction of starting a TONTO demo so an operator can start with 1-2 c
 ### Status
 
 - [x] Raspberry hardware validation completed.
-- [x] BOM issue fixed.
-- [ ] Issue #35 ready to close.
-
+- [x] All issues fixed.
+- [x] Issue #35 ready to close.
