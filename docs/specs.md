@@ -47,9 +47,9 @@ Durante semana 3, `/chat` sigue siendo el contrato estable. Tras validar la capt
 
 Fase 3 queda cerrada como validada en `specs/audio-pipeline-phase-3-web-loop.md`, `specs/web-validation-client.md` y `specs/audio-pipeline-phase-3-browser-manual-validation.md`. La web usa el contrato existente, captura desde microfono, envia WAV compatible, muestra transcript/response, reproduce la response de forma audible desde el navegador y registra evidencia visible; no añade endpoint propio, no cambia proveedor STT, no introduce dependencias ni expone subida manual de WAV como flujo de producto/demo. Como mejora posterior de UX web, las respuestas recibidas por el chat de texto `/chat` tambien se reproducen con Web Speech API cuando esta disponible, degradando a texto visible si speech falla o no esta soportado.
 
-## Semana 4 - Kickoff y Alcance Activo
+## Semana 4 - Estabilidad de demo y decisión de estados físicos (completada)
 
-La spec activa de preparación para Semana 4 vive en `specs/week-04-demo-stability.md`, con plan emparejado en `docs/plans/week-04-demo-stability.md`.
+La spec de Semana 4 vive en `specs/week-04-demo-stability.md`, con plan emparejado en `docs/plans/week-04-demo-stability.md`.
 
 Semana 4 empieza como una preparación documental para agentes IA y después avanza por fases:
 
@@ -71,7 +71,22 @@ El indicador de escucha Raspberry fue implementado en `client/main.py` (funcione
 
 La memoria de Semana 4 no implica persistencia, perfiles, memoria vectorial ni multiusuario. La decisión de Fase 4 difiere Arduino/LEDs fuera del MVP de 6 semanas y aprueba implementar primero indicadores no físicos de tiempo/escucha. Si Arduino/LEDs se retoman en una versión futura de TONTO, deberán tener una spec y plan separados antes de código.
 
-## Fuera de Alcance del Arranque de Semana 4
+## Semana 5 - Estabilidad y experiencia demo
+
+La spec activa de Semana 5 vive en `specs/week-05-demo-stability.md`, con plan emparejado en `docs/plans/week-05-demo-stability.md`.
+
+Semana 5 convierte el loop validado en una demo repetible y fácil de operar:
+
+1. **Kickoff documental** — completado 2026-06-08.
+2. **Runbook de demo y scripts de arranque** — reducir fricción del operador.
+3. **Pulido de UX conversacional** — respuestas más naturales y engaging para niños.
+4. **Resiliencia ante errores** — mensajes claros, recuperación limpia.
+5. **Ensayo de demo** — 3+ ejecuciones consecutivas sin fallos bloqueantes.
+6. **Closeout con evidencia.**
+
+GitHub tracking: issue #33 (parent), issues #34-#38 (phases).
+
+## Fuera de Alcance de Semana 5
 
 - Wake word.
 - STT local complejo en Raspberry.
