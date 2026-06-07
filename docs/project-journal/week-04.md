@@ -1,7 +1,7 @@
 # Week 04 Kickoff
 
 **Date:** 2026-06-05
-**Status:** Phase 2 complete; Phase 3 planned, ready for implementation.
+**Status:** Phase 2 complete; Phase 3 prompt calibration implemented, Raspberry 5-turn validation pending.
 
 ## Objective
 
@@ -64,7 +64,7 @@ Phase 5: Week 04 closeout.
 
 ## Recommended Next Action
 
-Phase 2 complete. Phase 3 planned. Next: validate on Raspberry (5 turns) and decide if prompt tuning is needed.
+Phase 2 complete. Phase 3 prompt calibration implemented. Next: validate on Raspberry (5 turns) and decide if the calibrated prompt is sufficient for demo.
 
 ## Phase 1 — Reproducible Demo Baseline (2026-06-05)
 
@@ -169,9 +169,9 @@ Phase 1 acceptance criteria are met. Next: Phase 2 — Demo Resilience and Error
 
 Phase 2 acceptance criteria are met. Next: Phase 3 — Conversation and Memory Calibration.
 
-## Phase 3 — Conversation and Memory Calibration (planned, not implemented)
+## Phase 3 — Conversation and Memory Calibration (in progress)
 
-**Branch:** pending (will be created when implementation starts)
+**Branch:** `feature/week-04-phase3-conversation-calibration`
 
 ### Objective
 
@@ -212,7 +212,25 @@ python3 client/main.py --mode voice
 - [ ] Any code change is documented and tested.
 - [ ] If no change is needed, journal says so.
 
-### Current Prompt (for reference)
+### Prompt Calibration (2026-06-07)
+
+Code calibration was applied before the final Raspberry 5-turn validation because the previous prompt was generic English-only guidance and did not explicitly enforce the Week 04 demo target: short, Spanish, child-friendly educational answers that use recent context.
+
+Changes:
+
+- Added reusable `OPENAI_INSTRUCTIONS` in `backend/openai_client.py`.
+- Instructions now explicitly require Spanish answers.
+- Instructions now request clear, warm, child-friendly language for children ages 6 to 10.
+- Instructions now request 2 or 3 simple sentences unless the child asks for more.
+- Instructions now tell TONTO to use recent conversation context for follow-up questions.
+- Reduced `max_output_tokens` from `300` to `220`.
+
+Tests:
+
+- Added `tests/test_openai_client.py` to verify the OpenAI payload includes the calibrated instructions, recent context, and output-token limit.
+- `.\scripts\test.ps1 -Target python` passed: 49/49 tests.
+
+### Previous Prompt (for reference)
 
 ```python
 instructions: (
@@ -222,23 +240,25 @@ instructions: (
 max_output_tokens: 300
 ```
 
-### Potential Changes (if needed)
+### Current Prompt Intent
 
-- Convert prompt to Spanish
-- Add specific instructions for shorter, child-friendly educational answers
-- Reduce `max_output_tokens` from 300 to 150-200
+- Always answer in Spanish.
+- Keep responses short and understandable for children.
+- Use recent conversation context for follow-up questions.
+- Preserve the existing in-memory session architecture and `/chat` + `/chat/audio` contracts.
 
 ### Status
 
 - [ ] Validation on Raspberry (5 turns)
-- [ ] Decision: prompt tuning needed or not
-- [ ] Implementation (if needed)
-- [ ] Tests updated (if needed)
-- [ ] Journal updated with evidence
+- [x] Decision: prompt tuning needed
+- [x] Implementation: small prompt/output-token calibration
+- [x] Tests updated
+- [x] Journal updated with implementation evidence
+- [ ] Journal updated with Raspberry validation evidence
 
 ## AI Tools Used
 
-Codex: documentation kickoff (Phase 0). OpenCode: Phase 1 validation execution — repo inspection, test runs, backend startup, endpoint validation, journal update.
+Codex: documentation kickoff (Phase 0); Phase 3 planning, prompt calibration, tests, and journal update. OpenCode: Phase 1 validation execution — repo inspection, test runs, backend startup, endpoint validation, journal update.
 
 ## Human Decisions
 
