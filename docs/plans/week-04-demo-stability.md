@@ -109,13 +109,34 @@ Result:
 - Non-blocking ALSA/JACK warnings persisted.
 - Follow-up candidate: decide whether to add time/listening/progress indicators to Raspberry and web clients.
 
-Phase 4: Physical state decision gate
+Phase 4: Physical state decision gate (kickoff prepared 2026-06-07)
 
 - Define state vocabulary.
+- Use Phase 3 evidence: users do not have clear feedback for when to stop speaking in Raspberry or web.
 - Decide whether LED/Arduino implementation is worth it for the MVP demo.
 - Decide whether non-physical time/listening/progress indicators should be implemented first for Raspberry and web.
-- If yes, create a separate spec and plan before code.
-- If no, document the deferral and use existing status surfaces.
+- If implementation is approved, create a separate spec and plan before code.
+- If implementation is deferred, document the deferral and use existing status surfaces.
+
+Decision options:
+
+1. Defer state work and keep current terminal/web messages.
+2. Implement non-physical indicators first:
+   - Raspberry terminal countdown/progress during recording.
+   - Web visible recording time/progress against the audio limit.
+3. Prepare Arduino/LED physical states through a separate spec and plan.
+
+Recommended default:
+
+- Choose option 2 unless the final demo specifically needs visible physical LEDs.
+- It addresses a validated operator UX gap with lower scope and risk than Arduino.
+
+Acceptance criteria:
+
+- Human decision recorded in `docs/project-journal/week-04.md`.
+- If implementation is approved, a paired spec and plan exist before code.
+- If deferring, rationale is recorded.
+- MVP exclusions remain intact: no persistence, wake word, local STT, local AI, auth, multi-user behavior, or advanced UI.
 
 Phase 5: Closeout
 
@@ -176,6 +197,8 @@ Current baseline:
 
 Task:
 - Work only on the next explicitly selected Week 04 phase.
+- For Phase 4, make or record the human decision before implementation.
+- Treat Arduino/LEDs and non-physical indicators as separate scope options.
 - Prefer reproducible demo validation before new behavior.
 - Keep changes small and aligned with the MVP.
 - Do not add dependencies.

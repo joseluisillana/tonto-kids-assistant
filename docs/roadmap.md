@@ -210,7 +210,7 @@ La preparación de Semana 4 es documentación-first: specs, planes, roadmap y jo
 - Validación reproducible del loop actual varias veces seguidas.
 - Manejo de errores mejorado solo si la validación detecta bloqueos reales de demo.
 - Calibración de conversación usando la memoria corta en proceso ya existente, sin persistencia — completada con 5 voice turns relacionados en Raspberry real.
-- Gate de decisión para estados físicos mínimos e indicadores de tiempo/escucha: implementar LEDs/Arduino, añadir estados no físicos, deferirlos o cubrirlos con estados visibles existentes.
+- Gate de decisión para estados físicos mínimos e indicadores de tiempo/escucha: kickoff preparado; decisión pendiente entre deferir, añadir indicadores no físicos o preparar LEDs/Arduino.
 
 ## Fases
 
@@ -218,7 +218,7 @@ La preparación de Semana 4 es documentación-first: specs, planes, roadmap y jo
 1. Baseline de demo reproducible sobre el sistema actual — completado 2026-06-05. 3 voice turns en Raspberry real, memoria corta validada, `/chat` y `/chat/audio` funcionando.
 2. Resiliencia y errores observados durante la demo — completado 2026-06-05.
 3. Calibración conversacional y memoria corta — completado 2026-06-07. Prompt calibrado, 49/49 tests pasados y 5 voice turns relacionados en Raspberry real.
-4. Decisión explícita sobre estados físicos e indicadores no físicos de escucha/tiempo.
+4. Decisión explícita sobre estados físicos e indicadores no físicos de escucha/tiempo — kickoff preparado 2026-06-07, decisión humana pendiente.
 5. Closeout con evidencia y próximos riesgos.
 
 ## Prioridades

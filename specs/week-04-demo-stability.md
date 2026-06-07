@@ -1,7 +1,7 @@
 # Week 04 Demo Stability and Scope Kickoff
 
-**Version:** 0.4
-**Status:** Phase 3 complete, Phase 4 decision gate next
+**Version:** 0.5
+**Status:** Phase 4 decision gate prepared, human scope decision pending
 **Last Updated:** 2026-06-07
 
 ## Objective
@@ -190,19 +190,21 @@ Evidence:
 - Known non-blocking ALSA/JACK warnings persisted and did not block capture, upload, response, or playback.
 - Improvement identified for a later decision: Raspberry and web users need a clearer time/listening/progress indicator for when to stop speaking.
 
-### Phase 4 - Physical State Decision Gate
+### Phase 4 - Physical State Decision Gate (kickoff prepared 2026-06-07)
 
-Purpose: decide whether physical LED states are worth implementing before the final demo.
+Purpose: decide whether physical LED states or simpler non-physical indicators are worth implementing before the final demo.
 
 Included:
 
 - Define the minimum useful state vocabulary on paper:
   - idle,
   - listening,
+  - uploading,
   - thinking,
   - speaking,
   - error.
-- Decide whether those states need Arduino LEDs, terminal/web status only, or no implementation for the MVP.
+- Use Phase 3 evidence that both Raspberry and web make it hard to know when to stop speaking.
+- Decide whether those states need Arduino LEDs, terminal/web status only, a time/listening/progress indicator, or no implementation for the MVP.
 - If Arduino is accepted later, prepare a separate narrow spec and plan before code.
 
 Excluded:
@@ -213,11 +215,28 @@ Excluded:
 - Buttons.
 - GPIO abstractions.
 - Multi-device hardware control.
+- Broad product UI redesign.
+- New runtime dependencies unless explicitly approved.
 
 Acceptance:
 
-- A human decision is recorded: implement LEDs now, defer LEDs, or use existing non-physical status indicators.
-- If implementation is approved, a separate spec and plan exist before code changes.
+- A human decision is recorded: defer, implement non-physical indicators first, prepare Arduino/LEDs, or use a combined approach.
+- If any implementation is approved, a separate spec and plan exist before code changes.
+- If the decision is deferral, the journal records the rationale.
+- MVP constraints remain intact: no persistence, wake word, local STT, local AI, auth, multi-user behavior, or advanced UI.
+
+Decision options:
+
+1. Defer physical and non-physical state work and keep current terminal/web messages.
+2. Implement non-physical time/listening indicators first:
+   - Raspberry terminal countdown/progress during recording.
+   - Web visible recording time/progress against the audio limit.
+3. Prepare Arduino/LED physical states through a separate spec and plan.
+
+Recommendation:
+
+- Prefer non-physical time/listening indicators first unless the final presentation specifically needs visible LEDs.
+- This directly addresses the Phase 3 usability gap with lower hardware risk than Arduino.
 
 ### Phase 5 - Week 04 Closeout
 
