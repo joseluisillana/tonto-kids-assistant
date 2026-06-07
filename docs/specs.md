@@ -57,7 +57,7 @@ Semana 4 empieza como una preparación documental para agentes IA y después ava
 2. **Baseline reproducible de la demo actual** — completado 2026-06-05. 3 voice turns en Raspberry real validados, memoria corta confirmada, `/chat` y `/chat/audio` funcionando.
 3. **Resiliencia y errores observados** — completado 2026-06-05. Timeouts de cliente ajustados y 48/48 tests pasados.
 4. **Calibración conversacional con la memoria corta en proceso ya existente** — completado 2026-06-07. Prompt calibrado, 49/49 tests pasados y 5 voice turns relacionados en Raspberry real validados.
-5. **Decisión explícita sobre estados físicos mínimos e indicadores no físicos de tiempo/escucha** — decisión humana registrada 2026-06-07: Arduino/LEDs quedan fuera del MVP de 6 semanas; indicadores no físicos aprobados primero.
+5. **Decisión explícita sobre estados físicos mínimos e indicadores no físicos de tiempo/escucha** — decisión humana registrada 2026-06-07: Arduino/LEDs quedan fuera del MVP de 6 semanas; indicadores no físicos aprobados primero. Implementación completada y validada en hardware real 2026-06-07: Raspberry #27 cerrada, web #23/#25 cerradas.
 6. Closeout con evidencia.
 
 Specs y planes de Phase 4 preparados antes de código:
@@ -66,6 +66,8 @@ Specs y planes de Phase 4 preparados antes de código:
 - `specs/web-listening-indicator.md` + `docs/plans/web-listening-indicator.md`
 
 La spec web registra la decisión humana del 2026-06-07 para el follow-up #23 (cerrada): la captura web debe hacer auto-stop al llegar al límite configurado, mostrar un aviso simple de límite alcanzado y mantener el envío manual con `Enviar voz`. Issue #25 reparó la superficie principal del cliente web para mostrar un contador visible `00:SS / 00:10` y una barra de progreso mientras TONTO escucha. La validación manual humana confirmó que el comportamiento esperado queda cubierto sin cambiar el contrato `/chat/audio` ni añadir dependencias. Ambas issues (#23 y #25) quedan cerradas.
+
+El indicador de escucha Raspberry fue implementado en `client/main.py` (funciones `_show_listening_indicator`, `_format_listening_progress`, `_stop_listening_indicator`) y validado en hardware real el 2026-06-07: 2/2 turnos de voz pasados, indicador visible `Listening: X/6s`, transición a `Uploading...` clara, transcript/response/espeak funcionando. Issue #27 cerrada.
 
 La memoria de Semana 4 no implica persistencia, perfiles, memoria vectorial ni multiusuario. La decisión de Fase 4 difiere Arduino/LEDs fuera del MVP de 6 semanas y aprueba implementar primero indicadores no físicos de tiempo/escucha. Si Arduino/LEDs se retoman en una versión futura de TONTO, deberán tener una spec y plan separados antes de código.
 

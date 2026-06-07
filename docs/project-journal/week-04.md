@@ -442,7 +442,7 @@ Repair the web client so a recording duration indicator is visible in the main T
 ## Phase 4 — Raspberry Listening Indicator Validation (planned 2026-06-07)
 
 **Branch:** `docs/week-04-phase4-raspberry-listening-validation`
-**Tracking:** GitHub issue #27 (open), part of #18.
+**Tracking:** GitHub issue #27 (closed 2026-06-07), part of #18.
 
 ### Objective
 
@@ -466,7 +466,7 @@ The following code is already on `main`:
 | `_stop_listening_indicator()` | `client/main.py:185` | Signals thread to stop and joins |
 | `capture_audio(show_progress=True)` | `client/main.py:98` | Voice loop already passes `show_progress=True` |
 
-### Validation Steps (pending Raspberry hardware)
+### Validation Steps (completed 2026-06-07)
 
 1. Pull latest `main` on Raspberry:
    ```bash
@@ -558,6 +558,37 @@ The following code is already on `main`:
 - [x] Raspberry hardware validation completed.
 - [x] Evidence recorded above.
 - [x] Issue #27 closed.
+
+## Phase 5 — Week 04 Closeout (active 2026-06-07)
+
+### Objective
+
+End Week 04 with evidence, not loose impressions.
+
+### Completed Work
+
+| Phase | Status | Key Evidence |
+|---|---|---|
+| Phase 0: Kickoff | ✅ | Specs, plans, roadmap, journal created |
+| Phase 1: Demo Baseline | ✅ | 3 voice turns on Raspberry, memory validated |
+| Phase 2: Resilience | ✅ | Timeouts split, 48/48 tests passed |
+| Phase 3: Calibration | ✅ | Prompt calibrated, 5 voice turns on Raspberry, 49/49 tests |
+| Phase 4: Indicators | ✅ | Raspberry validated (2/2), web validated, issues #23/#25/#27 closed |
+| Phase 5: Closeout | ⏳ | This section |
+
+### Open Issues at Close
+
+- None. All Week 04 issues (#23, #25, #27) are closed.
+
+### Risks for Week 05
+
+- ALSA/JACK warnings persist but do not block demo.
+- espeak remains robotic but understandable for MVP.
+- Demo repeatability depends on manual env setup (backend URL, audio device).
+
+### Recommended Next Action
+
+Week 05 should focus on demo stability and experience polish per `docs/roadmap.md`.
 
 ## AI Tools Used
 
