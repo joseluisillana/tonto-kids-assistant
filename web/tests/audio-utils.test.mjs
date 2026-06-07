@@ -1,12 +1,14 @@
 import assert from "node:assert/strict";
 
 import {
+  calculateDurationProgress,
   calculatePeakAmplitude,
   calculateRmsAmplitude,
   combineFloat32Chunks,
   downsampleBuffer,
   encodeWavPcm16Mono,
   formatBytes,
+  formatClockDuration,
   normalizePeak,
   prepareSpeechSamples,
   selectSpanishVoice,
@@ -106,6 +108,20 @@ function assertAlmostEqual(actual, expected, tolerance = 0.001) {
 {
   assert.equal(formatBytes(512), "512 B");
   assert.equal(formatBytes(1536), "1.5 KB");
+}
+
+{
+  assert.equal(formatClockDuration(0), "00:00");
+  assert.equal(formatClockDuration(3_200), "00:03");
+  assert.equal(formatClockDuration(65_999), "01:05");
+  assert.equal(formatClockDuration(-1), "00:00");
+}
+
+{
+  assert.equal(calculateDurationProgress(0, 10_000), 0);
+  assert.equal(calculateDurationProgress(5_000, 10_000), 50);
+  assert.equal(calculateDurationProgress(15_000, 10_000), 100);
+  assert.equal(calculateDurationProgress(5_000, 0), 0);
 }
 
 {
