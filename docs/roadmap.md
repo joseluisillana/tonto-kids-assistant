@@ -386,7 +386,7 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [x] Definir workflow AI-assisted development.
 - [x] Definir exportación para NotebookLM.
 - [x] Añadir exportación combinada para refrescos ágiles de NotebookLM.
-- [ ] Mantener journal semanal actualizado.
+- [x] Mantener journal semanal actualizado.
 
 ---
 
