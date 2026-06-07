@@ -362,11 +362,34 @@ For the MVP demo, prefer option 2 unless the final presentation specifically nee
 - `specs/web-listening-indicator.md`
 - `docs/plans/web-listening-indicator.md`
 
+### Web Recording Limit Follow-up Decision (2026-06-07)
+
+**Tracking:** GitHub issue #23, part of #18.
+
+After reviewing the merged web listening indicator, a follow-up gap was identified: the UI shows elapsed recording time against the 10 second validation limit, but the capture does not yet make the end of that limit operationally clear.
+
+Human decision:
+
+- The web client should automatically stop browser audio capture when the configured recording limit is reached.
+- The UI should show a short warning that the limit was reached.
+- Sending should remain manual after auto-stop; reaching the timer must not automatically upload audio.
+- The interaction should stay simple and demo-friendly enough for a child to understand: TONTO stopped listening, time is up, and the next step is pressing `Enviar voz`.
+
+Documentation updated on branch `docs/week-04-phase4-web-recording-limit`:
+
+- `specs/web-listening-indicator.md`
+- `docs/plans/web-listening-indicator.md`
+- `docs/specs.md`
+- `docs/roadmap.md`
+
+Implementation should use `feature/week-04-phase4-web-recording-limit` in a dedicated worktree and preserve the existing browser microphone -> WAV PCM -> `/chat/audio` contract.
+
 ### Acceptance Criteria
 
 - [x] Human decision recorded: defer Arduino/LEDs outside the 6-week MVP and implement non-physical indicators first.
 - [x] Separate Raspberry spec and plan exist before code changes.
 - [x] Separate web spec and plan exist before code changes.
+- [x] Follow-up web recording limit decision recorded before implementation.
 - [x] Journal records the Arduino/LED deferral and rationale.
 - [x] Scope remains inside MVP: no persistence, no wake word, no new AI architecture, no broad UI redesign.
 
@@ -390,6 +413,7 @@ Codex: documentation kickoff (Phase 0); Phase 3 planning, prompt calibration, te
 - Arduino should not be treated as automatic implementation work.
 - On 2026-06-07, Arduino/LEDs were explicitly deferred outside the 6-week MVP.
 - On 2026-06-07, non-physical Raspberry and web listening/time indicators were approved as the first Phase 4 implementation path.
+- On 2026-06-07, the web recording limit follow-up was decided: auto-stop at the configured limit, show a child-friendly limit warning, and keep `Enviar voz` manual.
 
 ## Notes
 

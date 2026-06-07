@@ -2,7 +2,7 @@
 
 ## Objective
 
-Implement the web listening/time indicator described in `specs/web-listening-indicator.md` without changing the backend audio contract or widening the product UI.
+Implement the web listening/time indicator and configured recording-limit behavior described in `specs/web-listening-indicator.md` without changing the backend audio contract or widening the product UI.
 
 ## Source Spec
 
@@ -20,6 +20,9 @@ Implement the web listening/time indicator described in `specs/web-listening-ind
 Included:
 
 - Web voice recording time/progress indicator.
+- Configured-limit auto-stop for browser audio capture.
+- A short, child-friendly warning when the recording limit is reached.
+- Manual `Enviar voz` after auto-stop; the client must not auto-upload at the limit.
 - Small changes in the existing React conversation/voice components.
 - Focused tests, type coverage, or build verification appropriate to the changed code.
 - Week 04 journal update with implementation and browser validation evidence.
@@ -30,6 +33,7 @@ Excluded:
 - Backend changes.
 - Manual WAV upload/file picker.
 - New dependencies.
+- Auto-uploading when the recording timer ends.
 - Streaming, silence detection, local STT, local AI, persistence, auth, broad dashboard UI, Arduino, LEDs, or physical states.
 
 ## Implementation Plan
@@ -41,15 +45,21 @@ Excluded:
    - `web/src/types/conversation.ts`
 2. Identify the current recording state and audio duration limits.
 3. Add live elapsed or remaining time while capture status is recording/listening.
-4. Display the indicator in the existing voice panel with compact, accessible text and, optionally, a simple progress bar using existing styles.
-5. Preserve existing upload, thinking, speaking, and error messages.
-6. Do not expose manual file upload.
-7. Add or update focused tests if the repo already has suitable web test coverage for this area.
-8. Update `docs/project-journal/week-04.md` after implementation and browser validation.
+4. Add a narrow timer effect that stops browser audio capture when the configured limit is reached.
+5. Keep the captured audio available after auto-stop so the user can press `Enviar voz` manually.
+6. Show a short warning when the limit is reached, for example: `Tiempo terminado. TONTO dejó de escuchar. Pulsa Enviar voz para mandarlo.`
+7. Display the indicator in the existing voice panel with compact, accessible text and, optionally, a simple progress bar using existing styles.
+8. Preserve existing upload, thinking, speaking, and error messages.
+9. Do not expose manual file upload.
+10. Add or update focused tests if the repo already has suitable web test coverage for this area.
+11. Update `docs/project-journal/week-04.md` after implementation and browser validation.
 
 ## Acceptance Criteria
 
 - Web recording visibly shows listening/time feedback while active.
+- Web recording automatically stops at the configured recording limit.
+- A child-friendly warning appears when the limit is reached.
+- After auto-stop, upload remains manual through `Enviar voz`.
 - Upload/thinking/speaking/error states remain clear after recording ends.
 - Text fallback remains unchanged.
 - `/chat/audio` request shape and WAV preparation remain unchanged.
@@ -91,6 +101,9 @@ Before editing:
 
 Task:
 - Add a compact live listening/time indicator to the existing web voice UI.
+- Add auto-stop at the configured web recording limit.
+- Show a simple, child-friendly warning when the limit is reached.
+- Keep sending manual after auto-stop; do not auto-upload audio.
 - Preserve the current browser microphone -> WAV -> /chat/audio flow.
 - Preserve text fallback behavior.
 - Do not add dependencies.
@@ -108,7 +121,7 @@ Verification:
 
 Delivery:
 - Summarize changed files.
-- Summarize the indicator behavior.
+- Summarize the indicator and recording-limit behavior.
 - Summarize verification and manual validation results.
 ```
 
@@ -116,13 +129,15 @@ Delivery:
 
 - This plan can run in parallel with `docs/plans/raspberry-listening-indicator.md`.
 - If both plans update `docs/project-journal/week-04.md`, reconcile those documentation edits during integration.
-- A simple time/progress indicator is enough; do not redesign the web client.
+- The limit behavior should stay simple enough for a child: TONTO stops listening, the UI says time is up, and the user presses `Enviar voz`.
+- Do not redesign the web client.
 
 ## Workflow Isolation
 
-- Branch: `feature/week-04-phase4-web-listening-indicator`
-- Worktree: use a dedicated worktree when running in parallel with the Raspberry indicator plan.
+- Spec branch: `docs/week-04-phase4-web-recording-limit`
+- Implementation branch: `feature/week-04-phase4-web-recording-limit`
+- Worktree: use a dedicated implementation worktree for `feature/week-04-phase4-web-recording-limit`.
 - Parallel-safe: yes, if Raspberry work uses `feature/week-04-phase4-raspberry-listening-indicator` in a separate worktree.
 - Collision risk: `docs/project-journal/week-04.md` may overlap during evidence updates.
 - Integration note: if the Raspberry PR merges first, update this branch from `main` and reconcile journal entries before merging.
-- GitHub tracking: create or reuse an issue for Week 04 Phase 4 web listening indicator implementation and validation.
+- GitHub tracking: #23 for the web recording limit follow-up, part of #18.

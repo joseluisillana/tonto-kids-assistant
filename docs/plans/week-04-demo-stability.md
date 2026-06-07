@@ -115,6 +115,7 @@ Phase 4: Physical state decision gate (human decision recorded 2026-06-07)
 - Use Phase 3 evidence: users do not have clear feedback for when to stop speaking in Raspberry or web.
 - Decision recorded: LED/Arduino work is deferred outside the 6-week MVP.
 - Decision recorded: implement non-physical time/listening/progress indicators first for Raspberry and web.
+- Follow-up decision recorded for web issue #23: auto-stop browser capture at the configured limit, show a simple warning, and keep upload manual.
 - Separate spec and plan created for Raspberry:
   - `specs/raspberry-listening-indicator.md`
   - `docs/plans/raspberry-listening-indicator.md`
@@ -128,7 +129,7 @@ Decision options:
 1. Defer state work and keep current terminal/web messages.
 2. Implement non-physical indicators first:
    - Raspberry terminal countdown/progress during recording.
-   - Web visible recording time/progress against the audio limit.
+   - Web visible recording time/progress against the audio limit, plus auto-stop, warning, and manual `Enviar voz`.
 3. Prepare Arduino/LED physical states through a separate spec and plan.
 
 Recommended default:
@@ -229,4 +230,5 @@ Delivery:
 
 - The kickoff branch in this local environment may use `docs-week-4-kickoff` because sandboxed Git metadata blocked creating slash-prefixed branches. The project convention remains `<type>/<short-kebab-description>` for normal Git environments.
 - The next implementation action after the Phase 4 decision should be the Raspberry and/or web listening indicator work, not Arduino.
+- For web follow-up #23, the implementation action should use `feature/week-04-phase4-web-recording-limit` in a dedicated worktree and preserve manual send after auto-stop.
 - Arduino/LED work is deferred outside the 6-week MVP and should return only through a future spec and plan.
