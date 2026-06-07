@@ -33,7 +33,7 @@ activate_venv() {
         source "$REPO_ROOT/.venv/bin/activate"
     else
         echo "ERROR: Virtual environment not found at $REPO_ROOT/.venv"
-        echo "Create the venv first: python3 -m venv $REPO_ROOT/.venv && source $REPO_ROOT/.venv/bin/activate && pip install -r $REPO_ROOT/backend/requirements.txt && pip install -r $REPO_ROOT/client/requirements.txt"
+        echo "Create the venv first: python3 -m venv $REPO_ROOT/.venv && source $REPO_ROOT/.venv/bin/activate && pip install -r $REPO_ROOT/client/requirements.txt"
         exit 1
     fi
 }
