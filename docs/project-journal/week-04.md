@@ -1,7 +1,7 @@
 # Week 04 Kickoff
 
 **Date:** 2026-06-05
-**Status:** Phase 2 complete; Phase 3 planned, ready for implementation.
+**Status:** Phase 3 complete; Raspberry 5-turn conversation calibration passed. Next: Phase 4 decision gate.
 
 ## Objective
 
@@ -64,7 +64,7 @@ Phase 5: Week 04 closeout.
 
 ## Recommended Next Action
 
-Phase 2 complete. Phase 3 planned. Next: validate on Raspberry (5 turns) and decide if prompt tuning is needed.
+Phase 3 complete. Next: Phase 4 decision gate, including whether to implement time/listening indicators before the final demo.
 
 ## Phase 1 — Reproducible Demo Baseline (2026-06-05)
 
@@ -169,9 +169,9 @@ Phase 1 acceptance criteria are met. Next: Phase 2 — Demo Resilience and Error
 
 Phase 2 acceptance criteria are met. Next: Phase 3 — Conversation and Memory Calibration.
 
-## Phase 3 — Conversation and Memory Calibration (planned, not implemented)
+## Phase 3 — Conversation and Memory Calibration (completed 2026-06-07)
 
-**Branch:** pending (will be created when implementation starts)
+**Branch:** `feature/week-04-phase3-conversation-calibration`
 
 ### Objective
 
@@ -207,12 +207,70 @@ python3 client/main.py --mode voice
 
 ### Acceptance Criteria
 
-- [ ] TONTO answers all 5 questions without losing context.
-- [ ] If context is lost, the issue is classified (prompt, token limit, or model behavior).
-- [ ] Any code change is documented and tested.
-- [ ] If no change is needed, journal says so.
+- [x] TONTO answers all 5 questions without losing context.
+- [x] Context was not lost in an obvious way.
+- [x] Prompt tuning code change is documented and tested.
+- [x] Journal records the validation result.
 
-### Current Prompt (for reference)
+### Prompt Calibration (2026-06-07)
+
+Code calibration was applied before the final Raspberry 5-turn validation because the previous prompt was generic English-only guidance and did not explicitly enforce the Week 04 demo target: short, Spanish, child-friendly educational answers that use recent context.
+
+Changes:
+
+- Added reusable `OPENAI_INSTRUCTIONS` in `backend/openai_client.py`.
+- Instructions now explicitly require Spanish answers.
+- Instructions now request clear, warm, child-friendly language for children ages 6 to 10.
+- Instructions now request 2 or 3 simple sentences unless the child asks for more.
+- Instructions now tell TONTO to use recent conversation context for follow-up questions.
+- Reduced `max_output_tokens` from `300` to `220`.
+
+Tests:
+
+- Added `tests/test_openai_client.py` to verify the OpenAI payload includes the calibrated instructions, recent context, and output-token limit.
+- `.\scripts\test.ps1 -Target python` passed: 49/49 tests.
+
+### Raspberry Validation Evidence (2026-06-07)
+
+**Environment:**
+- Branch: `feature/week-04-phase3-conversation-calibration`
+- Raspberry branch status: tracking `origin/feature/week-04-phase3-conversation-calibration`
+- Backend: `.\scripts\dev.ps1 -Service backend -AllowLan`
+- Backend URL from Raspberry: `http://192.168.1.91:8000`
+- Raspberry audio device: `plughw:CARD=Device,DEV=0`
+- Raspberry client: `python3 client/main.py --mode voice`
+- Session: same Raspberry voice client session for all 5 turns
+- `/health` from Raspberry: `{"status":"ok"}`
+
+**Backend evidence:**
+
+- `GET /health` from `192.168.1.183`: 200 OK
+- `POST /chat/audio` from `192.168.1.183`: 5/5 requests returned 200 OK
+
+**Conversation sequence:**
+
+| Turn | Child prompt | Transcript | TONTO result |
+|---|---|---|---|
+| 1 | `Hola TONTO, ¿qué es una estrella?` | `Hola tonto, ¿qué es una estrella?` | Explained a star as a hot ball of gas that shines in the sky. |
+| 2 | `¿Y el sol es una estrella?` | `¿Y el Sol es una estrella?` | Correctly answered that the Sun is a nearby star and provides light and heat. |
+| 3 | `¿De qué está hecho el sol?` | `¿De qué está hecho el sol?` | Answered hydrogen and helium, with a simple energy explanation. |
+| 4 | `¿Por qué brilla?` | `Por qué brilla?` | Kept the Sun context and explained fusion as the reason it shines. |
+| 5 | `¿Qué pasaría si el sol no existiera?` | `¿Qué pasaría si el Sol no existiera?` | Explained that Earth would be cold and dark and life would not work as it does now. |
+
+**Human judgment:**
+
+- Responses were coherent with expectations.
+- Responses were in Spanish, educational, and suitable for the MVP demo.
+- The Raspberry `espeak` voice remains robotic but slow and understandable enough for MVP validation.
+- ALSA/JACK warnings appeared again after each response. They are the same known non-blocking warnings from previous hardware validations and did not prevent capture, upload, response, or playback.
+
+**Improvement identified:**
+
+- The operator experience does not clearly show when the user should stop talking.
+- This affects both Raspberry and web validation flows.
+- A time/progress/listening indicator should be considered as a small future demo-resilience improvement before the final demo.
+
+### Previous Prompt (for reference)
 
 ```python
 instructions: (
@@ -222,23 +280,29 @@ instructions: (
 max_output_tokens: 300
 ```
 
-### Potential Changes (if needed)
+### Current Prompt Intent
 
-- Convert prompt to Spanish
-- Add specific instructions for shorter, child-friendly educational answers
-- Reduce `max_output_tokens` from 300 to 150-200
+- Always answer in Spanish.
+- Keep responses short and understandable for children.
+- Use recent conversation context for follow-up questions.
+- Preserve the existing in-memory session architecture and `/chat` + `/chat/audio` contracts.
 
 ### Status
 
-- [ ] Validation on Raspberry (5 turns)
-- [ ] Decision: prompt tuning needed or not
-- [ ] Implementation (if needed)
-- [ ] Tests updated (if needed)
-- [ ] Journal updated with evidence
+- [x] Validation on Raspberry (5 turns)
+- [x] Decision: prompt tuning needed
+- [x] Implementation: small prompt/output-token calibration
+- [x] Tests updated
+- [x] Journal updated with implementation evidence
+- [x] Journal updated with Raspberry validation evidence
+
+### Phase 3 Complete — Ready for Phase 4
+
+Phase 3 acceptance criteria are met. The calibrated prompt is sufficient for the current MVP demo. The next phase is the Week 04 Phase 4 decision gate, with one concrete non-physical state candidate already identified: a time/listening/progress indicator for Raspberry and web.
 
 ## AI Tools Used
 
-Codex: documentation kickoff (Phase 0). OpenCode: Phase 1 validation execution — repo inspection, test runs, backend startup, endpoint validation, journal update.
+Codex: documentation kickoff (Phase 0); Phase 3 planning, prompt calibration, tests, and journal update. OpenCode: Phase 1 validation execution — repo inspection, test runs, backend startup, endpoint validation, journal update.
 
 ## Human Decisions
 

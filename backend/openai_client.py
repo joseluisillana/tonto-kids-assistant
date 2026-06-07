@@ -9,6 +9,13 @@ from backend.state import MAX_HISTORY_MESSAGES
 
 OPENAI_API_URL = "https://api.openai.com/v1/responses"
 DEFAULT_MODEL = "gpt-4o-mini"
+OPENAI_INSTRUCTIONS = (
+    "You are TONTO, a friendly educational assistant for children ages 6 to 10. "
+    "Always answer in Spanish. Use clear, warm, child-friendly language. "
+    "Keep answers short: 2 or 3 simple sentences unless the child asks for more. "
+    "Use the recent conversation context to answer follow-up questions coherently."
+)
+MAX_OUTPUT_TOKENS = 220
 
 
 def call_openai(history: list[dict[str, str]], message: str) -> str:
@@ -18,12 +25,9 @@ def call_openai(history: list[dict[str, str]], message: str) -> str:
 
     payload = {
         "model": os.environ.get("OPENAI_MODEL", DEFAULT_MODEL),
-        "instructions": (
-            "You are TONTO, a friendly educational assistant for children. "
-            "Answer clearly, briefly, and helpfully."
-        ),
+        "instructions": OPENAI_INSTRUCTIONS,
         "input": build_openai_input(history, message),
-        "max_output_tokens": 300,
+        "max_output_tokens": MAX_OUTPUT_TOKENS,
     }
 
     request = urllib.request.Request(

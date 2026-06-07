@@ -1,8 +1,8 @@
 # Week 04 Demo Stability and Scope Kickoff
 
-**Version:** 0.3
-**Status:** Phase 2 complete, Phase 3 ready for implementation
-**Last Updated:** 2026-06-05
+**Version:** 0.4
+**Status:** Phase 3 complete, Phase 4 decision gate next
+**Last Updated:** 2026-06-07
 
 ## Objective
 
@@ -153,7 +153,7 @@ Evidence:
 - 48/48 tests passed (3 new timeout tests added).
 - Journal updated with Phase 2 changes.
 
-### Phase 3 - Conversation and Memory Calibration (ready for implementation)
+### Phase 3 - Conversation and Memory Calibration (completed 2026-06-07)
 
 Purpose: make TONTO feel coherent enough for a short educational demo without adding memory architecture.
 
@@ -177,6 +177,18 @@ Acceptance:
 - TONTO can answer a short sequence of related child-friendly questions without losing context in an obvious way.
 - If no code change is needed, the journal says so.
 - If prompt tuning is needed, it is documented and tested through the existing conversation paths.
+
+Evidence:
+
+- Prompt was calibrated in `backend/openai_client.py` for Spanish, shorter, child-friendly answers that use recent context.
+- `max_output_tokens` was reduced from `300` to `220`.
+- `tests/test_openai_client.py` verifies the OpenAI payload includes the calibrated instructions and output-token limit.
+- Python tests passed: 49/49.
+- Raspberry real validation passed with 5 related voice turns against backend LAN `192.168.1.91:8000`.
+- Backend evidence: `/health` returned 200 from Raspberry and 5/5 `POST /chat/audio` requests returned 200 OK.
+- Human judgment: responses were coherent, Spanish, educational, and audible enough through Raspberry `espeak` for the MVP demo.
+- Known non-blocking ALSA/JACK warnings persisted and did not block capture, upload, response, or playback.
+- Improvement identified for a later decision: Raspberry and web users need a clearer time/listening/progress indicator for when to stop speaking.
 
 ### Phase 4 - Physical State Decision Gate
 
