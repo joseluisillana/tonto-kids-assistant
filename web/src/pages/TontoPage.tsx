@@ -3,6 +3,10 @@ import { ChatComposer } from "../components/ChatComposer.js";
 import { TontoBot } from "../components/TontoBot.js";
 import { TontoLogo } from "../components/TontoLogo.js";
 import type { useConversation } from "../features/conversation/useConversation.js";
+import {
+  calculateDurationProgress,
+  formatRecordingDurationLabel,
+} from "../lib/audio.js";
 import type { BackendStatus } from "../types/conversation.js";
 
 type TontoPageProps = {
@@ -52,6 +56,17 @@ export function TontoPage({ conversation }: TontoPageProps) {
                 {lastAssistantMessage?.text ??
                   "Pulsa Escuchar y cuentame tu pregunta. Estoy listo para aprender contigo."}
               </div>
+              {conversation.voice.captureStatus === "recording" ? (
+                <MainRecordingIndicator
+                  elapsedMs={conversation.voice.recordingElapsedMs}
+                  limitMs={conversation.voice.recordingLimitMs}
+                />
+              ) : null}
+              {conversation.voice.notice ? (
+                <p className="mt-4 rounded-2xl bg-amber-50 px-5 py-3 text-base font-black text-amber-800">
+                  {conversation.voice.notice}
+                </p>
+              ) : null}
               {conversation.error ? (
                 <p className="mt-4 rounded-2xl bg-rose-50 px-5 py-3 text-sm font-semibold text-rose-700">
                   {conversation.error}
@@ -218,6 +233,41 @@ function StatusDetail({ label, value }: { label: string; value: string }) {
     <div className="grid grid-cols-[6.5rem_minmax(0,1fr)] gap-3">
       <span className="text-white/55">{label}</span>
       <span className="break-words font-semibold text-white">{value}</span>
+    </div>
+  );
+}
+
+function MainRecordingIndicator({
+  elapsedMs,
+  limitMs,
+}: {
+  elapsedMs: number;
+  limitMs: number;
+}) {
+  const progress = calculateDurationProgress(elapsedMs, limitMs);
+  const durationLabel = formatRecordingDurationLabel(elapsedMs, limitMs);
+
+  return (
+    <div
+      aria-label={`TONTO esta escuchando ${durationLabel}`}
+      className="mt-4 rounded-3xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-emerald-800"
+      role="status"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-lg font-black">TONTO esta escuchando</p>
+        <p className="text-2xl font-black tabular-nums">
+          {durationLabel}
+        </p>
+      </div>
+      <div className="mt-3 h-3 overflow-hidden rounded-full bg-emerald-100">
+        <div
+          className="h-full rounded-full bg-emerald-500 transition-[width] duration-300"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+      <p className="mt-3 text-sm font-bold">
+        La grabacion se detiene sola al llegar al limite. Pulsa Enviar voz para mandarla.
+      </p>
     </div>
   );
 }

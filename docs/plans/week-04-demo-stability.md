@@ -116,6 +116,7 @@ Phase 4: Physical state decision gate (human decision recorded 2026-06-07)
 - Decision recorded: LED/Arduino work is deferred outside the 6-week MVP.
 - Decision recorded: implement non-physical time/listening/progress indicators first for Raspberry and web.
 - Follow-up decision recorded for web issue #23: auto-stop browser capture at the configured limit, show a simple warning, and keep upload manual.
+- Web issue #25 implemented and human-validated the visible recording duration indicator in the main web interaction surface, preserving the #23 behavior decision and the existing `/chat/audio` contract.
 - Separate spec and plan created for Raspberry:
   - `specs/raspberry-listening-indicator.md`
   - `docs/plans/raspberry-listening-indicator.md`

@@ -1,5 +1,7 @@
 # Web Listening Indicator Implementation Plan
 
+**Status:** Implemented and human-validated on 2026-06-07 for issue #25.
+
 ## Objective
 
 Implement the web listening/time indicator and configured recording-limit behavior described in `specs/web-listening-indicator.md` without changing the backend audio contract or widening the product UI.
@@ -56,15 +58,29 @@ Excluded:
 
 ## Acceptance Criteria
 
-- Web recording visibly shows listening/time feedback while active.
-- Web recording automatically stops at the configured recording limit.
-- A child-friendly warning appears when the limit is reached.
-- After auto-stop, upload remains manual through `Enviar voz`.
-- Upload/thinking/speaking/error states remain clear after recording ends.
-- Text fallback remains unchanged.
-- `/chat/audio` request shape and WAV preparation remain unchanged.
-- Web checks pass.
-- Manual browser validation is recorded in the Week 04 journal.
+- [x] Web recording visibly shows listening/time feedback while active.
+- [x] Web recording automatically stops at the configured recording limit.
+- [x] A child-friendly warning appears when the limit is reached.
+- [x] After auto-stop, upload remains manual through `Enviar voz`.
+- [x] Upload/thinking/speaking/error states remain clear after recording ends.
+- [x] Text fallback remains unchanged.
+- [x] `/chat/audio` request shape and WAV preparation remain unchanged.
+- [x] Web checks pass.
+- [x] Manual browser validation is recorded in the Week 04 journal.
+
+## Implementation Result
+
+Issue #25 repaired the web client so the main TONTO interaction surface now displays the recording duration while browser capture is active. The client shows a live `00:SS / 00:10` counter and progress bar, stops recording automatically at the configured web validation limit, stores the prepared WAV for manual upload, and shows a simple time-up notice instructing the user to press `Enviar voz`.
+
+Verification completed:
+
+```powershell
+.\scripts\test.ps1 -Target web
+.\scripts\build.ps1 -Target web
+git diff --check
+```
+
+Manual human browser validation passed with backend and web client running.
 
 ## Verification
 

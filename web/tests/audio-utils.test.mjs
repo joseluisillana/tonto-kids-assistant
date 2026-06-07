@@ -9,6 +9,7 @@ import {
   encodeWavPcm16Mono,
   formatBytes,
   formatClockDuration,
+  formatRecordingDurationLabel,
   normalizePeak,
   prepareSpeechSamples,
   selectSpanishVoice,
@@ -122,6 +123,10 @@ function assertAlmostEqual(actual, expected, tolerance = 0.001) {
   assert.equal(calculateDurationProgress(5_000, 10_000), 50);
   assert.equal(calculateDurationProgress(15_000, 10_000), 100);
   assert.equal(calculateDurationProgress(5_000, 0), 0);
+}
+
+{
+  assert.equal(formatRecordingDurationLabel(3_200, 10_000), "00:03 / 00:10");
 }
 
 {

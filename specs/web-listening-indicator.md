@@ -1,7 +1,7 @@
 # Web Listening Indicator
 
-**Version:** 0.2
-**Status:** Planned for Week 04 Phase 4; recording limit decision recorded
+**Version:** 0.3
+**Status:** Implemented and human-validated for Week 04 Phase 4
 **Last Updated:** 2026-06-07
 
 ## Objective
@@ -9,6 +9,8 @@
 Improve the web validation client's voice experience by showing a visible listening/time indicator while browser audio capture is active, and by making the configured recording limit clear enough for a child to understand.
 
 The web client already validates the browser microphone to `/chat/audio` loop. Phase 4 adds only the missing user feedback needed to know when TONTO is listening and how much recording time has elapsed or remains.
+
+Implementation note, 2026-06-07: issue #25 repaired the missing visible duration indicator in the main web interaction surface. The web client now shows a live `00:SS / 00:10` recording counter and progress bar while capture is active, automatically stops at the configured web validation limit, keeps upload manual through `Enviar voz`, and shows a child-friendly time-up notice after auto-stop. Human manual validation confirmed the behavior is now as expected.
 
 ## User Experience Goal
 
@@ -102,6 +104,14 @@ After recording stops, the existing upload/thinking/speaking/error statuses shou
 - Manual browser validation records evidence in `docs/project-journal/week-04.md`.
 
 ## Validation
+
+Implemented validation evidence, 2026-06-07:
+
+- `.\scripts\test.ps1 -Target web` passed.
+- `.\scripts\build.ps1 -Target web` passed.
+- `git diff --check` passed.
+- In-app browser loaded the web client at `http://127.0.0.1:5173/` with no console errors on initial load.
+- Human manual browser validation with backend and web client running confirmed the expected behavior: visible duration indicator, live update, auto-stop at the configured limit, warning after auto-stop, and manual `Enviar voz`.
 
 Suggested local validation:
 

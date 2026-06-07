@@ -1,7 +1,7 @@
 # Week 04 Kickoff
 
 **Date:** 2026-06-05
-**Status:** Phase 3 complete; Phase 4 human decision recorded; indicator specs ready.
+**Status:** Phase 3 complete; Phase 4 human decision recorded; web recording indicator implemented and human-validated.
 
 ## Objective
 
@@ -401,6 +401,43 @@ Implementation should use `feature/week-04-phase4-web-recording-limit` in a dedi
 - [x] Recommendation documented.
 - [x] Human scope decision recorded.
 - [x] Parallelizable indicator specs and plans prepared.
+
+## Phase 4 — Web Recording Duration Indicator (implemented 2026-06-07)
+
+**Branch:** `fix/web-recording-duration-indicator`
+
+**Tracking:** GitHub issue #25, related to #23 and parent #18.
+
+### Objective
+
+Repair the web client so a recording duration indicator is visible in the main TONTO interaction surface while browser microphone capture is active.
+
+### Changes
+
+- Added a visible `TONTO esta escuchando` recording indicator to the main web surface.
+- Shows a live `00:SS / 00:10` counter and progress bar while capture is active.
+- Automatically stops browser capture at the configured web validation limit.
+- Keeps upload manual after auto-stop through `Enviar voz`.
+- Shows a simple time-up notice after auto-stop.
+- Keeps the existing browser microphone -> WAV PCM -> `/chat/audio` contract.
+- Added focused web utility coverage for the recording duration label.
+
+### Validation
+
+- `.\scripts\test.ps1 -Target web` passed.
+- `.\scripts\build.ps1 -Target web` passed.
+- `git diff --check` passed.
+- In-app browser loaded `http://127.0.0.1:5173/` with no console errors on initial load.
+- Human manual browser validation with backend and web client running confirmed the behavior is now exactly as expected.
+
+### Status
+
+- [x] Counter visible in the main web interaction surface.
+- [x] Counter updates while recording.
+- [x] Counter resets after stop/cancel/send.
+- [x] Capture auto-stops at the configured limit.
+- [x] User still manually sends with `Enviar voz`.
+- [x] Issue #25 ready to close through the PR.
 
 ## AI Tools Used
 

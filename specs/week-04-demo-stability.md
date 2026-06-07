@@ -1,7 +1,7 @@
 # Week 04 Demo Stability and Scope Kickoff
 
 **Version:** 0.5
-**Status:** Phase 4 human decision recorded; indicator specs prepared
+**Status:** Phase 4 human decision recorded; web indicator implemented and human-validated
 **Last Updated:** 2026-06-07
 
 ## Objective
@@ -250,6 +250,7 @@ Human decision:
 - Non-physical time/listening indicators are the approved Phase 4 implementation path.
 - Raspberry and web indicators must each have their own spec and plan so they can be implemented in parallel.
 - Web recording limit behavior is decided for follow-up #23: stop capture automatically at the configured limit, warn that time is up, and keep upload manual.
+- Web issue #25 repaired the main web interaction surface so the browser recording duration is visible while capture is active. Human manual validation confirmed the web client now shows the counter/progress indicator, auto-stops at the configured limit, warns that time is up, and keeps `Enviar voz` manual.
 
 ### Phase 5 - Week 04 Closeout
 
