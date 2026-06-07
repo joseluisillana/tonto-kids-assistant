@@ -130,13 +130,15 @@ NotebookLM reads exported repository documentation. It does not replace the repo
 
 ## Git and PR Workflow
 
-Use a lightweight GitHub Flow:
+Use a lightweight GitHub Flow with trunk-based principles:
 
 1. Start from `main`.
 2. Create a short-lived branch for one focused change.
 3. Keep implementation, tests, and documentation together when they describe the same change.
 4. Open a small PR back to `main`.
 5. Merge only after the change is reviewed and the relevant checks or manual validations are clear.
+
+This is the project default because it matches common small-team practice: `main` is the integration branch, PR branches are temporary review/check units, and each PR should be small enough to understand and revert.
 
 Branch names use:
 
@@ -163,6 +165,98 @@ experiment/local-stt-spike
 ```
 
 Avoid tool-owned prefixes such as `codex/` for project branches. Branch names should describe the work, not the assistant that helped with it.
+
+## Parallel Agent Workflow
+
+When multiple agents or work items run at the same time, isolate them with Git worktrees.
+
+The rule is:
+
+```text
+one coherent work item -> one branch -> one worktree when parallel -> one PR
+```
+
+A work item is a change that can be planned, implemented, verified, reviewed, and merged independently. It can include code, tests, docs, and specs when they describe the same behavior.
+
+Good work items:
+
+- `feature/week-04-phase4-raspberry-listening-indicator`
+- `feature/week-04-phase4-web-listening-indicator`
+- `docs/parallel-agent-workflow`
+
+Too broad:
+
+- `feature/week-04-everything`
+- `docs/update-all-docs`
+- one branch shared by two agents editing unrelated areas.
+
+Use a separate worktree whenever two agents could otherwise edit the same checkout:
+
+```powershell
+git switch main
+git pull --ff-only
+git worktree add ..\tonto-worktrees\week-04-phase4-raspberry-listening-indicator -b feature/week-04-phase4-raspberry-listening-indicator main
+git worktree add ..\tonto-worktrees\week-04-phase4-web-listening-indicator -b feature/week-04-phase4-web-listening-indicator main
+git worktree list
+```
+
+Rules for parallel agents:
+
+- Do not run parallel agents in the same working tree.
+- Do not let two agents edit the same branch at the same time.
+- Do not edit on `main` unless the developer explicitly asks for it.
+- Keep each branch short-lived and focused.
+- Push and open a PR for each work item.
+- Merge parallel PRs one at a time.
+- After one parallel PR merges, update the remaining branches from `main` and reconcile docs or journal changes before merging the next PR.
+- Delete merged branches and remove stale worktrees.
+
+Cleanup commands:
+
+```powershell
+git worktree list
+git worktree remove ..\tonto-worktrees\<worktree-name>
+git worktree prune
+```
+
+The detailed project spec for this workflow is `specs/parallel-agent-workflow.md`, with its paired plan in `docs/plans/parallel-agent-workflow.md`.
+
+## GitHub CLI and Issues
+
+Use `git` for local repository operations:
+
+- `git status --short --branch`
+- `git diff`
+- `git switch`
+- `git worktree`
+- `git add`
+- `git commit`
+- `git log`
+
+Prefer GitHub CLI (`gh`) for GitHub operations:
+
+- `gh pr create`
+- `gh pr view`
+- `gh pr checks`
+- `gh pr merge`
+- `gh issue create`
+- `gh issue view`
+- `gh issue list`
+- `gh issue edit`
+
+If `gh` is unavailable, unauthenticated, or blocked by sandbox/network restrictions, report that clearly and use the safest fallback only when it still preserves the workflow.
+
+Use GitHub Issues when a work item needs coordination beyond one immediate PR:
+
+- each active implementation phase,
+- each parallel work item with its own branch/worktree,
+- Raspberry or browser validation tasks,
+- known demo risks,
+- follow-up decisions that should not live only in chat.
+
+Do not create issues for every tiny edit. Prefer an issue when tracking improves coordination, evidence, or handoff quality.
+
+When an issue exists, reference it from the PR body. Use GitHub closing keywords only when merging the PR should truly close the issue.
 
 ## Spec Handoff Workflow
 
@@ -223,6 +317,8 @@ Minimum required gate:
 4. Do not use tool-owned prefixes such as `codex/` unless the developer explicitly asks for them.
 5. If `main` has uncommitted changes, stop and ask before moving, stashing, committing, discarding, or editing those changes.
 6. Apply the same gate before running formatters, generators, export scripts, or other commands that write repository files.
+7. For parallel work, confirm the current checkout is the dedicated worktree for this work item.
+8. If the work item depends on a recently merged PR, update from `main` before editing.
 
 ## Commit Messages
 
