@@ -1,7 +1,7 @@
 # Week 04 Kickoff
 
 **Date:** 2026-06-05
-**Status:** Phase 3 complete; Raspberry 5-turn conversation calibration passed. Next: Phase 4 decision gate.
+**Status:** Phase 3 complete; Phase 4 decision gate prepared.
 
 ## Objective
 
@@ -64,7 +64,7 @@ Phase 5: Week 04 closeout.
 
 ## Recommended Next Action
 
-Phase 3 complete. Next: Phase 4 decision gate, including whether to implement time/listening indicators before the final demo.
+Phase 4 decision gate prepared. Next: make a human scope decision before any implementation.
 
 ## Phase 1 — Reproducible Demo Baseline (2026-06-05)
 
@@ -299,6 +299,68 @@ max_output_tokens: 300
 ### Phase 3 Complete — Ready for Phase 4
 
 Phase 3 acceptance criteria are met. The calibrated prompt is sufficient for the current MVP demo. The next phase is the Week 04 Phase 4 decision gate, with one concrete non-physical state candidate already identified: a time/listening/progress indicator for Raspberry and web.
+
+## Phase 4 — Physical State Decision Gate (kickoff prepared 2026-06-07)
+
+**Branch:** `docs/week-04-phase4-kickoff`
+
+### Objective
+
+Decide whether the final MVP demo needs explicit state feedback before adding any implementation.
+
+Phase 4 is a decision gate, not automatic Arduino work. The decision should compare physical LEDs against simpler non-physical indicators and the option to defer both.
+
+### Inputs from Phase 3
+
+- Raspberry 5-turn validation passed.
+- TONTO responses are coherent enough for the current MVP demo.
+- Audio playback is understandable but robotic.
+- ALSA/JACK warnings remain noisy but non-blocking.
+- The main operator UX gap is knowing when the user should stop speaking.
+- The same timing/listening uncertainty exists in both Raspberry and web validation flows.
+
+### Candidate State Vocabulary
+
+- `idle`: ready for the next interaction.
+- `listening`: recording audio.
+- `uploading`: sending audio to backend.
+- `thinking`: waiting for STT and response generation.
+- `speaking`: playing the response.
+- `error`: capture, network, STT, backend, or playback failure.
+
+### Decision Options
+
+1. **Defer physical and non-physical state work.**
+   - Use current terminal/web messages only.
+   - Lowest scope, but leaves the known operator uncertainty in place.
+
+2. **Implement non-physical time/listening indicators first.**
+   - Raspberry: terminal countdown/progress during fixed-duration recording.
+   - Web: visible recording time/progress against the audio limit.
+   - No new hardware, no new dependencies expected, directly addresses the Phase 3 UX gap.
+
+3. **Prepare Arduino/LED physical states.**
+   - Create a separate spec and plan before any code.
+   - Higher demo value if the physical assistant needs visible presence, but higher hardware and integration risk.
+
+### Recommendation for Decision
+
+For the MVP demo, prefer option 2 unless the final presentation specifically needs physical LEDs. It addresses a validated usability problem with less scope than Arduino and keeps the Raspberry as a thin client.
+
+### Acceptance Criteria
+
+- [ ] Human decision recorded: defer, non-physical indicators first, Arduino/LED spec, or combined approach.
+- [ ] If implementation is approved, a separate spec and plan exist before code changes.
+- [ ] If implementation is deferred, journal records the deferral and rationale.
+- [ ] Scope remains inside MVP: no persistence, no wake word, no new AI architecture, no broad UI redesign.
+
+### Kickoff Status
+
+- [x] Phase 3 evidence reviewed.
+- [x] Candidate state vocabulary drafted.
+- [x] Decision options drafted.
+- [x] Recommendation documented.
+- [ ] Human scope decision pending.
 
 ## AI Tools Used
 

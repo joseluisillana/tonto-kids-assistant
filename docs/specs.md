@@ -57,10 +57,10 @@ Semana 4 empieza como una preparación documental para agentes IA y después ava
 2. **Baseline reproducible de la demo actual** — completado 2026-06-05. 3 voice turns en Raspberry real validados, memoria corta confirmada, `/chat` y `/chat/audio` funcionando.
 3. **Resiliencia y errores observados** — completado 2026-06-05. Timeouts de cliente ajustados y 48/48 tests pasados.
 4. **Calibración conversacional con la memoria corta en proceso ya existente** — completado 2026-06-07. Prompt calibrado, 49/49 tests pasados y 5 voice turns relacionados en Raspberry real validados.
-5. Decisión explícita sobre estados físicos mínimos e indicadores no físicos de tiempo/escucha.
+5. **Decisión explícita sobre estados físicos mínimos e indicadores no físicos de tiempo/escucha** — kickoff preparado 2026-06-07; decisión humana pendiente.
 6. Closeout con evidencia.
 
-La memoria de Semana 4 no implica persistencia, perfiles, memoria vectorial ni multiusuario. Los estados físicos no implican Arduino automático; Arduino/LEDs requieren una decisión humana y una spec/plan separados antes de código. La validación de Fase 3 identificó como mejora candidata un indicador de tiempo/escucha para Raspberry y web, también sujeto a decisión antes de implementarse.
+La memoria de Semana 4 no implica persistencia, perfiles, memoria vectorial ni multiusuario. Los estados físicos no implican Arduino automático; Arduino/LEDs requieren una decisión humana y una spec/plan separados antes de código. La Fase 4 compara deferir, implementar indicadores no físicos de tiempo/escucha primero, o preparar Arduino/LEDs con una spec separada.
 
 ## Fuera de Alcance del Arranque de Semana 4
 
