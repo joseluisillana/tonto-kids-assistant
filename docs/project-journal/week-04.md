@@ -439,6 +439,126 @@ Repair the web client so a recording duration indicator is visible in the main T
 - [x] User still manually sends with `Enviar voz`.
 - [x] Issue #25 ready to close through the PR.
 
+## Phase 4 — Raspberry Listening Indicator Validation (planned 2026-06-07)
+
+**Branch:** `docs/week-04-phase4-raspberry-listening-validation`
+**Tracking:** GitHub issue #27 (open), part of #18.
+
+### Objective
+
+Validate the Raspberry listening indicator on real hardware per `specs/raspberry-listening-indicator.md` and close issue #27.
+
+### Pre-conditions (all met)
+
+- [x] Indicator implementation merged into `main` (`client/main.py:114-192`).
+- [x] Unit tests pass (`_format_listening_progress`, `_show_listening_indicator`, `_stop_listening_indicator`).
+- [x] Spec exists: `specs/raspberry-listening-indicator.md`.
+- [x] Plan exists: `docs/plans/raspberry-listening-indicator.md`.
+
+### Implementation Status
+
+The following code is already on `main`:
+
+| Function | Location | Purpose |
+|---|---|---|
+| `_format_listening_progress()` | `client/main.py:168` | Returns `"Listening: X/Ys"` string |
+| `_show_listening_indicator()` | `client/main.py:172` | Daemon thread: prints countdown during capture |
+| `_stop_listening_indicator()` | `client/main.py:185` | Signals thread to stop and joins |
+| `capture_audio(show_progress=True)` | `client/main.py:98` | Voice loop already passes `show_progress=True` |
+
+### Validation Steps (pending Raspberry hardware)
+
+1. Pull latest `main` on Raspberry:
+   ```bash
+   cd ~/tonto-kids-assistant
+   git checkout main
+   git pull
+   ```
+
+2. Activate venv and set env vars:
+   ```bash
+   source .venv/bin/activate
+   export TONTO_BACKEND_URL=http://192.168.1.91:8000
+   export TONTO_AUDIO_DEVICE=plughw:CARD=Device,DEV=0
+   ```
+
+3. Run the client:
+   ```bash
+   python3 client/main.py --mode voice
+   ```
+
+4. Complete at least 2 voice turns and confirm:
+   - [ ] `Listening for 6s...` appears when recording starts.
+   - [ ] `Listening: 1/6s`, `Listening: 2/6s`, ... updates live.
+   - [ ] `Listening complete.` or `Uploading...` appears after capture ends.
+   - [ ] Transcript, response, and espeak playback still work.
+   - [ ] Text mode (`--mode text`) is unchanged.
+
+5. Record evidence below.
+
+### Evidence (2026-06-07)
+
+**Environment:**
+- Branch: `main` (synced with `origin/main`)
+- Backend: `http://192.168.1.91:8000` (Windows, LAN mode)
+- Raspberry audio device: `plughw:CARD=Device,DEV=0`
+- Session: `local-session-9f5600d5-e159-484f-a961-d078753e8f9f`
+- Commands used:
+  ```bash
+  git checkout main && git pull
+  source .venv/bin/activate
+  export TONTO_BACKEND_URL=http://192.168.1.91:8000
+  export TONTO_AUDIO_DEVICE=plughw:CARD=Device,DEV=0
+  python3 client/main.py --mode voice
+  ```
+
+**Turn 1:**
+- Indicator visible: `Listening for 6s...` then `Listening: 1/6s` through `Listening: 6/6s` ✅
+- `Listening complete.` appeared after capture ✅
+- `Uploading...` transition clear ✅
+- Transcript: `Esta es una prueba, esta es una prueba, esta es una prueba, esta es una prueba.`
+- TONTO: `¡Hola! ¿Cómo te puedo ayudar hoy? Si tienes alguna pregunta o algo que quieras aprender, aquí estoy.`
+- espeak: Audible ✅
+
+**Turn 2:**
+- Indicator visible: `Listening for 6s...` then `Listening: 1/6s` through `Listening: 6/6s` ✅
+- `Listening complete.` appeared after capture ✅
+- `Uploading...` transition clear ✅
+- Transcript: `¿Cuál es la última película que se ha hecho sobre Superman?`
+- TONTO: `La última película de Superman que se lanzó fue "Zack Snyder's Justice League" en 2021. También hay una nueva película de Superman en camino llamada "Superman: Legacy". ¿Te gusta Superman?`
+- espeak: Audible ✅
+
+**Observations:**
+
+| Check | Result | Notes |
+|---|---|---|
+| Indicator visible during capture | ✅ | `Listening for 6s...` + live counter |
+| Timer updates live | ✅ | 1/6s through 6/6s, 1 per second |
+| Transition to uploading clear | ✅ | `Listening complete.` → `Uploading...` |
+| Transcript works | ✅ | Both turns accurate |
+| Response works | ✅ | Both turns coherent |
+| espeak works | ✅ | Audible and understandable |
+| ALSA/JACK warnings | ✅ Known, non-blocking | Same warnings as previous validations, do not affect capture or playback |
+
+**Human judgment:**
+- Does the indicator improve the demo operator experience? **Yes.** The operator now has clear visual feedback for when the child should stop speaking and when capture is complete. This directly addresses the Phase 3 UX gap.
+- Any errors observed? **No.** Only the known ALSA/JACK warnings that have been present since Week 03.
+
+### Acceptance Criteria
+
+- [x] Listening indicator visible in terminal during audio capture.
+- [x] Elapsed or remaining time updates live while recording.
+- [x] Transition from listening to uploading is clear in the terminal.
+- [x] Existing voice loop (transcript, response, espeak) still works.
+- [x] Text mode (`--mode text`) is unchanged.
+- [x] Evidence recorded in this journal section.
+
+### Status
+
+- [x] Raspberry hardware validation completed.
+- [x] Evidence recorded above.
+- [x] Issue #27 closed.
+
 ## AI Tools Used
 
 Codex: documentation kickoff (Phase 0); Phase 3 planning, prompt calibration, tests, and journal update. OpenCode: Phase 1 validation execution — repo inspection, test runs, backend startup, endpoint validation, journal update.
