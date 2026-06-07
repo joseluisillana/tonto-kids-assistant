@@ -93,6 +93,9 @@ Explicitly out of scope for this first milestone:
 - Use one branch and one PR per coherent work item.
 - Keep work item branches short-lived and focused.
 - For parallel agent work, use one Git worktree per agent/work item. Do not run parallel agents in the same working tree or on the same branch.
+- Use `git` for local repository operations such as status, diff, branch, switch, worktree, add, commit, and log.
+- Prefer GitHub CLI (`gh`) for GitHub operations such as PR creation/view/checks/merge and issue creation/view/update.
+- For phases, parallel work, hardware validation, or multi-session work, create or reuse a GitHub Issue before implementation and reference it from the PR.
 - Use Conventional Commits when preparing commits, such as `feat:`, `fix:`, `docs:`, `chore:`, `test:`, or `refactor:`.
 - Keep PRs focused on one coherent change.
 - Include docs or specs in the same change when behavior, architecture, setup, scope, or workflow changes.

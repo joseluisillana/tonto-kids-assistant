@@ -93,6 +93,7 @@ For every branch/PR, record the relevant items:
 - AI tools used and their role,
 - checks or scripts run,
 - manual browser or Raspberry validation,
+- GitHub Issue or PR link when used,
 - remaining risks or follow-up work.
 
 For parallel work, keep evidence attached to the branch that produced it. If multiple parallel PRs update the same journal or roadmap section, merge one PR first, update the remaining branch from `main`, and reconcile the documentation before the second PR merges.

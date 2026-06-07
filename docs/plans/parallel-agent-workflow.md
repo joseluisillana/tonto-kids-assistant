@@ -23,6 +23,8 @@ Included:
 - Documentation-only workflow update.
 - Formal rules for one work item per branch/PR.
 - Formal rules for one worktree per parallel agent/work item.
+- Formal rules for using GitHub Issues to track phases, parallel tasks, validation, and multi-session work.
+- Formal rules for using `gh` as the preferred tool for GitHub PR/check/issue operations.
 - References to standard GitHub Flow, trunk-based development, small changes, and Git worktrees.
 - Updates to existing Phase 4 indicator plans so they can be launched safely in parallel.
 
@@ -51,7 +53,11 @@ Excluded:
 5. Update `docs/documentation-workflow.md` with evidence expectations for each work item.
 6. Update `docs/plans/TEMPLATE-spec-implementation-plan.md` with a `Workflow Isolation` section.
 7. Update existing Raspberry and web indicator plans to state they should run in separate branches/worktrees.
-8. Record the durable process decision in `docs/decisions.md`.
+8. Add GitHub CLI guidance:
+   - `git` remains the default for local repo state and content changes.
+   - `gh` is preferred for PRs, checks, merges, issues, and GitHub metadata.
+9. Add issue-tracking guidance for work items that span phases, parallel branches, hardware validation, or multiple sessions.
+10. Record the durable process decision in `docs/decisions.md`.
 
 ## Acceptance Criteria
 
@@ -60,6 +66,8 @@ Excluded:
 - Human-facing workflow guidance is present in `docs/ai-assisted-workflow.md`.
 - Documentation evidence expectations are present in `docs/documentation-workflow.md`.
 - Future plans have a place to state whether they are parallelizable.
+- Future plans can state whether a GitHub Issue should track the work.
+- Agents are told to prefer `gh` for GitHub PR/check/issue operations.
 - Raspberry and web listening indicator plans explicitly use separate branches/worktrees.
 - No code behavior changes are made.
 
@@ -91,6 +99,8 @@ Before editing:
 Task:
 - Update repository workflow documentation so every coherent work item uses its own branch and PR.
 - Add explicit Git worktree isolation rules for parallel agents.
+- Add explicit GitHub Issue tracking rules for phases, parallel tasks, validation, and multi-session work.
+- Add explicit `gh` usage guidance for GitHub PR/check/issue operations.
 - Keep GitHub Flow and short-lived branches as the base workflow.
 - Update AGENTS.md, docs/ai-assisted-workflow.md, docs/documentation-workflow.md, docs/plans/TEMPLATE-spec-implementation-plan.md, docs/decisions.md, and the Phase 4 indicator plans.
 - Do not change product code.

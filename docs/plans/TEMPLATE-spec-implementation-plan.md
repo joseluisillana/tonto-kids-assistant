@@ -82,6 +82,7 @@ Delivery:
 - Parallel-safe: state whether this work can run alongside other active plans.
 - Collision risk: list files likely to overlap with related work.
 - Integration note: explain what to do if a related PR merges first.
+- GitHub tracking: state whether this work should create or reuse a GitHub Issue.
 
 ## Notes / Assumptions
 

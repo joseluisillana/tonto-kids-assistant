@@ -221,6 +221,43 @@ git worktree prune
 
 The detailed project spec for this workflow is `specs/parallel-agent-workflow.md`, with its paired plan in `docs/plans/parallel-agent-workflow.md`.
 
+## GitHub CLI and Issues
+
+Use `git` for local repository operations:
+
+- `git status --short --branch`
+- `git diff`
+- `git switch`
+- `git worktree`
+- `git add`
+- `git commit`
+- `git log`
+
+Prefer GitHub CLI (`gh`) for GitHub operations:
+
+- `gh pr create`
+- `gh pr view`
+- `gh pr checks`
+- `gh pr merge`
+- `gh issue create`
+- `gh issue view`
+- `gh issue list`
+- `gh issue edit`
+
+If `gh` is unavailable, unauthenticated, or blocked by sandbox/network restrictions, report that clearly and use the safest fallback only when it still preserves the workflow.
+
+Use GitHub Issues when a work item needs coordination beyond one immediate PR:
+
+- each active implementation phase,
+- each parallel work item with its own branch/worktree,
+- Raspberry or browser validation tasks,
+- known demo risks,
+- follow-up decisions that should not live only in chat.
+
+Do not create issues for every tiny edit. Prefer an issue when tracking improves coordination, evidence, or handoff quality.
+
+When an issue exists, reference it from the PR body. Use GitHub closing keywords only when merging the PR should truly close the issue.
+
 ## Spec Handoff Workflow
 
 Whenever a spec is created or materially changed, the same change should also create or update an execution plan in `docs/plans/`.

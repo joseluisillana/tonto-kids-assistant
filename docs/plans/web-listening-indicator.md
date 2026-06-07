@@ -125,3 +125,4 @@ Delivery:
 - Parallel-safe: yes, if Raspberry work uses `feature/week-04-phase4-raspberry-listening-indicator` in a separate worktree.
 - Collision risk: `docs/project-journal/week-04.md` may overlap during evidence updates.
 - Integration note: if the Raspberry PR merges first, update this branch from `main` and reconcile journal entries before merging.
+- GitHub tracking: create or reuse an issue for Week 04 Phase 4 web listening indicator implementation and validation.
