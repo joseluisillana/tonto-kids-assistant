@@ -14,7 +14,7 @@ check_backend_health() {
     local attempt=1
     while [ $attempt -le $HEALTH_RETRIES ]; do
         echo "Checking backend health ($attempt/$HEALTH_RETRIES)..."
-        response=$(curl -sf "$TONTO_BACKEND_URL/health" 2>/dev/null || true)
+        response=$(curl -sf --connect-timeout 5 "$TONTO_BACKEND_URL/health" 2>/dev/null || true)
         if echo "$response" | grep -q '"status":"ok"'; then
             echo "Backend is healthy."
             return 0
