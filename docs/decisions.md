@@ -99,3 +99,16 @@ The original roadmap theme of memory and physical states is narrowed for the MVP
 Physical states are a decision gate, not automatic Arduino work. Arduino/LED implementation may be considered only after the current voice demo is run repeatedly and a human decision confirms that physical indicators directly improve the final demo. If accepted, Arduino work needs its own narrow spec and plan before code changes.
 
 The Week 04 kickoff itself is documentation-only: spec, implementation plan, roadmap alignment, and journal setup for AI-assisted agents.
+
+## D021 - Week 04 Phase 4 indicator scope
+
+Defer Arduino and LED integration outside the 6-week MVP. Treat physical indicators as future TONTO work for a later version, not as active Week 04 implementation scope.
+
+Implement non-physical listening/time indicators first because Phase 3 Raspberry validation showed that operators do not clearly know when the child should stop speaking. This affects both the Raspberry terminal voice loop and the web voice validation loop.
+
+Raspberry and web indicators must be specified and planned separately before code so they can be implemented in parallel while preserving the same backend contracts. The paired specs and plans are:
+
+- `specs/raspberry-listening-indicator.md`
+- `docs/plans/raspberry-listening-indicator.md`
+- `specs/web-listening-indicator.md`
+- `docs/plans/web-listening-indicator.md`

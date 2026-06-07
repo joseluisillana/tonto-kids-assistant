@@ -1,7 +1,7 @@
 # Week 04 Demo Stability and Scope Kickoff
 
 **Version:** 0.5
-**Status:** Phase 4 decision gate prepared, human scope decision pending
+**Status:** Phase 4 human decision recorded; indicator specs prepared
 **Last Updated:** 2026-06-07
 
 ## Objective
@@ -49,7 +49,7 @@ Existing implementation facts:
 The original roadmap described Week 04 as "memoria simple y estados físicos". That needs a narrow MVP adjustment:
 
 - "Memoria simple" should mean validating and, only if needed, lightly tuning the existing short in-memory session behavior. It must not become persistence, vector memory, user profiles, or advanced personalization.
-- "Estados físicos" should be treated as a decision gate and optional spike, not an automatic Arduino implementation. Arduino/LED work should begin only if it clearly improves the final demo and the user explicitly accepts that scope.
+- "Estados físicos" should be treated as a decision gate and optional spike, not an automatic Arduino implementation. The 2026-06-07 human decision defers Arduino/LED work outside the 6-week MVP and approves non-physical indicators first.
 - The main Week 04 value should be repeatability: fewer surprises, clearer failure modes, and a runbook agents and humans can follow.
 
 ## Phased Milestones
@@ -190,7 +190,7 @@ Evidence:
 - Known non-blocking ALSA/JACK warnings persisted and did not block capture, upload, response, or playback.
 - Improvement identified for a later decision: Raspberry and web users need a clearer time/listening/progress indicator for when to stop speaking.
 
-### Phase 4 - Physical State Decision Gate (kickoff prepared 2026-06-07)
+### Phase 4 - Physical State Decision Gate (human decision recorded 2026-06-07)
 
 Purpose: decide whether physical LED states or simpler non-physical indicators are worth implementing before the final demo.
 
@@ -205,11 +205,12 @@ Included:
   - error.
 - Use Phase 3 evidence that both Raspberry and web make it hard to know when to stop speaking.
 - Decide whether those states need Arduino LEDs, terminal/web status only, a time/listening/progress indicator, or no implementation for the MVP.
-- If Arduino is accepted later, prepare a separate narrow spec and plan before code.
+- Record the human decision before implementation.
+- Prepare separate narrow specs and plans before code.
 
 Excluded:
 
-- Automatic Arduino implementation in this kickoff.
+- Automatic Arduino implementation.
 - Complex animations.
 - Sensors.
 - Buttons.
@@ -220,9 +221,13 @@ Excluded:
 
 Acceptance:
 
-- A human decision is recorded: defer, implement non-physical indicators first, prepare Arduino/LEDs, or use a combined approach.
-- If any implementation is approved, a separate spec and plan exist before code changes.
-- If the decision is deferral, the journal records the rationale.
+- A human decision is recorded: Arduino/LEDs are deferred outside the 6-week MVP, and non-physical indicators are approved first.
+- Separate specs and plans exist before code changes:
+  - `specs/raspberry-listening-indicator.md`
+  - `docs/plans/raspberry-listening-indicator.md`
+  - `specs/web-listening-indicator.md`
+  - `docs/plans/web-listening-indicator.md`
+- The journal records the deferral rationale and the approved implementation order.
 - MVP constraints remain intact: no persistence, wake word, local STT, local AI, auth, multi-user behavior, or advanced UI.
 
 Decision options:
@@ -237,6 +242,12 @@ Recommendation:
 
 - Prefer non-physical time/listening indicators first unless the final presentation specifically needs visible LEDs.
 - This directly addresses the Phase 3 usability gap with lower hardware risk than Arduino.
+
+Human decision:
+
+- Arduino and LED integration are deferred outside the 6-week MVP and treated as future TONTO work.
+- Non-physical time/listening indicators are the approved Phase 4 implementation path.
+- Raspberry and web indicators must each have their own spec and plan so they can be implemented in parallel.
 
 ### Phase 5 - Week 04 Closeout
 
