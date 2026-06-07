@@ -1,4 +1,4 @@
-# Week 05 Kickoff
+﻿# Week 05 Kickoff
 
 **Date:** 2026-06-08
 **Status:** Kickoff; Phase 0 complete.
@@ -53,7 +53,7 @@ Phase 1: create a demo runbook and startup script to reduce operator friction.
 
 ## AI Tools Used
 
-(none yet — kickoff phase)
+(none yet â€” kickoff phase)
 
 ## Human Decisions
 
@@ -63,3 +63,43 @@ Phase 1: create a demo runbook and startup script to reduce operator friction.
 
 - Week 05 applies the MVP rule: no new features unless they directly unblock the demo.
 - ALSA/JACK warnings are a known non-blocking issue from Week 03-04; they should be documented or suppressed, not "fixed" with architecture changes.
+
+
+## Phase 1 — Demo Runbook and Startup Scripts (implemented 2026-06-08)
+
+**Branch:** `feature/week-05-phase1-demo-runbook`
+**Tracking:** GitHub issue #35
+
+### Objective
+
+Reduce the friction of starting a TONTO demo so an operator can start with 1-2 commands.
+
+### Changes
+
+**`scripts/demo-raspberry.sh`** (new):
+- Bash script for Raspberry Pi demo startup.
+- Default env vars: `TONTO_BACKEND_URL`, `TONTO_AUDIO_DEVICE`, `TONTO_RECORD_SECONDS`.
+- Health check with 5 retries and 2s delay before starting.
+- Activates venv and starts client in voice mode.
+
+**`docs/demo-runbook.md`** (new):
+- Prerequisites section.
+- Quick start: 3 commands (backend, Raspberry, web).
+- Full demo flow for Raspberry (5 steps).
+- Full demo flow for web (5 steps).
+- Known warnings (ALSA/JACK) documented as ignorable.
+- Troubleshooting: 6 common failures with fixes.
+
+### Acceptance Criteria
+
+- [x] Demo operator can start with 1-2 commands.
+- [x] Health check with reintentos funciona.
+- [x] Runbook cubre flujo completo de demo Raspberry.
+- [x] Runbook cubre flujo completo de demo web.
+- [x] Warnings ALSA/JACK documentados como ignorables.
+- [x] Troubleshooting cubre fallos comunes de ambos clientes.
+
+### Status
+
+- [ ] Raspberry hardware validation pending.
+- [ ] Issue #35 ready to close.
