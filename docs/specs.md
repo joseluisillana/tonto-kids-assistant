@@ -65,7 +65,7 @@ Specs y planes de Phase 4 preparados antes de código:
 - `specs/raspberry-listening-indicator.md` + `docs/plans/raspberry-listening-indicator.md`
 - `specs/web-listening-indicator.md` + `docs/plans/web-listening-indicator.md`
 
-La spec web registra además la decisión humana del 2026-06-07 para el follow-up #23: la captura web debe hacer auto-stop al llegar al límite configurado, mostrar un aviso simple de límite alcanzado y mantener el envío manual con `Enviar voz`. Issue #25 reparó la superficie principal del cliente web para mostrar un contador visible `00:SS / 00:10` y una barra de progreso mientras TONTO escucha. La validación manual humana confirmó que el comportamiento esperado queda cubierto sin cambiar el contrato `/chat/audio` ni añadir dependencias.
+La spec web registra la decisión humana del 2026-06-07 para el follow-up #23 (cerrada): la captura web debe hacer auto-stop al llegar al límite configurado, mostrar un aviso simple de límite alcanzado y mantener el envío manual con `Enviar voz`. Issue #25 reparó la superficie principal del cliente web para mostrar un contador visible `00:SS / 00:10` y una barra de progreso mientras TONTO escucha. La validación manual humana confirmó que el comportamiento esperado queda cubierto sin cambiar el contrato `/chat/audio` ni añadir dependencias. Ambas issues (#23 y #25) quedan cerradas.
 
 La memoria de Semana 4 no implica persistencia, perfiles, memoria vectorial ni multiusuario. La decisión de Fase 4 difiere Arduino/LEDs fuera del MVP de 6 semanas y aprueba implementar primero indicadores no físicos de tiempo/escucha. Si Arduino/LEDs se retoman en una versión futura de TONTO, deberán tener una spec y plan separados antes de código.
 

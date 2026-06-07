@@ -364,7 +364,7 @@ For the MVP demo, prefer option 2 unless the final presentation specifically nee
 
 ### Web Recording Limit Follow-up Decision (2026-06-07)
 
-**Tracking:** GitHub issue #23, part of #18.
+**Tracking:** GitHub issue #23 (closed 2026-06-07), part of #18.
 
 After reviewing the merged web listening indicator, a follow-up gap was identified: the UI shows elapsed recording time against the 10 second validation limit, but the capture does not yet make the end of that limit operationally clear.
 
@@ -406,7 +406,7 @@ Implementation should use `feature/week-04-phase4-web-recording-limit` in a dedi
 
 **Branch:** `fix/web-recording-duration-indicator`
 
-**Tracking:** GitHub issue #25, related to #23 and parent #18.
+**Tracking:** GitHub issue #25 (closed 2026-06-07), related to #23 (closed) and parent #18.
 
 ### Objective
 
