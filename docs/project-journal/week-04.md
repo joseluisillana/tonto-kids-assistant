@@ -1,7 +1,7 @@
 # Week 04 Kickoff
 
 **Date:** 2026-06-05
-**Status:** Phase 3 complete; Phase 4 human decision recorded; web recording indicator implemented and human-validated.
+**Status:** Week 04 complete (Phases 0-5).
 
 ## Objective
 
@@ -574,7 +574,7 @@ End Week 04 with evidence, not loose impressions.
 | Phase 2: Resilience | ✅ | Timeouts split, 48/48 tests passed |
 | Phase 3: Calibration | ✅ | Prompt calibrated, 5 voice turns on Raspberry, 49/49 tests |
 | Phase 4: Indicators | ✅ | Raspberry validated (2/2), web validated, issues #23/#25/#27 closed |
-| Phase 5: Closeout | ⏳ | This section |
+| Phase 5: Closeout | ✅ | This section |
 
 ### Open Issues at Close
 
