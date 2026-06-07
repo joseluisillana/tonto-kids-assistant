@@ -57,6 +57,7 @@ export type VoiceCaptureStatus =
   | "idle"
   | "requesting-permission"
   | "recording"
+  | "ready-to-send"
   | "encoding"
   | "uploading"
   | "transcribing"
@@ -87,5 +88,6 @@ export type VoiceLoopState = {
   sampleRateHz: number;
   channels: number;
   speechVoice: string | null;
+  notice: string | null;
   error: string | null;
 };

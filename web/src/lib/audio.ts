@@ -269,6 +269,13 @@ export function calculateDurationProgress(
   return Math.max(0, Math.min(100, (elapsedMs / limitMs) * 100));
 }
 
+export function formatRecordingDurationLabel(
+  elapsedMs: number,
+  limitMs: number,
+): string {
+  return `${formatClockDuration(elapsedMs)} / ${formatClockDuration(limitMs)}`;
+}
+
 export function hasSpeechSynthesisSupport(): boolean {
   return (
     typeof window !== "undefined" &&

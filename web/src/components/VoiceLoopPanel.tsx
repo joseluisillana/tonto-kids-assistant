@@ -1,7 +1,7 @@
 import {
   calculateDurationProgress,
   formatBytes,
-  formatClockDuration,
+  formatRecordingDurationLabel,
 } from "../lib/audio.js";
 import type { useConversation } from "../features/conversation/useConversation.js";
 
@@ -60,6 +60,7 @@ export function VoiceLoopPanel({
             limitMs={voice.recordingLimitMs}
           />
         ) : null}
+        {voice.notice ? <NoticeBlock value={voice.notice} /> : null}
         <InfoBlock
           label="Estado tecnico"
           value={`${voice.captureStatus} / ${voice.speechStatus}`}
@@ -126,9 +127,7 @@ function ListeningIndicator({
   limitMs: number;
 }) {
   const progress = calculateDurationProgress(elapsedMs, limitMs);
-  const label = `Escuchando... ${formatClockDuration(elapsedMs)} / ${formatClockDuration(
-    limitMs,
-  )}`;
+  const label = `Escuchando... ${formatRecordingDurationLabel(elapsedMs, limitMs)}`;
 
   return (
     <div
@@ -224,7 +223,7 @@ function DetailRow({ label, value }: { label: string; value: string }) {
 }
 
 function statusTone(status: string): "green" | "amber" | "rose" | "blue" {
-  if (status === "complete" || status === "recording") {
+  if (status === "complete" || status === "recording" || status === "ready-to-send") {
     return "green";
   }
   if (status === "error") {
@@ -234,4 +233,15 @@ function statusTone(status: string): "green" | "amber" | "rose" | "blue" {
     return "amber";
   }
   return "blue";
+}
+
+function NoticeBlock({ value }: { value: string }) {
+  return (
+    <div
+      className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm font-bold text-amber-800 lg:col-span-2"
+      role="status"
+    >
+      {value}
+    </div>
+  );
 }

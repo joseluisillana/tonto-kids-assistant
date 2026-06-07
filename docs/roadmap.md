@@ -210,7 +210,7 @@ La preparación de Semana 4 es documentación-first: specs, planes, roadmap y jo
 - Validación reproducible del loop actual varias veces seguidas.
 - Manejo de errores mejorado solo si la validación detecta bloqueos reales de demo.
 - Calibración de conversación usando la memoria corta en proceso ya existente, sin persistencia — completada con 5 voice turns relacionados en Raspberry real.
-- Gate de decisión para estados físicos mínimos e indicadores de tiempo/escucha: decisión tomada el 2026-06-07. Arduino/LEDs quedan fuera del MVP de 6 semanas; se implementan primero indicadores no físicos de escucha/tiempo para Raspberry y web. El follow-up web #23 queda decidido: auto-stop al límite configurado, aviso simple de límite alcanzado y envío manual.
+- Gate de decisión para estados físicos mínimos e indicadores de tiempo/escucha: decisión tomada el 2026-06-07. Arduino/LEDs quedan fuera del MVP de 6 semanas; se implementan primero indicadores no físicos de escucha/tiempo para Raspberry y web. El follow-up web #23 queda decidido como auto-stop al límite configurado, aviso simple de límite alcanzado y envío manual; la issue #25 reparó el contador visible en la superficie principal web y fue validada manualmente.
 
 ## Fases
 
@@ -218,7 +218,7 @@ La preparación de Semana 4 es documentación-first: specs, planes, roadmap y jo
 1. Baseline de demo reproducible sobre el sistema actual — completado 2026-06-05. 3 voice turns en Raspberry real, memoria corta validada, `/chat` y `/chat/audio` funcionando.
 2. Resiliencia y errores observados durante la demo — completado 2026-06-05.
 3. Calibración conversacional y memoria corta — completado 2026-06-07. Prompt calibrado, 49/49 tests pasados y 5 voice turns relacionados en Raspberry real.
-4. Decisión explícita sobre estados físicos e indicadores no físicos de escucha/tiempo — decisión humana registrada 2026-06-07; specs y planes separados preparados para Raspberry y web; follow-up web #23 decidido para auto-stop, warning y envío manual.
+4. Decisión explícita sobre estados físicos e indicadores no físicos de escucha/tiempo — decisión humana registrada 2026-06-07; specs y planes separados preparados para Raspberry y web; web #23/#25 implementa contador visible, auto-stop al límite, warning y envío manual.
 5. Closeout con evidencia y próximos riesgos.
 
 ## Prioridades

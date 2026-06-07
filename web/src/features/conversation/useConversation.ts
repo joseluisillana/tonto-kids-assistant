@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import type { MutableRefObject } from "react";
 import {
   BackendRequestError,
   checkBackendHealth,
@@ -41,6 +42,12 @@ type CaptureRuntime = {
   chunks: Float32Array[];
 };
 
+type PendingVoiceUpload = {
+  wavBlob: Blob;
+  durationMs: number;
+  wavBytes: number;
+};
+
 export function useConversation() {
   const [sessionId, setSessionId] = useState(createSessionId);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -59,6 +66,11 @@ export function useConversation() {
   );
 
   const captureRuntimeRef = useRef<CaptureRuntime | null>(null);
+  const pendingVoiceUploadRef = useRef<PendingVoiceUpload | null>(null);
+  const recordingLimitTimeoutRef = useRef<ReturnType<typeof globalThis.setTimeout> | null>(
+    null,
+  );
+  const finalizingCaptureRef = useRef(false);
   const mountedRef = useRef(true);
 
   const checkHealth = useCallback(async () => {
@@ -87,8 +99,10 @@ export function useConversation() {
 
     return () => {
       mountedRef.current = false;
+      clearRecordingLimitTimeout(recordingLimitTimeoutRef);
       cancelCapture(captureRuntimeRef.current);
       captureRuntimeRef.current = null;
+      pendingVoiceUploadRef.current = null;
       if (hasSpeechSynthesisSupport()) {
         window.speechSynthesis.cancel();
       }
@@ -266,6 +280,7 @@ export function useConversation() {
       httpStatus: null,
       latencyMs: null,
       speechVoice: null,
+      notice: null,
       error: null,
     }));
     setStatus("listening");
@@ -311,6 +326,7 @@ export function useConversation() {
         silenceGain,
         chunks,
       };
+      pendingVoiceUploadRef.current = null;
 
       setVoice((current) => ({
         ...current,
@@ -325,6 +341,10 @@ export function useConversation() {
           createActivity("recording", "Microfono", "Grabando audio"),
         ),
       );
+      clearRecordingLimitTimeout(recordingLimitTimeoutRef);
+      recordingLimitTimeoutRef.current = globalThis.setTimeout(() => {
+        void finalizeVoiceCapture({ sendAfterFinalize: false, stoppedByLimit: true });
+      }, WEB_VALIDATION_MAX_DURATION_MS);
     } catch (voiceError) {
       cancelCaptureRuntime(stream);
       const message = getVoiceErrorMessage(voiceError);
@@ -334,6 +354,7 @@ export function useConversation() {
         speechStatus: "error",
         recordingStartedAtMs: null,
         recordingElapsedMs: 0,
+        notice: null,
         microphonePermission: isPermissionDenied(voiceError)
           ? "denied"
           : current.microphonePermission,
@@ -347,13 +368,160 @@ export function useConversation() {
     }
   }, [status, voice.captureStatus]);
 
-  const stopVoiceTurn = useCallback(async () => {
+  const uploadPendingVoiceTurn = useCallback(
+    async (pendingUpload: PendingVoiceUpload) => {
+      pendingVoiceUploadRef.current = null;
+      const { durationMs: captureDurationMs, wavBlob, wavBytes } = pendingUpload;
+
+      setVoice((current) => ({
+        ...current,
+        captureStatus: "encoding",
+        durationMs: captureDurationMs,
+        recordingStartedAtMs: null,
+        recordingElapsedMs: 0,
+        wavBytes,
+        wavMimeType: wavBlob.type,
+        notice: null,
+        error: null,
+      }));
+      setActivity((current) =>
+        pushActivity(
+          current,
+          createActivity("uploading", "Audio", "Voz preparada en WAV"),
+        ),
+      );
+
+      const started = performance.now();
+      setVoice((current) => ({
+        ...current,
+        captureStatus: "uploading",
+        httpStatus: null,
+        latencyMs: null,
+      }));
+      setStatus("sending");
+
+      try {
+        const response = await sendAudioTurn(
+          {
+            session_id: sessionId,
+            device_id: WEB_VALIDATION_BACKEND_DEVICE_ID,
+            duration_ms: captureDurationMs,
+            sample_rate_hz: WEB_VALIDATION_SAMPLE_RATE_HZ,
+            channels: WEB_VALIDATION_CHANNELS,
+            language: WEB_VALIDATION_LANGUAGE,
+            audio: wavBlob,
+          },
+          voice.backendUrl,
+        );
+
+        const latency = Math.round(performance.now() - started);
+        setVoice((current) => ({
+          ...current,
+          captureStatus: "transcribing",
+          httpStatus: 200,
+          latencyMs: latency,
+          transcript: response.transcript,
+          response: response.response,
+          error: null,
+        }));
+        setLatestLatencyMs(latency);
+        setMessages((current) => [
+          ...current,
+          {
+            id: crypto.randomUUID(),
+            role: "user",
+            text: response.transcript,
+            createdAt: new Date(),
+          },
+          {
+            id: crypto.randomUUID(),
+            role: "assistant",
+            text: response.response,
+            createdAt: new Date(),
+          },
+        ]);
+        setActivity((current) =>
+          pushActivity(
+            current,
+            createActivity("transcribing", "STT", "Transcripcion recibida"),
+            createActivity("response", "TONTO", "Respuesta educativa lista"),
+          ),
+        );
+        setStatus("thinking");
+        setVoice((current) => ({
+          ...current,
+          speechStatus: "speaking",
+        }));
+        setStatus("speaking");
+
+        const speechResult = await playSpeech(response.response);
+        if (speechResult) {
+          setVoice((current) => ({
+            ...current,
+            captureStatus: "complete",
+            speechStatus: "complete",
+            speechVoice: speechResult.voiceName,
+            error: null,
+          }));
+          setActivity((current) =>
+            pushActivity(
+              current,
+              createActivity("speaking", "Voz", "Respuesta reproducida"),
+            ),
+          );
+          setStatus("speaking");
+          globalThis.setTimeout(() => {
+            if (mountedRef.current) {
+              setStatus("idle");
+            }
+          }, 900);
+        }
+      } catch (voiceError) {
+        const message = getVoiceErrorMessage(voiceError);
+        const httpStatus =
+          voiceError instanceof BackendRequestError ? voiceError.status : null;
+        setVoice((current) => ({
+          ...current,
+          captureStatus: "error",
+          speechStatus: "error",
+          recordingStartedAtMs: null,
+          recordingElapsedMs: 0,
+          httpStatus: httpStatus ?? current.httpStatus,
+          notice: null,
+          error: message,
+        }));
+        setError(message);
+        setStatus("error");
+        setActivity((current) =>
+          pushActivity(current, createActivity("error", "Error", message)),
+        );
+      }
+    },
+    [sessionId, voice.backendUrl],
+  );
+
+  const finalizeVoiceCapture = useCallback(async ({
+    sendAfterFinalize,
+    stoppedByLimit,
+  }: {
+    sendAfterFinalize: boolean;
+    stoppedByLimit: boolean;
+  }) => {
     const runtime = captureRuntimeRef.current;
     if (!runtime) {
+      const pendingUpload = pendingVoiceUploadRef.current;
+      if (sendAfterFinalize && pendingUpload) {
+        await uploadPendingVoiceTurn(pendingUpload);
+      }
+      return;
+    }
+    if (finalizingCaptureRef.current) {
       return;
     }
 
+    finalizingCaptureRef.current = true;
     captureRuntimeRef.current = null;
+    clearRecordingLimitTimeout(recordingLimitTimeoutRef);
     const inputSampleRate = runtime.audioContext.sampleRate;
     cancelCapture(runtime);
 
@@ -366,8 +534,10 @@ export function useConversation() {
         speechStatus: "error",
         recordingStartedAtMs: null,
         recordingElapsedMs: 0,
+        notice: null,
         error: message,
       }));
+      finalizingCaptureRef.current = false;
       setError(message);
       setStatus("error");
       setActivity((current) =>
@@ -387,8 +557,10 @@ export function useConversation() {
         durationMs: preparedAudio.originalDurationMs,
         recordingStartedAtMs: null,
         recordingElapsedMs: 0,
+        notice: null,
         error: message,
       }));
+      finalizingCaptureRef.current = false;
       setError(message);
       setStatus("error");
       setActivity((current) =>
@@ -410,133 +582,55 @@ export function useConversation() {
     const wavBlob = new Blob([wavBytes.buffer as ArrayBuffer], {
       type: WEB_VALIDATION_WAV_MIME_TYPE,
     });
-
-    setVoice((current) => ({
-      ...current,
-      captureStatus: "encoding",
+    const pendingUpload = {
+      wavBlob,
       durationMs: captureDurationMs,
-      recordingStartedAtMs: null,
-      recordingElapsedMs: 0,
       wavBytes: wavBytes.byteLength,
-      wavMimeType: wavBlob.type,
-      error: null,
-    }));
-    setActivity((current) =>
-      pushActivity(
-        current,
-        createActivity("uploading", "Audio", "Voz preparada en WAV"),
-      ),
-    );
+    };
 
-    const started = performance.now();
-    setVoice((current) => ({
-      ...current,
-      captureStatus: "uploading",
-      httpStatus: null,
-      latencyMs: null,
-    }));
-    setStatus("sending");
+    pendingVoiceUploadRef.current = pendingUpload;
+    finalizingCaptureRef.current = false;
 
-    try {
-      const response = await sendAudioTurn(
-        {
-          session_id: sessionId,
-          device_id: WEB_VALIDATION_BACKEND_DEVICE_ID,
-          duration_ms: captureDurationMs,
-          sample_rate_hz: WEB_VALIDATION_SAMPLE_RATE_HZ,
-          channels: WEB_VALIDATION_CHANNELS,
-          language: WEB_VALIDATION_LANGUAGE,
-          audio: wavBlob,
-        },
-        voice.backendUrl,
-      );
-
-      const latency = Math.round(performance.now() - started);
+    if (!sendAfterFinalize) {
       setVoice((current) => ({
         ...current,
-        captureStatus: "transcribing",
-        httpStatus: 200,
-        latencyMs: latency,
-        transcript: response.transcript,
-        response: response.response,
+        captureStatus: "ready-to-send",
+        durationMs: captureDurationMs,
+        recordingStartedAtMs: null,
+        recordingElapsedMs: 0,
+        wavBytes: wavBytes.byteLength,
+        wavMimeType: wavBlob.type,
+        notice: stoppedByLimit
+          ? "Tiempo terminado. TONTO dejo de escuchar. Pulsa Enviar voz para mandarlo."
+          : "Audio listo. Pulsa Enviar voz para mandarlo.",
         error: null,
       }));
-      setLatestLatencyMs(latency);
-      setMessages((current) => [
-        ...current,
-        {
-          id: crypto.randomUUID(),
-          role: "user",
-          text: response.transcript,
-          createdAt: new Date(),
-        },
-        {
-          id: crypto.randomUUID(),
-          role: "assistant",
-          text: response.response,
-          createdAt: new Date(),
-        },
-      ]);
+      setStatus("idle");
       setActivity((current) =>
         pushActivity(
           current,
-          createActivity("transcribing", "STT", "Transcripcion recibida"),
-          createActivity("response", "TONTO", "Respuesta educativa lista"),
+          createActivity(
+            "recording",
+            "Microfono",
+            stoppedByLimit ? "Tiempo maximo alcanzado" : "Grabacion detenida",
+          ),
         ),
       );
-      setStatus("thinking");
-      setVoice((current) => ({
-        ...current,
-        speechStatus: "speaking",
-      }));
-      setStatus("speaking");
-
-      const speechResult = await playSpeech(response.response);
-      if (speechResult) {
-        setVoice((current) => ({
-          ...current,
-          captureStatus: "complete",
-          speechStatus: "complete",
-          speechVoice: speechResult.voiceName,
-          error: null,
-        }));
-        setActivity((current) =>
-          pushActivity(
-            current,
-            createActivity("speaking", "Voz", "Respuesta reproducida"),
-          ),
-        );
-        setStatus("speaking");
-        globalThis.setTimeout(() => {
-          if (mountedRef.current) {
-            setStatus("idle");
-          }
-        }, 900);
-      }
-    } catch (voiceError) {
-      const message = getVoiceErrorMessage(voiceError);
-      const httpStatus =
-        voiceError instanceof BackendRequestError ? voiceError.status : null;
-      setVoice((current) => ({
-        ...current,
-        captureStatus: "error",
-        speechStatus: "error",
-        recordingStartedAtMs: null,
-        recordingElapsedMs: 0,
-        httpStatus: httpStatus ?? current.httpStatus,
-        error: message,
-      }));
-      setError(message);
-      setStatus("error");
-      setActivity((current) =>
-        pushActivity(current, createActivity("error", "Error", message)),
-      );
+      return;
     }
-  }, [sessionId, voice.backendUrl]);
+
+    await uploadPendingVoiceTurn(pendingUpload);
+  }, [uploadPendingVoiceTurn]);
+
+  const stopVoiceTurn = useCallback(async () => {
+    await finalizeVoiceCapture({ sendAfterFinalize: true, stoppedByLimit: false });
+  }, [finalizeVoiceCapture]);
 
   const resetSession = useCallback(() => {
+    clearRecordingLimitTimeout(recordingLimitTimeoutRef);
     cancelCapture(captureRuntimeRef.current);
     captureRuntimeRef.current = null;
+    pendingVoiceUploadRef.current = null;
     if (hasSpeechSynthesisSupport()) {
       window.speechSynthesis.cancel();
     }
@@ -552,8 +646,10 @@ export function useConversation() {
 
   const cancelVoiceTurn = useCallback(() => {
     const hadCapture = captureRuntimeRef.current !== null;
+    clearRecordingLimitTimeout(recordingLimitTimeoutRef);
     cancelCapture(captureRuntimeRef.current);
     captureRuntimeRef.current = null;
+    pendingVoiceUploadRef.current = null;
     if (hasSpeechSynthesisSupport()) {
       window.speechSynthesis.cancel();
     }
@@ -561,20 +657,24 @@ export function useConversation() {
       ...current,
       captureStatus:
         current.captureStatus === "recording" ||
-        current.captureStatus === "requesting-permission"
+        current.captureStatus === "requesting-permission" ||
+        current.captureStatus === "ready-to-send"
           ? "idle"
           : current.captureStatus,
       recordingStartedAtMs:
         current.captureStatus === "recording" ||
-        current.captureStatus === "requesting-permission"
+        current.captureStatus === "requesting-permission" ||
+        current.captureStatus === "ready-to-send"
           ? null
           : current.recordingStartedAtMs,
       recordingElapsedMs:
         current.captureStatus === "recording" ||
-        current.captureStatus === "requesting-permission"
+        current.captureStatus === "requesting-permission" ||
+        current.captureStatus === "ready-to-send"
           ? 0
           : current.recordingElapsedMs,
       speechStatus: current.speechStatus === "speaking" ? "idle" : current.speechStatus,
+      notice: null,
       error: null,
     }));
     if (status === "listening" || status === "speaking" || hadCapture) {
@@ -730,6 +830,7 @@ function createVoiceState(backendUrl: string): VoiceLoopState {
     sampleRateHz: WEB_VALIDATION_SAMPLE_RATE_HZ,
     channels: WEB_VALIDATION_CHANNELS,
     speechVoice: null,
+    notice: null,
     error: null,
   };
 }
@@ -791,6 +892,17 @@ function cancelCaptureRuntime(stream: MediaStream | null) {
   } catch {
     // No-op.
   }
+}
+
+function clearRecordingLimitTimeout(
+  timeoutRef: MutableRefObject<ReturnType<typeof globalThis.setTimeout> | null>,
+) {
+  if (timeoutRef.current === null) {
+    return;
+  }
+
+  globalThis.clearTimeout(timeoutRef.current);
+  timeoutRef.current = null;
 }
 
 async function playSpeech(text: string) {
