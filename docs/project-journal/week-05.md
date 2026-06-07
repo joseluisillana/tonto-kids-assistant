@@ -65,6 +65,7 @@ Phase 1: create a demo runbook and startup script to reduce operator friction.
 - ALSA/JACK warnings are a known non-blocking issue from Week 03-04; they should be documented or suppressed, not "fixed" with architecture changes.
 
 
+
 ## Phase 1 — Demo Runbook and Startup Scripts (implemented 2026-06-08)
 
 **Branch:** `feature/week-05-phase1-demo-runbook`
@@ -90,6 +91,46 @@ Reduce the friction of starting a TONTO demo so an operator can start with 1-2 c
 - Known warnings (ALSA/JACK) documented as ignorable.
 - Troubleshooting: 6 common failures with fixes.
 
+### Validation Evidence (2026-06-08)
+
+**Environment:**
+- Branch: `feature/week-05-phase1-demo-runbook`
+- Backend: `http://192.168.1.91:8000` (Windows, LAN mode)
+- Raspberry audio device: `plughw:CARD=Device,DEV=0`
+- Commands used:
+  `ash
+  chmod +x scripts/demo-raspberry.sh
+  ./scripts/demo-raspberry.sh
+  `
+
+**Observations:**
+
+| Check | Result | Notes |
+|---|---|---|
+| Health check (curl /health) | OK (1/5) | Backend responded immediately |
+| Venv activation | OK | Activate found and sourced |
+| Client starts in voice mode | OK | `--mode voice` launched correctly |
+| Turn 1: indicator visible | OK | `Listening for 6s...` + `Listening: 1/6s` ... `6/6s` |
+| Turn 1: transcript | `Esto es una prueba con el nuevo script de arranque.` | Accurate |
+| Turn 1: response | `¡Hola! ¿Cómo puedo ayudarte hoy?` | Coherent |
+| Turn 1: espeak | Audible | Standard quality |
+| Turn 2: indicator visible | OK | Same as turn 1 |
+| Turn 2: transcript | `Estoy haciendo un trabajo sobre el circo. ¿Conoces algún payaso famoso?` | Accurate |
+| Turn 2: response | `¡Sí! Uno de los payasos más famosos es Emmett Kelly...` | Educational, coherent |
+| Turn 2: espeak | Audible | Standard quality |
+| ALSA/JACK warnings | Known, non-blocking | Same as previous validations |
+| Script shebang BOM | Fixed | Removed UTF-8 BOM after validation |
+
+**Issues found and fixed during validation:**
+- UTF-8 BOM at start of script caused `﻿#!/usr/bin/env: No such file or directory` warning (non-blocking). Fixed by saving without BOM.
+- Venv setup instructions in script referenced PowerShell command (`setup-dev.ps1`). Fixed to show bash instructions.
+- Backend requirements incorrectly included in venv setup message. Fixed to only include client requirements.
+
+**Human judgment:**
+- The script reduces demo startup from 4 manual commands to 1.
+- Health check provides clear feedback before starting.
+- The operator experience is smoother than the previous manual setup.
+
 ### Acceptance Criteria
 
 - [x] Demo operator can start with 1-2 commands.
@@ -101,5 +142,7 @@ Reduce the friction of starting a TONTO demo so an operator can start with 1-2 c
 
 ### Status
 
-- [ ] Raspberry hardware validation pending.
+- [x] Raspberry hardware validation completed.
+- [x] BOM issue fixed.
 - [ ] Issue #35 ready to close.
+
