@@ -17,6 +17,7 @@ import {
   WEB_VALIDATION_BACKEND_DEVICE_ID,
   WEB_VALIDATION_CHANNELS,
   WEB_VALIDATION_LANGUAGE,
+  WEB_VALIDATION_MAX_DURATION_MS,
   WEB_VALIDATION_SAMPLE_RATE_HZ,
   WEB_VALIDATION_WAV_MIME_TYPE,
 } from "../../lib/audio.js";
@@ -258,6 +259,8 @@ export function useConversation() {
       transcript: null,
       response: null,
       durationMs: null,
+      recordingStartedAtMs: null,
+      recordingElapsedMs: 0,
       wavBytes: null,
       wavMimeType: null,
       httpStatus: null,
@@ -313,6 +316,8 @@ export function useConversation() {
         ...current,
         microphonePermission: "granted",
         captureStatus: "recording",
+        recordingStartedAtMs: Date.now(),
+        recordingElapsedMs: 0,
       }));
       setActivity((current) =>
         pushActivity(
@@ -327,6 +332,8 @@ export function useConversation() {
         ...current,
         captureStatus: "error",
         speechStatus: "error",
+        recordingStartedAtMs: null,
+        recordingElapsedMs: 0,
         microphonePermission: isPermissionDenied(voiceError)
           ? "denied"
           : current.microphonePermission,
@@ -357,6 +364,8 @@ export function useConversation() {
         ...current,
         captureStatus: "error",
         speechStatus: "error",
+        recordingStartedAtMs: null,
+        recordingElapsedMs: 0,
         error: message,
       }));
       setError(message);
@@ -376,6 +385,8 @@ export function useConversation() {
         captureStatus: "error",
         speechStatus: "idle",
         durationMs: preparedAudio.originalDurationMs,
+        recordingStartedAtMs: null,
+        recordingElapsedMs: 0,
         error: message,
       }));
       setError(message);
@@ -404,6 +415,8 @@ export function useConversation() {
       ...current,
       captureStatus: "encoding",
       durationMs: captureDurationMs,
+      recordingStartedAtMs: null,
+      recordingElapsedMs: 0,
       wavBytes: wavBytes.byteLength,
       wavMimeType: wavBlob.type,
       error: null,
@@ -508,6 +521,8 @@ export function useConversation() {
         ...current,
         captureStatus: "error",
         speechStatus: "error",
+        recordingStartedAtMs: null,
+        recordingElapsedMs: 0,
         httpStatus: httpStatus ?? current.httpStatus,
         error: message,
       }));
@@ -549,6 +564,16 @@ export function useConversation() {
         current.captureStatus === "requesting-permission"
           ? "idle"
           : current.captureStatus,
+      recordingStartedAtMs:
+        current.captureStatus === "recording" ||
+        current.captureStatus === "requesting-permission"
+          ? null
+          : current.recordingStartedAtMs,
+      recordingElapsedMs:
+        current.captureStatus === "recording" ||
+        current.captureStatus === "requesting-permission"
+          ? 0
+          : current.recordingElapsedMs,
       speechStatus: current.speechStatus === "speaking" ? "idle" : current.speechStatus,
       error: null,
     }));
@@ -614,6 +639,19 @@ export function useConversation() {
     () => messages.filter((message) => message.role === "user").length,
     [messages],
   );
+  const liveVoice = useMemo<VoiceLoopState>(() => {
+    if (voice.captureStatus !== "recording" || voice.recordingStartedAtMs === null) {
+      return {
+        ...voice,
+        recordingElapsedMs: 0,
+      };
+    }
+
+    return {
+      ...voice,
+      recordingElapsedMs: Math.max(0, now.getTime() - voice.recordingStartedAtMs),
+    };
+  }, [now, voice]);
 
   return {
     activity,
@@ -636,7 +674,7 @@ export function useConversation() {
     startVoiceTurn,
     status,
     stopVoiceTurn,
-    voice,
+    voice: liveVoice,
   };
 }
 
@@ -678,6 +716,9 @@ function createVoiceState(backendUrl: string): VoiceLoopState {
     captureStatus: "idle",
     speechStatus: "idle",
     durationMs: null,
+    recordingStartedAtMs: null,
+    recordingElapsedMs: 0,
+    recordingLimitMs: WEB_VALIDATION_MAX_DURATION_MS,
     wavBytes: null,
     wavMimeType: null,
     httpStatus: null,

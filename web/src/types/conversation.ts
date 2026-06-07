@@ -73,6 +73,9 @@ export type VoiceLoopState = {
   captureStatus: VoiceCaptureStatus;
   speechStatus: SpeechPlaybackStatus;
   durationMs: number | null;
+  recordingStartedAtMs: number | null;
+  recordingElapsedMs: number;
+  recordingLimitMs: number;
   wavBytes: number | null;
   wavMimeType: string | null;
   httpStatus: number | null;

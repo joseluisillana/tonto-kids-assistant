@@ -2,6 +2,7 @@ export const WEB_VALIDATION_BACKEND_DEVICE_ID = "web-validation-client";
 export const WEB_VALIDATION_LANGUAGE = "es";
 export const WEB_VALIDATION_SAMPLE_RATE_HZ = 16_000;
 export const WEB_VALIDATION_CHANNELS = 1;
+export const WEB_VALIDATION_MAX_DURATION_MS = 10_000;
 export const WEB_VALIDATION_WAV_MIME_TYPE = "audio/wav";
 export const WEB_VALIDATION_WAV_FILENAME = "turn.wav";
 
@@ -242,6 +243,30 @@ export function formatBytes(bytes: number): string {
     return `${(bytes / 1024).toFixed(1)} KB`;
   }
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+export function formatClockDuration(durationMs: number): string {
+  if (!Number.isFinite(durationMs) || durationMs < 0) {
+    return "00:00";
+  }
+
+  const totalSeconds = Math.floor(durationMs / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes.toString().padStart(2, "0")}:${seconds
+    .toString()
+    .padStart(2, "0")}`;
+}
+
+export function calculateDurationProgress(
+  elapsedMs: number,
+  limitMs: number,
+): number {
+  if (!Number.isFinite(elapsedMs) || !Number.isFinite(limitMs) || limitMs <= 0) {
+    return 0;
+  }
+
+  return Math.max(0, Math.min(100, (elapsedMs / limitMs) * 100));
 }
 
 export function hasSpeechSynthesisSupport(): boolean {

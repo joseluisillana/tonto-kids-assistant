@@ -1,4 +1,8 @@
-import { formatBytes } from "../lib/audio.js";
+import {
+  calculateDurationProgress,
+  formatBytes,
+  formatClockDuration,
+} from "../lib/audio.js";
 import type { useConversation } from "../features/conversation/useConversation.js";
 
 type VoiceLoopPanelProps = {
@@ -50,6 +54,12 @@ export function VoiceLoopPanel({
       </div>
 
       <div className={`mt-5 grid gap-4 ${compact ? "" : "lg:grid-cols-2"}`}>
+        {voice.captureStatus === "recording" ? (
+          <ListeningIndicator
+            elapsedMs={voice.recordingElapsedMs}
+            limitMs={voice.recordingLimitMs}
+          />
+        ) : null}
         <InfoBlock
           label="Estado tecnico"
           value={`${voice.captureStatus} / ${voice.speechStatus}`}
@@ -105,6 +115,40 @@ export function VoiceLoopPanel({
         </dl>
       ) : null}
     </section>
+  );
+}
+
+function ListeningIndicator({
+  elapsedMs,
+  limitMs,
+}: {
+  elapsedMs: number;
+  limitMs: number;
+}) {
+  const progress = calculateDurationProgress(elapsedMs, limitMs);
+  const label = `Escuchando... ${formatClockDuration(elapsedMs)} / ${formatClockDuration(
+    limitMs,
+  )}`;
+
+  return (
+    <div
+      aria-label={label}
+      className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-800 lg:col-span-2"
+      role="status"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm font-black">{label}</p>
+        <p className="text-xs font-bold uppercase tracking-wide text-emerald-700">
+          TONTO está escuchando
+        </p>
+      </div>
+      <div className="mt-3 h-2 overflow-hidden rounded-full bg-emerald-100">
+        <div
+          className="h-full rounded-full bg-emerald-500 transition-[width] duration-300"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+    </div>
   );
 }
 
