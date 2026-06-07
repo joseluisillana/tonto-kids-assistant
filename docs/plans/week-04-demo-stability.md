@@ -109,14 +109,19 @@ Result:
 - Non-blocking ALSA/JACK warnings persisted.
 - Follow-up candidate: decide whether to add time/listening/progress indicators to Raspberry and web clients.
 
-Phase 4: Physical state decision gate (kickoff prepared 2026-06-07)
+Phase 4: Physical state decision gate (human decision recorded 2026-06-07)
 
 - Define state vocabulary.
 - Use Phase 3 evidence: users do not have clear feedback for when to stop speaking in Raspberry or web.
-- Decide whether LED/Arduino implementation is worth it for the MVP demo.
-- Decide whether non-physical time/listening/progress indicators should be implemented first for Raspberry and web.
-- If implementation is approved, create a separate spec and plan before code.
-- If implementation is deferred, document the deferral and use existing status surfaces.
+- Decision recorded: LED/Arduino work is deferred outside the 6-week MVP.
+- Decision recorded: implement non-physical time/listening/progress indicators first for Raspberry and web.
+- Separate spec and plan created for Raspberry:
+  - `specs/raspberry-listening-indicator.md`
+  - `docs/plans/raspberry-listening-indicator.md`
+- Separate spec and plan created for web:
+  - `specs/web-listening-indicator.md`
+  - `docs/plans/web-listening-indicator.md`
+- Raspberry and web implementation can proceed in parallel because they share no code and preserve the same `/chat/audio` contract.
 
 Decision options:
 
@@ -134,8 +139,8 @@ Recommended default:
 Acceptance criteria:
 
 - Human decision recorded in `docs/project-journal/week-04.md`.
-- If implementation is approved, a paired spec and plan exist before code.
-- If deferring, rationale is recorded.
+- Paired specs and plans exist before code.
+- Arduino/LED deferral rationale is recorded.
 - MVP exclusions remain intact: no persistence, wake word, local STT, local AI, auth, multi-user behavior, or advanced UI.
 
 Phase 5: Closeout
@@ -223,5 +228,5 @@ Delivery:
 ## Notes / Assumptions
 
 - The kickoff branch in this local environment may use `docs-week-4-kickoff` because sandboxed Git metadata blocked creating slash-prefixed branches. The project convention remains `<type>/<short-kebab-description>` for normal Git environments.
-- The first implementation action after kickoff should be Phase 1 baseline validation, not Arduino.
-- Arduino/LED work remains possible, but only after the Phase 4 decision gate.
+- The next implementation action after the Phase 4 decision should be the Raspberry and/or web listening indicator work, not Arduino.
+- Arduino/LED work is deferred outside the 6-week MVP and should return only through a future spec and plan.

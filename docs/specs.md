@@ -36,7 +36,7 @@ Fase 2B fue validada inicialmente en Raspberry real: el cliente Raspberry (`clie
 5. **Cliente web de validación**: interfaz mínima para probar el backend desde navegador; Fase 3 valida voz contra `POST /chat/audio` con captura de microfono, transcript, respuesta textual y speech output del navegador. El chat de texto web mantiene `/chat` como contrato estable y reproduce tambien la respuesta con speech nativo cuando el navegador lo soporta.
 6. **Voz real**: semana 3 completada con micrófono USB/Raspberry, cliente Raspberry automatizado y loop web de voz validado.
 7. **Semana 4 demo stability**: kickoff documental y fases para convertir el loop de voz validado en una demo repetible antes de añadir comportamiento nuevo.
-8. **Estados visuales e integración Arduino**: expansión futura sujeta a gate de decisión en Semana 4, no implementación automática.
+8. **Estados visuales e integración Arduino**: expansión futura fuera del MVP de 6 semanas; Semana 4 usa primero indicadores no físicos.
 
 ## APIs Base
 
@@ -57,10 +57,15 @@ Semana 4 empieza como una preparación documental para agentes IA y después ava
 2. **Baseline reproducible de la demo actual** — completado 2026-06-05. 3 voice turns en Raspberry real validados, memoria corta confirmada, `/chat` y `/chat/audio` funcionando.
 3. **Resiliencia y errores observados** — completado 2026-06-05. Timeouts de cliente ajustados y 48/48 tests pasados.
 4. **Calibración conversacional con la memoria corta en proceso ya existente** — completado 2026-06-07. Prompt calibrado, 49/49 tests pasados y 5 voice turns relacionados en Raspberry real validados.
-5. **Decisión explícita sobre estados físicos mínimos e indicadores no físicos de tiempo/escucha** — kickoff preparado 2026-06-07; decisión humana pendiente.
+5. **Decisión explícita sobre estados físicos mínimos e indicadores no físicos de tiempo/escucha** — decisión humana registrada 2026-06-07: Arduino/LEDs quedan fuera del MVP de 6 semanas; indicadores no físicos aprobados primero.
 6. Closeout con evidencia.
 
-La memoria de Semana 4 no implica persistencia, perfiles, memoria vectorial ni multiusuario. Los estados físicos no implican Arduino automático; Arduino/LEDs requieren una decisión humana y una spec/plan separados antes de código. La Fase 4 compara deferir, implementar indicadores no físicos de tiempo/escucha primero, o preparar Arduino/LEDs con una spec separada.
+Specs y planes de Phase 4 preparados antes de código:
+
+- `specs/raspberry-listening-indicator.md` + `docs/plans/raspberry-listening-indicator.md`
+- `specs/web-listening-indicator.md` + `docs/plans/web-listening-indicator.md`
+
+La memoria de Semana 4 no implica persistencia, perfiles, memoria vectorial ni multiusuario. La decisión de Fase 4 difiere Arduino/LEDs fuera del MVP de 6 semanas y aprueba implementar primero indicadores no físicos de tiempo/escucha. Si Arduino/LEDs se retoman en una versión futura de TONTO, deberán tener una spec y plan separados antes de código.
 
 ## Fuera de Alcance del Arranque de Semana 4
 
@@ -69,7 +74,7 @@ La memoria de Semana 4 no implica persistencia, perfiles, memoria vectorial ni m
 - Modelos locales de audio.
 - Integración offline con Vosk, `whisper.cpp` u otro motor local sin spike técnico previo.
 - Nuevas dependencias sin decisión explícita.
-- Arduino/LEDs sin gate de decisión explícito.
+- Arduino/LEDs dentro del MVP de 6 semanas; quedan diferidos a una versión futura de TONTO.
 - Persistencia.
 - Autenticación.
 - Multiusuario.

@@ -1,7 +1,7 @@
 # Week 04 Kickoff
 
 **Date:** 2026-06-05
-**Status:** Phase 3 complete; Phase 4 decision gate prepared.
+**Status:** Phase 3 complete; Phase 4 human decision recorded; indicator specs ready.
 
 ## Objective
 
@@ -64,7 +64,7 @@ Phase 5: Week 04 closeout.
 
 ## Recommended Next Action
 
-Phase 4 decision gate prepared. Next: make a human scope decision before any implementation.
+Phase 4 decision recorded. Next: implement non-physical listening/time indicators, using separate Raspberry and web branches if parallel work is useful.
 
 ## Phase 1 — Reproducible Demo Baseline (2026-06-05)
 
@@ -347,12 +347,28 @@ Phase 4 is a decision gate, not automatic Arduino work. The decision should comp
 
 For the MVP demo, prefer option 2 unless the final presentation specifically needs physical LEDs. It addresses a validated usability problem with less scope than Arduino and keeps the Raspberry as a thin client.
 
+### Human Decision (2026-06-07)
+
+- Arduino and LED integration are deferred outside the 6-week MVP.
+- Physical indicators remain a future TONTO improvement for another version.
+- Phase 4 implementation should start with non-physical listening/time indicators.
+- Raspberry and web need separate specs and plans because their implementations can run in parallel.
+- No code should be changed until those specs and plans exist.
+
+### Prepared Indicator Specs and Plans
+
+- `specs/raspberry-listening-indicator.md`
+- `docs/plans/raspberry-listening-indicator.md`
+- `specs/web-listening-indicator.md`
+- `docs/plans/web-listening-indicator.md`
+
 ### Acceptance Criteria
 
-- [ ] Human decision recorded: defer, non-physical indicators first, Arduino/LED spec, or combined approach.
-- [ ] If implementation is approved, a separate spec and plan exist before code changes.
-- [ ] If implementation is deferred, journal records the deferral and rationale.
-- [ ] Scope remains inside MVP: no persistence, no wake word, no new AI architecture, no broad UI redesign.
+- [x] Human decision recorded: defer Arduino/LEDs outside the 6-week MVP and implement non-physical indicators first.
+- [x] Separate Raspberry spec and plan exist before code changes.
+- [x] Separate web spec and plan exist before code changes.
+- [x] Journal records the Arduino/LED deferral and rationale.
+- [x] Scope remains inside MVP: no persistence, no wake word, no new AI architecture, no broad UI redesign.
 
 ### Kickoff Status
 
@@ -360,7 +376,8 @@ For the MVP demo, prefer option 2 unless the final presentation specifically nee
 - [x] Candidate state vocabulary drafted.
 - [x] Decision options drafted.
 - [x] Recommendation documented.
-- [ ] Human scope decision pending.
+- [x] Human scope decision recorded.
+- [x] Parallelizable indicator specs and plans prepared.
 
 ## AI Tools Used
 
@@ -371,6 +388,8 @@ Codex: documentation kickoff (Phase 0); Phase 3 planning, prompt calibration, te
 - The Week 04 kickoff product should be documentation and agent handoff material, not code.
 - Week 04 should be phased before implementation.
 - Arduino should not be treated as automatic implementation work.
+- On 2026-06-07, Arduino/LEDs were explicitly deferred outside the 6-week MVP.
+- On 2026-06-07, non-physical Raspberry and web listening/time indicators were approved as the first Phase 4 implementation path.
 
 ## Notes
 
