@@ -1,7 +1,7 @@
 # Week 04 Demo Stability and Scope Kickoff
 
 **Version:** 0.5
-**Status:** Phase 4 human decision recorded; web indicator implemented and human-validated
+**Status:** Phases 0-4 complete; Phase 5 closeout pending
 **Last Updated:** 2026-06-07
 
 ## Objective
@@ -190,7 +190,7 @@ Evidence:
 - Known non-blocking ALSA/JACK warnings persisted and did not block capture, upload, response, or playback.
 - Improvement identified for a later decision: Raspberry and web users need a clearer time/listening/progress indicator for when to stop speaking.
 
-### Phase 4 - Physical State Decision Gate (human decision recorded 2026-06-07)
+### Phase 4 - Physical State Decision Gate (completed 2026-06-07)
 
 Purpose: decide whether physical LED states or simpler non-physical indicators are worth implementing before the final demo.
 
@@ -207,6 +207,9 @@ Included:
 - Decide whether those states need Arduino LEDs, terminal/web status only, a time/listening/progress indicator, or no implementation for the MVP.
 - Record the human decision before implementation.
 - Prepare separate narrow specs and plans before code.
+- Implement non-physical listening/time indicators for Raspberry and web.
+- Validate Raspberry indicator on real hardware (issue #27).
+- Implement and validate web indicator with auto-stop and recording limit (issues #23, #25).
 
 Excluded:
 
@@ -231,6 +234,13 @@ Acceptance:
 - The journal records the deferral rationale and the approved implementation order.
 - MVP constraints remain intact: no persistence, wake word, local STT, local AI, auth, multi-user behavior, or advanced UI.
 
+Evidence:
+
+- Human decision recorded 2026-06-07: Arduino/LEDs deferred, non-physical indicators approved.
+- Raspberry listening indicator implemented in `client/main.py` and validated on real hardware 2026-06-07: 2/2 voice turns passed, indicator visible, timer updates live, transition to uploading clear. Issue #27 closed.
+- Web listening indicator implemented and validated 2026-06-07: visible counter, auto-stop at configured limit, manual `Enviar voz` preserved. Issues #23 and #25 closed.
+- All three issues (#23, #25, #27) closed.
+
 Decision options:
 
 1. Defer physical and non-physical state work and keep current terminal/web messages.
@@ -252,7 +262,7 @@ Human decision:
 - Web recording limit behavior is decided for follow-up #23: stop capture automatically at the configured limit, warn that time is up, and keep upload manual.
 - Web issue #25 repaired the main web interaction surface so the browser recording duration is visible while capture is active. Human manual validation confirmed the web client now shows the counter/progress indicator, auto-stops at the configured limit, warns that time is up, and keeps `Enviar voz` manual.
 
-### Phase 5 - Week 04 Closeout
+### Phase 5 - Week 04 Closeout (active)
 
 Purpose: end the week with evidence, not loose impressions.
 

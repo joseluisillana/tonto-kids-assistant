@@ -1,5 +1,7 @@
 # Raspberry Listening Indicator Implementation Plan
 
+**Status:** Implemented and validated on real hardware (2026-06-07). Issue #27 closed.
+
 ## Objective
 
 Implement the Raspberry terminal listening/time indicator described in `specs/raspberry-listening-indicator.md` without changing the backend contract or adding hardware scope.
@@ -111,6 +113,25 @@ Delivery:
 - Summarize the indicator behavior.
 - Summarize verification and hardware validation results.
 ```
+
+## Implementation Result
+
+The Raspberry listening indicator was implemented in `client/main.py` with three helper functions:
+
+- `_format_listening_progress()` — returns `"Listening: X/Ys"` string
+- `_show_listening_indicator()` — daemon thread that prints countdown during capture
+- `_stop_listening_indicator()` — signals thread to stop and joins
+
+The `capture_audio()` function was updated with a `show_progress` parameter, and the voice loop passes `show_progress=True` by default.
+
+Verification completed:
+
+```powershell
+.\scripts\test.ps1 -Target python
+git diff --check
+```
+
+Raspberry real hardware validation passed 2026-06-07: 2/2 voice turns, indicator visible, timer updates live, transition to uploading clear, transcript/response/espeak working. Issue #27 closed.
 
 ## Notes / Assumptions
 

@@ -218,7 +218,7 @@ La preparación de Semana 4 es documentación-first: specs, planes, roadmap y jo
 1. Baseline de demo reproducible sobre el sistema actual — completado 2026-06-05. 3 voice turns en Raspberry real, memoria corta validada, `/chat` y `/chat/audio` funcionando.
 2. Resiliencia y errores observados durante la demo — completado 2026-06-05.
 3. Calibración conversacional y memoria corta — completado 2026-06-07. Prompt calibrado, 49/49 tests pasados y 5 voice turns relacionados en Raspberry real.
-4. Decisión explícita sobre estados físicos e indicadores no físicos de escucha/tiempo — decisión humana registrada 2026-06-07; specs y planes separados preparados para Raspberry y web; web #23/#25 (ambas cerradas) implementa contador visible, auto-stop al límite, warning y envío manual.
+4. Decisión explícita sobre estados físicos e indicadores no físicos de escucha/tiempo — decisión humana registrada 2026-06-07; specs y planes separados preparados para Raspberry y web; web #23/#25 (ambas cerradas) implementa contador visible, auto-stop al límite, warning y envío manual; Raspberry #27 (cerrada) implementado y validado en hardware real 2026-06-07.
 5. Closeout con evidencia y próximos riesgos.
 
 ## Prioridades
@@ -353,7 +353,7 @@ Las siguientes funcionalidades quedan explícitamente fuera del alcance inicial:
 - [x] Añadir logs básicos.
 - [x] Añadir manejo básico de errores.
 - [x] Gestionar estado de sesión local.
-- [ ] Añadir indicador no físico de escucha/tiempo durante grabación.
+- [x] Añadir indicador no físico de escucha/tiempo durante grabación.
 
 ## Cliente web de validación
 

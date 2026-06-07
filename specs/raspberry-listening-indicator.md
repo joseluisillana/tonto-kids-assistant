@@ -1,7 +1,7 @@
 # Raspberry Listening Indicator
 
 **Version:** 0.1
-**Status:** Planned for Week 04 Phase 4
+**Status:** Implemented and validated on real hardware (2026-06-07)
 **Last Updated:** 2026-06-07
 
 ## Objective
@@ -74,14 +74,14 @@ The exact text may differ, but it must be readable on a Raspberry terminal and m
 
 ## Acceptance Criteria
 
-- Starting a voice capture shows that TONTO is listening.
-- The terminal shows elapsed or remaining time while capture is active.
-- The terminal clearly transitions from listening to uploading.
-- Existing text mode behavior is unchanged.
-- The generated WAV remains compatible with the backend.
-- `duration_ms` still matches the configured capture duration.
-- Relevant Python tests pass.
-- A real Raspberry validation records commands, environment, result, and human judgment in `docs/project-journal/week-04.md`.
+- [x] Starting a voice capture shows that TONTO is listening.
+- [x] The terminal shows elapsed or remaining time while capture is active.
+- [x] The terminal clearly transitions from listening to uploading.
+- [x] Existing text mode behavior is unchanged.
+- [x] The generated WAV remains compatible with the backend.
+- [x] `duration_ms` still matches the configured capture duration.
+- [x] Relevant Python tests pass.
+- [x] A real Raspberry validation records commands, environment, result, and human judgment in `docs/project-journal/week-04.md`.
 
 ## Validation
 
@@ -101,6 +101,19 @@ Validate at least two voice turns:
 1. Confirm the listening indicator is visible during capture.
 2. Confirm upload starts after the listening indicator completes.
 3. Confirm transcript, response, and local `espeak` playback still work.
+
+Implemented validation evidence (2026-06-07):
+
+- Branch: `main` (synced with `origin/main`)
+- Backend: `http://192.168.1.91:8000` (Windows, LAN mode)
+- 2/2 voice turns passed on `tonto-pi`
+- Indicator visible: `Listening for 6s...` then `Listening: 1/6s` through `Listening: 6/6s`
+- `Listening complete.` appeared after capture
+- `Uploading...` transition clear
+- Transcript, response, and espeak all working
+- Known ALSA/JACK warnings (non-blocking, same as previous validations)
+- Human judgment: indicator improves demo operator experience
+- Issue #27 closed
 
 ## Parallelization
 
