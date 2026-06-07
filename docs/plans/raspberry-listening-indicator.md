@@ -117,3 +117,11 @@ Delivery:
 - This plan can run in parallel with `docs/plans/web-listening-indicator.md`.
 - If both plans update `docs/project-journal/week-04.md`, reconcile those documentation edits during integration.
 - A simple terminal timer is enough; polished terminal animation is not required.
+
+## Workflow Isolation
+
+- Branch: `feature/week-04-phase4-raspberry-listening-indicator`
+- Worktree: use a dedicated worktree when running in parallel with the web indicator plan.
+- Parallel-safe: yes, if web work uses `feature/week-04-phase4-web-listening-indicator` in a separate worktree.
+- Collision risk: `docs/project-journal/week-04.md` may overlap during evidence updates.
+- Integration note: if the web PR merges first, update this branch from `main` and reconcile journal entries before merging.

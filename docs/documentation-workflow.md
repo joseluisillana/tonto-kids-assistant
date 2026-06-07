@@ -81,6 +81,22 @@ Use this routine at the end of meaningful work sessions:
 4. Let the `pre-commit` hook regenerate `exports/notebooklm/`.
 5. Refresh NotebookLM sources from that export when you want deeper synthesis.
 
+## Work Item Evidence
+
+Each coherent work item should leave enough evidence to reconstruct what happened later for the course report.
+
+For every branch/PR, record the relevant items:
+
+- source spec or issue,
+- implementation plan,
+- human decisions made during the work,
+- AI tools used and their role,
+- checks or scripts run,
+- manual browser or Raspberry validation,
+- remaining risks or follow-up work.
+
+For parallel work, keep evidence attached to the branch that produced it. If multiple parallel PRs update the same journal or roadmap section, merge one PR first, update the remaining branch from `main`, and reconcile the documentation before the second PR merges.
+
 ## Spec Handoff Routine
 
 When a spec is created or materially changed, create or update its execution plan in `docs/plans/` during the same documentation pass.
@@ -88,6 +104,13 @@ When a spec is created or materially changed, create or update its execution pla
 Use `docs/plans/TEMPLATE-spec-implementation-plan.md` as the default structure. Each plan should include the source spec, scope, implementation outline, acceptance criteria, verification commands, and an implementation prompt ready for Codex/OpenCode.
 
 This keeps implementation handoff details in the repository instead of leaving them only in an AI chat. Purely editorial spec changes can skip a plan update when they do not change behavior, contracts, scope, validation, or acceptance criteria.
+
+Every plan should also state its workflow isolation:
+
+- branch name,
+- whether a dedicated Git worktree is required,
+- whether the work can run in parallel with other plans,
+- expected integration order if another related PR merges first.
 
 ## Manual Export
 

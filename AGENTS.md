@@ -90,6 +90,9 @@ Explicitly out of scope for this first milestone:
 - Use `feature/`, `fix/`, `docs/`, `chore/`, or `experiment/` as the initial branch types.
 - Prefer `docs/` for documentation-only changes.
 - Do not use tool-owned branch prefixes such as `codex/` unless the user explicitly asks for them.
+- Use one branch and one PR per coherent work item.
+- Keep work item branches short-lived and focused.
+- For parallel agent work, use one Git worktree per agent/work item. Do not run parallel agents in the same working tree or on the same branch.
 - Use Conventional Commits when preparing commits, such as `feat:`, `fix:`, `docs:`, `chore:`, `test:`, or `refactor:`.
 - Keep PRs focused on one coherent change.
 - Include docs or specs in the same change when behavior, architecture, setup, scope, or workflow changes.
@@ -107,6 +110,8 @@ Minimum pre-edit gate:
 4. Do not use tool-owned prefixes such as `codex/` unless the user explicitly asks for them.
 5. If `main` has uncommitted changes, stop and ask before moving, stashing, committing, discarding, or editing those changes.
 6. Apply the same gate before running formatters, generators, export scripts, or other commands that write repository files.
+7. If another agent is working in parallel, create or use a separate Git worktree for this work item before editing.
+8. If a related PR merges while this work item is still active, update from `main` and reconcile conflicts before continuing.
 
 ## Simplicity Rules
 

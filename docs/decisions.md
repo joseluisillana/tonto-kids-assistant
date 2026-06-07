@@ -112,3 +112,16 @@ Raspberry and web indicators must be specified and planned separately before cod
 - `docs/plans/raspberry-listening-indicator.md`
 - `specs/web-listening-indicator.md`
 - `docs/plans/web-listening-indicator.md`
+
+## D022 - Parallel agent workflow isolation
+
+Use a standard small-team workflow for AI-assisted parallel development: GitHub Flow with short-lived branches, small PRs, and Git worktrees when multiple agents or work items run at the same time.
+
+Each coherent work item gets one branch and one PR. When work runs in parallel, each work item also gets a separate Git worktree so agents do not share the same checkout or branch.
+
+The rationale is to reduce collisions, keep `main` as the integration branch, preserve reviewable history, and make the project evidence easier to explain for the AI course. This is a workflow decision, not a product architecture change.
+
+The detailed spec and plan are:
+
+- `specs/parallel-agent-workflow.md`
+- `docs/plans/parallel-agent-workflow.md`

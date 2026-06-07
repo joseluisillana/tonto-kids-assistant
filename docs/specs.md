@@ -100,3 +100,8 @@ La memoria de Semana 4 no implica persistencia, perfiles, memoria vectorial ni m
 - Velocidad de iteración
 - Reproducibilidad para demo
 - Documentación viva en el repositorio
+
+## Workflow de Desarrollo Asistido por IA
+
+- `specs/parallel-agent-workflow.md`: define el patrón de trabajo por unidad coherente, rama corta, PR pequeña y worktree dedicado cuando hay agentes o tareas en paralelo.
+- `docs/plans/parallel-agent-workflow.md`: plan de implementación documental de ese workflow.

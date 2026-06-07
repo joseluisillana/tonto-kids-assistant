@@ -130,13 +130,15 @@ NotebookLM reads exported repository documentation. It does not replace the repo
 
 ## Git and PR Workflow
 
-Use a lightweight GitHub Flow:
+Use a lightweight GitHub Flow with trunk-based principles:
 
 1. Start from `main`.
 2. Create a short-lived branch for one focused change.
 3. Keep implementation, tests, and documentation together when they describe the same change.
 4. Open a small PR back to `main`.
 5. Merge only after the change is reviewed and the relevant checks or manual validations are clear.
+
+This is the project default because it matches common small-team practice: `main` is the integration branch, PR branches are temporary review/check units, and each PR should be small enough to understand and revert.
 
 Branch names use:
 
@@ -163,6 +165,61 @@ experiment/local-stt-spike
 ```
 
 Avoid tool-owned prefixes such as `codex/` for project branches. Branch names should describe the work, not the assistant that helped with it.
+
+## Parallel Agent Workflow
+
+When multiple agents or work items run at the same time, isolate them with Git worktrees.
+
+The rule is:
+
+```text
+one coherent work item -> one branch -> one worktree when parallel -> one PR
+```
+
+A work item is a change that can be planned, implemented, verified, reviewed, and merged independently. It can include code, tests, docs, and specs when they describe the same behavior.
+
+Good work items:
+
+- `feature/week-04-phase4-raspberry-listening-indicator`
+- `feature/week-04-phase4-web-listening-indicator`
+- `docs/parallel-agent-workflow`
+
+Too broad:
+
+- `feature/week-04-everything`
+- `docs/update-all-docs`
+- one branch shared by two agents editing unrelated areas.
+
+Use a separate worktree whenever two agents could otherwise edit the same checkout:
+
+```powershell
+git switch main
+git pull --ff-only
+git worktree add ..\tonto-worktrees\week-04-phase4-raspberry-listening-indicator -b feature/week-04-phase4-raspberry-listening-indicator main
+git worktree add ..\tonto-worktrees\week-04-phase4-web-listening-indicator -b feature/week-04-phase4-web-listening-indicator main
+git worktree list
+```
+
+Rules for parallel agents:
+
+- Do not run parallel agents in the same working tree.
+- Do not let two agents edit the same branch at the same time.
+- Do not edit on `main` unless the developer explicitly asks for it.
+- Keep each branch short-lived and focused.
+- Push and open a PR for each work item.
+- Merge parallel PRs one at a time.
+- After one parallel PR merges, update the remaining branches from `main` and reconcile docs or journal changes before merging the next PR.
+- Delete merged branches and remove stale worktrees.
+
+Cleanup commands:
+
+```powershell
+git worktree list
+git worktree remove ..\tonto-worktrees\<worktree-name>
+git worktree prune
+```
+
+The detailed project spec for this workflow is `specs/parallel-agent-workflow.md`, with its paired plan in `docs/plans/parallel-agent-workflow.md`.
 
 ## Spec Handoff Workflow
 
@@ -223,6 +280,8 @@ Minimum required gate:
 4. Do not use tool-owned prefixes such as `codex/` unless the developer explicitly asks for them.
 5. If `main` has uncommitted changes, stop and ask before moving, stashing, committing, discarding, or editing those changes.
 6. Apply the same gate before running formatters, generators, export scripts, or other commands that write repository files.
+7. For parallel work, confirm the current checkout is the dedicated worktree for this work item.
+8. If the work item depends on a recently merged PR, update from `main` before editing.
 
 ## Commit Messages
 

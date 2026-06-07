@@ -75,6 +75,14 @@ Delivery:
 - Summarize verification results.
 ```
 
+## Workflow Isolation
+
+- Branch: `<type>/<short-kebab-description>`
+- Worktree: state whether this plan can run in the current checkout or needs a dedicated `git worktree`.
+- Parallel-safe: state whether this work can run alongside other active plans.
+- Collision risk: list files likely to overlap with related work.
+- Integration note: explain what to do if a related PR merges first.
+
 ## Notes / Assumptions
 
 - Record defaults chosen for ambiguous implementation details.
