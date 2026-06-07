@@ -6,8 +6,9 @@ import shlex
 import socket
 import subprocess
 import sys
+import threading
 import uuid
-from typing import Optional
+from typing import Callable, Optional
 import urllib.error
 import urllib.request
 
@@ -94,8 +95,7 @@ def voice_loop(backend_url: str, session_id: str) -> int:
             speak(response_text)
             continue
 
-        print("Recording...")
-        wav_bytes = capture_audio(device, record_seconds, audio_path)
+        wav_bytes = capture_audio(device, record_seconds, audio_path, show_progress=True)
         if wav_bytes is None:
             continue
 
@@ -111,17 +111,35 @@ def voice_loop(backend_url: str, session_id: str) -> int:
         speak(audio_response["response"])
 
 
-def capture_audio(device: Optional[str], seconds: int, wav_path: str) -> Optional[bytes]:
+def capture_audio(
+    device: Optional[str],
+    seconds: int,
+    wav_path: str,
+    show_progress: bool = False,
+) -> Optional[bytes]:
     cmd = ["arecord"]
     if device:
         cmd.extend(["-D", device])
     cmd.extend(["-f", "S16_LE", "-r", "16000", "-c", "1", "-d", str(seconds), wav_path])
+
+    stop_indicator: Optional[threading.Event] = None
+    indicator_thread: Optional[threading.Thread] = None
+    if show_progress:
+        stop_indicator = threading.Event()
+        indicator_thread = threading.Thread(
+            target=_show_listening_indicator,
+            args=(seconds, stop_indicator),
+            daemon=True,
+        )
+        indicator_thread.start()
 
     try:
         result = subprocess.run(cmd, capture_output=True, check=False)
     except FileNotFoundError:
         print("arecord not found. Install alsa-utils on the Raspberry Pi.")
         return None
+    finally:
+        _stop_listening_indicator(stop_indicator, indicator_thread)
 
     if result.returncode != 0:
         stderr = result.stderr.decode("utf-8", errors="replace").strip()
@@ -129,6 +147,9 @@ def capture_audio(device: Optional[str], seconds: int, wav_path: str) -> Optiona
         if stderr:
             print(f"arecord stderr: {stderr}")
         return None
+
+    if show_progress:
+        print("Listening complete.")
 
     try:
         with open(wav_path, "rb") as f:
@@ -142,6 +163,33 @@ def capture_audio(device: Optional[str], seconds: int, wav_path: str) -> Optiona
         return None
 
     return wav_bytes
+
+
+def _format_listening_progress(elapsed_seconds: int, total_seconds: int) -> str:
+    return f"Listening: {elapsed_seconds}/{total_seconds}s"
+
+
+def _show_listening_indicator(
+    seconds: int,
+    stop_event: threading.Event,
+    output: Callable[[str], None] = print,
+) -> None:
+    output(f"Listening for {seconds}s...")
+    for elapsed_seconds in range(1, seconds + 1):
+        if stop_event.wait(1):
+            return
+        output(_format_listening_progress(elapsed_seconds, seconds))
+    stop_event.wait()
+
+
+def _stop_listening_indicator(
+    stop_event: Optional[threading.Event],
+    indicator_thread: Optional[threading.Thread],
+) -> None:
+    if stop_event is None or indicator_thread is None:
+        return
+    stop_event.set()
+    indicator_thread.join()
 
 
 def send_message(chat_url: str, session_id: str, message: str) -> Optional[str]:
