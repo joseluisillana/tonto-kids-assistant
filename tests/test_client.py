@@ -4,12 +4,14 @@ import os
 import socket
 from pathlib import Path
 import subprocess
+import threading
 import urllib.error
 import uuid
 
 import pytest
 
 from client.main import (
+    _format_listening_progress,
     capture_audio,
     send_audio,
     send_message,
@@ -260,6 +262,64 @@ def test_capture_audio_calls_arecord_with_device(monkeypatch):
     assert "arecord" in args_captured
     assert "-D" in args_captured
     assert "plughw:1,0" in args_captured
+
+
+def test_format_listening_progress():
+    assert _format_listening_progress(2, 6) == "Listening: 2/6s"
+
+
+def test_capture_audio_shows_listening_indicator_when_requested(monkeypatch, tmp_path, capsys):
+    wav_path = str(tmp_path / "turn.wav")
+    with open(wav_path, "wb") as f:
+        f.write(b"WAV data")
+
+    indicator_started = threading.Event()
+    observed = {}
+
+    def fake_indicator(seconds, stop_event):
+        observed["seconds"] = seconds
+        observed["stopped_before_capture"] = stop_event.is_set()
+        indicator_started.set()
+        stop_event.wait(1)
+        observed["stopped_after_capture"] = stop_event.is_set()
+
+    def fake_run(cmd, **kwargs):
+        assert indicator_started.wait(1)
+        return _make_fake_completed_process(0)
+
+    monkeypatch.setattr("client.main._show_listening_indicator", fake_indicator)
+    monkeypatch.setattr("client.main.subprocess.run", fake_run)
+
+    result = capture_audio(None, 4, wav_path, show_progress=True)
+
+    assert result == b"WAV data"
+    assert observed == {
+        "seconds": 4,
+        "stopped_before_capture": False,
+        "stopped_after_capture": True,
+    }
+    assert "Listening complete." in capsys.readouterr().out
+
+
+def test_capture_audio_does_not_print_complete_when_arecord_fails(
+    monkeypatch, tmp_path, capsys
+):
+    wav_path = str(tmp_path / "turn.wav")
+    indicator_started = threading.Event()
+
+    def fake_indicator(seconds, stop_event):
+        indicator_started.set()
+        stop_event.wait(1)
+
+    def fake_run(cmd, **kwargs):
+        assert indicator_started.wait(1)
+        return _make_fake_completed_process(1, "error")
+
+    monkeypatch.setattr("client.main._show_listening_indicator", fake_indicator)
+    monkeypatch.setattr("client.main.subprocess.run", fake_run)
+
+    assert capture_audio(None, 4, wav_path, show_progress=True) is None
+    assert "Listening complete." not in capsys.readouterr().out
 
 
 def test_capture_audio_calls_arecord_without_device(monkeypatch):
