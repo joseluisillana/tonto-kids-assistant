@@ -557,7 +557,7 @@ The following code is already on `main`:
 
 - [x] Raspberry hardware validation completed.
 - [x] Evidence recorded above.
-- [ ] Issue #27 closed.
+- [x] Issue #27 closed.
 
 ## AI Tools Used
 
