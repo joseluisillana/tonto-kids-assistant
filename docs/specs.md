@@ -78,7 +78,7 @@ La spec activa de Semana 5 vive en `specs/week-05-demo-stability.md`, con plan e
 Semana 5 convierte el loop validado en una demo repetible y fácil de operar:
 
 1. **Kickoff documental** — completado 2026-06-08.
-2. **Runbook de demo y scripts de arranque** — reducir fricción del operador.
+2. **Runbook de demo y scripts de arranque** — completado 2026-06-08. Script bash con health check y runbook completo.
 3. **Pulido de UX conversacional** — respuestas más naturales y engaging para niños.
 4. **Resiliencia ante errores** — mensajes claros, recuperación limpia.
 5. **Ensayo de demo** — 3+ ejecuciones consecutivas sin fallos bloqueantes.
