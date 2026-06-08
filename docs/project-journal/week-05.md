@@ -140,3 +140,32 @@ chmod +x scripts/demo-raspberry.sh
 - [x] Raspberry hardware validation completed.
 - [x] All issues fixed.
 - [x] Issue #35 ready to close.
+
+## Extra — Agent Capability Pack Planning (created 2026-06-09)
+
+**Branch:** `docs/week-05-agent-capability-pack`
+**Tracking:** GitHub issue #43
+
+### Objective
+
+Plan a portable AI development asset so Codex, OpenCode, and future agents can operate common backend and Raspberry validation tasks through repo-owned documentation and PowerShell helpers.
+
+### Context
+
+During the attempt to complete Week 05 Phase 2, Codex correctly identified the need to validate 5+ demo questions on Raspberry, but started to improvise backend startup and Raspberry SSH commands. The project already has official PowerShell scripts and workflow docs, but it does not yet have a dedicated portable capability layer for agent-operated backend/Raspberry tasks.
+
+### Documents Created
+
+- `specs/week-05-agent-capability-pack.md`
+- `docs/plans/week-05-agent-capability-pack.md`
+
+### Decisions Captured
+
+- The source of truth is repository Markdown plus official scripts, not a Codex-only skill.
+- Tool-specific assets may wrap the capability pack later, but must delegate to repo-owned docs and scripts.
+- Raspberry access should use a dedicated SSH key stored outside the repo.
+- Password-based SSH automation and committed secrets are out of scope.
+
+### Follow-up
+
+After issue #43 is implemented, resume issue #36 and complete the Raspberry 5+ demo-question validation for Week 05 Phase 2.

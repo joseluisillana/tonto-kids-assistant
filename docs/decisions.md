@@ -127,3 +127,14 @@ The detailed spec and plan are:
 
 - `specs/parallel-agent-workflow.md`
 - `docs/plans/parallel-agent-workflow.md`
+
+## D023 - Agent Capability Pack as portable AI development asset
+
+Use repository-owned Markdown and PowerShell helper scripts as the portable Agent Capability Pack for backend and Raspberry operations. This pack is the source of truth for AI-assisted agents and humans when running demo validation tasks that need backend lifecycle management or Raspberry SSH access.
+
+Tool-specific assets such as Codex skills, OpenCode prompts, plugins, or MCP tools may be added later, but they must wrap or delegate to the repository pack instead of becoming the canonical workflow.
+
+The pack uses key-based SSH for Raspberry access with a dedicated local key stored outside the repository, prefers existing official scripts such as `scripts/dev.ps1`, and must not commit secrets or introduce new dependencies. The paired spec and plan are:
+
+- `specs/week-05-agent-capability-pack.md`
+- `docs/plans/week-05-agent-capability-pack.md`
