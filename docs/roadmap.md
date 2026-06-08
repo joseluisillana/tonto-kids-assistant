@@ -258,6 +258,14 @@ Convertir el sistema en una demo estable y repetible.
 4. Ensayo de demo (3+ ejecuciones consecutivas).
 5. Closeout con evidencia.
 
+## Extra — Agent Capability Pack
+
+Trabajo extra de Semana 5, trackeado en GitHub issue #43.
+
+Objetivo: definir un asset portable para agentes basado en Markdown del repo y scripts PowerShell oficiales, de modo que Codex, OpenCode u otros agentes puedan arrancar/parar backend y ejecutar preflights SSH en Raspberry sin inventar comandos ad hoc ni guardar secretos en el repositorio.
+
+La spec vive en `specs/week-05-agent-capability-pack.md` y el plan en `docs/plans/week-05-agent-capability-pack.md`.
+
 ## Prioridades
 
 1. Estabilidad antes que nuevas funcionalidades.
