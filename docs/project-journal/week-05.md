@@ -1,4 +1,4 @@
-# Week 05 Kickoff
+﻿# Week 05 Kickoff
 
 **Date:** 2026-06-08
 **Status:** Kickoff; Phase 0 complete.
@@ -50,16 +50,93 @@ Known gaps:
 ## Recommended Next Action
 
 Phase 1: create a demo runbook and startup script to reduce operator friction.
+## Phase 1 — Demo Runbook and Startup Scripts (implemented 2026-06-07)
 
-## AI Tools Used
+**Branch:** `feature/week-05-phase1-demo-runbook`
+**Tracking:** GitHub issue #35
 
-(none yet — kickoff phase)
+### Objective
 
-## Human Decisions
+Reduce the friction of starting a TONTO demo so an operator can start with 1-2 commands.
 
-(none yet)
+### Changes
 
-## Notes
+**`scripts/demo-raspberry.sh`** (new):
+- Bash script for Raspberry Pi demo startup.
+- Default env vars: `TONTO_BACKEND_URL`, `TONTO_AUDIO_DEVICE`, `TONTO_RECORD_SECONDS`.
+- Health check with 5 retries and 2s delay before starting.
+- Activates venv and starts client in voice mode.
+- Tracked as executable in git (mode 100755).
 
-- Week 05 applies the MVP rule: no new features unless they directly unblock the demo.
-- ALSA/JACK warnings are a known non-blocking issue from Week 03-04; they should be documented or suppressed, not "fixed" with architecture changes.
+**`docs/demo-runbook.md`** (new):
+- Prerequisites section.
+- Quick start: 3 commands (backend, Raspberry, web).
+- Full demo flow for Raspberry (5 steps).
+- Full demo flow for web (5 steps).
+- Known warnings (ALSA/JACK) documented as ignorable.
+- Troubleshooting: 6 common failures with fixes.
+
+### Validation Evidence (2026-06-08)
+
+**Environment:**
+- Branch: `feature/week-05-phase1-demo-runbook`
+- Backend: `http://192.168.1.91:8000` (Windows, LAN mode)
+- Raspberry audio device: `plughw:CARD=Device,DEV=0`
+- Commands used:
+
+```bash
+chmod +x scripts/demo-raspberry.sh
+./scripts/demo-raspberry.sh
+```
+**Observations (voice turns):**
+
+| Check | Result | Notes |
+|---|---|---|
+| Health check (curl /health) | OK (1/5) | Backend responded immediately |
+| Venv activation | OK | Activate found and sourced |
+| Client starts in voice mode | OK | `--mode voice` launched correctly |
+| Turn 1: indicator visible | OK | Live countdown 1-6s |
+| Turn 1: transcript | Accurate | Transcription worked |
+| Turn 1: response | Coherent | Spanish, child-friendly |
+| Turn 1: espeak | Audible | Standard quality |
+| Turn 2: indicator visible | OK | Same as turn 1 |
+| Turn 2: transcript | Accurate | Transcription worked |
+| Turn 2: response | Educational, coherent | Spanish, child-friendly |
+| Turn 2: espeak | Audible | Standard quality |
+| ALSA/JACK warnings | Known, non-blocking | Same as previous validations |
+
+**Observations (health check retries):**
+
+| Scenario | Result | Notes |
+|---|---|---|
+| Backend stopped | ERROR after 5 retries | Clear error message with instructions |
+| Backend started mid-retries | Connected on attempt 5/5 | Recovery works correctly |
+| Retry interval | 2s delay, ~7s total | `--connect-timeout 5` prevents hangs |
+| Script executable in git | Fixed | Tracked as 100755, no manual chmod needed |
+
+**Issues found and fixed during validation:**
+- UTF-8 BOM at start of script caused warning (non-blocking). Fixed by saving without BOM.
+- Venv setup instructions in script referenced PowerShell command. Fixed to show bash instructions.
+- Backend requirements incorrectly included in venv setup message. Fixed to only include client requirements.
+- `curl` hung without `--connect-timeout` when backend was unreachable. Fixed with 5s timeout.
+- Script lost execute permissions after `git pull`. Fixed by tracking as 100755 in git.
+
+**Human judgment:**
+- The script reduces demo startup from 4 manual commands to 1.
+- Health check provides clear feedback before starting, with retries and recovery.
+- The operator experience is smoother than the previous manual setup.
+
+### Acceptance Criteria
+
+- [x] Demo operator can start with 1-2 commands.
+- [x] Health check with reintentos funciona.
+- [x] Runbook cubre flujo completo de demo Raspberry.
+- [x] Runbook cubre flujo completo de demo web.
+- [x] Warnings ALSA/JACK documentados como ignorables.
+- [x] Troubleshooting cubre fallos comunes de ambos clientes.
+
+### Status
+
+- [x] Raspberry hardware validation completed.
+- [x] All issues fixed.
+- [x] Issue #35 ready to close.
