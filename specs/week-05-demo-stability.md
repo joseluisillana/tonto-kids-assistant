@@ -1,7 +1,7 @@
 # Week 05 Demo Stability and Experience
 
 **Version:** 0.1
-**Status:** Phases 0-1 complete
+**Status:** Phases 0-2 complete
 **Last Updated:** 2026-06-08
 
 ## Objective
@@ -101,6 +101,13 @@ Acceptance:
 ### Phase 2 - Conversational UX Polish
 
 Purpose: make TONTO responses feel more natural and engaging for children.
+
+Implementation note, 2026-06-08: Phase 2 applied a small prompt polish in
+`backend/openai_client.py`. TONTO now starts with a direct answer, uses one simple
+example or comparison when useful, avoids long lists/markdown/lecture-style
+answers, handles greetings/farewells naturally, and keeps using recent context
+for follow-up questions. `MAX_OUTPUT_TOKENS` was reduced from `220` to `180` to
+keep demo answers more speakable through Raspberry `espeak` and browser speech.
 
 Included:
 - Review current prompt calibration in `backend/openai_client.py`.

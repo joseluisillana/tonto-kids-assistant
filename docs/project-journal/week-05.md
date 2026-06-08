@@ -1,7 +1,7 @@
 ﻿# Week 05 Kickoff
 
 **Date:** 2026-06-08
-**Status:** Kickoff; Phase 0 complete.
+**Status:** Phases 0-2 complete.
 
 ## Objective
 
@@ -140,3 +140,61 @@ chmod +x scripts/demo-raspberry.sh
 - [x] Raspberry hardware validation completed.
 - [x] All issues fixed.
 - [x] Issue #35 ready to close.
+
+## Phase 2 — Conversational UX Polish (implemented 2026-06-08)
+
+**Branch:** `feature/week-05-phase2-conversational-ux`
+**Tracking:** GitHub issue #36
+
+### Objective
+
+Make TONTO responses feel more natural and demo-ready for children while keeping
+the MVP architecture unchanged.
+
+### Changes
+
+**`backend/openai_client.py`:**
+- Kept the existing Spanish, child-friendly, short-answer requirement.
+- Added guidance to start with a direct answer before adding supporting detail.
+- Added guidance to use one simple example or comparison when useful.
+- Added guidance to avoid long lists, markdown, and lecture-style answers.
+- Added guidance for natural greetings/farewells with a gentle invitation to ask
+  one small educational question.
+- Reduced `MAX_OUTPUT_TOKENS` from `220` to `180` so spoken answers stay tighter
+  for Raspberry `espeak` and browser speech.
+
+**`tests/test_openai_client.py`:**
+- Updated the OpenAI payload test to verify the new conversational UX guidance.
+
+### Demo Scenario Review
+
+The Phase 2 prompt now explicitly supports the expected demo sequence:
+
+| Scenario | Expected behavior |
+|---|---|
+| Greeting | Natural Spanish greeting, then a small educational invitation |
+| Educational question | Direct answer first, then a short child-friendly explanation |
+| Follow-up question | Uses recent in-memory context coherently |
+| Farewell | Natural goodbye without introducing new architecture or state |
+
+### Validation
+
+- Automated validation: `tests/test_openai_client.py` checks the prompt payload
+  includes Spanish, short answers, direct-answer style, no long lists/markdown,
+  greeting/farewell guidance, recent context, and the configured token limit.
+- Full Python suite: `.\scripts\test.ps1 -Target python` passed with 52/52 tests
+  on 2026-06-08. The first sandboxed run hit a temp-file `PermissionError`; the
+  same official command passed when rerun outside the sandbox.
+
+### Acceptance Criteria
+
+- [x] TONTO prompt supports coherent demo question sequences.
+- [x] Responses remain short, Spanish, child-friendly, and educational.
+- [x] Prompt changes are documented.
+- [x] Prompt changes are covered by focused tests.
+
+### Status
+
+- [x] Code prompt polish implemented.
+- [x] Focused test updated.
+- [x] Full Python test suite passed.

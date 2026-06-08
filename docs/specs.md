@@ -79,7 +79,7 @@ Semana 5 convierte el loop validado en una demo repetible y fácil de operar:
 
 1. **Kickoff documental** — completado 2026-06-08.
 2. **Runbook de demo y scripts de arranque** — completado 2026-06-08. Script bash con health check y runbook completo.
-3. **Pulido de UX conversacional** — respuestas más naturales y engaging para niños.
+3. **Pulido de UX conversacional** — completado 2026-06-08. Prompt ajustado para respuesta directa, ejemplo simple cuando aporte claridad, menos formato/listas y mejor manejo natural de saludos/despedidas; `MAX_OUTPUT_TOKENS` reducido a `180`.
 4. **Resiliencia ante errores** — mensajes claros, recuperación limpia.
 5. **Ensayo de demo** — 3+ ejecuciones consecutivas sin fallos bloqueantes.
 6. **Closeout con evidencia.**
