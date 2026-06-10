@@ -86,6 +86,10 @@ Semana 5 convierte el loop validado en una demo repetible y fácil de operar:
 
 GitHub tracking: issue #33 (parent), issues #34-#38 (phases).
 
+Semana 5 also includes an extra workflow item, tracked by issue #43:
+
+- **Agent Capability Pack** — planned. Portable repo-owned Markdown and PowerShell helper scripts for backend lifecycle and Raspberry SSH operations. Spec: `specs/week-05-agent-capability-pack.md`; plan: `docs/plans/week-05-agent-capability-pack.md`.
+
 ## Fuera de Alcance de Semana 5
 
 - Wake word.

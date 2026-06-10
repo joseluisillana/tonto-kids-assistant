@@ -2,7 +2,7 @@ import io
 import pathlib
 import struct
 import unittest.mock
-import tempfile
+import uuid
 import wave
 
 import pytest
@@ -13,9 +13,12 @@ from backend.main import app
 
 @pytest.fixture
 def tmp_path():
-    root = pathlib.Path(tempfile.gettempdir()) / "tonto-pytest-fixtures"
+    repo_root = pathlib.Path(__file__).resolve().parents[1]
+    root = repo_root / ".cache" / "pytest-fixtures"
     root.mkdir(parents=True, exist_ok=True)
-    return pathlib.Path(tempfile.mkdtemp(dir=root))
+    path = root / f"tmp-{uuid.uuid4().hex}"
+    path.mkdir()
+    return path
 
 
 @pytest.fixture

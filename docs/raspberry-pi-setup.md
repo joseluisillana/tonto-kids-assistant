@@ -208,6 +208,94 @@ tonto-pi-user
 /home/tonto-pi-user
 ```
 
+### 5.1. Clave SSH dedicada para agentes
+
+El Agent Capability Pack de Semana 05 usa una clave SSH dedicada para que Codex, OpenCode u otros agentes puedan ejecutar comprobaciones reproducibles sin automatizar contrasenas.
+
+La clave privada vive fuera del repositorio. No copiar claves privadas, contrasenas ni tokens dentro del proyecto.
+
+En Windows, generar la clave dedicada desde el ordenador de desarrollo:
+
+```powershell
+ssh-keygen -t ed25519 -f "$env:USERPROFILE\.ssh\tonto_agent_ed25519" -C "tonto-agent"
+```
+
+Usar `tonto_agent_ed25519` como nombre de archivo mantiene la clave neutral para Codex, OpenCode u otros agentes. No documentar la clave privada, el contenido de la clave publica, fingerprints reales ni randomart en el repositorio; si se necesita evidencia, registrar solo que la clave `tonto-agent` fue creada e instalada.
+
+Instalar la clave publica en la Raspberry:
+
+```powershell
+type "$env:USERPROFILE\.ssh\tonto_agent_ed25519.pub"
+```
+
+Copiar la linea completa que termina en `tonto-agent`. Despues, entrar por SSH con el metodo manual ya configurado:
+
+```powershell
+ssh tonto-pi-user@tonto-pi.local
+```
+
+En la Raspberry, crear o actualizar `authorized_keys`:
+
+```bash
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh
+nano ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys
+```
+
+Pegar la clave publica `tonto-agent` en una sola linea. No pegar la clave privada.
+
+Tambien se puede instalar la clave publica desde Windows en un solo comando. Este comando copia solo la clave `.pub`; no imprime ni envia la clave privada:
+
+```powershell
+type "$env:USERPROFILE\.ssh\tonto_agent_ed25519.pub" | ssh tonto-pi-user@tonto-pi.local "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys"
+```
+
+Validar desde Windows:
+
+```powershell
+ssh -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=5 -i "$env:USERPROFILE\.ssh\tonto_agent_ed25519" tonto-pi-user@tonto-pi.local hostname
+```
+
+Resultado esperado:
+
+```text
+tonto-pi
+```
+
+Si los valores por defecto no coinciden con la maquina local, configurar variables de entorno antes de usar `scripts/agent-raspberry.ps1`:
+
+```powershell
+$env:TONTO_PI_HOST = "tonto-pi.local"
+$env:TONTO_PI_USER = "tonto-pi-user"
+$env:TONTO_PI_SSH_KEY = "$env:USERPROFILE\.ssh\tonto_agent_ed25519"
+$env:TONTO_PI_REPO = "~/tonto-kids-assistant"
+$env:TONTO_BACKEND_URL = "http://<IP_DEL_PC_WINDOWS>:8000"
+```
+
+Usar el preflight del pack:
+
+```powershell
+.\scripts\agent-raspberry.ps1 -Action preflight
+```
+
+El helper usa `tonto-pi.local` por defecto. Si se necesita usar una IP fija o un alias SSH local distinto, sobreescribir `TONTO_PI_HOST`:
+
+```powershell
+$env:TONTO_PI_HOST = "<IP_O_ALIAS_DE_LA_RASPBERRY>"
+.\scripts\agent-raspberry.ps1 -Action preflight
+```
+
+Revocar la clave dedicada:
+
+1. Entrar manualmente por SSH en la Raspberry.
+2. Editar `~/.ssh/authorized_keys`.
+3. Eliminar solo la linea de clave publica que termina en `tonto-agent`.
+4. Guardar el archivo y mantener permisos `chmod 600 ~/.ssh/authorized_keys`.
+5. Si hace falta rotar acceso local, borrar o reemplazar `C:\Users\<USUARIO>\.ssh\tonto_agent_ed25519` y su `.pub`.
+
+La revocacion no debe borrar otras claves de operador o VSCode Remote SSH.
+
 ## 6. Preparacion Minima del Sistema
 
 Actualizar paquetes:
@@ -577,3 +665,4 @@ NotebookLM debe leer la copia exportada, pero la fuente oficial sigue siendo est
 | 2026-05-15 | Semana 1 | Se documenta uso de `.\scripts\dev.ps1 -Service backend -AllowLan` para que la Raspberry alcance el backend del PC Windows en la LAN. |
 | 2026-05-15 | Semana 1 | Se valida prueba punto a punto Raspberry -> backend LAN -> OpenAI -> TTS por salida de auriculares/jack. |
 | 2026-05-18 | Semana 3 | Se documentan comandos reproducibles para validar microfono USB con `arecord`, grabacion WAV corta y reproduccion local con `aplay` antes de implementar STT. |
+| 2026-06-09 | Semana 5 | Se documenta clave SSH dedicada `tonto-agent` para el Agent Capability Pack, con generacion, instalacion, validacion y revocacion sin guardar secretos en repo. |

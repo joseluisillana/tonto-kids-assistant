@@ -7,6 +7,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 TONTO_BACKEND_URL="${TONTO_BACKEND_URL:-http://192.168.1.91:8000}"
 TONTO_AUDIO_DEVICE="${TONTO_AUDIO_DEVICE:-plughw:CARD=Device,DEV=0}"
 TONTO_RECORD_SECONDS="${TONTO_RECORD_SECONDS:-6}"
+VENV_PYTHON="$REPO_ROOT/.venv/bin/python"
 HEALTH_RETRIES=5
 HEALTH_DELAY=2
 
@@ -28,12 +29,10 @@ check_backend_health() {
     exit 1
 }
 
-activate_venv() {
-    if [ -f "$REPO_ROOT/.venv/bin/activate" ]; then
-        source "$REPO_ROOT/.venv/bin/activate"
-    else
-        echo "ERROR: Virtual environment not found at $REPO_ROOT/.venv"
-        echo "Create the venv first: python3 -m venv $REPO_ROOT/.venv && source $REPO_ROOT/.venv/bin/activate && pip install -r $REPO_ROOT/client/requirements.txt"
+check_venv() {
+    if [ ! -x "$VENV_PYTHON" ]; then
+        echo "ERROR: Virtual environment Python not found at $VENV_PYTHON"
+        echo "Create the venv first: python3 -m venv $REPO_ROOT/.venv && $REPO_ROOT/.venv/bin/python -m pip install -r $REPO_ROOT/client/requirements.txt"
         exit 1
     fi
 }
@@ -48,13 +47,13 @@ start_client() {
     echo "  Audio device: $TONTO_AUDIO_DEVICE"
     echo "  Recording duration: ${TONTO_RECORD_SECONDS}s"
     echo ""
-    python3 "$REPO_ROOT/client/main.py" --mode voice
+    "$VENV_PYTHON" "$REPO_ROOT/client/main.py" --mode voice
 }
 
 echo "=== TONTO Demo Client (Raspberry) ==="
 echo ""
 check_backend_health
 echo ""
-activate_venv
+check_venv
 echo ""
 start_client

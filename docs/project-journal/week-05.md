@@ -198,3 +198,98 @@ The Phase 2 prompt now explicitly supports the expected demo sequence:
 - [x] Code prompt polish implemented.
 - [x] Focused test updated.
 - [x] Full Python test suite passed.
+
+## Extra — Agent Capability Pack Planning (created 2026-06-09)
+
+**Branch:** `docs/week-05-agent-capability-pack`
+**Tracking:** GitHub issue #43
+
+### Objective
+
+Plan a portable AI development asset so Codex, OpenCode, and future agents can operate common backend and Raspberry validation tasks through repo-owned documentation and PowerShell helpers.
+
+### Context
+
+During the attempt to complete Week 05 Phase 2, Codex correctly identified the need to validate 5+ demo questions on Raspberry, but started to improvise backend startup and Raspberry SSH commands. The project already has official PowerShell scripts and workflow docs, but it does not yet have a dedicated portable capability layer for agent-operated backend/Raspberry tasks.
+
+### Documents Created
+
+- `specs/week-05-agent-capability-pack.md`
+- `docs/plans/week-05-agent-capability-pack.md`
+
+### Decisions Captured
+
+- The source of truth is repository Markdown plus official scripts, not a Codex-only skill.
+- Tool-specific assets may wrap the capability pack later, but must delegate to repo-owned docs and scripts.
+- Raspberry access should use a dedicated SSH key stored outside the repo.
+- Password-based SSH automation and committed secrets are out of scope.
+
+### Follow-up
+
+After issue #43 is implemented, resume issue #36 and complete the Raspberry 5+ demo-question validation for Week 05 Phase 2.
+
+## Step 3 — Agent Capability Pack Implementation (implemented 2026-06-09)
+
+**Branch:** `feature/week-05-agent-capability-pack`
+**Tracking:** GitHub issue #43
+
+### Objective
+
+Implement the portable Agent Capability Pack so AI-assisted agents and humans can use repository-owned helpers for backend lifecycle checks and Raspberry SSH preflight work.
+
+### Changes
+
+**`scripts/agent-backend.ps1`** (new):
+- Supports `-Action start|stop|status|health`.
+- Supports `-AllowLan` for Raspberry-accessible backend validation.
+- Starts the backend in the background through `scripts/dev.ps1 -Service backend`.
+- Stores process metadata and logs under `.cache/agent/`.
+- Waits for `http://127.0.0.1:8000/health`.
+- Stops only the PID recorded in `.cache/agent/backend.pid`.
+- Uses an internal `scripts/dev.ps1 -Service backend` agent mode that starts uvicorn without reload and redirects logs from the Python process itself. This avoids a Windows background-process hang seen when `Start-Process` owned the stdout/stderr redirection for a long-running backend.
+
+**`scripts/agent-raspberry.ps1`** (new):
+- Supports `-Action preflight|exec`.
+- Uses `TONTO_PI_HOST`, `TONTO_PI_USER`, `TONTO_PI_SSH_KEY`, `TONTO_PI_REPO`, and optional `TONTO_BACKEND_URL`.
+- Uses OpenSSH with `BatchMode=yes`, `IdentitiesOnly=yes`, and `ConnectTimeout=5`.
+- Does not automate passwords or print private key contents.
+- Preflight checks SSH identity, repo presence, git status, required tools, and optional backend health from the Raspberry.
+- Preflight also confirms `.venv/bin/python` exists in the Raspberry repo so project Python stays inside the virtual environment.
+
+**`scripts/demo-raspberry.sh`** (updated):
+- Starts the voice client with `.venv/bin/python` directly instead of relying on `source .venv/bin/activate` plus bare `python3`.
+
+**Documentation:**
+- `docs/raspberry-pi-setup.md` now documents dedicated SSH key generation, installation, validation, and revocation.
+- `docs/ai-assisted-workflow.md` now documents the Capability Pack as the portable agent command surface.
+
+**Test infrastructure:**
+- `tests/conftest.py` now keeps the custom `tmp_path` fixture under repo-local `.cache/pytest-fixtures` and creates directories with `pathlib`, avoiding inaccessible Windows temp directories in sandboxed agent runs.
+
+### Validation Evidence
+
+| Check | Result | Notes |
+|---|---|---|
+| `.\scripts\agent-backend.ps1 -Action start -AllowLan` | Passed | Backend started in background, wrote PID/logs, and waited for `/health`. |
+| `.\scripts\agent-backend.ps1 -Action health` | Passed | Returned `Health: ok`. |
+| `.\scripts\agent-backend.ps1 -Action status` | Passed | Reported recorded PID alive and health OK. |
+| `.\scripts\agent-backend.ps1 -Action stop` | Passed | Stopped the recorded PID only; follow-up `/health` was unavailable and no Python backend process remained. |
+| Dedicated SSH key setup | Passed | Human generated and installed `tonto_agent_ed25519` with comment `tonto-agent`; exact key contents, fingerprint, and randomart are intentionally not recorded. |
+| SSH key validation | Passed | Human validated `ssh -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=5 -i "$env:USERPROFILE\.ssh\tonto_agent_ed25519" tonto-pi-user@tonto-pi.local hostname` returned `tonto-pi`. |
+| `.\scripts\agent-raspberry.ps1 -Action exec -Command "echo hello; hostname; whoami; pwd"` | Passed | Returned `hello`, `tonto-pi`, `tonto-pi-user`, and `/home/tonto-pi-user/tonto-kids-assistant` after changing the default host to `tonto-pi.local`. |
+| `.\scripts\agent-raspberry.ps1 -Action preflight` | Passed | Confirmed SSH identity, repo path, git status, required tools, and `.venv/bin/python` at `/home/tonto-pi-user/tonto-kids-assistant/.venv/bin/python` after changing the default host to `tonto-pi.local`. |
+| `.\scripts\agent-raspberry.ps1 -Action preflight` with `TONTO_BACKEND_URL=http://192.168.1.99:8000` | Failed as expected | Raspberry could not connect because `192.168.1.99` was not the current Windows PC LAN IP. |
+| `.\scripts\agent-raspberry.ps1 -Action preflight` with `TONTO_BACKEND_URL=http://192.168.1.91:8000` | Passed | Raspberry reached backend health and returned `{"status":"ok"}`. |
+| `.\scripts\test.ps1 -Target python` | Passed | 52 tests passed. |
+| `bash -n scripts/demo-raspberry.sh` | Blocked | Local Bash/WSL returned `Access is denied` in this Windows session. |
+
+### Issues Found and Fixed
+
+- Initial backend helper attempts hung in the Codex desktop shell because `Start-Process` owned redirected stdout/stderr for a long-running uvicorn process. Fixed by having the Python runner redirect its own logs and by disabling uvicorn reload for agent background startup.
+- `uvicorn --reload` in background produced repeated Windows `multiprocessing.resource_sharer` `PermissionError: [WinError 5] Access is denied` traces. Fixed by keeping reload enabled for normal human `scripts/dev.ps1` use but disabling it only for agent background mode.
+- Test runs initially failed because the custom `tmp_path` fixture used temp directories that were inaccessible under this sandbox. Fixed by creating fixture directories under repo-local `.cache/pytest-fixtures`.
+- Raspberry backend health initially failed because `TONTO_BACKEND_URL` pointed to stale LAN IP `192.168.1.99`. The current Windows PC LAN IP was `192.168.1.91`, and preflight backend health passed with `http://192.168.1.91:8000`.
+
+### Remaining Validation
+
+Issue #43 is implementation-ready for PR review. Real Raspberry preflight passed after setting the default host to `tonto-pi.local`.
