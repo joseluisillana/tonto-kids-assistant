@@ -28,7 +28,7 @@ cd ~/tonto-kids-assistant
 ./scripts/demo-raspberry.sh
 ```
 
-The script checks backend health, sets default env vars, and starts voice mode.
+The script checks backend health, sets default env vars, and starts voice mode with `.venv/bin/python`.
 
 ### 3. Start the web client (optional, Windows)
 

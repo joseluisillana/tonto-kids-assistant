@@ -29,6 +29,8 @@ function Assert-DevEnvironment {
 function Start-Backend {
     Assert-DevEnvironment
     $BackendHost = if ($AllowLan) { "0.0.0.0" } else { "127.0.0.1" }
+    $ReloadArgs = if ($env:TONTO_BACKEND_RELOAD -eq "0") { @() } else { @("--reload") }
+    $BackendArgs = @("-m", "uvicorn", "backend.main:app", "--host", $BackendHost, "--port", "8000") + $ReloadArgs
 
     Write-Host "Starting backend on ${BackendHost}:8000"
     if ($AllowLan) {
@@ -36,9 +38,61 @@ function Start-Backend {
         Write-Host "Example: TONTO_BACKEND_URL=http://<windows-pc-ip>:8000"
     }
 
+    if ($env:TONTO_AGENT_BACKGROUND -eq "1") {
+        $AgentPidPath = $env:TONTO_AGENT_BACKEND_PID_PATH
+        $AgentOutLogPath = $env:TONTO_AGENT_BACKEND_OUT_LOG
+        $AgentErrLogPath = $env:TONTO_AGENT_BACKEND_ERR_LOG
+
+        if (-not $AgentPidPath -or -not $AgentOutLogPath -or -not $AgentErrLogPath) {
+            throw "Agent background mode requires TONTO_AGENT_BACKEND_PID_PATH, TONTO_AGENT_BACKEND_OUT_LOG, and TONTO_AGENT_BACKEND_ERR_LOG."
+        }
+
+        $AgentDir = Split-Path -Parent $AgentPidPath
+        $AgentRunnerPath = Join-Path $AgentDir "backend-runner.py"
+
+        New-Item -ItemType Directory -Force -Path $AgentDir | Out-Null
+        Set-Content -Path $AgentRunnerPath -Encoding utf8 -Value @"
+import os
+import sys
+
+import uvicorn
+
+sys.path.insert(0, os.getcwd())
+
+out_log = os.environ["TONTO_AGENT_BACKEND_OUT_LOG"]
+err_log = os.environ["TONTO_AGENT_BACKEND_ERR_LOG"]
+host = os.environ["TONTO_AGENT_BACKEND_HOST"]
+
+os.makedirs(os.path.dirname(out_log), exist_ok=True)
+stdout = open(out_log, "a", buffering=1, encoding="utf-8")
+stderr = open(err_log, "a", buffering=1, encoding="utf-8")
+os.dup2(stdout.fileno(), 1)
+os.dup2(stderr.fileno(), 2)
+sys.stdout = stdout
+sys.stderr = stderr
+
+print(f"Starting backend on {host}:8000", flush=True)
+uvicorn.run("backend.main:app", host=host, port=8000, reload=False)
+"@
+
+        $StartProcessParameters = @{
+            FilePath = $VenvPython
+            ArgumentList = @($AgentRunnerPath)
+            WorkingDirectory = $RepoRoot
+            PassThru = $true
+        }
+        if ($env:OS -eq "Windows_NT") {
+            $StartProcessParameters.WindowStyle = "Hidden"
+        }
+
+        $Process = Start-Process @StartProcessParameters
+        Set-Content -Path $AgentPidPath -Value $Process.Id -Encoding ascii
+        return
+    }
+
     Push-Location $RepoRoot
     try {
-        & $VenvPython -m uvicorn backend.main:app --host $BackendHost --port 8000 --reload
+        & $VenvPython @BackendArgs
     } finally {
         Pop-Location
     }

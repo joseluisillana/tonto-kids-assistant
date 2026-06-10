@@ -25,6 +25,35 @@ Codex should follow the repo instructions in `AGENTS.md` and prefer the official
 
 Codex can execute full repository changes, but the repository workflow is tool-agnostic. Codex-specific skills may help later, but they must not become the source of truth for project rules.
 
+## Agent Capability Pack
+
+The Week 05 Agent Capability Pack is the portable command surface for AI-assisted agents and humans when operating backend and Raspberry validation tasks.
+
+Its source of truth is repository-owned Markdown and PowerShell scripts:
+
+- `specs/week-05-agent-capability-pack.md`
+- `docs/plans/week-05-agent-capability-pack.md`
+- `scripts/agent-backend.ps1`
+- `scripts/agent-raspberry.ps1`
+- `docs/raspberry-pi-setup.md`
+
+Tool-specific wrappers, Codex skills, OpenCode prompts, plugins, or MCP tools may be added later, but they must delegate to this repo-owned pack. They should not become the canonical workflow.
+
+Use the pack when an agent needs to:
+
+- start, stop, status-check, or health-check the backend for validation,
+- run a Raspberry preflight over SSH,
+- execute a narrow command inside the Raspberry repo for evidence capture.
+
+The pack deliberately does not automate passwords, store secrets, replace human voice demo validation, or change product behavior. Machine-specific values belong in local environment variables such as `TONTO_PI_HOST`, `TONTO_PI_USER`, `TONTO_PI_SSH_KEY`, `TONTO_PI_REPO`, and `TONTO_BACKEND_URL`.
+
+Python execution for project code must stay inside the repository virtual environment:
+
+- Windows backend, tests, and setup use `.venv\Scripts\python.exe`.
+- Raspberry client/demo commands use `.venv/bin/python`.
+- Host `python` or `python3` may be used only to create the virtual environment or to verify that the system Python exists.
+- Agents should not run project modules with bare `python`, `python3`, `pip`, or `pytest`.
+
 ## OpenCode
 
 OpenCode is an additional interactive CLI used for implementation,

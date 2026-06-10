@@ -1,6 +1,6 @@
 # Week 05 Agent Capability Pack Implementation Plan
 
-**Status:** Planned
+**Status:** Implemented
 **Tracking:** GitHub issue #43
 
 ## Objective
@@ -59,6 +59,7 @@ Create `scripts/agent-raspberry.ps1` with:
 - defaults from the spec for `TONTO_PI_HOST`, `TONTO_PI_USER`, `TONTO_PI_SSH_KEY`, `TONTO_PI_REPO`,
 - OpenSSH options `BatchMode=yes`, `IdentitiesOnly=yes`, and `ConnectTimeout=5`,
 - preflight checks for SSH, repo, git status, required tools, and optional backend health.
+- preflight confirms `.venv/bin/python` exists so project Python execution stays inside the repo virtual environment.
 
 ### 3. Documentation
 
@@ -100,6 +101,15 @@ For the implementation:
 git diff --check
 git status --short --branch
 ```
+
+Implementation verification recorded on 2026-06-09:
+
+- `.\scripts\agent-backend.ps1 -Action start -AllowLan`: passed after switching agent startup away from external PowerShell stream redirection.
+- `.\scripts\agent-backend.ps1 -Action health`: passed.
+- `.\scripts\agent-backend.ps1 -Action status`: passed.
+- `.\scripts\agent-backend.ps1 -Action stop`: passed and left `/health` unavailable.
+- `.\scripts\agent-raspberry.ps1 -Action preflight`: passed after changing the default host to `tonto-pi.local`, repairing the default key path to `C:\Users\josel\.ssh\tonto_agent_ed25519`, fixing `~/` repo expansion, and preserving remote stdout.
+- `.\scripts\test.ps1 -Target python`: passed, 52 tests.
 
 For documentation-only planning work:
 
