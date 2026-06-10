@@ -1,6 +1,6 @@
 # Week 05 Agent Capability Pack
 
-**Status:** Planned
+**Status:** Implemented
 **Tracking:** GitHub issue #43
 **Last Updated:** 2026-06-09
 
@@ -83,9 +83,9 @@ Environment variables:
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `TONTO_PI_HOST` | `tonto-pi` | Raspberry SSH host |
+| `TONTO_PI_HOST` | `tonto-pi.local` | Raspberry SSH host |
 | `TONTO_PI_USER` | `tonto-pi-user` | Raspberry SSH user |
-| `TONTO_PI_SSH_KEY` | `$HOME\.ssh\tonto_codex_ed25519` | Dedicated private key path |
+| `TONTO_PI_SSH_KEY` | `$HOME\.ssh\tonto_agent_ed25519` | Dedicated private key path |
 | `TONTO_PI_REPO` | `~/tonto-kids-assistant` | Repository path on Raspberry |
 | `TONTO_BACKEND_URL` | unset | Optional backend URL to check from Raspberry |
 
@@ -107,6 +107,7 @@ SSH behavior:
 - `TONTO_PI_REPO` exists.
 - `git status --short --branch` runs inside the Raspberry repo.
 - `python3`, `curl`, `arecord`, `aplay`, and `espeak` are available.
+- `.venv/bin/python` exists inside the Raspberry repo and is the Python used for project client execution.
 - If `TONTO_BACKEND_URL` is set, Raspberry can reach `$TONTO_BACKEND_URL/health`.
 
 `exec` behavior:
@@ -122,7 +123,7 @@ Document the setup in both `docs/raspberry-pi-setup.md` and the future Agent Cap
 Human setup command on Windows:
 
 ```powershell
-ssh-keygen -t ed25519 -f "$env:USERPROFILE\.ssh\tonto_codex_ed25519" -C "tonto-agent"
+ssh-keygen -t ed25519 -f "$env:USERPROFILE\.ssh\tonto_agent_ed25519" -C "tonto-agent"
 ```
 
 Installation:
