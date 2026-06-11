@@ -34,6 +34,10 @@ def test_call_openai_uses_child_friendly_spanish_prompt(monkeypatch):
     assert captured["timeout"] == 20
     assert "Always answer in Spanish" in captured["payload"]["instructions"]
     assert "2 or 3 simple sentences" in captured["payload"]["instructions"]
+    assert "simple accurate facts" in captured["payload"]["instructions"]
+    assert "direct answer to the child's question" in captured["payload"]["instructions"]
+    assert "Avoid long lists, markdown, and lecture-style answers" in captured["payload"]["instructions"]
+    assert "greets you or says goodbye" in captured["payload"]["instructions"]
     assert "recent conversation context" in captured["payload"]["instructions"]
     assert captured["payload"]["max_output_tokens"] == MAX_OUTPUT_TOKENS
     assert "User: Hola TONTO, que es una estrella?" in captured["payload"]["input"]
