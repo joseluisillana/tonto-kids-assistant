@@ -340,6 +340,6 @@ Implement the portable Agent Capability Pack so AI-assisted agents and humans ca
 - Test runs initially failed because the custom `tmp_path` fixture used temp directories that were inaccessible under this sandbox. Fixed by creating fixture directories under repo-local `.cache/pytest-fixtures`.
 - Raspberry backend health initially failed because `TONTO_BACKEND_URL` pointed to stale LAN IP `192.168.1.99`. The current Windows PC LAN IP was `192.168.1.91`, and preflight backend health passed with `http://192.168.1.91:8000`.
 
-### Remaining Validation
+### Status
 
-Issue #43 is implementation-ready for PR review. Real Raspberry preflight passed after setting the default host to `tonto-pi.local`.
+Issue #43 was completed and closed after PR #45 merged. Real Raspberry preflight passed after setting the default host to `tonto-pi.local`, and the pack is now the official agent command surface for backend and Raspberry operations.

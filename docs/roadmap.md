@@ -253,7 +253,7 @@ Convertir el sistema en una demo estable y repetible.
 
 0. Kickoff documental y handoff para agentes — completado 2026-06-08.
 1. Runbook de demo y scripts de arranque — completado 2026-06-08.
-2. Pulido de UX conversacional — completado 2026-06-08.
+2. Pulido de UX conversacional — completado 2026-06-11; validado con 6/6 preguntas desde Raspberry real contra backend LAN.
 3. Resiliencia ante errores.
 4. Ensayo de demo (3+ ejecuciones consecutivas).
 5. Closeout con evidencia.
@@ -263,6 +263,8 @@ Convertir el sistema en una demo estable y repetible.
 Trabajo extra de Semana 5, trackeado en GitHub issue #43.
 
 Objetivo: definir un asset portable para agentes basado en Markdown del repo y scripts PowerShell oficiales, de modo que Codex, OpenCode u otros agentes puedan arrancar/parar backend y ejecutar preflights SSH en Raspberry sin inventar comandos ad hoc ni guardar secretos en el repositorio.
+
+Estado: implementado y mergeado en PR #45; issue #43 cerrada. El pack añadió `scripts/agent-backend.ps1` y `scripts/agent-raspberry.ps1`, documentó el workflow SSH con clave dedicada y validó preflight real desde Raspberry con backend health.
 
 La spec vive en `specs/week-05-agent-capability-pack.md` y el plan en `docs/plans/week-05-agent-capability-pack.md`.
 

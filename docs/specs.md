@@ -79,7 +79,7 @@ Semana 5 convierte el loop validado en una demo repetible y fácil de operar:
 
 1. **Kickoff documental** — completado 2026-06-08.
 2. **Runbook de demo y scripts de arranque** — completado 2026-06-08. Script bash con health check y runbook completo.
-3. **Pulido de UX conversacional** — completado 2026-06-08. Prompt ajustado para respuesta directa, ejemplo simple cuando aporte claridad, menos formato/listas y mejor manejo natural de saludos/despedidas; `MAX_OUTPUT_TOKENS` reducido a `180`.
+3. **Pulido de UX conversacional** — completado 2026-06-11. Prompt ajustado para respuesta directa, ejemplo simple cuando aporte claridad, factual-care, menos formato/listas y mejor manejo natural de saludos/despedidas; `MAX_OUTPUT_TOKENS` reducido a `180`; validado con 6/6 preguntas desde Raspberry real contra backend LAN.
 4. **Resiliencia ante errores** — mensajes claros, recuperación limpia.
 5. **Ensayo de demo** — 3+ ejecuciones consecutivas sin fallos bloqueantes.
 6. **Closeout con evidencia.**
@@ -88,7 +88,7 @@ GitHub tracking: issue #33 (parent), issues #34-#38 (phases).
 
 Semana 5 also includes an extra workflow item, tracked by issue #43:
 
-- **Agent Capability Pack** — planned. Portable repo-owned Markdown and PowerShell helper scripts for backend lifecycle and Raspberry SSH operations. Spec: `specs/week-05-agent-capability-pack.md`; plan: `docs/plans/week-05-agent-capability-pack.md`.
+- **Agent Capability Pack** — implemented and merged. Portable repo-owned Markdown and PowerShell helper scripts for backend lifecycle and Raspberry SSH operations. It added `scripts/agent-backend.ps1` and `scripts/agent-raspberry.ps1`; real Raspberry preflight passed with backend health. Spec: `specs/week-05-agent-capability-pack.md`; plan: `docs/plans/week-05-agent-capability-pack.md`.
 
 ## Fuera de Alcance de Semana 5
 
