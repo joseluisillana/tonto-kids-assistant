@@ -157,6 +157,7 @@ the MVP architecture unchanged.
 - Kept the existing Spanish, child-friendly, short-answer requirement.
 - Added guidance to start with a direct answer before adding supporting detail.
 - Added guidance to use one simple example or comparison when useful.
+- Added guidance to use simple accurate facts and avoid guessing.
 - Added guidance to avoid long lists, markdown, and lecture-style answers.
 - Added guidance for natural greetings/farewells with a gentle invitation to ask
   one small educational question.
@@ -181,15 +182,63 @@ The Phase 2 prompt now explicitly supports the expected demo sequence:
 
 - Automated validation: `tests/test_openai_client.py` checks the prompt payload
   includes Spanish, short answers, direct-answer style, no long lists/markdown,
-  greeting/farewell guidance, recent context, and the configured token limit.
+  factual care, greeting/farewell guidance, recent context, and the configured
+  token limit.
 - Full Python suite: `.\scripts\test.ps1 -Target python` passed with 52/52 tests
   on 2026-06-08. The first sandboxed run hit a temp-file `PermissionError`; the
   same official command passed when rerun outside the sandbox.
+- Full Python suite: `.\scripts\test.ps1 -Target python` passed with 52/52 tests
+  on 2026-06-11 after the final factual-care prompt adjustment.
+
+### Raspberry Validation Evidence (2026-06-11)
+
+**Environment:**
+- Branch: `feature/week-05-phase2-conversational-ux`
+- Windows LAN IP from `ipconfig`: `192.168.1.91`
+- Backend helper: `.\scripts\agent-backend.ps1 -Action start -AllowLan`
+- Backend URL from Raspberry: `http://192.168.1.91:8000`
+- Raspberry helper: `.\scripts\agent-raspberry.ps1`
+- Raspberry identity: `tonto-pi` / `tonto-pi-user`
+- Raspberry repo state during validation: `feature/week-05-phase1-demo-runbook`
+  client, calling the Windows backend from this Phase 2 branch.
+
+**Base checks:**
+
+| Check | Result | Notes |
+|---|---|---|
+| `.\scripts\agent-backend.ps1 -Action start -AllowLan` | Passed | Backend started on `0.0.0.0:8000`; final validation PID was `28168`. |
+| `.\scripts\agent-raspberry.ps1 -Action preflight` with `TONTO_BACKEND_URL=http://192.168.1.91:8000` | Passed | Confirmed SSH identity, repo, required tools, `.venv/bin/python`, and backend `/health` returned `{"status":"ok"}`. |
+| First 6-question Raspberry run | Failed | Raspberry reached backend, but backend returned OpenAI 502 because it had been started inside the sandbox and inherited a blocking proxy. |
+| Backend restart outside sandbox | Passed | Stopped recorded PID and restarted with the same official helper outside the sandbox so OpenAI calls could complete. |
+
+**Final 6-question Raspberry text-mode run:**
+
+The command executed on Raspberry via `agent-raspberry.ps1 -Action exec`, piping
+six inputs into `.venv/bin/python client/main.py --mode text` with one generated
+session ID: `local-session-e5866fdb-8930-430b-9ba2-081740636db8`.
+
+| Turn | User input | Result |
+|---|---|---|
+| 1 | `Hola TONTO, ¿cómo estás?` | Warm Spanish greeting, short, invited a question. |
+| 2 | `¿Qué es una estrella?` | Direct child-friendly explanation with a simple comparison. |
+| 3 | `¿Y el Sol es una estrella?` | Coherent follow-up; confirmed the Sol is a star and related it to Earth. |
+| 4 | `¿Por qué nos da luz y calor?` | Short educational answer; avoided the earlier incorrect "chemical reactions" phrasing after the factual-care prompt adjustment. |
+| 5 | `¿Puedes recordarme qué te pregunté al principio?` | Correctly used session context and recalled the first educational question about stars. |
+| 6 | `Gracias, adiós.` | Natural farewell in Spanish. |
+
+**Observations:**
+- The final run completed 6/6 Raspberry-originated questions successfully.
+- Responses were Spanish, warm, short enough for the demo, and child-friendly.
+- In-memory context worked across the sequence.
+- Raspberry `espeak` ran after each answer; ALSA/JACK warnings appeared but were
+  the already documented non-blocking Raspberry audio warnings.
+- No architecture, dependency, persistence, or scope changes were introduced.
 
 ### Acceptance Criteria
 
 - [x] TONTO prompt supports coherent demo question sequences.
 - [x] Responses remain short, Spanish, child-friendly, and educational.
+- [x] Raspberry real validation completed with 5+ demo questions.
 - [x] Prompt changes are documented.
 - [x] Prompt changes are covered by focused tests.
 
@@ -198,6 +247,7 @@ The Phase 2 prompt now explicitly supports the expected demo sequence:
 - [x] Code prompt polish implemented.
 - [x] Focused test updated.
 - [x] Full Python test suite passed.
+- [x] Raspberry 5+ question validation completed.
 
 ## Extra — Agent Capability Pack Planning (created 2026-06-09)
 

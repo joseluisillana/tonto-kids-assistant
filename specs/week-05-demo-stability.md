@@ -105,9 +105,15 @@ Purpose: make TONTO responses feel more natural and engaging for children.
 Implementation note, 2026-06-08: Phase 2 applied a small prompt polish in
 `backend/openai_client.py`. TONTO now starts with a direct answer, uses one simple
 example or comparison when useful, avoids long lists/markdown/lecture-style
-answers, handles greetings/farewells naturally, and keeps using recent context
-for follow-up questions. `MAX_OUTPUT_TOKENS` was reduced from `220` to `180` to
+answers, uses simple accurate facts instead of guessing, handles
+greetings/farewells naturally, and keeps using recent context for follow-up
+questions. `MAX_OUTPUT_TOKENS` was reduced from `220` to `180` to
 keep demo answers more speakable through Raspberry `espeak` and browser speech.
+
+Validation note, 2026-06-11: Phase 2 was validated from the real Raspberry with
+6 text-mode demo questions against the Windows LAN backend. See
+`docs/project-journal/week-05.md` for the command evidence and turn-by-turn
+results.
 
 Included:
 - Review current prompt calibration in `backend/openai_client.py`.
