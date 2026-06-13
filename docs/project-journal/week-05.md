@@ -486,3 +486,89 @@ No new script flag is added in this phase. `scripts/dev.ps1` and `scripts/agent-
 ### Status
 
 Implemented through Phase 3. Future fallback, balancing, DevExpert TTS, and Gemini remain tracked separately in issue #53.
+
+## Extra — Inference Providers Real Credential Validation (validated 2026-06-13)
+
+**Branch:** `docs/inference-provider-real-validation`
+**Tracking:** GitHub parent issue #48 (closed)
+
+### Objective
+
+Validate that the implemented inference provider layer works end-to-end with real API credentials for both OpenAI and DevExpert, without changing architecture or adding features.
+
+### Validation Evidence
+
+**Environment:**
+- Branch: `docs/inference-provider-real-validation` (from `main`)
+- Backend: `http://127.0.0.1:8000` via `agent-backend.ps1 -Action start -AllowLan`
+- Python tests: 62/62 passed
+- `git diff --check`: clean
+
+#### A. OpenAI Real Validation
+
+| Check | Result | Notes |
+|---|---|---|
+| Provider env | `$env:TONTO_INFERENCE_PROVIDER="openai"` | |
+| Models | `OPENAI_MODEL=gpt-4o-mini`, `OPENAI_STT_MODEL=gpt-4o-mini-transcribe` | |
+| `/health` | OK | `{"status":"ok"}` |
+| `POST /chat` smoke | OK | `success: true`, `response_text` in Spanish, child-friendly |
+| Latency (chat) | ~1.3-2.0s | Two consecutive calls measured |
+| STT + chat (web voice) | OK | Browser microphone via web client at `http://127.0.0.1:5173/` |
+
+**Voice test (OpenAI STT + chat) — Web:**
+- User spoke: "¿Qué es un planeta?"
+- STT transcript: accurate
+- TONTO response: child-friendly Spanish explanation about planets orbiting a star, with Earth as example. Correct system prompt behavior.
+
+**Voice test (OpenAI STT + chat) — Raspberry:**
+- User spoke Spanish: "¿Qué es un planeta?" → transcript accurate, response in Spanish, child-friendly. Correct.
+- User spoke Catalan: "Què és un planeta?" → transcript accurate (Catalan detected), but TONTO responded in Catalan instead of Spanish. The system prompt says "Always answer in Spanish" but the model matched the input language. This is a model behavior edge case, not a provider integration issue; the STT and chat pipeline worked correctly.
+
+#### B. DevExpert Real Validation
+
+| Check | Result | Notes |
+|---|---|---|
+| Provider env | `$env:TONTO_INFERENCE_PROVIDER="devexpert"` | |
+| Base URL | `https://inference.devexpert.io/v1` | |
+| Chat model | `mimo-v2.5` | |
+| STT model | `gpt-4o-mini-transcribe` | |
+| `/health` | OK | `{"status":"ok"}` |
+| `POST /chat` smoke | OK | `success: true`, `response_text` in Spanish, child-friendly |
+| Latency (chat) | ~2.0-2.9s | Two consecutive calls measured |
+| STT + chat (web voice) | OK | Browser microphone via web client at `http://127.0.0.1:5173/` |
+
+**Voice test (DevExpert STT + chat) — Web:**
+- User spoke: "¿Cuántos planetas hay?"
+- STT transcript: accurate
+- TONTO response: listed 8 planets with size facts, child-friendly Spanish. Correct system prompt behavior.
+
+**Voice test (DevExpert STT + chat) — Raspberry:**
+- User spoke: "¿Qué es una estrella?"
+- STT transcript: accurate
+- TONTO response: child-friendly Spanish explanation comparing stars to distant suns. Correct system prompt behavior. Response was more verbose than typical OpenAI, consistent with `mimo-v2.5` model behavior noted earlier.
+
+**Sample response to "Responde solo: ok":**
+- DevExpert `mimo-v2.5` produced a longer child-friendly Spanish greeting.
+- The model tends to be more verbose than OpenAI `gpt-4o-mini` for simple prompts.
+- Provider integration worked correctly: request routed to DevExpert `/chat/completions`, response extracted, TONTO contract preserved.
+
+**Observation on model behavior:**
+- DevExpert `mimo-v2.5` appears more conversational/verbose than OpenAI `gpt-4o-mini` for the same TONTO system prompt.
+- This is a model behavior difference, not a provider integration issue.
+- For demo consistency, an operator may prefer to adjust `DEVEXPERT_CHAT_MODEL` if shorter answers are needed, but this is not a blocker.
+
+#### C. Automated Tests
+
+| Check | Result |
+|---|---|
+| `.\scripts\test.ps1 -Target python` | 62/62 passed |
+| `git diff --check` | Clean |
+
+### Summary
+
+Both OpenAI and DevExpert providers work end-to-end with real credentials. The provider selection mechanism (`TONTO_INFERENCE_PROVIDER`), chat generation, STT transcription, response extraction, and TONTO public contracts (`/chat`, `/chat/audio`) are all functional. No architecture changes, no new dependencies, no fallback/balancing implemented.
+
+### Next Steps
+
+- If DevExpert `mimo-v2.5` verbosity is a demo concern, consider testing alternative models (tracked in #53).
+- Future: fallback, balancing, DevExpert TTS, Gemini (all tracked in #53).
