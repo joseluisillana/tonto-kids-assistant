@@ -274,12 +274,12 @@ Trabajo extra de Semana 5 para alinear TONTO con el portal DevExpert Inference u
 
 Objetivo: permitir que el backend use OpenAI o DevExpert Inference mediante configuración de arranque, manteniendo estables los contratos `/chat` y `/chat/audio` y sin obligar a los clientes Raspberry/web a conocer el proveedor activo.
 
-Estado: en progreso, con parent issue #48. La línea se divide en fases:
+Estado: implementado hasta Phase 3, con parent issue #48. La línea se divide en fases:
 
 1. planificación documental, specs de proveedores y repo-local Agent Skill — issue #50, completada,
 2. adaptador de chat por proveedor — issue #51, completado,
 3. adaptador STT por proveedor — issue #49, completado,
-4. runbook/scripts y validación dual — issue #52.
+4. runbook/scripts y validación dual — issue #52, completado.
 
 Quedan fuera del alcance inicial el switching en caliente, fallback automático, balanceo, DevExpert TTS, Gemini y selectores UI. El backlog futuro queda trackeado en #53.
 

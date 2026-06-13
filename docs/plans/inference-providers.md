@@ -1,6 +1,6 @@
 # Inference Providers Implementation Plan
 
-**Status:** In progress - Phase 2 implemented
+**Status:** Implemented through Phase 3
 **Source Spec:** `specs/inference-providers.md`
 **Tracking:** GitHub parent issue #48
 
@@ -240,6 +240,8 @@ Delivery:
 ### Phase 3 - Runbook, Scripts, and Dual-Provider Validation
 
 Tracking: GitHub issue #52
+
+Status: implemented on 2026-06-13 in branch `docs/inference-provider-runbook`.
 
 Recommended branch:
 

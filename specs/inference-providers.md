@@ -1,6 +1,6 @@
 # Extra MVP Line - Inference Providers
 
-**Status:** In progress - Phase 2 implemented
+**Status:** Implemented through Phase 3
 **Tracking:** GitHub parent issue #48
 **Last Updated:** 2026-06-13
 
@@ -198,6 +198,8 @@ Acceptance:
 - No manual WAV upload/file picker is introduced into the product/demo UI.
 
 ### Phase 3 - Runbook, Scripts, and Dual-Provider Validation
+
+Status: implemented on 2026-06-13 in branch `docs/inference-provider-runbook`.
 
 Make provider selection easy to operate for humans and agents.
 

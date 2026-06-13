@@ -455,3 +455,34 @@ Extend provider selection to backend STT while preserving `/chat/audio` request 
 ### Status
 
 Implemented. Phase 3 remains responsible for runbook/scripts and real dual-provider validation guidance.
+
+## Extra — Inference Providers Phase 3: Runbook and Dual-Provider Operation (implemented 2026-06-13)
+
+**Branch:** `docs/inference-provider-runbook`
+**Tracking:** GitHub issue #52
+
+### Objective
+
+Document the operator path for running TONTO with either OpenAI or DevExpert without adding extra script surface area.
+
+### Decision
+
+No new script flag is added in this phase. `scripts/dev.ps1` and `scripts/agent-backend.ps1` already inherit environment variables from the starting shell, so `TONTO_INFERENCE_PROVIDER=openai|devexpert` is the simplest startup mechanism.
+
+### Changes
+
+- Added root `.env.example` as a safe provider-variable reference; scripts do not auto-load it.
+- Updated `docs/demo-runbook.md` with OpenAI and DevExpert backend startup commands.
+- Added a provider smoke check for `/chat`.
+- Updated `README.md` setup guidance to show OpenAI and DevExpert provider selection.
+- Updated specs, roadmap, and plan status through Phase 3.
+
+### Validation
+
+- `.\scripts\test.ps1 -Target python` passed with 62/62 tests after provider adapter changes.
+- `git diff --check` passed.
+- Real credential-backed OpenAI/DevExpert calls were not run in this phase to avoid assuming local secrets or consuming quota automatically.
+
+### Status
+
+Implemented through Phase 3. Future fallback, balancing, DevExpert TTS, and Gemini remain tracked separately in issue #53.
