@@ -142,7 +142,7 @@ El asistente debe responder:
 - **Sin listas, sin markdown, sin enumeraciones**
 - **Cuidado factual**: no inventar datos científicos incorrectos
 - **Saludos y despedidas naturales**, acordes a la edad
-- **Tokens máximos de salida**: 180
+- **Tokens máximos de salida**: 300
 
 ---
 

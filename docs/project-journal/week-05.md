@@ -162,7 +162,8 @@ the MVP architecture unchanged.
 - Added guidance for natural greetings/farewells with a gentle invitation to ask
   one small educational question.
 - Reduced `MAX_OUTPUT_TOKENS` from `220` to `180` so spoken answers stay tighter
-  for Raspberry `espeak` and browser speech.
+  for Raspberry `espeak` and browser speech (later raised to `300` in Phase 3
+  fix, see below).
 
 **`tests/test_openai_client.py`:**
 - Updated the OpenAI payload test to verify the new conversational UX guidance.
@@ -556,6 +557,7 @@ Validate that the implemented inference provider layer works end-to-end with rea
 - DevExpert `mimo-v2.5` appears more conversational/verbose than OpenAI `gpt-4o-mini` for the same TONTO system prompt.
 - This is a model behavior difference, not a provider integration issue.
 - For demo consistency, an operator may prefer to adjust `DEVEXPERT_CHAT_MODEL` if shorter answers are needed, but this is not a blocker.
+- **Update (2026-06-13):** The verbosity combined with the 180-token limit caused responses to truncate mid-sentence. Fixed in #59 by raising `MAX_OUTPUT_TOKENS` to 300.
 
 #### C. Automated Tests
 
@@ -572,3 +574,35 @@ Both OpenAI and DevExpert providers work end-to-end with real credentials. The p
 
 - If DevExpert `mimo-v2.5` verbosity is a demo concern, consider testing alternative models (tracked in #53).
 - Future: fallback, balancing, DevExpert TTS, Gemini (all tracked in #53).
+
+## Bug Fix — DevExpert response truncation (fixed 2026-06-13)
+
+**Branch:** `fix/devexpert-max-tokens-truncation`
+**Tracking:** GitHub issue #59, PR #60
+
+### Problem
+
+DevExpert responses were cut off mid-sentence. Example:
+
+- **Input:** "¿Qué le pasó a la gente que no pudo ser rescatada cuando naufragó el Titanic?"
+- **Before fix (180 tokens):** "Muchas personas que no pudieron subirse a los botes salvavidas terminaron en el agua muy fría del océano. Las personas que no pudieron" — truncated, `finish_reason: length`.
+- **After fix (300 tokens):** Complete response with explanation and follow-up question (363 chars).
+
+### Root Cause
+
+`MAX_OUTPUT_TOKENS = 180` was insufficient for Spanish text. Spanish uses more tokens than English; 180 tokens could not fit 2-3 child-friendly sentences with examples.
+
+### Fix
+
+- Increased `MAX_OUTPUT_TOKENS` from `180` to `300` in `backend/openai_client.py:32`.
+- All 62 Python tests pass.
+- Manual verification shows complete responses for the same Titanic question.
+
+### Validation
+
+| Test | Result |
+|---|---|
+| `.\scripts\test.ps1 -Target python` | 62/62 passed |
+| Titanic question (pre-fix) | 143 chars, truncated |
+| Titanic question (post-fix) | 363 chars, complete |
+| Smoke check (`Responde solo: ok`) | OK |
