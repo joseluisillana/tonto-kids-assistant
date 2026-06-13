@@ -515,10 +515,14 @@ Validate that the implemented inference provider layer works end-to-end with rea
 | Latency (chat) | ~1.3-2.0s | Two consecutive calls measured |
 | STT + chat (web voice) | OK | Browser microphone via web client at `http://127.0.0.1:5173/` |
 
-**Voice test (OpenAI STT + chat):**
+**Voice test (OpenAI STT + chat) — Web:**
 - User spoke: "¿Qué es un planeta?"
 - STT transcript: accurate
 - TONTO response: child-friendly Spanish explanation about planets orbiting a star, with Earth as example. Correct system prompt behavior.
+
+**Voice test (OpenAI STT + chat) — Raspberry:**
+- User spoke Spanish: "¿Qué es un planeta?" → transcript accurate, response in Spanish, child-friendly. Correct.
+- User spoke Catalan: "Què és un planeta?" → transcript accurate (Catalan detected), but TONTO responded in Catalan instead of Spanish. The system prompt says "Always answer in Spanish" but the model matched the input language. This is a model behavior edge case, not a provider integration issue; the STT and chat pipeline worked correctly.
 
 #### B. DevExpert Real Validation
 
@@ -533,10 +537,15 @@ Validate that the implemented inference provider layer works end-to-end with rea
 | Latency (chat) | ~2.0-2.9s | Two consecutive calls measured |
 | STT + chat (web voice) | OK | Browser microphone via web client at `http://127.0.0.1:5173/` |
 
-**Voice test (DevExpert STT + chat):**
+**Voice test (DevExpert STT + chat) — Web:**
 - User spoke: "¿Cuántos planetas hay?"
 - STT transcript: accurate
 - TONTO response: listed 8 planets with size facts, child-friendly Spanish. Correct system prompt behavior.
+
+**Voice test (DevExpert STT + chat) — Raspberry:**
+- User spoke: "¿Qué es una estrella?"
+- STT transcript: accurate
+- TONTO response: child-friendly Spanish explanation comparing stars to distant suns. Correct system prompt behavior. Response was more verbose than typical OpenAI, consistent with `mimo-v2.5` model behavior noted earlier.
 
 **Sample response to "Responde solo: ok":**
 - DevExpert `mimo-v2.5` produced a longer child-friendly Spanish greeting.
