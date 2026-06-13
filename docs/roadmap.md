@@ -255,7 +255,7 @@ Convertir el sistema en una demo estable y repetible.
 1. Runbook de demo y scripts de arranque — completado 2026-06-08.
 2. Pulido de UX conversacional — completado 2026-06-11; validado con 6/6 preguntas desde Raspberry real contra backend LAN.
 3. Resiliencia ante errores — completado 2026-06-13.
-4. Ensayo de demo (3+ ejecuciones consecutivas).
+4. Ensayo de demo (3+ ejecuciones consecutivas) — completado 2026-06-13. 6/6 turnos OpenAI + 1/1 smoke DevExpert en Raspberry real.
 5. Closeout con evidencia.
 
 ## Extra — Agent Capability Pack
