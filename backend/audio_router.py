@@ -4,7 +4,7 @@ from typing import Optional
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from pydantic import BaseModel
 
-from backend.openai_client import call_openai
+from backend.openai_client import call_inference
 from backend.state import MAX_HISTORY_MESSAGES, session_history
 from backend.stt_client import transcribe_audio
 
@@ -117,7 +117,7 @@ async def chat_audio(
         raise HTTPException(status_code=422, detail="Audio did not contain recognizable speech")
 
     history = session_history.setdefault(session_id, [])
-    response_text = call_openai(history, transcript)
+    response_text = call_inference(history, transcript)
 
     history.extend(
         [

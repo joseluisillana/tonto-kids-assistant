@@ -42,7 +42,7 @@ class TestChatAudioValidation:
         stt_mock = unittest.mock.MagicMock(return_value="que es una estrella")
         chat_mock = unittest.mock.MagicMock(return_value="Una estrella es una bola de gas muy caliente.")
         monkeypatch.setattr("backend.audio_router.transcribe_audio", stt_mock)
-        monkeypatch.setattr("backend.audio_router.call_openai", chat_mock)
+        monkeypatch.setattr("backend.audio_router.call_inference", chat_mock)
 
         resp = client.post("/chat/audio", files={"audio": data.pop("audio")}, data=data)
 

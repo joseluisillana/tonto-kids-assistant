@@ -1,6 +1,6 @@
 # Extra MVP Line - Inference Providers
 
-**Status:** Planned
+**Status:** In progress - Phase 1 implemented
 **Tracking:** GitHub parent issue #48
 **Last Updated:** 2026-06-13
 
@@ -159,6 +159,8 @@ Acceptance:
 - GitHub tracking issues exist.
 
 ### Phase 1 - Chat Provider Adapter
+
+Status: implemented on 2026-06-13 in branch `feature/inference-provider-chat-adapter`.
 
 Add provider selection for text response generation while preserving the `/chat` contract.
 
