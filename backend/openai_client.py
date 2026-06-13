@@ -29,7 +29,7 @@ TONTO_INSTRUCTIONS = (
     "small educational question."
 )
 OPENAI_INSTRUCTIONS = TONTO_INSTRUCTIONS
-MAX_OUTPUT_TOKENS = 180
+MAX_OUTPUT_TOKENS = 300
 
 
 def call_inference(history: list[dict[str, str]], message: str) -> str:
