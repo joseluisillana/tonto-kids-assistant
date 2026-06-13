@@ -11,6 +11,7 @@ import uuid
 import pytest
 
 from client.main import (
+    _filter_alsa_warnings,
     _format_listening_progress,
     capture_audio,
     send_audio,
@@ -437,3 +438,172 @@ def test_speak_handles_nonzero_exit(monkeypatch):
 
     monkeypatch.setattr("client.main.subprocess.run", fake_run)
     speak("test")
+
+
+def test_speak_suppresses_stderr(monkeypatch):
+    """speak() should redirect stderr to DEVNULL to suppress ALSA/JACK warnings."""
+    captured_kwargs = {}
+
+    def fake_run(cmd, **kwargs):
+        captured_kwargs.update(kwargs)
+        return subprocess.CompletedProcess(args=cmd, returncode=0)
+
+    monkeypatch.setattr("client.main.subprocess.run", fake_run)
+    speak("test")
+    assert captured_kwargs.get("stderr") == subprocess.DEVNULL
+
+
+#
+# _filter_alsa_warnings
+#
+
+
+def test_filter_alsa_warnings_removes_alsa_lines():
+    stderr = "ALSA lib confmisc.c:1234:(snd_func_xyz) error\nSome real error\nJACK: JackClient::Open\n"
+    result = _filter_alsa_warnings(stderr)
+    assert "ALSA" not in result
+    assert "JACK" not in result
+    assert "Some real error" in result
+
+
+def test_filter_alsa_warnings_removes_unknown_pcm():
+    stderr = "ALSA lib pcm.c:Unknown PCM foo\nReal error here\n"
+    result = _filter_alsa_warnings(stderr)
+    assert "Unknown PCM" not in result
+    assert "Real error here" in result
+
+
+def test_filter_alsa_warnings_removes_cannot_find_card():
+    stderr = "ALSA lib confmisc.c:788:(snd_card_get_name) cannot find card 'Device'\nReal issue\n"
+    result = _filter_alsa_warnings(stderr)
+    assert "cannot find card" not in result
+    assert "Real issue" in result
+
+
+def test_filter_alsa_warnings_returns_empty_for_only_alsa():
+    stderr = "ALSA lib confmisc.c:1234:\nJACK: some jack message\n"
+    result = _filter_alsa_warnings(stderr)
+    assert result == ""
+
+
+def test_filter_alsa_warnings_returns_empty_for_empty_input():
+    assert _filter_alsa_warnings("") == ""
+
+
+#
+# Operator-friendly error messages
+#
+
+
+def test_capture_audio_prints_friendly_message_when_arecord_not_found(monkeypatch, tmp_path, capsys):
+    wav_path = str(tmp_path / "turn.wav")
+
+    def fake_run(cmd, **kwargs):
+        raise FileNotFoundError("arecord not found")
+
+    monkeypatch.setattr("client.main.subprocess.run", fake_run)
+    assert capture_audio(None, 5, wav_path) is None
+    out = capsys.readouterr().out
+    assert "Recording tool not found" in out
+    assert "alsa-utils" in out
+
+
+def test_capture_audio_prints_friendly_message_when_arecord_fails(monkeypatch, tmp_path, capsys):
+    wav_path = str(tmp_path / "turn.wav")
+
+    def fake_run(cmd, **kwargs):
+        return _make_fake_completed_process(1, "some error")
+
+    monkeypatch.setattr("client.main.subprocess.run", fake_run)
+    assert capture_audio(None, 5, wav_path) is None
+    out = capsys.readouterr().out
+    assert "Recording failed" in out
+    assert "microphone" in out.lower()
+
+
+def test_capture_audio_filters_alsa_warnings_from_stderr(monkeypatch, tmp_path, capsys):
+    wav_path = str(tmp_path / "turn.wav")
+
+    def fake_run(cmd, **kwargs):
+        return _make_fake_completed_process(1, "ALSA lib confmisc.c:1234:\nReal error\n")
+
+    monkeypatch.setattr("client.main.subprocess.run", fake_run)
+    assert capture_audio(None, 5, wav_path) is None
+    out = capsys.readouterr().out
+    assert "ALSA" not in out
+    assert "Real error" in out
+
+
+def test_send_message_prints_friendly_message_on_timeout(monkeypatch, capsys):
+    def fake_urlopen(request, timeout):
+        raise TimeoutError("timed out")
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    assert send_message("http://localhost:8000/chat", "s1", "hola") is None
+    out = capsys.readouterr().out
+    assert "too long" in out.lower()
+
+
+def test_send_message_prints_friendly_message_on_url_error(monkeypatch, capsys):
+    def fake_urlopen(request, timeout):
+        raise urllib.error.URLError("network unreachable")
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    assert send_message("http://localhost:8000/chat", "s1", "hola") is None
+    out = capsys.readouterr().out
+    assert "Could not reach the backend" in out
+
+
+def test_send_audio_prints_friendly_message_for_413(monkeypatch, capsys):
+    def fake_urlopen(request, timeout):
+        raise urllib.error.HTTPError(
+            request.full_url, 413, "Too Large", hdrs=None, fp=io.BytesIO(b'{"detail":"too big"}')
+        )
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    assert send_audio("http://localhost:8000/chat/audio", "s1", "d1", b"data", 3000) is None
+    out = capsys.readouterr().out
+    assert "too long" in out.lower()
+
+
+def test_send_audio_prints_friendly_message_for_400(monkeypatch, capsys):
+    def fake_urlopen(request, timeout):
+        raise urllib.error.HTTPError(
+            request.full_url, 400, "Bad Request", hdrs=None, fp=io.BytesIO(b'{"detail":"bad audio"}')
+        )
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    assert send_audio("http://localhost:8000/chat/audio", "s1", "d1", b"data", 3000) is None
+    out = capsys.readouterr().out
+    assert "understand" in out.lower() or "clearly" in out.lower()
+
+
+def test_send_audio_prints_friendly_message_on_timeout(monkeypatch, capsys):
+    def fake_urlopen(request, timeout):
+        raise TimeoutError("timed out")
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+    assert send_audio("http://localhost:8000/chat/audio", "s1", "d1", b"data", 3000) is None
+    out = capsys.readouterr().out
+    assert "too long" in out.lower()
+
+
+def test_speak_prints_friendly_message_when_not_found(monkeypatch, capsys):
+    def fake_run(cmd, **kwargs):
+        raise FileNotFoundError("espeak not found")
+
+    monkeypatch.setattr("client.main.subprocess.run", fake_run)
+    speak("test")
+    out = capsys.readouterr().out
+    assert "Speech output not available" in out
+    assert "espeak" in out
+
+
+def test_speak_prints_friendly_message_on_failure(monkeypatch, capsys):
+    def fake_run(cmd, **kwargs):
+        return subprocess.CompletedProcess(args=cmd, returncode=1)
+
+    monkeypatch.setattr("client.main.subprocess.run", fake_run)
+    speak("test")
+    out = capsys.readouterr().out
+    assert "Speech output failed" in out

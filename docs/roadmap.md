@@ -254,7 +254,7 @@ Convertir el sistema en una demo estable y repetible.
 0. Kickoff documental y handoff para agentes — completado 2026-06-08.
 1. Runbook de demo y scripts de arranque — completado 2026-06-08.
 2. Pulido de UX conversacional — completado 2026-06-11; validado con 6/6 preguntas desde Raspberry real contra backend LAN.
-3. Resiliencia ante errores.
+3. Resiliencia ante errores — completado 2026-06-13.
 4. Ensayo de demo (3+ ejecuciones consecutivas).
 5. Closeout con evidencia.
 
