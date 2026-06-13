@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from backend.audio_router import router as audio_router
-from backend.openai_client import call_openai
+from backend.openai_client import call_inference
 from backend.state import MAX_HISTORY_MESSAGES, session_history
 
 
@@ -46,7 +46,7 @@ def chat(request: ChatRequest) -> ChatResponse:
         raise HTTPException(status_code=400, detail="session_id and message are required")
 
     history = session_history.setdefault(session_id, [])
-    response_text = call_openai(history, message)
+    response_text = call_inference(history, message)
 
     history.extend(
         [

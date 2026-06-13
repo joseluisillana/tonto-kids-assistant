@@ -1,6 +1,6 @@
 # Inference Providers Implementation Plan
 
-**Status:** Planned
+**Status:** In progress - Phase 1 implemented
 **Source Spec:** `specs/inference-providers.md`
 **Tracking:** GitHub parent issue #48
 
@@ -110,6 +110,8 @@ Delivery:
 ### Phase 1 - Chat Provider Adapter
 
 Tracking: GitHub issue #51
+
+Status: implemented on 2026-06-13 in branch `feature/inference-provider-chat-adapter`.
 
 Recommended branch:
 

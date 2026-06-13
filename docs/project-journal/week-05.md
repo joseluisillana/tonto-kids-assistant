@@ -388,3 +388,40 @@ After that PR merges:
 ### Status
 
 Planning in progress. No runtime behavior changed in this phase. GitHub tracking issues were created for the parent line, implementation phases, and future backlog.
+
+## Extra — Inference Providers Phase 1: Chat Provider Adapter (implemented 2026-06-13)
+
+**Branch:** `feature/inference-provider-chat-adapter`
+**Tracking:** GitHub issue #51
+
+### Objective
+
+Add backend text-generation provider selection while preserving TONTO's public `/chat` and `/chat/audio` response contracts.
+
+### Changes
+
+**`backend/openai_client.py`:**
+- Added `TONTO_INFERENCE_PROVIDER=openai|devexpert` selection through `call_inference`.
+- Kept OpenAI text generation on `https://api.openai.com/v1/responses`.
+- Added DevExpert chat generation through `DEVEXPERT_BASE_URL + /chat/completions`.
+- Added DevExpert defaults: `DEVEXPERT_BASE_URL=https://inference.devexpert.io/v1` and `DEVEXPERT_CHAT_MODEL=mimo-v2.5`.
+- Kept the shared TONTO child-friendly Spanish instructions for both providers.
+- Added clear errors for unsupported providers and missing `DEVEXPERT_API_KEY`.
+- Added timeout handling for provider text requests without exposing secrets.
+
+**`backend/main.py` and `backend/audio_router.py`:**
+- Switched text response generation to `call_inference`.
+- Kept request/response contracts unchanged.
+- STT provider selection is not implemented in this phase; `/chat/audio` still uses the existing STT client before calling the selected text provider.
+
+**Tests:**
+- Updated audio endpoint mocks from `call_openai` to `call_inference`.
+- Added focused tests for OpenAI default routing, DevExpert routing, DevExpert default URL/model, missing DevExpert key, unsupported provider, and DevExpert timeout behavior.
+
+### Validation
+
+- `.\scripts\test.ps1 -Target python` passed with 58/58 tests.
+
+### Status
+
+Implemented. Phase 2 remains responsible for STT provider selection.
