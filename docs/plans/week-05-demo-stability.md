@@ -114,12 +114,12 @@ Acceptance:
 
 ### Phase 4: Demo rehearsal
 
-Purpose: prove the demo works repeatedly.
+Purpose: prove the demo works repeatedly with both supported inference providers.
 
 Execution plan:
 
-1. Set up Raspberry with backend running.
-2. Run the full demo flow 3+ consecutive times:
+1. Set up Raspberry with backend running and primary provider configured (OpenAI by default).
+2. Run the full demo flow 3+ consecutive times on Raspberry:
    - Greeting turn.
    - Educational question turns (3+).
    - Context follow-up turn.
@@ -129,14 +129,17 @@ Execution plan:
    - Response (what TONTO said).
    - Timing (approximate).
    - Any errors or warnings.
-4. Run web demo 3+ times if practical.
-5. Document any failures with clear cause.
-6. Record evidence in `docs/project-journal/week-05.md`.
+4. Switch backend to alternative provider (DevExpert) and run 1 smoke turn on Raspberry.
+5. Record smoke turn evidence with the same fields.
+6. Run web demo 3+ times if practical.
+7. Document any failures with clear cause.
+8. Record evidence in `docs/project-journal/week-05.md` for both providers.
 
 Acceptance:
-- 3+ consecutive voice turns complete.
+- 3+ consecutive voice turns complete on primary provider.
+- 1 smoke turn completes on alternative provider.
 - Any failure is documented.
-- Evidence is in the journal.
+- Evidence is in the journal for both providers.
 
 ### Phase 5: Closeout
 

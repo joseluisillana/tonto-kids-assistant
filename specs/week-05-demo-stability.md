@@ -156,12 +156,13 @@ Acceptance:
 
 ### Phase 4 - Demo Rehearsal
 
-Purpose: prove the demo works repeatedly.
+Purpose: prove the demo works repeatedly with both supported inference providers.
 
 Included:
-- Run the full demo flow 3+ consecutive times on Raspberry.
+- Run the full demo flow 3+ consecutive times on Raspberry with the primary demo provider (OpenAI by default).
 - Run the full demo flow 3+ consecutive times on web (if practical).
-- Record timing, success/failure, and any issues.
+- Run a 1-turn smoke test on Raspberry with the alternative provider (DevExpert).
+- Record timing, success/failure, and any issues for each provider.
 - Document operator steps and any friction points.
 
 Excluded:
@@ -169,9 +170,10 @@ Excluded:
 - New features.
 
 Acceptance:
-- 3+ consecutive voice turns complete without blocking failures.
+- 3+ consecutive voice turns complete without blocking failures on the primary provider.
+- 1 smoke turn completes successfully on the alternative provider.
 - Any failure is documented with clear cause.
-- Evidence is recorded in `docs/project-journal/week-05.md`.
+- Evidence is recorded in `docs/project-journal/week-05.md` for both providers.
 
 ### Phase 5 - Week 05 Closeout
 
