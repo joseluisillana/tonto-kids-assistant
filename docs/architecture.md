@@ -148,7 +148,7 @@ Esta variante usa el cliente web como superficie de validacion, no como sustitut
 
 ## Estado actual de la arquitectura
 
-La arquitectura se encuentra en fase de estabilización de demo (Semana 4, Phase 1 completado).
+La arquitectura se encuentra en fase de preparación de demo de Semana 5. Semana 4 ya cerró el baseline reproducible, resiliencia inicial, calibración conversacional, indicadores no físicos de escucha/tiempo y closeout. Semana 5 ya añadió el runbook/script de demo y el pulido conversacional; el siguiente foco es resiliencia ante errores sin cambiar la arquitectura MVP.
 
 Componentes validados:
 
@@ -163,8 +163,10 @@ Componentes validados:
 - subida manual Raspberry -> backend a `POST /chat/audio` validada con `curl` y STT real
 - Fase 3 de cliente web de audio implementada y validada
 - **Validación en hardware real (2026-06-05):** 3 voice turns consecutivos en `tonto-pi` contra backend LAN `192.168.1.91:8000`, memoria corta de sesión confirmada (TONTO recordó pregunta inicial en turno 3)
+- **Indicadores no físicos (2026-06-07):** Raspberry y web muestran feedback de escucha/tiempo validado, sin integrar Arduino en el MVP.
+- **Pulido conversacional de Semana 5 (2026-06-11):** respuestas más directas, breves y adecuadas para demo infantil, validadas con 6/6 preguntas desde Raspberry real contra backend LAN.
 
-La Semana 4 Phase 1 queda cerrada: el sistema completo funciona en hardware real con el loop voz -> backend STT -> respuesta -> TTS local.
+El sistema completo funciona en hardware real con el loop voz -> backend STT -> respuesta -> TTS local. La arquitectura sigue siendo un MVP pequeño: Raspberry como cliente ligero, backend Python/FastAPI como orquestador, memoria corta en proceso y cliente web como superficie de validación.
 
 La arquitectura está optimizada para velocidad de iteración y facilidad de depuración durante el MVP, no para escalabilidad de producción.
 

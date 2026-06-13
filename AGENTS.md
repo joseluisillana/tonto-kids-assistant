@@ -26,16 +26,19 @@ The project is demo-first. Prefer working, understandable prototypes over broad 
 
 ## Current Implementation Milestone
 
-The Week 04 Phase 1 (Reproducible Demo Baseline) is complete. The system has been validated end-to-end on real hardware:
+The project is currently in Week 05: Demo Stability and Experience.
+
+Before choosing or executing the next work item, agents must confirm the active project state against `docs/specs.md`, `docs/roadmap.md`, and the newest `docs/project-journal/week-XX.md`. This section is a short agent-facing summary, not the only source of truth.
 
 - Week 03 voice milestone was complete: text loop, voice loop from Raspberry, voice loop from web.
-- Week 04 Phase 1 validated on 2026-06-05: 3 consecutive voice turns on Raspberry real (`tonto-pi`) against backend LAN (`192.168.1.91:8000`), in-memory session history confirmed (TONTO recalled initial greeting in turn 3), `/chat` and `/chat/audio` working.
-- The next milestone is Week 04 Phase 2: Demo Resilience and Error Handling.
+- Week 04 is complete (Phases 0-5): reproducible demo baseline, resilience fixes, conversation calibration, non-physical listening/time indicators, and closeout evidence.
+- Week 05 Phases 0-2 are complete: kickoff, demo runbook/startup script, and conversational UX polish validated from Raspberry real.
+- The next milestone is Week 05 Phase 3: Error Resilience.
 - Do not expose a manual WAV upload/file picker as part of the Phase 3 product/demo UI; WAV files are only acceptable as test fixtures or integration helpers.
 - Keep state in memory only if state is needed at all.
 - Optimize for clarity, debuggability, and a real demo.
 
-Explicitly out of scope for this first milestone:
+Explicitly out of scope for this MVP milestone:
 
 - No wake word.
 - No Arduino integration.

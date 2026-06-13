@@ -81,6 +81,12 @@ Use this routine at the end of meaningful work sessions:
 4. Let the `pre-commit` hook regenerate `exports/notebooklm/`.
 5. Refresh NotebookLM sources from that export when you want deeper synthesis.
 
+When a phase, week, or active milestone changes, also check that agent-facing summaries did not become stale:
+
+- `AGENTS.md` should summarize the current state without replacing `docs/specs.md`, `docs/roadmap.md`, or the newest weekly journal as the source of truth.
+- High-level summaries in `docs/architecture.md`, `docs/specs.md`, `docs/roadmap.md`, and `README.md` should not point agents toward an already completed phase.
+- This is a documentation consistency check only; it does not imply a product, architecture, or implementation change.
+
 ## Work Item Evidence
 
 Each coherent work item should leave enough evidence to reconstruct what happened later for the course report.
