@@ -7,14 +7,15 @@ The repository is the source of truth. NotebookLM is a reading and synthesis too
 ## What to Read First
 
 1. `../README.md` - project orientation, setup, and current MVP shape.
-2. `architecture.md` - how the Raspberry Pi client, backend, and web validation client fit together.
-3. `raspberry-pi-setup.md` - reproducible setup and recovery guide for the Raspberry Pi client.
-4. `roadmap.md` - 6-week delivery plan and MVP boundaries.
-5. `specs.md` - active behavior-level specification summary.
-6. `decisions.md` - compact record of technical decisions.
-7. `documentation-workflow.md` - how docs, NotebookLM, Codex, OpenCode, and GitHub stay aligned.
+2. `project-genesis.md` - autonomous prompt to rebuild the entire project from scratch with AI assistance.
+3. `architecture.md` - how the Raspberry Pi client, backend, and web validation client fit together.
+4. `raspberry-pi-setup.md` - reproducible setup and recovery guide for the Raspberry Pi client.
+5. `roadmap.md` - 6-week delivery plan and MVP boundaries.
+6. `specs.md` - active behavior-level specification summary.
+7. `decisions.md` - compact record of technical decisions.
+8. `documentation-workflow.md` - how docs, NotebookLM, Codex, OpenCode, and GitHub stay aligned.
 
-For the current Week 04 kickoff, read `../specs/week-04-demo-stability.md`, `plans/week-04-demo-stability.md`, and `project-journal/week-04.md` before starting implementation work.
+For the current Week 05 Phase 3 kickoff, read `../specs/week-05-demo-stability.md`, `plans/week-05-demo-stability.md`, and `project-journal/week-05.md` before starting implementation work.
 
 ## Working Notes
 
@@ -23,6 +24,7 @@ For the current Week 04 kickoff, read `../specs/week-04-demo-stability.md`, `pla
 - `research/` stores research notes and source guidance.
 - `final-report-outline.md` tracks the eventual course delivery document structure.
 - `ai-assisted-workflow.md` explains how Codex, OpenCode, GitHub Copilot, and NotebookLM are used responsibly.
+- `project-genesis.md` is the autonomous genesis prompt to rebuild the project from zero.
 
 ## Documentation Rule
 

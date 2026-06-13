@@ -12,6 +12,8 @@ TONTO Kids Assistant is an educational physical assistant for children. The MVP 
 
 The project is demo-first. Prefer working, understandable prototypes over broad platform design.
 
+For a complete autonomous prompt to rebuild this project from scratch with AI assistance, see `docs/project-genesis.md`.
+
 ## Current MVP Architecture
 
 - Monorepo with separate `backend/`, `client/`, `web/`, `shared/`, `docs/`, `specs/`, `scripts/`, and `tests/` areas.
