@@ -36,6 +36,7 @@ Before choosing or executing the next work item, agents must confirm the active 
 - Week 04 is complete (Phases 0-5): reproducible demo baseline, resilience fixes, conversation calibration, non-physical listening/time indicators, and closeout evidence.
 - Week 05 Phases 0-2 are complete: kickoff, demo runbook/startup script, and conversational UX polish validated from Raspberry real.
 - The next milestone is Week 05 Phase 3: Error Resilience.
+- Extra MVP line planned: Inference Providers / DevExpert Inference integration. This line lives in `specs/inference-providers.md`, with provider specs `specs/inference-provider-openai.md` and `specs/inference-provider-devexpert.md`, plan `docs/plans/inference-providers.md`, and repo-local skill `.agents/skills/devexpert-inference/SKILL.md`.
 - Do not expose a manual WAV upload/file picker as part of the Phase 3 product/demo UI; WAV files are only acceptable as test fixtures or integration helpers.
 - Keep state in memory only if state is needed at all.
 - Optimize for clarity, debuggability, and a real demo.
@@ -105,6 +106,7 @@ Explicitly out of scope for this MVP milestone:
 - Keep PRs focused on one coherent change.
 - Include docs or specs in the same change when behavior, architecture, setup, scope, or workflow changes.
 - Follow `docs/ai-assisted-workflow.md` for the shared human and AI-assisted Git workflow.
+- When working with DevExpert Inference or inference provider behavior, use the repo-local Agent Skill at `.agents/skills/devexpert-inference/SKILL.md` if the agent supports skills; otherwise read it manually as project guidance.
 
 ## Pre-Edit AI Workflow Gate
 
@@ -175,6 +177,8 @@ Use:
 - `README.md` only for high-level project orientation and setup guidance.
 
 When a spec is created or materially changed, also create or update its execution plan in `docs/plans/`. A material spec change is any change to behavior, scope, contracts, architecture, validation, or acceptance criteria. The plan must include an implementation prompt ready for Codex/OpenCode handoff. Purely editorial spec changes may skip a new plan, but the change summary must say that no implementation behavior changed.
+
+Repo-local Agent Skills live under `.agents/skills/`. They can provide portable operating guidance for skills-compatible agents, but they must not replace specs, plans, or project docs as the canonical source of truth.
 
 If implementation and documentation disagree, pause and make the decision explicit before continuing.
 
