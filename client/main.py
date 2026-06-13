@@ -74,7 +74,7 @@ def voice_loop(backend_url: str, session_id: str) -> int:
         record_seconds = 6
     audio_path = os.environ.get("TONTO_AUDIO_PATH", "/tmp/tonto-turn.wav")
 
-    print("Voice mode: press Enter to capture audio, or type a message.")
+    print("Voice mode: press Enter to record, or type a message.")
     print("Type 'exit' or 'quit' to stop.")
 
     while True:
@@ -99,7 +99,7 @@ def voice_loop(backend_url: str, session_id: str) -> int:
         if wav_bytes is None:
             continue
 
-        print("Uploading...")
+        print("Processing...")
         audio_response = send_audio(
             audio_url, session_id, device_id, wav_bytes, record_seconds * 1000
         )
@@ -109,6 +109,25 @@ def voice_loop(backend_url: str, session_id: str) -> int:
         print(f"Transcript: {audio_response['transcript']}")
         print(f"TONTO: {audio_response['response']}")
         speak(audio_response["response"])
+
+
+def _filter_alsa_warnings(stderr: str) -> str:
+    """Remove known ALSA/JACK warning lines from stderr output."""
+    if not stderr:
+        return ""
+    filtered = []
+    for line in stderr.splitlines():
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if "ALSA" in stripped or "JACK" in stripped or "jack" in stripped.lower():
+            continue
+        if "cannot find card" in stripped.lower():
+            continue
+        if "Unknown PCM" in stripped:
+            continue
+        filtered.append(stripped)
+    return "\n".join(filtered)
 
 
 def capture_audio(
@@ -136,16 +155,16 @@ def capture_audio(
     try:
         result = subprocess.run(cmd, capture_output=True, check=False)
     except FileNotFoundError:
-        print("arecord not found. Install alsa-utils on the Raspberry Pi.")
+        print("Recording tool not found. Make sure the microphone is connected and alsa-utils is installed.")
         return None
     finally:
         _stop_listening_indicator(stop_indicator, indicator_thread)
 
     if result.returncode != 0:
-        stderr = result.stderr.decode("utf-8", errors="replace").strip()
-        print(f"arecord failed with exit code {result.returncode}")
+        stderr = _filter_alsa_warnings(result.stderr.decode("utf-8", errors="replace"))
+        print("Recording failed. Check that the microphone is connected and not in use by another program.")
         if stderr:
-            print(f"arecord stderr: {stderr}")
+            print(f"  Details: {stderr}")
         return None
 
     if show_progress:
@@ -155,11 +174,11 @@ def capture_audio(
         with open(wav_path, "rb") as f:
             wav_bytes = f.read()
     except FileNotFoundError:
-        print(f"WAV file was not created at {wav_path}")
+        print("Recording did not produce an audio file. The microphone may not be working.")
         return None
 
     if not wav_bytes:
-        print(f"WAV file is empty at {wav_path}")
+        print("Recording produced an empty file. The microphone may not be working.")
         return None
 
     return wav_bytes
@@ -206,28 +225,28 @@ def send_message(chat_url: str, session_id: str, message: str) -> Optional[str]:
             data = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace")
-        print(f"Backend error {exc.code}: {detail}")
+        print(f"Backend error ({exc.code}). Please try again.")
         return None
     except urllib.error.URLError as exc:
         if _is_timeout_reason(exc.reason):
-            print("Backend request timed out")
+            print("Backend took too long to respond. It may be slow or unreachable.")
         else:
-            print(f"Could not reach backend: {exc.reason}")
+            print("Could not reach the backend. Make sure it is running and accessible.")
         return None
     except TimeoutError:
-        print("Backend request timed out")
+        print("Backend took too long to respond. It may be slow or unreachable.")
         return None
     except json.JSONDecodeError:
-        print("Backend returned invalid JSON")
+        print("Unexpected response from backend. Please try again.")
         return None
 
     if not data.get("success"):
-        print("Backend returned an unsuccessful response")
+        print("Backend could not process the request. Please try again.")
         return None
 
     response_text = data.get("response_text")
     if not isinstance(response_text, str) or not response_text.strip():
-        print("Backend response did not include response_text")
+        print("Backend returned an empty response. Please try again.")
         return None
 
     return response_text.strip()
@@ -274,25 +293,30 @@ def send_audio(
             data = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
         detail = exc.read().decode("utf-8", errors="replace")
-        print(f"Backend error {exc.code}: {detail}")
+        if exc.code == 413:
+            print("Recording is too long. Try a shorter question.")
+        elif exc.code == 400:
+            print("Could not understand the recording. Try speaking more clearly.")
+        else:
+            print(f"Backend error ({exc.code}). Please try again.")
         return None
     except urllib.error.URLError as exc:
         if _is_timeout_reason(exc.reason):
-            print("Backend request timed out")
+            print("Backend took too long to respond. It may be slow or unreachable.")
         else:
-            print(f"Could not reach backend: {exc.reason}")
+            print("Could not reach the backend. Make sure it is running and accessible.")
         return None
     except TimeoutError:
-        print("Backend request timed out")
+        print("Backend took too long to respond. It may be slow or unreachable.")
         return None
     except json.JSONDecodeError:
-        print("Backend returned invalid JSON")
+        print("Unexpected response from backend. Please try again.")
         return None
 
     transcript = data.get("transcript")
     response_text = data.get("response")
     if not isinstance(transcript, str) or not isinstance(response_text, str):
-        print("Backend response missing transcript or response")
+        print("Backend returned an incomplete response. Please try again.")
         return None
 
     return {"transcript": transcript.strip(), "response": response_text.strip()}
@@ -303,13 +327,17 @@ def speak(text: str) -> None:
     tts_args = shlex.split(os.environ.get("TONTO_TTS_ARGS", DEFAULT_TTS_ARGS))
 
     try:
-        result = subprocess.run([tts_command, *tts_args, text], check=False)
+        result = subprocess.run(
+            [tts_command, *tts_args, text],
+            check=False,
+            stderr=subprocess.DEVNULL,
+        )
     except FileNotFoundError:
-        print(f"TTS command not found: {tts_command}")
+        print("Speech output not available. Make sure espeak is installed.")
         return
 
     if result.returncode != 0:
-        print(f"TTS command failed with exit code {result.returncode}")
+        print("Speech output failed. The response is shown above as text.")
 
 
 def _is_timeout_reason(reason: object) -> bool:

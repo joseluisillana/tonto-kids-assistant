@@ -606,3 +606,102 @@ DevExpert responses were cut off mid-sentence. Example:
 | Titanic question (pre-fix) | 143 chars, truncated |
 | Titanic question (post-fix) | 363 chars, complete |
 | Smoke check (`Responde solo: ok`) | OK |
+
+## Phase 3 — Error Resilience (implemented 2026-06-13)
+
+**Branch:** `fix/week-05-phase3-error-resilience`
+**Tracking:** GitHub issue #37
+
+### Objective
+
+Make demo failures understandable and recoverable for the operator.
+
+### Changes
+
+**`client/main.py`:**
+
+- **Operator-friendly error messages:** Replaced technical messages with clear, actionable text:
+  - `arecord` not found → `"Recording tool not found. Make sure the microphone is connected and alsa-utils is installed."`
+  - `arecord` fails → `"Recording failed. Check that the microphone is connected and not in use by another program."`
+  - WAV not created → `"Recording did not produce an audio file. The microphone may not be working."`
+  - Backend unreachable → `"Could not reach the backend. Make sure it is running and accessible."`
+  - Backend timeout → `"Backend took too long to respond. It may be slow or unreachable."`
+  - Audio 413 → `"Recording is too long. Try a shorter question."`
+  - Audio 400 → `"Could not understand the recording. Try speaking more clearly."`
+  - TTS not found → `"Speech output not available. Make sure espeak is installed."`
+  - TTS failure → `"Speech output failed. The response is shown above as text."`
+
+- **ALSA/JACK warning suppression:**
+  - `speak()` now redirects stderr to `subprocess.DEVNULL`, suppressing ALSA/JACK noise from espeak.
+  - `capture_audio()` filters ALSA/JACK/Unknown PCM lines from arecord stderr before printing, showing only real errors.
+
+- **Recovery:** Client already recovered from errors (returns `None` and continues loop). No changes needed.
+
+**`tests/test_client.py`:**
+- Added `_filter_alsa_warnings` import.
+- Added 11 new focused tests:
+  - `test_filter_alsa_warnings_removes_alsa_lines`
+  - `test_filter_alsa_warnings_removes_unknown_pcm`
+  - `test_filter_alsa_warnings_removes_cannot_find_card`
+  - `test_filter_alsa_warnings_returns_empty_for_only_alsa`
+  - `test_filter_alsa_warnings_returns_empty_for_empty_input`
+  - `test_capture_audio_prints_friendly_message_when_arecord_not_found`
+  - `test_capture_audio_prints_friendly_message_when_arecord_fails`
+  - `test_capture_audio_filters_alsa_warnings_from_stderr`
+  - `test_send_message_prints_friendly_message_on_timeout`
+  - `test_send_message_prints_friendly_message_on_url_error`
+  - `test_send_audio_prints_friendly_message_for_413`
+  - `test_send_audio_prints_friendly_message_for_400`
+  - `test_send_audio_prints_friendly_message_on_timeout`
+  - `test_speak_prints_friendly_message_when_not_found`
+  - `test_speak_prints_friendly_message_on_failure`
+  - `test_speak_suppresses_stderr`
+
+### Validation
+
+| Check | Result |
+|---|---|
+| `.\scripts\test.ps1 -Target python` | 78/78 passed |
+| `.\scripts\test.ps1 -Target web` | Web typecheck passed |
+| Error messages | Operator-friendly, no stack traces |
+| ALSA/JACK warnings | Suppressed in speak(), filtered in capture_audio() |
+| Client recovery | Continues loop after errors |
+
+### Acceptance Criteria
+
+- [x] Common demo failures show a clear, non-technical message.
+- [x] Client recovers from errors and can continue the demo.
+- [x] ALSA/JACK warnings are suppressed (speak) and filtered (capture_audio).
+
+### Status
+
+- [x] Code changes implemented.
+- [x] Focused tests added.
+- [x] Full test suite passes.
+- [x] Hardware validation completed (4/4 voice turns on Raspberry).
+
+### Hardware Validation Evidence (2026-06-13)
+
+**Environment:**
+- Branch: `fix/week-05-phase3-error-resilience`
+- Backend: `http://192.168.1.91:8000` (Windows, LAN mode)
+- Raspberry audio device: `plughw:CARD=Device,DEV=0`
+- `TONTO_RECORD_SECONDS`: 6 (default)
+
+**4-turn voice validation:**
+
+| Turn | Input | Transcript | Response | espeak | ALSA warnings |
+|---|---|---|---|---|---|
+| 1 | "Hola tonto, ¿cómo estás?" | Exact | Natural greeting + invitation | OK | None visible |
+| 2 | "¿Qué es un planeta?" | Exact | Child-friendly definition with example | OK | None visible |
+| 3 | "¿Cuántos planetas hay?" | Exact | 8 planets + follow-up question | OK | None visible |
+| 4 | "Gracias, adiós." | Exact | Natural farewell | OK | None visible |
+
+**Observations:**
+- All 4 voice turns completed without errors.
+- ALSA/JACK warnings fully suppressed in terminal output.
+- Listening indicator visible (6/6s) on every turn.
+- STT transcription accurate on all turns.
+- Responses in Spanish, short, child-friendly, educational.
+- In-memory context worked (turn 3 follow-up was coherent with turn 2).
+- No technical error messages shown to operator.
