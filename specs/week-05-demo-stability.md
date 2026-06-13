@@ -108,7 +108,9 @@ example or comparison when useful, avoids long lists/markdown/lecture-style
 answers, uses simple accurate facts instead of guessing, handles
 greetings/farewells naturally, and keeps using recent context for follow-up
 questions. `MAX_OUTPUT_TOKENS` was reduced from `220` to `180` to
-keep demo answers more speakable through Raspberry `espeak` and browser speech.
+keep demo answers more speakable through Raspberry `espeak` and browser speech,
+then raised to `300` (issue #59) because 180 tokens truncated Spanish responses
+mid-sentence (`finish_reason: length`).
 
 Validation note, 2026-06-11: Phase 2 was validated from the real Raspberry with
 6 text-mode demo questions against the Windows LAN backend. See
