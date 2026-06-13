@@ -513,11 +513,12 @@ Validate that the implemented inference provider layer works end-to-end with rea
 | `/health` | OK | `{"status":"ok"}` |
 | `POST /chat` smoke | OK | `success: true`, `response_text` in Spanish, child-friendly |
 | Latency (chat) | ~1.3-2.0s | Two consecutive calls measured |
-| STT (audio) | Not tested in this session | Requires microphone input; covered by automated tests |
+| STT + chat (web voice) | OK | Browser microphone via web client at `http://127.0.0.1:5173/` |
 
-**Sample response to "Responde solo: ok":**
-- Response was a short Spanish greeting with invitation to ask a question.
-- TONTO system prompt correctly applied: Spanish, child-friendly, short.
+**Voice test (OpenAI STT + chat):**
+- User spoke: "¿Qué es un planeta?"
+- STT transcript: accurate
+- TONTO response: child-friendly Spanish explanation about planets orbiting a star, with Earth as example. Correct system prompt behavior.
 
 #### B. DevExpert Real Validation
 
@@ -530,7 +531,12 @@ Validate that the implemented inference provider layer works end-to-end with rea
 | `/health` | OK | `{"status":"ok"}` |
 | `POST /chat` smoke | OK | `success: true`, `response_text` in Spanish, child-friendly |
 | Latency (chat) | ~2.0-2.9s | Two consecutive calls measured |
-| STT (audio) | Not tested in this session | Requires microphone input; covered by automated tests |
+| STT + chat (web voice) | OK | Browser microphone via web client at `http://127.0.0.1:5173/` |
+
+**Voice test (DevExpert STT + chat):**
+- User spoke: "¿Cuántos planetas hay?"
+- STT transcript: accurate
+- TONTO response: listed 8 planets with size facts, child-friendly Spanish. Correct system prompt behavior.
 
 **Sample response to "Responde solo: ok":**
 - DevExpert `mimo-v2.5` produced a longer child-friendly Spanish greeting.
@@ -551,10 +557,9 @@ Validate that the implemented inference provider layer works end-to-end with rea
 
 ### Summary
 
-Both OpenAI and DevExpert providers work end-to-end with real credentials. The provider selection mechanism (`TONTO_INFERENCE_PROVIDER`), chat generation, response extraction, and TONTO public contracts are all functional. No architecture changes, no new dependencies, no fallback/balancing implemented.
+Both OpenAI and DevExpert providers work end-to-end with real credentials. The provider selection mechanism (`TONTO_INFERENCE_PROVIDER`), chat generation, STT transcription, response extraction, and TONTO public contracts (`/chat`, `/chat/audio`) are all functional. No architecture changes, no new dependencies, no fallback/balancing implemented.
 
 ### Next Steps
 
-- STT real validation (requires microphone or WAV fixture from Raspberry/web).
 - If DevExpert `mimo-v2.5` verbosity is a demo concern, consider testing alternative models (tracked in #53).
 - Future: fallback, balancing, DevExpert TTS, Gemini (all tracked in #53).
