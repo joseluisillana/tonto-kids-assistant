@@ -71,18 +71,18 @@ El indicador de escucha Raspberry fue implementado en `client/main.py` (funcione
 
 La memoria de Semana 4 no implica persistencia, perfiles, memoria vectorial ni multiusuario. La decisión de Fase 4 difiere Arduino/LEDs fuera del MVP de 6 semanas y aprueba implementar primero indicadores no físicos de tiempo/escucha. Si Arduino/LEDs se retoman en una versión futura de TONTO, deberán tener una spec y plan separados antes de código.
 
-## Semana 5 - Estabilidad y experiencia demo
+## Semana 5 - Estabilidad y experiencia demo (completada)
 
-La spec activa de Semana 5 vive en `specs/week-05-demo-stability.md`, con plan emparejado en `docs/plans/week-05-demo-stability.md`.
+La spec de Semana 5 vive en `specs/week-05-demo-stability.md`, con plan emparejado en `docs/plans/week-05-demo-stability.md`.
 
-Semana 5 convierte el loop validado en una demo repetible y fácil de operar:
+Semana 5 convirtió el loop validado en una demo repetible y fácil de operar:
 
 1. **Kickoff documental** — completado 2026-06-08.
 2. **Runbook de demo y scripts de arranque** — completado 2026-06-08. Script bash con health check y runbook completo.
-3. **Pulido de UX conversacional** — completado 2026-06-11. Prompt ajustado para respuesta directa, ejemplo simple cuando aporte claridad, factual-care, menos formato/listas y mejor manejo natural de saludos/despedidas; `MAX_OUTPUT_TOKENS` reducido a `180` (luego ajustado a `300` en #59 por truncamiento en español); validado con 6/6 preguntas desde Raspberry real contra backend LAN.
-4. **Resiliencia ante errores** — mensajes claros, recuperación limpia.
-5. **Ensayo de demo** — 3+ ejecuciones consecutivas sin fallos bloqueantes.
-6. **Closeout con evidencia.**
+3. **Pulido de UX conversacional** — completado 2026-06-11. Prompt ajustado para respuesta directa, ejemplo simple cuando aporte claridad, factual-care, menos formato/listas y mejor manejo natural de saludos/despedidas; `MAX_OUTPUT_TOKENS` ajustado a `300` (#59); validado con 6/6 preguntas desde Raspberry real contra backend LAN.
+4. **Resiliencia ante errores** — completado 2026-06-13. Mensajes operador-amigables, ALSA/JACK suprimidos, recuperación limpia. Validado con 4/4 turnos de voz en Raspberry.
+5. **Ensayo de demo** — completado 2026-06-13. 6/6 turnos OpenAI + 1/1 smoke DevExpert en Raspberry real.
+6. **Closeout con evidencia** — completado 2026-06-13.
 
 GitHub tracking: issue #33 (parent), issues #34-#38 (phases).
 

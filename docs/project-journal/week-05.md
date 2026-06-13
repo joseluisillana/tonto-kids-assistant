@@ -787,3 +787,69 @@ Prove the demo works repeatedly with both supported inference providers.
 - [x] OpenAI rehearsal: 6/6 voice turns passed.
 - [x] DevExpert smoke turn: 1/1 passed.
 - [x] Evidence recorded.
+
+## Week 05 Closeout (2026-06-13)
+
+### Definition of Done Checklist
+
+- [x] A demo operator can start and run the demo with minimal friction.
+  - Demo runbook created (`docs/demo-runbook.md`).
+  - Startup script created (`scripts/demo-raspberry.sh`).
+  - Agent Capability Pack for backend/Raspberry operations.
+- [x] TONTO responses are polished for the demo scenario.
+  - Prompt calibrated for Spanish, child-friendly, short answers.
+  - Direct answer first, simple examples, no long lists/markdown.
+  - Natural greetings/farewells.
+- [x] Common errors are handled gracefully.
+  - Operator-friendly error messages in `client/main.py`.
+  - ALSA/JACK warnings suppressed (speak) and filtered (capture_audio).
+  - Client recovers from errors and continues loop.
+- [x] 3+ consecutive demo turns have been validated.
+  - OpenAI: 6/6 voice turns on Raspberry.
+  - DevExpert: 1/1 smoke turn on Raspberry.
+  - Both providers validated end-to-end with STT + TTS.
+- [x] Evidence is recorded in the journal.
+  - Phase 1: Demo runbook validation (2 voice turns, health check retries).
+  - Phase 2: 6/6 text-mode demo questions from Raspberry.
+  - Phase 3: 4/4 voice turns with error resilience validation.
+  - Phase 4: 6/6 OpenAI + 1/1 DevExpert voice turns.
+
+### Week 05 Summary
+
+Week 05 converted the validated TONTO voice loop into a stable, repeatable demo:
+
+1. **Demo runbook and startup** (Phase 1): operator can start with 1-2 commands, health check with retries, full troubleshooting guide.
+2. **Conversational UX polish** (Phase 2): prompt refined for direct answers, simple examples, factual care, natural greetings/farewells. Validated with 6 real questions from Raspberry.
+3. **Error resilience** (Phase 3): all error messages are now operator-friendly, ALSA/JACK warnings suppressed, client recovers cleanly.
+4. **Demo rehearsal** (Phase 4): 6/6 consecutive voice turns with OpenAI, 1/1 smoke turn with DevExpert. Both providers work end-to-end.
+
+**Extra items completed:**
+- Agent Capability Pack (issue #43): portable agent command surface for backend and Raspberry operations.
+- Inference Providers (issues #48-#53): OpenAI and DevExpert supported via `TONTO_INFERENCE_PROVIDER` env var.
+- DevExpert response truncation fix (issue #59): `MAX_OUTPUT_TOKENS` raised from 180 to 300.
+
+### Remaining Risks for Week 06
+
+1. **ALSA/JACK warnings**: suppressed but not eliminated. If audio device changes, warnings may reappear.
+2. **TTS quality**: `espeak` is functional but robotic. No alternative TTS in scope for MVP.
+3. **DevExpert verbosity**: `mimo-v2.5` can be more verbose than OpenAI `gpt-4o-mini`. Not a blocker but affects demo pacing.
+4. **No persistence**: session history is in-memory only. Backend restart loses context.
+5. **Single Raspberry**: no backup hardware if the demo Pi fails.
+6. **Network dependency**: both providers require internet connectivity for STT and text generation.
+
+### Week 06 Readiness
+
+Week 06 is the final MVP week: closeout and presentation preparation.
+
+Starting state:
+- Demo is stable and repeatable with both providers.
+- All error handling is operator-friendly.
+- Runbook and scripts are documented.
+- 78 Python tests pass.
+- Web typecheck passes.
+
+Known gaps for Week 06:
+- No final demo recording or presentation deck.
+- No checklist of arranque y validación for the presentation.
+- No documented limitations list for the audience.
+- No "siguientes pasos" list for post-MVP.

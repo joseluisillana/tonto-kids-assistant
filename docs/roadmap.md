@@ -256,7 +256,7 @@ Convertir el sistema en una demo estable y repetible.
 2. Pulido de UX conversacional — completado 2026-06-11; validado con 6/6 preguntas desde Raspberry real contra backend LAN.
 3. Resiliencia ante errores — completado 2026-06-13.
 4. Ensayo de demo (3+ ejecuciones consecutivas) — completado 2026-06-13. 6/6 turnos OpenAI + 1/1 smoke DevExpert en Raspberry real.
-5. Closeout con evidencia.
+5. Closeout con evidencia — completado 2026-06-13.
 
 ## Extra — Agent Capability Pack
 

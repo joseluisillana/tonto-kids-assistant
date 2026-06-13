@@ -34,8 +34,8 @@ Before choosing or executing the next work item, agents must confirm the active 
 
 - Week 03 voice milestone was complete: text loop, voice loop from Raspberry, voice loop from web.
 - Week 04 is complete (Phases 0-5): reproducible demo baseline, resilience fixes, conversation calibration, non-physical listening/time indicators, and closeout evidence.
-- Week 05 Phases 0-4 are complete: kickoff, demo runbook/startup script, conversational UX polish validated from Raspberry real, error resilience, and dual-provider demo rehearsal (6/6 OpenAI + 1/1 DevExpert).
-- The next milestone is Week 05 Phase 5: Closeout.
+- Week 05 is complete (Phases 0-5): demo runbook, conversational UX polish, error resilience, dual-provider demo rehearsal (6/6 OpenAI + 1/1 DevExpert), and closeout evidence.
+- The next milestone is Week 06: Closeout and presentation preparation.
 - Extra MVP line planned: Inference Providers / DevExpert Inference integration. This line lives in `specs/inference-providers.md`, with provider specs `specs/inference-provider-openai.md` and `specs/inference-provider-devexpert.md`, plan `docs/plans/inference-providers.md`, and repo-local skill `.agents/skills/devexpert-inference/SKILL.md`.
 - Do not expose a manual WAV upload/file picker as part of the Phase 3 product/demo UI; WAV files are only acceptable as test fixtures or integration helpers.
 - Keep state in memory only if state is needed at all.
