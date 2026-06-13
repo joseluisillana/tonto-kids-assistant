@@ -277,8 +277,8 @@ Objetivo: permitir que el backend use OpenAI o DevExpert Inference mediante conf
 Estado: en progreso, con parent issue #48. La línea se divide en fases:
 
 1. planificación documental, specs de proveedores y repo-local Agent Skill — issue #50, completada,
-2. adaptador de chat por proveedor — issue #51, implementado,
-3. adaptador STT por proveedor — issue #49,
+2. adaptador de chat por proveedor — issue #51, completado,
+3. adaptador STT por proveedor — issue #49, completado,
 4. runbook/scripts y validación dual — issue #52.
 
 Quedan fuera del alcance inicial el switching en caliente, fallback automático, balanceo, DevExpert TTS, Gemini y selectores UI. El backlog futuro queda trackeado en #53.

@@ -1,6 +1,6 @@
 # Extra MVP Line - Inference Providers
 
-**Status:** In progress - Phase 1 implemented
+**Status:** In progress - Phase 2 implemented
 **Tracking:** GitHub parent issue #48
 **Last Updated:** 2026-06-13
 
@@ -179,6 +179,8 @@ Acceptance:
 - No client or web contract changes are required.
 
 ### Phase 2 - STT Provider Adapter
+
+Status: implemented on 2026-06-13 in branch `feature/inference-provider-stt-adapter`.
 
 Extend provider selection to backend STT for `/chat/audio`.
 
