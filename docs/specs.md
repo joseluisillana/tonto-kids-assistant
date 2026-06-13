@@ -90,6 +90,10 @@ Semana 5 also includes an extra workflow item, tracked by issue #43:
 
 - **Agent Capability Pack** — implemented and merged. Portable repo-owned Markdown and PowerShell helper scripts for backend lifecycle and Raspberry SSH operations. It added `scripts/agent-backend.ps1` and `scripts/agent-raspberry.ps1`; real Raspberry preflight passed with backend health. Spec: `specs/week-05-agent-capability-pack.md`; plan: `docs/plans/week-05-agent-capability-pack.md`.
 
+Semana 5 also includes a planned extra MVP line for AI Expert course alignment:
+
+- **Inference Providers / DevExpert Inference** — planned, tracked by parent issue #48 and phase issues #50, #51, #49, #52, with future backlog #53. The goal is to let the backend run with either OpenAI or DevExpert Inference by startup configuration while keeping Raspberry and web clients provider-agnostic. The current OpenAI provider baseline is documented before implementation changes begin. OpenAI may keep using the Responses API, DevExpert should use its documented OpenAI-compatible Chat Completions endpoint, and both providers must remain covered by tests when inference behavior changes. General spec: `specs/inference-providers.md`; provider specs: `specs/inference-provider-openai.md`, `specs/inference-provider-devexpert.md`; plan: `docs/plans/inference-providers.md`; repo-local skill: `.agents/skills/devexpert-inference/SKILL.md`.
+
 ## Fuera de Alcance de Semana 5
 
 - Wake word.

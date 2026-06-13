@@ -54,6 +54,28 @@ Python execution for project code must stay inside the repository virtual enviro
 - Host `python` or `python3` may be used only to create the virtual environment or to verify that the system Python exists.
 - Agents should not run project modules with bare `python`, `python3`, `pip`, or `pytest`.
 
+## Repo-Local Agent Skills
+
+TONTO may include repo-local Agent Skills under:
+
+```text
+.agents/skills/<skill-name>/SKILL.md
+```
+
+These skills follow the portable Agent Skills pattern: a folder with `SKILL.md` frontmatter (`name`, `description`) and optional `references/`, `scripts/`, or `assets/` resources. Skills-compatible agents can discover them from the repository and load them when the task matches the description.
+
+Repo-local skills are useful for agent operating knowledge, but they do not replace project specs, plans, or durable decisions. Canonical project behavior still lives in `specs/`, `docs/plans/`, and the implementation.
+
+Use `.agents/skills/devexpert-inference/SKILL.md` when working with:
+
+- DevExpert Inference documentation,
+- the `https://inference.devexpert.io/v1` OpenAI-compatible gateway,
+- TONTO inference provider selection,
+- DevExpert chat, STT, TTS, embeddings, or model configuration,
+- the extra MVP line in `specs/inference-providers.md`.
+
+When an inference change touches provider behavior, agents must preserve both OpenAI and DevExpert support through focused tests or documented validation. Do not make DevExpert skill contents the only source of truth; keep the provider specs and plan updated when behavior, contracts, or validation requirements change.
+
 ## OpenCode
 
 OpenCode is an additional interactive CLI used for implementation,

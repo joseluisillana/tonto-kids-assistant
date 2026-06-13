@@ -343,3 +343,48 @@ Implement the portable Agent Capability Pack so AI-assisted agents and humans ca
 ### Status
 
 Issue #43 was completed and closed after PR #45 merged. Real Raspberry preflight passed after setting the default host to `tonto-pi.local`, and the pack is now the official agent command surface for backend and Raspberry operations.
+
+## Extra — Inference Providers / DevExpert Inference Planning (created 2026-06-13)
+
+**Branch:** `docs/inference-providers-line`
+**Tracking:** GitHub parent issue #48; phase issues #50, #51, #49, #52; future backlog #53
+
+### Objective
+
+Plan an extra MVP line so TONTO can run the same backend-facing demo contracts with either OpenAI or DevExpert Inference.
+
+This supports the AI Expert course context without changing the MVP product goal. Raspberry and web clients should remain provider-agnostic; the backend should select the provider at startup configuration.
+
+### Documents Created
+
+- `specs/inference-providers.md`
+- `specs/inference-provider-openai.md`
+- `specs/inference-provider-devexpert.md`
+- `docs/plans/inference-providers.md`
+- `.agents/skills/devexpert-inference/SKILL.md`
+- `.agents/skills/devexpert-inference/references/endpoint-summary.md`
+
+### Decisions Captured
+
+- Treat this as an extra MVP line, not Week 05 Phase 3.
+- Document the current OpenAI provider baseline before implementation changes begin.
+- Keep OpenAI and DevExpert support behind backend provider adapters.
+- OpenAI may continue using `/v1/responses` for text generation.
+- DevExpert should use its documented `/v1/chat/completions` endpoint for text generation.
+- Both providers should support STT through provider-specific `/audio/transcriptions`.
+- Do not implement hot switching, fallback, balancing, DevExpert TTS, Gemini, or frontend provider selection in the initial phases.
+- Add a repo-local Agent Skill so skills-compatible agents can discover DevExpert Inference guidance without relying on Codex-only local skills.
+
+### Proposed PR Strategy
+
+Open one initial documentation PR from `docs/inference-providers-line` to `main` that only adds planning, skill, and tracking context.
+
+After that PR merges:
+
+1. implement the chat provider adapter in its own feature branch,
+2. implement the STT provider adapter in a second feature branch after chat provider selection is stable,
+3. update runbooks/scripts and record dual-provider validation in a final focused branch.
+
+### Status
+
+Planning in progress. No runtime behavior changed in this phase. GitHub tracking issues were created for the parent line, implementation phases, and future backlog.
