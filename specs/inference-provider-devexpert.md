@@ -1,6 +1,6 @@
 # Inference Provider - DevExpert
 
-**Status:** Chat provider implemented; STT planned
+**Status:** Chat and STT provider implemented
 **Last Updated:** 2026-06-13
 
 ## Objective
@@ -33,7 +33,7 @@ DevExpert will be an alternate backend inference provider.
 Planned TONTO paths:
 
 - `POST /chat` -> DevExpert Chat Completions -> TONTO JSON response. Implemented in Phase 1 of `specs/inference-providers.md`.
-- `POST /chat/audio` -> DevExpert STT -> DevExpert Chat Completions -> TONTO JSON response.
+- `POST /chat/audio` -> DevExpert STT -> DevExpert Chat Completions -> TONTO JSON response. Implemented in Phase 2 of `specs/inference-providers.md`.
 
 Speech output remains unchanged in the initial implementation:
 
@@ -152,7 +152,7 @@ Provider errors must not expose API keys.
 When DevExpert is implemented:
 
 - `TONTO_INFERENCE_PROVIDER=devexpert` routes text generation to DevExpert. Implemented in Phase 1.
-- `TONTO_INFERENCE_PROVIDER=devexpert` routes STT to DevExpert.
+- `TONTO_INFERENCE_PROVIDER=devexpert` routes STT to DevExpert. Implemented in Phase 2.
 - `/chat` response shape stays unchanged.
 - `/chat/audio` response shape stays unchanged.
 - DevExpert text payload and response extraction are covered by tests.

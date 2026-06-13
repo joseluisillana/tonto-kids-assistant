@@ -424,4 +424,34 @@ Add backend text-generation provider selection while preserving TONTO's public `
 
 ### Status
 
-Implemented. Phase 2 remains responsible for STT provider selection.
+Implemented. Phase 2 followed with STT provider selection.
+
+## Extra — Inference Providers Phase 2: STT Provider Adapter (implemented 2026-06-13)
+
+**Branch:** `feature/inference-provider-stt-adapter`
+**Tracking:** GitHub issue #49
+
+### Objective
+
+Extend provider selection to backend STT while preserving `/chat/audio` request validation and response shape.
+
+### Changes
+
+**`backend/stt_client.py`:**
+- Added `TONTO_INFERENCE_PROVIDER=openai|devexpert` selection for STT.
+- Preserved OpenAI `/audio/transcriptions` behavior and `OPENAI_STT_MODEL`.
+- Added DevExpert `/audio/transcriptions` behavior with `DEVEXPERT_BASE_URL` and `DEVEXPERT_STT_MODEL`.
+- Kept the same multipart WAV upload shape with `model`, `language`, `response_format=json`, and `file`.
+- Added clear errors for unsupported providers and missing `DEVEXPERT_API_KEY`.
+
+**Tests:**
+- Preserved existing OpenAI STT tests as the default path.
+- Added focused DevExpert STT tests for custom URL/model, default URL/model, missing key, and unsupported provider.
+
+### Validation
+
+- `.\scripts\test.ps1 -Target python` passed with 62/62 tests.
+
+### Status
+
+Implemented. Phase 3 remains responsible for runbook/scripts and real dual-provider validation guidance.

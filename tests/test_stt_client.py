@@ -57,6 +57,65 @@ def test_transcribe_audio_uses_configured_model(monkeypatch):
     assert stt_client.transcribe_audio(b"wav-bytes", "test.wav", "es") == "hola"
 
 
+def test_transcribe_audio_routes_to_devexpert(monkeypatch):
+    monkeypatch.setenv("TONTO_INFERENCE_PROVIDER", "devexpert")
+    monkeypatch.setenv("DEVEXPERT_API_KEY", "devexpert-key")
+    monkeypatch.setenv("DEVEXPERT_BASE_URL", "https://example.test/v1/")
+    monkeypatch.setenv("DEVEXPERT_STT_MODEL", "devexpert-transcribe")
+
+    def fake_urlopen(request, timeout):
+        assert timeout == 20
+        assert request.full_url == "https://example.test/v1/audio/transcriptions"
+        assert request.headers["Authorization"] == "Bearer devexpert-key"
+        assert "multipart/form-data" in request.headers["Content-type"]
+        body = request.data
+        assert b'name="model"' in body
+        assert b"devexpert-transcribe" in body
+        assert b'name="language"' in body
+        assert b"es" in body
+        assert b'name="file"; filename="test.wav"' in body
+        return _FakeResponse({"text": " hola devexpert "})
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+
+    assert stt_client.transcribe_audio(b"wav-bytes", "test.wav", "es") == "hola devexpert"
+
+
+def test_transcribe_devexpert_audio_uses_default_base_url_and_model(monkeypatch):
+    monkeypatch.delenv("DEVEXPERT_BASE_URL", raising=False)
+    monkeypatch.delenv("DEVEXPERT_STT_MODEL", raising=False)
+    monkeypatch.setenv("DEVEXPERT_API_KEY", "devexpert-key")
+
+    def fake_urlopen(request, timeout):
+        assert request.full_url == "https://inference.devexpert.io/v1/audio/transcriptions"
+        assert b"gpt-4o-mini-transcribe" in request.data
+        return _FakeResponse({"text": "hola"})
+
+    monkeypatch.setattr("urllib.request.urlopen", fake_urlopen)
+
+    assert stt_client.transcribe_devexpert_audio(b"wav-bytes", "test.wav", "es") == "hola"
+
+
+def test_transcribe_devexpert_audio_requires_api_key(monkeypatch):
+    monkeypatch.delenv("DEVEXPERT_API_KEY", raising=False)
+
+    with pytest.raises(HTTPException) as exc:
+        stt_client.transcribe_devexpert_audio(b"wav-bytes", "test.wav", "es")
+
+    assert exc.value.status_code == 500
+    assert exc.value.detail == "DEVEXPERT_API_KEY is not set"
+
+
+def test_transcribe_audio_rejects_unsupported_provider(monkeypatch):
+    monkeypatch.setenv("TONTO_INFERENCE_PROVIDER", "unknown")
+
+    with pytest.raises(HTTPException) as exc:
+        stt_client.transcribe_audio(b"wav-bytes", "test.wav", "es")
+
+    assert exc.value.status_code == 500
+    assert "Unsupported TONTO_INFERENCE_PROVIDER" in exc.value.detail
+
+
 def test_transcribe_audio_response_without_text(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
     monkeypatch.setattr("urllib.request.urlopen", lambda request, timeout: _FakeResponse({"other": "value"}))

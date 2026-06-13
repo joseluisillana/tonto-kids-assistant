@@ -1,6 +1,6 @@
 # Inference Provider - OpenAI
 
-**Status:** Current baseline with provider selector
+**Status:** Current baseline with chat and STT provider selector
 **Last Updated:** 2026-06-13
 
 ## Objective
@@ -18,7 +18,7 @@ Current TONTO paths:
 - `POST /chat` -> OpenAI text response -> TONTO JSON response.
 - `POST /chat/audio` -> OpenAI STT -> OpenAI text response -> TONTO JSON response.
 
-As of Phase 1 of `specs/inference-providers.md`, OpenAI text generation is selected by `TONTO_INFERENCE_PROVIDER=openai` or by leaving `TONTO_INFERENCE_PROVIDER` unset.
+As of Phase 1 of `specs/inference-providers.md`, OpenAI text generation is selected by `TONTO_INFERENCE_PROVIDER=openai` or by leaving `TONTO_INFERENCE_PROVIDER` unset. As of Phase 2, OpenAI STT is selected the same way.
 
 Speech output is not handled by OpenAI in the current MVP:
 

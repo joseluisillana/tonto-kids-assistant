@@ -1,6 +1,6 @@
 # Inference Providers Implementation Plan
 
-**Status:** In progress - Phase 1 implemented
+**Status:** In progress - Phase 2 implemented
 **Source Spec:** `specs/inference-providers.md`
 **Tracking:** GitHub parent issue #48
 
@@ -179,6 +179,8 @@ Delivery:
 ### Phase 2 - STT Provider Adapter
 
 Tracking: GitHub issue #49
+
+Status: implemented on 2026-06-13 in branch `feature/inference-provider-stt-adapter`.
 
 Recommended branch:
 
