@@ -103,9 +103,9 @@ Queda fuera del primer loop automatizado: wake word, Arduino/LEDs, persistencia,
 
 - **Lenguajes**: Python (cliente y backend inicial)
 - **Web**: React, TypeScript, Vite, Tailwind CSS
-- **IA**: OpenAI API
+- **IA**: OpenAI API by default; DevExpert Inference is available through backend provider selection
 - **Audio actual**: espeak/espeak-ng para TTS local
-- **Audio actual**: STT backend con OpenAI `gpt-4o-mini-transcribe` validado manualmente desde Raspberry; wake word queda fuera del MVP inmediato
+- **Audio actual**: STT backend con OpenAI `gpt-4o-mini-transcribe` validado manualmente desde Raspberry; DevExpert STT puede usarse mediante `TONTO_INFERENCE_PROVIDER=devexpert`; wake word queda fuera del MVP inmediato
 - **Hardware**: Raspberry Pi 3B v1.2; Arduino Uno queda futuro para estados físicos
 - **Comunicación**: REST APIs (FastAPI)
 - **Desarrollo**: Codex, OpenCode (WSL2/DevExpert), GitHub, GitHub Copilot, VSCode + Remote SSH
@@ -281,6 +281,16 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 2. **Levanta el backend**
 
    ```powershell
+   $env:TONTO_INFERENCE_PROVIDER="openai"
+   $env:OPENAI_API_KEY="<your-openai-api-key>"
+   .\scripts\dev.ps1 -Service backend
+   ```
+
+   Para usar DevExpert Inference en lugar de OpenAI:
+
+   ```powershell
+   $env:TONTO_INFERENCE_PROVIDER="devexpert"
+   $env:DEVEXPERT_API_KEY="<your-devexpert-api-key>"
    .\scripts\dev.ps1 -Service backend
    ```
 

@@ -1,7 +1,7 @@
 ﻿# TONTO Demo Runbook
 
 **Audience:** Demo operator
-**Last Updated:** 2026-06-08
+**Last Updated:** 2026-06-13
 
 ## Prerequisites
 
@@ -10,6 +10,64 @@
 - USB audio device (microphone + speaker) connected to the Raspberry.
 - Python venv set up on the Raspberry.
 - Node.js and npm installed on Windows (for web client, optional).
+- One backend inference provider configured in the Windows backend terminal: OpenAI or DevExpert.
+
+## Provider Selection
+
+TONTO selects the backend inference provider at backend startup through `TONTO_INFERENCE_PROVIDER`.
+
+The supported values are:
+
+| Value | Text generation | STT |
+|---|---|---|
+| `openai` | OpenAI Responses API | OpenAI audio transcriptions |
+| `devexpert` | DevExpert Chat Completions | DevExpert audio transcriptions |
+
+The scripts inherit environment variables from the shell that starts them. No script auto-loads `.env`; use `.env.example` as a local reference only.
+
+### OpenAI backend
+
+In the backend PowerShell terminal:
+
+```powershell
+$env:TONTO_INFERENCE_PROVIDER = "openai"
+$env:OPENAI_API_KEY = "<your-openai-api-key>"
+$env:OPENAI_MODEL = "gpt-4o-mini"
+$env:OPENAI_STT_MODEL = "gpt-4o-mini-transcribe"
+.\scripts\dev.ps1 -Service backend -AllowLan
+```
+
+OpenAI is also the default when `TONTO_INFERENCE_PROVIDER` is unset.
+
+### DevExpert backend
+
+In the backend PowerShell terminal:
+
+```powershell
+$env:TONTO_INFERENCE_PROVIDER = "devexpert"
+$env:DEVEXPERT_API_KEY = "<your-devexpert-api-key>"
+$env:DEVEXPERT_BASE_URL = "https://inference.devexpert.io/v1"
+$env:DEVEXPERT_CHAT_MODEL = "mimo-v2.5"
+$env:DEVEXPERT_STT_MODEL = "gpt-4o-mini-transcribe"
+.\scripts\dev.ps1 -Service backend -AllowLan
+```
+
+Do not print or commit real API keys. If using `scripts/agent-backend.ps1`, set the same environment variables first and then run:
+
+```powershell
+.\scripts\agent-backend.ps1 -Action start -AllowLan
+```
+
+### Provider smoke check
+
+After the backend starts, a text turn validates the active text provider:
+
+```powershell
+$body = @{ session_id = "provider-smoke"; message = "Responde solo: ok" } | ConvertTo-Json
+Invoke-RestMethod -Uri "http://127.0.0.1:8000/chat" -Method Post -ContentType "application/json" -Body $body
+```
+
+The voice loop validates the active STT provider through `POST /chat/audio`; use the Raspberry or web demo flow below.
 
 ## Quick Start
 
@@ -19,7 +77,7 @@
 .\scripts\dev.ps1 -Service backend -AllowLan
 ```
 
-The backend starts on `0.0.0.0:8000`. Keep this terminal open.
+The backend starts on `0.0.0.0:8000` with whichever provider was configured in the shell. Keep this terminal open.
 
 ### 2. Start the Raspberry client
 
