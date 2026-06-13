@@ -705,3 +705,85 @@ Make demo failures understandable and recoverable for the operator.
 - Responses in Spanish, short, child-friendly, educational.
 - In-memory context worked (turn 3 follow-up was coherent with turn 2).
 - No technical error messages shown to operator.
+
+## Phase 4 — Demo Rehearsal (validated 2026-06-13)
+
+**Branch:** `docs/week-05-phase4-demo-rehearsal`
+**Tracking:** GitHub issue #38
+
+### Objective
+
+Prove the demo works repeatedly with both supported inference providers.
+
+### Environment
+
+- Backend: `http://192.168.1.91:8000` (Windows, LAN mode)
+- Raspberry: `tonto-pi` / `tonto-pi-user`
+- Audio device: `plughw:CARD=Device,DEV=0`
+- `TONTO_RECORD_SECONDS`: 6 (default)
+- Session: single session per provider run
+
+### A. Primary Provider — OpenAI (6 voice turns)
+
+**Provider config:**
+- `TONTO_INFERENCE_PROVIDER=openai`
+- `OPENAI_MODEL=gpt-4o-mini`
+- `OPENAI_STT_MODEL=gpt-4o-mini-transcribe`
+
+**Smoke check:** `POST /chat` with `Responde solo: ok` → OK
+
+**Voice turns:**
+
+| Turn | Input | Transcript | Response | espeak | ALSA |
+|---|---|---|---|---|---|
+| 1 | "Hola tonto, ¿cómo estás?" | Exact | Natural greeting + invitation | OK | None |
+| 2 | "¿Qué es el Sol?" | Exact | Child-friendly explanation with comparison ("como una gran lámpara en el cielo") | OK | None |
+| 3 | "Es una estrella." | Exact | Confirmed and expanded | OK | None |
+| 4 | "Porque nos dá luz e calor." | Exact | Confirmed and explained | OK | None |
+| 5 | "¿Por qué nos da luz y calor?" | Exact | Simplified explanation (gases, energy) | OK | None |
+| 6 | "Gracias. Adiós." | Exact | Natural farewell | OK | None |
+
+**Observations:**
+- 6/6 voice turns completed without errors.
+- STT transcription accurate on all turns.
+- Responses in Spanish, short, child-friendly, educational.
+- In-memory context worked across the sequence.
+- ALSA/JACK warnings fully suppressed.
+- Listening indicator visible (6/6s) on every turn.
+- No technical error messages shown to operator.
+
+### B. Alternative Provider — DevExpert (1 smoke turn)
+
+**Provider config:**
+- `TONTO_INFERENCE_PROVIDER=devexpert`
+- `DEVEXPERT_CHAT_MODEL=mimo-v2.5`
+- `DEVEXPERT_STT_MODEL=gpt-4o-mini-transcribe`
+
+**Smoke check:** `POST /chat` with `Responde solo: ok` → OK
+
+**Voice turn:**
+
+| Turn | Input | Transcript | Response | espeak | ALSA |
+|---|---|---|---|---|---|
+| 1 | "¿Qué es un planeta?" | Exact | Child-friendly definition ("objeto grande y redondo que viaja alrededor de una estrella") | OK | None |
+
+**Observations:**
+- 1/1 smoke turn completed without errors.
+- STT transcription accurate.
+- Response in Spanish, short, child-friendly.
+- DevExpert `mimo-v2.5` response was concise (shorter than typical OpenAI for same prompt).
+- No ALSA/JACK warnings.
+- Provider switch from OpenAI to DevExpert worked correctly (backend restart with env var).
+
+### Acceptance Criteria
+
+- [x] 3+ consecutive voice turns complete without blocking failures on primary provider (OpenAI: 6/6).
+- [x] 1 smoke turn completes successfully on alternative provider (DevExpert: 1/1).
+- [x] Any failure documented with clear cause (no failures in this rehearsal).
+- [x] Evidence recorded in journal for both providers.
+
+### Status
+
+- [x] OpenAI rehearsal: 6/6 voice turns passed.
+- [x] DevExpert smoke turn: 1/1 passed.
+- [x] Evidence recorded.
