@@ -1,7 +1,7 @@
 # Week 06 Closeout and Presentation
 
 **Version:** 0.1
-**Status:** Not started
+**Status:** In progress - Phase 1 complete
 **Last Updated:** 2026-06-14
 
 ## Objective
@@ -33,7 +33,6 @@ Current state:
 - Inference provider selection operational (OpenAI + DevExpert).
 
 Known gaps for Week 06:
-- No demo checklist for presentation day.
 - No documented limitations list for the audience.
 - No future work list for post-MVP.
 - No final report for the AI Expert course.
@@ -83,6 +82,8 @@ Acceptance:
 - Roadmap and specs summary point to Week 06.
 
 ### Phase 1 - Demo Checklist
+
+Status: completed 2026-06-14. The checklist lives in `docs/demo-checklist.md`.
 
 Purpose: create a step-by-step checklist the operator follows on presentation day to verify everything works before starting.
 

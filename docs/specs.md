@@ -101,7 +101,7 @@ La spec de Semana 6 vive en `specs/week-06-closeout.md`, con plan emparejado en 
 Semana 6 cierra el MVP con entregables documentales:
 
 1. **Kickoff documental** — completado 2026-06-14. Spec, plan e issues creadas.
-2. **Checklist de presentación** — pendiente. Documento paso a paso para el operador el día de la demo.
+2. **Checklist de presentación** — completado 2026-06-14. `docs/demo-checklist.md` documenta el paso a paso para el operador el día de la demo.
 3. **Limitaciones conocidas** — pendiente. Lista honesta de qué no funciona y qué la audiencia debe saber.
 4. **Siguientes pasos post-MVP** — pendiente. Backlog priorizado para continuar el proyecto.
 5. **Informe final** — pendiente. Informe del curso AI Expert basado en evidencia real del repo.

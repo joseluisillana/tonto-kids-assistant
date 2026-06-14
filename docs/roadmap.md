@@ -316,7 +316,7 @@ Preparar la entrega final del proyecto.
 ## Fases
 
 0. Kickoff documental y handoff para agentes — completado 2026-06-14.
-1. Checklist de presentación — pendiente.
+1. Checklist de presentación — completado 2026-06-14.
 2. Limitaciones conocidas — pendiente.
 3. Siguientes pasos post-MVP — pendiente.
 4. Informe final del curso AI Expert — pendiente.
