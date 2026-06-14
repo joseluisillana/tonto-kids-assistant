@@ -1,7 +1,7 @@
 # Week 06 Closeout — Implementation Plan
 
 **Spec:** `specs/week-06-closeout.md`
-**Tracking:** GitHub parent issue TBD
+**Tracking:** GitHub parent issue #65
 
 ## Overview
 
@@ -9,7 +9,7 @@ Week 06 closes the TONTO MVP with documentation-only deliverables: a presentatio
 
 ## Phase 0 — Documentation Kickoff
 
-**Issue:** #TBD
+**Issue:** #66
 
 ### Tasks
 
@@ -30,7 +30,9 @@ Week 06 closes the TONTO MVP with documentation-only deliverables: a presentatio
 
 ## Phase 1 — Demo Checklist
 
-**Issue:** #TBD
+**Issue:** #67
+
+**Status:** Complete - 2026-06-14
 
 ### Tasks
 
@@ -53,7 +55,7 @@ Week 06 closes the TONTO MVP with documentation-only deliverables: a presentatio
 
 ## Phase 2 — Known Limitations
 
-**Issue:** #TBD
+**Issue:** #68
 
 ### Tasks
 
@@ -79,7 +81,7 @@ Week 06 closes the TONTO MVP with documentation-only deliverables: a presentatio
 
 ## Phase 3 — Future Work
 
-**Issue:** #TBD
+**Issue:** #69
 
 ### Tasks
 
@@ -104,7 +106,7 @@ Week 06 closes the TONTO MVP with documentation-only deliverables: a presentatio
 
 ## Phase 4 — Final Report
 
-**Issue:** #TBD
+**Issue:** #70
 
 ### Tasks
 
@@ -133,7 +135,7 @@ Week 06 closes the TONTO MVP with documentation-only deliverables: a presentatio
 
 ## Phase 5 — Final Demo Evidence and Closeout
 
-**Issue:** #TBD
+**Issue:** #71
 
 ### Tasks
 

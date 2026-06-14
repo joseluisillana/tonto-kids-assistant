@@ -1,7 +1,7 @@
 # Week 06 Kickoff
 
 **Date:** 2026-06-14
-**Status:** Phase 0 complete.
+**Status:** Phase 1 complete.
 
 ## Objective
 
@@ -24,7 +24,6 @@ Current test state:
 - Web typecheck: passes.
 
 Known gaps for Week 06:
-- No demo checklist for presentation day.
 - No documented limitations list for the audience.
 - No future work list for post-MVP.
 - No final report for the AI Expert course.
@@ -35,11 +34,12 @@ Known gaps for Week 06:
 - `specs/week-06-closeout.md`
 - `docs/plans/week-06-closeout.md`
 - `docs/project-journal/week-06.md`
+- `docs/demo-checklist.md`
 
 ## Proposed Week 06 Phases
 
 0. Documentation kickoff and handoff for agents — completed 2026-06-14.
-1. Demo checklist.
+1. Demo checklist - completed 2026-06-14.
 2. Known limitations.
 3. Future work.
 4. Final report.
@@ -57,4 +57,25 @@ Known gaps for Week 06:
 
 ## Recommended Next Action
 
-Phase 1: create a demo checklist for presentation day.
+Phase 2: create the known limitations document.
+
+## Phase 1 - Demo Checklist
+
+**Date:** 2026-06-14
+**Status:** Complete.
+**Tracking:** #67
+
+Created `docs/demo-checklist.md` as the presentation-day operator checklist.
+
+The checklist covers:
+- presentation preconditions,
+- provider selection for OpenAI and DevExpert,
+- backend verification,
+- Raspberry verification,
+- optional web verification,
+- recommended 5-7 turn demo sequence,
+- Plan B fallbacks,
+- final ready check,
+- evidence to record after the final demo.
+
+No code, script, dependency, API, or behavior changes were made.
