@@ -94,6 +94,21 @@ Semana 5 also includes a planned extra MVP line for AI Expert course alignment:
 
 - **Inference Providers / DevExpert Inference** — implemented through Phase 3, tracked by parent issue #48 and phase issues #50, #51, #49, #52, with future backlog #53. Phases 0-3 are complete: planning/provider specs, chat provider selection, STT provider selection, and runbook/setup documentation for OpenAI and DevExpert while keeping Raspberry and web clients provider-agnostic. OpenAI keeps using the Responses API for text, DevExpert uses its documented OpenAI-compatible Chat Completions endpoint, and both providers must remain covered by tests when inference behavior changes. General spec: `specs/inference-providers.md`; provider specs: `specs/inference-provider-openai.md`, `specs/inference-provider-devexpert.md`; plan: `docs/plans/inference-providers.md`; repo-local skill: `.agents/skills/devexpert-inference/SKILL.md`.
 
+## Semana 6 - Cierre del MVP y presentación (en curso)
+
+La spec de Semana 6 vive en `specs/week-06-closeout.md`, con plan emparejado en `docs/plans/week-06-closeout.md`.
+
+Semana 6 cierra el MVP con entregables documentales:
+
+1. **Kickoff documental** — completado 2026-06-14. Spec, plan e issues creadas.
+2. **Checklist de presentación** — pendiente. Documento paso a paso para el operador el día de la demo.
+3. **Limitaciones conocidas** — pendiente. Lista honesta de qué no funciona y qué la audiencia debe saber.
+4. **Siguientes pasos post-MVP** — pendiente. Backlog priorizado para continuar el proyecto.
+5. **Informe final** — pendiente. Informe del curso AI Expert basado en evidencia real del repo.
+6. **Demo final y closeout** — pendiente. Ejecución de la demo, evidencia en journal, verificación del Definition of Done.
+
+GitHub tracking: issue #65 (parent), issues #66-#71 (phases).
+
 ## Fuera de Alcance de Semana 5
 
 - Wake word.
