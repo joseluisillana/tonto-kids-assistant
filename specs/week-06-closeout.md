@@ -1,8 +1,8 @@
 # Week 06 Closeout and Presentation
 
 **Version:** 0.1
-**Status:** In progress - Phase 1 complete
-**Last Updated:** 2026-06-14
+**Status:** In progress - Phase 2 complete
+**Last Updated:** 2026-06-18
 
 ## Objective
 
@@ -33,7 +33,6 @@ Current state:
 - Inference provider selection operational (OpenAI + DevExpert).
 
 Known gaps for Week 06:
-- No documented limitations list for the audience.
 - No future work list for post-MVP.
 - No final report for the AI Expert course.
 - No final demo evidence recorded in journal.
@@ -108,6 +107,8 @@ Acceptance:
 - Checklist is actionable (operator can follow it without guessing).
 
 ### Phase 2 - Known Limitations
+
+Status: completed 2026-06-18. The limitations document lives in `docs/known-limitations.md`.
 
 Purpose: create an honest list of what does not work, what is fragile, and what the audience should know.
 

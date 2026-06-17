@@ -102,7 +102,7 @@ Semana 6 cierra el MVP con entregables documentales:
 
 1. **Kickoff documental** — completado 2026-06-14. Spec, plan e issues creadas.
 2. **Checklist de presentación** — completado 2026-06-14. `docs/demo-checklist.md` documenta el paso a paso para el operador el día de la demo.
-3. **Limitaciones conocidas** — pendiente. Lista honesta de qué no funciona y qué la audiencia debe saber.
+3. **Limitaciones conocidas** — completado 2026-06-18. `docs/known-limitations.md` documenta los límites honestos del MVP para audiencia, operador y próximos contribuidores.
 4. **Siguientes pasos post-MVP** — pendiente. Backlog priorizado para continuar el proyecto.
 5. **Informe final** — pendiente. Informe del curso AI Expert basado en evidencia real del repo.
 6. **Demo final y closeout** — pendiente. Ejecución de la demo, evidencia en journal, verificación del Definition of Done.
