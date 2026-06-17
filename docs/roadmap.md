@@ -317,7 +317,7 @@ Preparar la entrega final del proyecto.
 
 0. Kickoff documental y handoff para agentes — completado 2026-06-14.
 1. Checklist de presentación — completado 2026-06-14.
-2. Limitaciones conocidas — pendiente.
+2. Limitaciones conocidas — completado 2026-06-18.
 3. Siguientes pasos post-MVP — pendiente.
 4. Informe final del curso AI Expert — pendiente.
 5. Demo final, evidencia y closeout — pendiente.

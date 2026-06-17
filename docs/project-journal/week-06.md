@@ -1,7 +1,7 @@
 # Week 06 Kickoff
 
 **Date:** 2026-06-14
-**Status:** Phase 1 complete.
+**Status:** Phase 2 complete.
 
 ## Objective
 
@@ -24,7 +24,6 @@ Current test state:
 - Web typecheck: passes.
 
 Known gaps for Week 06:
-- No documented limitations list for the audience.
 - No future work list for post-MVP.
 - No final report for the AI Expert course.
 - No final demo evidence recorded in journal.
@@ -40,7 +39,7 @@ Known gaps for Week 06:
 
 0. Documentation kickoff and handoff for agents — completed 2026-06-14.
 1. Demo checklist - completed 2026-06-14.
-2. Known limitations.
+2. Known limitations - completed 2026-06-18.
 3. Future work.
 4. Final report.
 5. Final demo evidence and closeout.
@@ -57,7 +56,7 @@ Known gaps for Week 06:
 
 ## Recommended Next Action
 
-Phase 2: create the known limitations document.
+Phase 3: create the future work document.
 
 ## Phase 1 - Demo Checklist
 
@@ -77,5 +76,28 @@ The checklist covers:
 - Plan B fallbacks,
 - final ready check,
 - evidence to record after the final demo.
+
+No code, script, dependency, API, or behavior changes were made.
+
+## Phase 2 - Known Limitations
+
+**Date:** 2026-06-18
+**Status:** Complete.
+**Tracking:** #68
+
+Created `docs/known-limitations.md` as the audience-facing limitations document for the MVP closeout.
+
+The document covers:
+- robotic but functional `espeak` TTS quality,
+- in-memory session history with no persistence,
+- no wake word or continuous listening,
+- no Arduino/LED physical states in the six-week MVP,
+- LAN, internet, and provider dependency,
+- single validated Raspberry hardware unit,
+- expected turn latency,
+- DevExpert verbosity compared to OpenAI,
+- ALSA/JACK warnings suppressed or filtered but not eliminated at the OS/audio-stack level.
+
+The document frames these as honest MVP boundaries and future productization areas rather than current presentation blockers.
 
 No code, script, dependency, API, or behavior changes were made.

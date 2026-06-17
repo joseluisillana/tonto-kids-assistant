@@ -57,6 +57,8 @@ Week 06 closes the TONTO MVP with documentation-only deliverables: a presentatio
 
 **Issue:** #68
 
+**Status:** Complete - 2026-06-18
+
 ### Tasks
 
 1. Create `docs/known-limitations.md` covering:
