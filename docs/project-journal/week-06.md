@@ -1,7 +1,7 @@
 # Week 06 Kickoff
 
 **Date:** 2026-06-14
-**Status:** Phase 2 complete.
+**Status:** Phase 3 complete.
 
 ## Objective
 
@@ -99,5 +99,21 @@ The document covers:
 - ALSA/JACK warnings suppressed or filtered but not eliminated at the OS/audio-stack level.
 
 The document frames these as honest MVP boundaries and future productization areas rather than current presentation blockers.
+
+No code, script, dependency, API, or behavior changes were made.
+
+## Phase 3 - Future Work
+
+**Date:** 2026-06-18
+**Status:** Complete.
+**Tracking:** #69
+
+Created `docs/future-work.md` as the prioritized post-MVP backlog.
+
+The document records the human decision to discard cloud deployment as a near-term post-MVP milestone. It explains that hosted deployment may become useful later for remote demos or multiple devices, but it is not the right next step because it adds operational, privacy, secret-management, and support complexity without improving the physical child-facing experience.
+
+The first post-MVP priority is now the Raspberry touch UI with animated assistant face using the selected Waveshare 5" HDMI touch display. The planned direction keeps the Raspberry as a thin client: UI, touch controls, audio capture, and audio playback run on Raspberry, while the backend remains external and reachable through `TONTO_BACKEND_URL`. The existing Python terminal client remains the fallback path.
+
+The backlog also covers better TTS, inference provider improvements, minimal session persistence, wake word exploration, Arduino/LED physical states, multi-user support, and metrics/demo diagnostics.
 
 No code, script, dependency, API, or behavior changes were made.
