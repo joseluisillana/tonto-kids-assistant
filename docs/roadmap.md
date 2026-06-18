@@ -320,7 +320,7 @@ Preparar la entrega final del proyecto.
 2. Limitaciones conocidas — completado 2026-06-18.
 3. Siguientes pasos post-MVP — completado 2026-06-18. `docs/future-work.md` define la pantalla Waveshare 5" HDMI táctil con UI/cliente en Raspberry y avatar animado como primer hito post-MVP; cloud deployment queda descartado como prioridad cercana.
 4. Informe final del curso AI Expert — completado 2026-06-18. `docs/final-report.md` creado a partir de evidencia real del repositorio.
-5. Demo final, evidencia y closeout — pendiente.
+5. Demo final, evidencia y closeout — completado 2026-06-18. Backend OpenAI validado, Raspberry preflight pasado, 4 turnos de voz exitosos registrados en `docs/project-journal/week-06.md` y Definition of Done verificado.
 
 ## Prioridades
 
@@ -449,10 +449,10 @@ El MVP se considerará exitoso si:
 
 # Definition of Done
 
-TONTO MVP estará “done” cuando:
+TONTO MVP está “done” desde 2026-06-18 porque:
 
-- exista una demo funcional reproducible,
-- la arquitectura sea estable,
-- el flujo conversacional funcione extremo a extremo,
-- el sistema pueda presentarse sin configuración manual compleja,
-- y el proyecto esté documentado de forma clara y mantenible.
+- existe una demo funcional reproducible,
+- la arquitectura es estable,
+- el flujo conversacional funciona extremo a extremo,
+- el sistema puede presentarse sin configuración manual compleja,
+- y el proyecto está documentado de forma clara y mantenible.
