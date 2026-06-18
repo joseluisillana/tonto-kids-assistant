@@ -1,7 +1,7 @@
 # Week 06 Closeout and Presentation
 
 **Version:** 0.1
-**Status:** In progress - Phase 4 complete
+**Status:** Complete
 **Last Updated:** 2026-06-18
 
 ## Objective
@@ -33,7 +33,7 @@ Current state:
 - Inference provider selection operational (OpenAI + DevExpert).
 
 Known gaps for Week 06:
-- No final demo evidence recorded in journal.
+- None. Final demo evidence is recorded in `docs/project-journal/week-06.md`.
 
 ## Week 06 Framing
 
@@ -192,6 +192,8 @@ Acceptance:
 
 ### Phase 5 - Final Demo Evidence and Closeout
 
+Status: completed 2026-06-18. Final evidence lives in `docs/project-journal/week-06.md`.
+
 Purpose: end the project with recorded evidence and a clear final state.
 
 Included:
@@ -204,11 +206,11 @@ Included:
 - Update `docs/specs.md` with final Week 06 status.
 - Update `docs/roadmap.md` with Week 06 completion.
 - Verify Definition of Done:
-  - [ ] Demo funcional reproducible.
-  - [ ] Arquitectura estable.
-  - [ ] Flujo conversacional extremo a extremo.
-  - [ ] Sistema presentable sin configuración manual compleja.
-  - [ ] Proyecto documentado clara y manteniblemente.
+  - [x] Demo funcional reproducible.
+  - [x] Arquitectura estable.
+  - [x] Flujo conversacional extremo a extremo.
+  - [x] Sistema presentable sin configuración manual compleja.
+  - [x] Proyecto documentado clara y manteniblemente.
 
 Excluded:
 - Code changes.

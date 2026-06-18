@@ -94,7 +94,7 @@ Semana 5 also includes a planned extra MVP line for AI Expert course alignment:
 
 - **Inference Providers / DevExpert Inference** — implemented through Phase 3, tracked by parent issue #48 and phase issues #50, #51, #49, #52, with future backlog #53. Phases 0-3 are complete: planning/provider specs, chat provider selection, STT provider selection, and runbook/setup documentation for OpenAI and DevExpert while keeping Raspberry and web clients provider-agnostic. OpenAI keeps using the Responses API for text, DevExpert uses its documented OpenAI-compatible Chat Completions endpoint, and both providers must remain covered by tests when inference behavior changes. General spec: `specs/inference-providers.md`; provider specs: `specs/inference-provider-openai.md`, `specs/inference-provider-devexpert.md`; plan: `docs/plans/inference-providers.md`; repo-local skill: `.agents/skills/devexpert-inference/SKILL.md`.
 
-## Semana 6 - Cierre del MVP y presentación (en curso)
+## Semana 6 - Cierre del MVP y presentación (completada)
 
 La spec de Semana 6 vive en `specs/week-06-closeout.md`, con plan emparejado en `docs/plans/week-06-closeout.md`.
 
@@ -105,7 +105,7 @@ Semana 6 cierra el MVP con entregables documentales:
 3. **Limitaciones conocidas** — completado 2026-06-18. `docs/known-limitations.md` documenta los límites honestos del MVP para audiencia, operador y próximos contribuidores.
 4. **Siguientes pasos post-MVP** — completado 2026-06-18. `docs/future-work.md` prioriza la UI táctil en Raspberry con pantalla Waveshare 5" HDMI y cara animada como primer hito post-MVP, descarta cloud deployment como prioridad cercana y lista mejoras futuras de TTS, proveedores, persistencia, wake word, Arduino/LEDs, multiusuario y diagnósticos.
 5. **Informe final** — completado 2026-06-18. `docs/final-report.md` documenta el proyecto para el curso AI Expert con alcance MVP, arquitectura, proceso, desarrollo asistido por IA, implementación, validación, resultados, trabajo futuro y apéndice.
-6. **Demo final y closeout** — pendiente. Ejecución de la demo, evidencia en journal, verificación del Definition of Done.
+6. **Demo final y closeout** — completado 2026-06-18. Demo final ejecutada con backend OpenAI, preflight Raspberry, smoke `/chat`, 4 turnos de voz exitosos en Raspberry real y Definition of Done verificado en `docs/project-journal/week-06.md`.
 
 GitHub tracking: issue #65 (parent), issues #66-#71 (phases).
 
