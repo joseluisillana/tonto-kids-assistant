@@ -1,0 +1,4 @@
+interface:
+  display_name: "Raspberry Voice Demo"
+  short_description: "Run guided TONTO Raspberry voice turns"
+  default_prompt: "Use $raspberry-voice-demo to run guided TONTO voice turns through the Raspberry client."
