@@ -318,7 +318,7 @@ Preparar la entrega final del proyecto.
 0. Kickoff documental y handoff para agentes — completado 2026-06-14.
 1. Checklist de presentación — completado 2026-06-14.
 2. Limitaciones conocidas — completado 2026-06-18.
-3. Siguientes pasos post-MVP — pendiente.
+3. Siguientes pasos post-MVP — completado 2026-06-18. `docs/future-work.md` define la pantalla Waveshare 5" HDMI táctil con UI/cliente en Raspberry y avatar animado como primer hito post-MVP; cloud deployment queda descartado como prioridad cercana.
 4. Informe final del curso AI Expert — pendiente.
 5. Demo final, evidencia y closeout — pendiente.
 

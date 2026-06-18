@@ -81,22 +81,25 @@ Week 06 closes the TONTO MVP with documentation-only deliverables: a presentatio
 
 ---
 
-## Phase 3 — Future Work
+## Phase 3 - Future Work
 
 **Issue:** #69
+
+**Status:** Complete - 2026-06-18
 
 ### Tasks
 
 1. Create `docs/future-work.md` covering:
+   - Raspberry touch UI with animated assistant face using the selected Waveshare 5" HDMI touch display.
    - Inference provider improvements (#53).
    - TTS alternatives.
    - Session persistence.
    - Wake word.
    - Arduino/LEDs.
-   - Cloud deployment.
    - Multi-user.
    - Metrics dashboard.
 2. Each item has priority, description, complexity.
+3. Explicitly document that cloud deployment is not prioritized after the MVP.
 
 ### Acceptance
 

@@ -1,7 +1,7 @@
 # Week 06 Closeout and Presentation
 
 **Version:** 0.1
-**Status:** In progress - Phase 2 complete
+**Status:** In progress - Phase 3 complete
 **Last Updated:** 2026-06-18
 
 ## Objective
@@ -33,7 +33,6 @@ Current state:
 - Inference provider selection operational (OpenAI + DevExpert).
 
 Known gaps for Week 06:
-- No future work list for post-MVP.
 - No final report for the AI Expert course.
 - No final demo evidence recorded in journal.
 
@@ -135,19 +134,22 @@ Acceptance:
 
 ### Phase 3 - Future Work
 
+Status: completed 2026-06-18. The future work document lives in `docs/future-work.md`.
+
 Purpose: create a prioritized backlog for continuing the project after the MVP.
 
 Included:
 - A `docs/future-work.md` document covering:
   - Inference provider improvements (issue #53: fallback, balancing, Gemini, DevExpert TTS).
+  - Raspberry touch UI with animated assistant face using the selected Waveshare 5" HDMI touch display.
   - TTS alternatives (better voice quality).
   - Session persistence.
   - Wake word integration.
   - Arduino/LED physical states.
-  - Cloud deployment.
   - Multi-user support.
   - Metrics dashboard.
 - Each item has priority, description, and estimated complexity.
+- Cloud deployment is explicitly not prioritized after the MVP; the next direction is the physical Raspberry experience while keeping the backend external and simple.
 
 Excluded:
 - Implementation of any future work item.
