@@ -104,7 +104,7 @@ Semana 6 cierra el MVP con entregables documentales:
 2. **Checklist de presentación** — completado 2026-06-14. `docs/demo-checklist.md` documenta el paso a paso para el operador el día de la demo.
 3. **Limitaciones conocidas** — completado 2026-06-18. `docs/known-limitations.md` documenta los límites honestos del MVP para audiencia, operador y próximos contribuidores.
 4. **Siguientes pasos post-MVP** — completado 2026-06-18. `docs/future-work.md` prioriza la UI táctil en Raspberry con pantalla Waveshare 5" HDMI y cara animada como primer hito post-MVP, descarta cloud deployment como prioridad cercana y lista mejoras futuras de TTS, proveedores, persistencia, wake word, Arduino/LEDs, multiusuario y diagnósticos.
-5. **Informe final** — pendiente. Informe del curso AI Expert basado en evidencia real del repo.
+5. **Informe final** — completado 2026-06-18. `docs/final-report.md` documenta el proyecto para el curso AI Expert con alcance MVP, arquitectura, proceso, desarrollo asistido por IA, implementación, validación, resultados, trabajo futuro y apéndice.
 6. **Demo final y closeout** — pendiente. Ejecución de la demo, evidencia en journal, verificación del Definition of Done.
 
 GitHub tracking: issue #65 (parent), issues #66-#71 (phases).

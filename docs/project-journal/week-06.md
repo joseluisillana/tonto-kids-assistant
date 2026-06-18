@@ -1,7 +1,7 @@
 # Week 06 Kickoff
 
 **Date:** 2026-06-14
-**Status:** Phase 3 complete.
+**Status:** Phase 4 complete.
 
 ## Objective
 
@@ -23,9 +23,7 @@ Current test state:
 - 78 Python tests pass.
 - Web typecheck: passes.
 
-Known gaps for Week 06:
-- No future work list for post-MVP.
-- No final report for the AI Expert course.
+Remaining gaps for Week 06:
 - No final demo evidence recorded in journal.
 
 ## Prepared Documents
@@ -40,8 +38,8 @@ Known gaps for Week 06:
 0. Documentation kickoff and handoff for agents — completed 2026-06-14.
 1. Demo checklist - completed 2026-06-14.
 2. Known limitations - completed 2026-06-18.
-3. Future work.
-4. Final report.
+3. Future work - completed 2026-06-18.
+4. Final report - completed 2026-06-18.
 5. Final demo evidence and closeout.
 
 ## GitHub Tracking
@@ -56,7 +54,7 @@ Known gaps for Week 06:
 
 ## Recommended Next Action
 
-Phase 3: create the future work document.
+Phase 5: execute the final demo evidence pass and close out the MVP.
 
 ## Phase 1 - Demo Checklist
 
@@ -115,5 +113,29 @@ The document records the human decision to discard cloud deployment as a near-te
 The first post-MVP priority is now the Raspberry touch UI with animated assistant face using the selected Waveshare 5" HDMI touch display. The planned direction keeps the Raspberry as a thin client: UI, touch controls, audio capture, and audio playback run on Raspberry, while the backend remains external and reachable through `TONTO_BACKEND_URL`. The existing Python terminal client remains the fallback path.
 
 The backlog also covers better TTS, inference provider improvements, minimal session persistence, wake word exploration, Arduino/LED physical states, multi-user support, and metrics/demo diagnostics.
+
+No code, script, dependency, API, or behavior changes were made.
+
+## Phase 4 - Final Report
+
+**Date:** 2026-06-18
+**Status:** Complete.
+**Tracking:** #70
+
+Created `docs/final-report.md` as the AI Expert course final report.
+
+The report expands the original outline into 10 substantive sections:
+- project introduction,
+- MVP scope,
+- architecture,
+- development process,
+- AI-assisted development,
+- implementation,
+- validation,
+- results,
+- future work,
+- appendix.
+
+The content is based on repository evidence rather than new claims: Week 03 Raspberry audio validation, Week 04 demo stability and listening indicators, Week 05 OpenAI/DevExpert rehearsal evidence, Week 06 closeout docs, current specs, runbooks, limitations, and future work.
 
 No code, script, dependency, API, or behavior changes were made.
