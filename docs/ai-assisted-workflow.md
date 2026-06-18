@@ -76,6 +76,16 @@ Use `.agents/skills/devexpert-inference/SKILL.md` when working with:
 
 When an inference change touches provider behavior, agents must preserve both OpenAI and DevExpert support through focused tests or documented validation. Do not make DevExpert skill contents the only source of truth; keep the provider specs and plan updated when behavior, contracts, or validation requirements change.
 
+Use `.agents/skills/raspberry-voice-demo/SKILL.md` when operating live TONTO voice turns through the Raspberry client, including:
+
+- starting or checking the backend with official scripts,
+- running Raspberry SSH preflight,
+- launching the Raspberry voice client,
+- coordinating spoken `espeak` prompts so the operator knows when to ask questions,
+- optionally starting the web validation client if requested.
+
+The Raspberry voice demo skill is for operation only. It must not create product features, replace the demo runbook/checklist, or change repository behavior unless the user explicitly asks for documentation updates.
+
 ## OpenCode
 
 OpenCode is an additional interactive CLI used for implementation,
