@@ -26,33 +26,27 @@ For a complete autonomous prompt to rebuild this project from scratch with AI as
 - Shared request/response contracts belong in `shared/` when needed.
 - Documentation and specs live in `docs/` and `specs/`.
 
-## Current Implementation Milestone
+## Current Implementation Milestone & Project State
 
-The project is currently in Week 05: Demo Stability and Experience.
+**CRITICAL MANDATE FOR AGENTS:**
+AGENTS.md does not track the current weekly sprint or active phase to avoid desynchronization. 
+Before choosing or executing ANY work item, you MUST read the following files to determine the active project state:
+1. `docs/roadmap.md` - For the current milestone status, what is completed, and overall scope.
+2. `docs/specs.md` - For active implementation constraints.
+3. The latest entry in `docs/project-journal/` (e.g., `week-06.md` or newer) - For the most immediate context of recent changes.
 
-Before choosing or executing the next work item, agents must confirm the active project state against `docs/specs.md`, `docs/roadmap.md`, and the newest `docs/project-journal/week-XX.md`. This section is a short agent-facing summary, not the only source of truth.
-
-- Week 03 voice milestone was complete: text loop, voice loop from Raspberry, voice loop from web.
-- Week 04 is complete (Phases 0-5): reproducible demo baseline, resilience fixes, conversation calibration, non-physical listening/time indicators, and closeout evidence.
-- Week 05 is complete (Phases 0-5): demo runbook, conversational UX polish, error resilience, dual-provider demo rehearsal (6/6 OpenAI + 1/1 DevExpert), and closeout evidence.
-- The next milestone is Week 06: Closeout and presentation preparation.
-- Extra MVP line planned: Inference Providers / DevExpert Inference integration. This line lives in `specs/inference-providers.md`, with provider specs `specs/inference-provider-openai.md` and `specs/inference-provider-devexpert.md`, plan `docs/plans/inference-providers.md`, and repo-local skill `.agents/skills/devexpert-inference/SKILL.md`.
+**Static Scope Constraints (Do not violate):**
 - Do not expose a manual WAV upload/file picker as part of the Phase 3 product/demo UI; WAV files are only acceptable as test fixtures or integration helpers.
 - Keep state in memory only if state is needed at all.
 - Optimize for clarity, debuggability, and a real demo.
 
-Explicitly out of scope for this MVP milestone:
-
+**Explicitly out of scope for the MVP:**
 - No wake word.
 - No Arduino integration.
 - No advanced product UI beyond the web validation client and its narrow Phase 3 audio validation surface.
-- No persistence.
-- No authentication.
-- No user accounts.
-- No advanced memory.
-- No multi-agent architecture.
-- No local AI models.
-- No local STT or local audio models.
+- No persistence, authentication, or user accounts.
+- No advanced memory or multi-agent architecture.
+- No local AI models, local STT, or local audio models.
 - No backend transcoding of browser `webm`/`ogg` audio unless explicitly decided later.
 - No automated audio capture/upload beyond the narrow web validation loop or Raspberry client work explicitly requested for the active milestone.
 
