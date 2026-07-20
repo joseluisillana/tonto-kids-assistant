@@ -16,13 +16,22 @@
 
 ## Diario de Ejecución
 
-### 2026-07-18: Kickoff de Planificación
+### 2026-07-18: Kickoff de Planificación y Fase 0
 - **Estado:** Completado
 - **Acciones:**
   - Se definieron los documentos iniciales de planificación en la rama `docs/raspberry-touch-ui-spec`.
   - Se actualizó la especificación en `specs/raspberry-touch-ui.md` para incluir el Diseño Visual (Fase 3) y redimensionar las fases posteriores.
   - Se redactó el plan de implementación en `docs/plans/raspberry-touch-ui-implementation-plan.md`.
   - El usuario especificó el orden (hardware -> tech stack -> diseño visual -> spike animación -> ui -> face anim integration -> kiosk mode).
+  - **Fase 0 ejecutada:** Se crearon los issues de seguimiento en GitHub mediante la CLI.
+    - Parent Issue: #81
+    - Fase 1: #82
+    - Fase 2: #83
+    - Fase 3: #84
+    - Fase 4: #85
+    - Fase 5: #86
+    - Fase 6: #87
+    - Fase 7: #88
 - **Próximos pasos:** 
-  - Revisar documentación actualizada.
-  - Ejecutar la **Fase 0** creando los issues en GitHub mediante CLI.
+  - Abrir el Pull Request (PR) de esta documentación inicial en `main`.
+  - Comenzar con la **Fase 1** (Setup y Validación de Hardware), preferiblemente en una rama derivada de este plan (`feature/raspberry-touch-ui-phase-1`).
