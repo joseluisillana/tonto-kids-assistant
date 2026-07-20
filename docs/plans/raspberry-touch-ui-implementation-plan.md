@@ -18,6 +18,7 @@ Proveer un plan de ejecución detallado para implementar el spec `specs/raspberr
 Included:
 - Configuración física de la pantalla Waveshare 5".
 - Spikes de tecnología para elegir el stack de renderizado de UI y motor para la cara animada.
+- Fase de diseño conceptual de la cara (generación de imágenes / selección de referencias).
 - Implementación de un cliente ligero que mantenga el contrato actual de STT/TTS (`POST /chat/audio`).
 - Modo texto ocultable.
 - Kiosk mode al arranque de la Raspberry.
@@ -30,19 +31,21 @@ Excluded:
 
 ## Implementation Plan
 
-1. **Fase 0:** Ejecutar `gh issue create` para crear el Parent Issue y los 6 Phase Issues listados en la spec. Linkearlos en los PRs.
+1. **Fase 0:** Ejecutar `gh issue create` para crear el Parent Issue y los 7 Phase Issues listados en la spec. Linkearlos en los PRs.
 2. **Fase 1:** Seguir instrucciones del operador humano para la conexión del hardware. Validar HDMI y touch. Documentar comandos en `docs/hardware.md`.
 3. **Fase 2:** Crear un script de prueba rápida o esqueleto web/local en la Raspberry Pi. Validar los FPS y uso de CPU. Tomar y registrar la decisión en `docs/decisions.md`.
-4. **Fase 3:** Seleccionar librería (ej. CSS, Canvas, Pygame, Tkinter, etc.) de acuerdo a la Fase 2, programar un loop de animación básica y visualizarlo.
-5. **Fase 4:** Armar la UI principal interactiva con botón de "Hablar". Conectar la captura de audio y envío al backend. Añadir botón toggle para modo texto.
-6. **Fase 5:** Sincronizar el estado del cliente (idle, recording, uploading, speaking) con el motor de animación de la Fase 3.
-7. **Fase 6:** Automatizar el arranque en `.config/autostart/` o como servicio `systemd`. Validar que el script `main.py` de terminal siga sirviendo de fallback sin conflictos.
+4. **Fase 3:** Proponer y elegir el diseño visual de la cara (imágenes estáticas generadas o recolectadas como referencia visual del estilo gráfico).
+5. **Fase 4:** Seleccionar librería técnica (ej. CSS, Canvas, Pygame, Tkinter) de acuerdo a la Fase 2, y programar la animación de los estados de la cara basada en el diseño visual.
+6. **Fase 5:** Armar la UI principal interactiva con botón de "Hablar". Conectar la captura de audio y envío al backend. Añadir botón toggle para modo texto.
+7. **Fase 6:** Sincronizar el estado del cliente (idle, recording, uploading, speaking) con la cara animada de la Fase 4.
+8. **Fase 7:** Automatizar el arranque en `.config/autostart/` o como servicio `systemd`. Validar que el script `main.py` de terminal siga sirviendo de fallback.
 
 ## Acceptance Criteria
 
 - El Parent Issue y Phase Issues existen en GitHub.
 - La pantalla táctil reacciona adecuadamente y los componentes están documentados para reemplazo/reproducción.
 - La decisión del stack técnico es pública y justificada.
+- Existe un diseño visual de referencia claro.
 - El cliente permite grabar audio tocando la pantalla y devuelve respuesta audible.
 - La cara cambia de estado visualmente.
 - El texto es visible si el control opcional está activado.

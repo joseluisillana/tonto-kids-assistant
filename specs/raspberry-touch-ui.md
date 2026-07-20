@@ -26,12 +26,17 @@ Antes de escribir código o configurar hardware, se debe registrar el trabajo en
 - **Objetivo:** Tomar en cuenta los recursos limitados de la Raspberry Pi 3 y el estado actual de la configuración para elegir la solución más fluida y sencilla.
 - **Entregable:** Decisión documentada en `docs/decisions.md` y un esqueleto (scaffold) básico del cliente validado en el hardware.
 
-### Fase 3: Spike y Evaluación de Cara Animada
-- **Acción:** Explorar formas de renderizar la cara animada de manera *programática* (no basada en videos pesados) para que sea simple pero evolucionable.
+### Fase 3: Diseño Visual de la Cara Animada
+- **Acción:** Proponer y elegir el diseño base visual de TONTO. Se utilizarán imágenes de ejemplo o modelos de generación de imágenes (GenAI) para visualizar conceptos y paletas.
+- **Objetivo:** Tener referencias claras de cómo se verá el personaje (forma, ojos, boca, estilo flat/3D) antes de intentar animarlo.
+- **Entregable:** Referencias visuales seleccionadas e incorporadas al repositorio como base de diseño.
+
+### Fase 4: Spike y Evaluación Técnica de Animación
+- **Acción:** Explorar formas de renderizar el diseño elegido de manera *programática* (no basada en videos pesados) para que sea simple pero evolucionable.
 - **Objetivo:** Elegir el motor o librería adecuada (dependiendo de la decisión de la Fase 2) para dibujar los estados: idle, listening, thinking, speaking, error.
 - **Entregable:** Decisión técnica y un prototipo de animación visualizado en la pantalla.
 
-### Fase 4: Cliente Táctil Mínimo
+### Fase 5: Cliente Táctil Mínimo
 - **Acción:** Construir la UI base con el motor elegido.
 - **Elementos requeridos:**
   - Botón táctil gigante para "hablar" (reemplaza al 'Enter' del terminal).
@@ -39,12 +44,12 @@ Antes de escribir código o configurar hardware, se debe registrar el trabajo en
   - Panel oculto (modo texto) activable por un control/botón para ver la transcripción y la respuesta textual.
 - **Entregable:** El cliente graba audio al tocar la pantalla y recibe respuesta textual/hablada del backend.
 
-### Fase 5: Integración de Cara Animada y Estados
-- **Acción:** Integrar el prototipo de la Fase 3 con el cliente funcional de la Fase 4.
+### Fase 6: Integración de Cara Animada y Estados
+- **Acción:** Integrar el prototipo de la Fase 4 con el cliente funcional de la Fase 5.
 - **Objetivo:** Que la cara responda a los estados reales de la interacción de voz (cambiar a cara de "escuchando" al grabar, "pensando" al esperar al backend, y sincronizar la cara "hablando" con la duración de la respuesta TTS).
 - **Entregable:** Experiencia audiovisual integrada y fluida.
 
-### Fase 6: Kiosk Mode, Fallback y Validación Final
+### Fase 7: Kiosk Mode, Fallback y Validación Final
 - **Acción:** Configurar el autostart para que la UI cargue en pantalla completa (kiosko) al encender la Raspberry.
 - **Objetivo:** Asegurar que la experiencia es "appliance-like".
 - **Validación:** Comprobar que el fallback de terminal (`client/main.py`) sigue funcionando si la UI gráfica falla.
