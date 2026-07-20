@@ -169,21 +169,50 @@ Audio ya validado mediante salida básica local.
 
 # Hardware opcional futuro
 
-## Pantalla HDMI compacta
+## Pantalla Táctil HDMI (Waveshare 5")
 
-### Objetivo potencial
+### Rol
+
+Interfaz visual principal interactiva (Touch UI) y despliegue de la cara animada de TONTO.
+
+### Objetivo
 
 Mostrar:
 
-- estados simples,
-- modo escucha,
-- feedback visual mínimo.
+- UI táctil con botón para hablar,
+- estados visuales (cara animada: idle, escuchando, pensando, hablando, error),
+- panel de texto opcional para transcripción.
 
 ### Prioridad
 
-Baja.
+Alta (Post-MVP Touch UI).
 
-TONTO es principalmente voice-first, por lo que una pantalla NO es necesaria para validar el MVP.
+### Configuración (Raspberry Pi 3)
+
+La pantalla se conecta por HDMI (video) y USB (alimentación y touch). Para configurar la resolución correcta y la funcionalidad táctil:
+
+1. Editar el archivo de configuración de arranque:
+   ```bash
+   sudo nano /boot/config.txt
+   ```
+2. Añadir las siguientes líneas al final del archivo:
+   ```ini
+   max_usb_current=1
+   hdmi_group=2
+   hdmi_mode=87
+   hdmi_cvt 800 480 60 6 0 0 0
+   hdmi_drive=1
+   ```
+3. Reiniciar la Raspberry Pi para aplicar los cambios:
+   ```bash
+   sudo reboot
+   ```
+4. El touch (USB) debería ser Plug-and-Play usando `evdev` en Raspbian. Para calibración opcional si la precisión es pobre:
+   ```bash
+   sudo apt-get install xserver-xorg-input-evdev
+   sudo cp -rf /usr/share/X11/xorg.conf.d/10-evdev.conf /usr/share/X11/xorg.conf.d/45-evdev.conf
+   # Reiniciar el entorno gráfico
+   ```
 
 ---
 

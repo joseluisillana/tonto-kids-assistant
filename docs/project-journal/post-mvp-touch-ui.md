@@ -33,5 +33,12 @@
     - Fase 6: #87
     - Fase 7: #88
 - **Próximos pasos:** 
-  - Abrir el Pull Request (PR) de esta documentación inicial en `main`.
-  - Comenzar con la **Fase 1** (Setup y Validación de Hardware), preferiblemente en una rama derivada de este plan (`feature/raspberry-touch-ui-phase-1`).
+  - Comenzar con la **Fase 1** (Setup y Validación de Hardware).
+
+### 2026-07-20: Ejecución de la Fase 1
+- **Estado:** Pendiente de validación física
+- **Acciones:**
+  - Se actualizaron las instrucciones de `docs/hardware.md` con la configuración estándar para la pantalla HDMI táctil Waveshare 5" y los ajustes del `/boot/config.txt`.
+- **Próximos pasos:** 
+  - Solicitar al operador humano que conecte físicamente la pantalla y realice las pruebas de verificación de video y funcionalidad táctil.
+  - Tras la validación, comenzar con la **Fase 2** (Spike de Runtime y Stack Tecnológico).
