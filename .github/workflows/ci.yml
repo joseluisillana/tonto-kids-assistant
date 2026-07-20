@@ -15,6 +15,9 @@ jobs:
   checks:
     name: Project checks
     runs-on: ubuntu-latest
+    env:
+      PIP_CACHE_DIR: ${{ github.workspace }}/.cache/pip
+      npm_config_cache: ${{ github.workspace }}/.cache/npm
 
     steps:
       - name: Checkout
