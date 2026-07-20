@@ -64,6 +64,7 @@ Task:
 - Keep the project architecture and MVP scope intact.
 - Do not add dependencies or change contracts unless the spec explicitly requires it.
 - Update docs or specs only when implementation changes durable project state.
+- When creating a PR, link to the related Phase Issue using `Closes #XYZ`. If there is a Parent/Epic Issue, mention it as `Part of #XYZ` but DO NOT use closing keywords for it unless all its child issues and un-tracked tasks are complete.
 
 Verification:
 - Run the checks listed in this plan.

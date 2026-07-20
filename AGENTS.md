@@ -96,6 +96,7 @@ Before choosing or executing ANY work item, you MUST read the following files to
 - Use `git` for local repository operations such as status, diff, branch, switch, worktree, add, commit, and log.
 - Prefer GitHub CLI (`gh`) for GitHub operations such as PR creation/view/checks/merge and issue creation/view/update.
 - For phases, parallel work, hardware validation, or multi-session work, create or reuse a GitHub Issue before implementation and reference it from the PR.
+- When creating PRs, DO NOT use auto-closing keywords (e.g., `Closes #XYZ`) for Parent/Epic issues unless ALL child issues and other un-tracked tasks within the parent are fully completed. Use `Part of #XYZ` to link without closing.
 - Use Conventional Commits when preparing commits, such as `feat:`, `fix:`, `docs:`, `chore:`, `test:`, or `refactor:`.
 - Keep PRs focused on one coherent change.
 - Include docs or specs in the same change when behavior, architecture, setup, scope, or workflow changes.
