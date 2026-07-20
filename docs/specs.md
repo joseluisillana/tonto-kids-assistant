@@ -109,6 +109,15 @@ Semana 6 cierra el MVP con entregables documentales:
 
 GitHub tracking: issue #65 (parent), issues #66-#71 (phases).
 
+## Mantenimiento post-MVP de CI
+
+La alineación de cachés locales de GitHub Actions está aprobada y pendiente de
+implementación. `specs/ci-local-cache-alignment.md` define que las cachés
+integradas de pip y npm deben conservarse, pero deben resolver respectivamente
+a `.cache/pip` y `.cache/npm` dentro del workspace, igual que
+`scripts/setup-dev.ps1`. Su plan emparejado vive en
+`docs/plans/ci-local-cache-alignment-implementation-plan.md`.
+
 ## Fuera de Alcance de Semana 5
 
 - Wake word.
