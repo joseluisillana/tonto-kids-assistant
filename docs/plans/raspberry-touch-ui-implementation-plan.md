@@ -85,7 +85,7 @@ Delivery:
 ## Workflow Isolation
 
 - Branch: `docs/raspberry-touch-ui-spec` (actual) y luego `feature/raspberry-touch-ui-phase-X` para las implementaciones.
-- Worktree: Usar worktrees separados si hay más agentes operando en paralelo.
+- **Worktree (CRITICAL PARA AGENTES):** Si este trabajo se ejecuta en paralelo a otras especificaciones, el agente **DEBE** aislar la implementación creando un Git worktree dedicado (ej. `git worktree add ../tonto-worktrees/touch-ui-phase-X -b feature/raspberry-touch-ui-phase-X main`) tal y como indica `docs/ai-assisted-workflow.md`. Nunca operar en la misma rama o worktree que otro agente.
 - Parallel-safe: La Fase 0 debe ejecutarse primero, luego el resto de forma estrictamente secuencial al depender fuertemente de validación de hardware y pruebas físicas.
 - GitHub tracking: Requerido (Fase 0).
 
