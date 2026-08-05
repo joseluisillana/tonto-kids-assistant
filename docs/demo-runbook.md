@@ -1,4 +1,4 @@
-﻿# TONTO Demo Runbook
+# TONTO Demo Runbook
 
 **Audience:** Demo operator
 **Last Updated:** 2026-06-13
@@ -8,6 +8,7 @@
 - Windows PC with backend running.
 - Raspberry Pi connected to the same LAN as the Windows PC.
 - USB audio device (microphone + speaker) connected to the Raspberry.
+- Waveshare 5" Touch Screen connected to the Raspberry (HDMI for video, USB for power/touch).
 - Python venv set up on the Raspberry.
 - Node.js and npm installed on Windows (for web client, optional).
 - One backend inference provider configured in the Windows backend terminal: OpenAI or DevExpert.

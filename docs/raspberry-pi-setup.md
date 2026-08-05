@@ -25,6 +25,7 @@ No cubre speech-to-text, wake word, Arduino, persistencia, autenticacion, despli
 
 - Raspberry Pi 3.
 - Tarjeta SDHC.
+- Pantalla táctil HDMI Waveshare 5" conectada por HDMI (video) y MicroUSB (touch/energía).
 - Fuente de alimentacion estable para Raspberry Pi.
 - Altavoz o salida de audio conectada a la Raspberry Pi.
 - Red Wi-Fi local.
@@ -621,6 +622,7 @@ Usar esta lista despues de reinstalar o recuperar la Raspberry:
 - [ ] Wi-Fi configurada desde Imager con un SSID disponible en 2.4 GHz.
 - [ ] SSH habilitado desde Imager.
 - [ ] Raspberry arranca y aparece en la red.
+- [ ] La pantalla táctil muestra la consola y está configurada con `max_usb_current=1` y la resolución correcta en `/boot/firmware/config.txt`.
 - [ ] `ssh tonto-pi-user@tonto-pi.local` funciona, o funciona SSH por IP.
 - [ ] VSCode Remote SSH conecta con `tonto-pi`.
 - [ ] `sudo apt update` y `sudo apt upgrade` ejecutados.

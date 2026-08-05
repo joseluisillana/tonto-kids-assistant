@@ -81,7 +81,7 @@ Queda fuera del primer loop automatizado: wake word, Arduino/LEDs, persistencia,
 
 ### Cliente (Raspberry Pi 3 Model B v1.2)
 
-- **Hardware confirmado**: Audio output validado y `espeak` funcionando.
+- **Hardware confirmado**: Pantalla táctil HDMI Waveshare 5" conectada y funcionando; Audio output validado y `espeak` funcionando.
 - **Desarrollo**: VSCode Remote SSH, acceso por SSH remoto.
 - **Responsabilidades actuales**: entrada manual de texto, llamadas HTTP al backend, TTS local, manejo básico de errores y loop de voz automatizado con `client/main.py --mode voice`.
 - **Responsabilidades futuras**: wake word, control físico/Arduino y otras capacidades fuera del MVP inmediato.
@@ -106,7 +106,7 @@ Queda fuera del primer loop automatizado: wake word, Arduino/LEDs, persistencia,
 - **IA**: OpenAI API by default; DevExpert Inference is available through backend provider selection
 - **Audio actual**: espeak/espeak-ng para TTS local
 - **Audio actual**: STT backend con OpenAI `gpt-4o-mini-transcribe` validado manualmente desde Raspberry; DevExpert STT puede usarse mediante `TONTO_INFERENCE_PROVIDER=devexpert`; wake word queda fuera del MVP inmediato
-- **Hardware**: Raspberry Pi 3B v1.2; Arduino Uno queda futuro para estados físicos
+- **Hardware**: Raspberry Pi 3B v1.2 con pantalla táctil HDMI Waveshare 5"; Arduino Uno queda futuro para estados físicos
 - **Comunicación**: REST APIs (FastAPI)
 - **Desarrollo**: Codex, OpenCode (WSL2/DevExpert), GitHub, GitHub Copilot, VSCode + Remote SSH
 - **Documentación**: Markdown en repo como fuente oficial; NotebookLM para síntesis; Codex/OpenCode para mantenimiento asistido

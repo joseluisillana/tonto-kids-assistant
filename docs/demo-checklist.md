@@ -11,6 +11,7 @@ Use this checklist with `docs/demo-runbook.md`. The runbook explains the full op
 - [ ] Windows development PC is available and connected to power.
 - [ ] Raspberry Pi 3 is available, powered, and on the same LAN as the Windows PC.
 - [ ] USB microphone and speaker/audio output are connected to the Raspberry.
+- [ ] Waveshare 5" Touch Screen connected to the Raspberry (HDMI for video, USB for power/touch).
 - [ ] The active LAN IP of the Windows PC is known.
 - [ ] Windows Firewall allows backend traffic on port `8000` for the current network.
 - [ ] Repository is available on Windows at the expected project path.
@@ -291,6 +292,7 @@ arecord -l
 If the USB microphone is missing:
 
 - Reconnect the USB audio device.
+- Check that `/boot/firmware/config.txt` has `max_usb_current=1` to ensure the screen does not starve the microphone.
 - Reboot the Raspberry only if there is time.
 - Switch to web voice or text fallback.
 
