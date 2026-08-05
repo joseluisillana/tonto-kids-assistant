@@ -191,9 +191,9 @@ Alta (Post-MVP Touch UI).
 
 La pantalla se conecta por HDMI (video) y USB (alimentación y touch). Para configurar la resolución correcta y la funcionalidad táctil:
 
-1. Editar el archivo de configuración de arranque:
+1. Editar el archivo de configuración de arranque (desde Debian 12/Bookworm está en la carpeta firmware):
    ```bash
-   sudo nano /boot/config.txt
+   sudo nano /boot/firmware/config.txt
    ```
 2. Añadir las siguientes líneas al final del archivo:
    ```ini
@@ -207,12 +207,12 @@ La pantalla se conecta por HDMI (video) y USB (alimentación y touch). Para conf
    ```bash
    sudo reboot
    ```
-4. El touch (USB) debería ser Plug-and-Play usando `evdev` en Raspbian. Para calibración opcional si la precisión es pobre:
+4. El touch (USB) debería ser Plug-and-Play usando `evdev` en Raspbian. Para validar que funciona correctamente, puedes verificar los eventos sin entorno gráfico:
    ```bash
-   sudo apt-get install xserver-xorg-input-evdev
-   sudo cp -rf /usr/share/X11/xorg.conf.d/10-evdev.conf /usr/share/X11/xorg.conf.d/45-evdev.conf
-   # Reiniciar el entorno gráfico
+   sudo apt-get install evtest
+   sudo evtest
    ```
+   Selecciona el dispositivo `WaveShare WS...` de la lista y comprueba que aparecen eventos (`BTN_TOUCH`, `ABS_X`, `ABS_Y`) al tocar físicamente la pantalla.
 
 ---
 

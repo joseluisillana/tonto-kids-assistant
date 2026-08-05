@@ -35,10 +35,13 @@
 - **Próximos pasos:** 
   - Comenzar con la **Fase 1** (Setup y Validación de Hardware).
 
-### 2026-07-20: Ejecución de la Fase 1
-- **Estado:** Pendiente de validación física
+### 2026-07-20 / 2026-08-05: Ejecución y Validación de la Fase 1
+- **Estado:** Completado
 - **Acciones:**
-  - Se actualizaron las instrucciones de `docs/hardware.md` con la configuración estándar para la pantalla HDMI táctil Waveshare 5" y los ajustes del `/boot/config.txt`.
+  - Se actualizaron las instrucciones de `docs/hardware.md` con la configuración estándar para la pantalla HDMI táctil Waveshare 5".
+  - Se corrigió la ruta de boot a `/boot/firmware/config.txt` para Debian 12 Bookworm.
+  - El operador humano validó físicamente el arranque, la resolución visual y el input táctil (comprobado vía `evtest` con el dispositivo `WaveShare WS170120`).
+  - Se confirmó que el límite `max_usb_current=1` mantiene alimentado el micrófono USB y el audio funciona correctamente sin caídas de tensión.
 - **Próximos pasos:** 
-  - Solicitar al operador humano que conecte físicamente la pantalla y realice las pruebas de verificación de video y funcionalidad táctil.
-  - Tras la validación, comenzar con la **Fase 2** (Spike de Runtime y Stack Tecnológico).
+  - Hacer merge de la PR asociada a la Fase 1 (#93).
+  - Comenzar con la **Fase 2** (Spike de Runtime y Stack Tecnológico).
