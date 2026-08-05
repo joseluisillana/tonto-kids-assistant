@@ -33,5 +33,15 @@
     - Fase 6: #87
     - Fase 7: #88
 - **Próximos pasos:** 
-  - Abrir el Pull Request (PR) de esta documentación inicial en `main`.
-  - Comenzar con la **Fase 1** (Setup y Validación de Hardware), preferiblemente en una rama derivada de este plan (`feature/raspberry-touch-ui-phase-1`).
+  - Comenzar con la **Fase 1** (Setup y Validación de Hardware).
+
+### 2026-07-20 / 2026-08-05: Ejecución y Validación de la Fase 1
+- **Estado:** Completado
+- **Acciones:**
+  - Se actualizaron las instrucciones de `docs/hardware.md` con la configuración estándar para la pantalla HDMI táctil Waveshare 5".
+  - Se corrigió la ruta de boot a `/boot/firmware/config.txt` para Debian 12 Bookworm.
+  - El operador humano validó físicamente el arranque, la resolución visual y el input táctil (comprobado vía `evtest` con el dispositivo `WaveShare WS170120`).
+  - Se confirmó que el límite `max_usb_current=1` mantiene alimentado el micrófono USB y el audio funciona correctamente sin caídas de tensión.
+- **Próximos pasos:** 
+  - Hacer merge de la PR asociada a la Fase 1 (#93).
+  - Comenzar con la **Fase 2** (Spike de Runtime y Stack Tecnológico).

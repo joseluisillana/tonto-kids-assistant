@@ -317,7 +317,7 @@ Use GitHub Issues when a work item needs coordination beyond one immediate PR:
 
 Do not create issues for every tiny edit. Prefer an issue when tracking improves coordination, evidence, or handoff quality.
 
-When an issue exists, reference it from the PR body. Use GitHub closing keywords only when merging the PR should truly close the issue.
+When an issue exists, reference it from the PR body to maintain tracking. Use GitHub closing keywords (e.g., `Closes #XYZ`) ONLY for the specific Phase/Child issue that the PR fully completes. NEVER use closing keywords for a Parent/Epic issue unless all child issues and any other un-tracked tasks within the parent are fully completed. To link a PR to a Parent issue without closing it, use phrasing like `Part of #XYZ` or just mention the issue number.
 
 ## Spec Handoff Workflow
 
