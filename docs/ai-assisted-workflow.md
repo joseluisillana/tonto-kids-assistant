@@ -43,7 +43,8 @@ Use the pack when an agent needs to:
 
 - start, stop, status-check, or health-check the backend for validation,
 - run a Raspberry preflight over SSH,
-- execute a narrow command inside the Raspberry repo for evidence capture.
+- execute a narrow command inside the Raspberry repo for evidence capture,
+- launch the Raspberry touch UI client (`.\scripts\agent-raspberry.ps1 -Action exec -Command "./scripts/demo-touch.sh"`).
 
 The pack deliberately does not automate passwords, store secrets, replace human voice demo validation, or change product behavior. Machine-specific values belong in local environment variables such as `TONTO_PI_HOST`, `TONTO_PI_USER`, `TONTO_PI_SSH_KEY`, `TONTO_PI_REPO`, and `TONTO_BACKEND_URL`.
 
