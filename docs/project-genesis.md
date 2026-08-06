@@ -37,6 +37,7 @@ Crea un asistente educativo físico para niños llamado **TONTO Kids Assistant**
 backend/          # Python + FastAPI (orquestación, STT, chat)
 client/           # Python stdlib (cliente Raspberry Pi)
 web/              # React + TypeScript + Vite (cliente de validación)
+spikes/           # Pruebas de concepto experimentales
 shared/           # Modelos compartidos (si se necesitan)
 docs/             # Documentación, specs, journal, planes
 specs/            # Especificaciones detalladas
