@@ -129,6 +129,7 @@ tonto-kids-assistant/
 │   ├── src/          # React app
 │   ├── package.json
 │   └── ...
+├── spikes/           # Pruebas de concepto y prototipos aislados
 ├── shared/           # Código compartido
 │   ├── models.py     # DTOs y modelos
 │   └── config.py     # Configuración común

@@ -138,3 +138,11 @@ The pack uses key-based SSH for Raspberry access with a dedicated local key stor
 
 - `specs/week-05-agent-capability-pack.md`
 - `docs/plans/week-05-agent-capability-pack.md`
+
+## D024 - Raspberry Touch UI Tech Stack
+
+Use Kivy as the UI runtime for the Raspberry Pi Touch UI (Phase 2 spike decision).
+
+The rationale is that Kivy provides hardware-accelerated OpenGL ES 2 rendering and robust native touch support via `mtdev` for headless environments (Raspberry Pi OS Lite without X11/Wayland). While Pygame was considered for its zero-dependency footprint, reading raw `/dev/input/` events without X11 often leads to severe touch coordinate calibration issues (inverted axes, offsets) on USB touchscreens.
+
+We accept the trade-off of installing some system-level dependencies (`apt` packages like `libmtdev1` or `libgles2`) on the Raspberry Pi OS Lite image in exchange for a reliable, calibrated multi-touch experience and superior UI capabilities.

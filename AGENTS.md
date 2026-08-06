@@ -16,7 +16,7 @@ For a complete autonomous prompt to rebuild this project from scratch with AI as
 
 ## Current MVP Architecture
 
-- Monorepo with separate `backend/`, `client/`, `web/`, `shared/`, `docs/`, `specs/`, `scripts/`, and `tests/` areas.
+- Monorepo with separate `backend/`, `client/`, `web/`, `spikes/`, `shared/`, `docs/`, `specs/`, `scripts/`, and `tests/` areas.
 - Backend for the MVP is Python with FastAPI.
 - Raspberry client is Python.
 - Communication is simple HTTP/JSON.
