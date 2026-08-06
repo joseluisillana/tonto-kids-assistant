@@ -59,7 +59,8 @@ start_client() {
     pkill -f 'client.main --mode touch' || true
 
     echo "Launching UI in background..."
-    nohup "$VENV_PYTHON" "$REPO_ROOT/client/main.py" --mode touch > /tmp/tonto-ui.log 2>&1 &
+    cd "$REPO_ROOT"
+    nohup env PYTHONPATH="$REPO_ROOT" "$VENV_PYTHON" -m client.main --mode touch > /tmp/tonto-ui.log 2>&1 &
     
     echo "UI started successfully! Check /tmp/tonto-ui.log for logs."
 }
