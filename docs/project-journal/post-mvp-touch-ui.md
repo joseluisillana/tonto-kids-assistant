@@ -58,3 +58,17 @@
 - **Próximos pasos:** 
   - Hacer merge de la PR asociada a la Fase 2 (Issue #83).
   - Comenzar con la **Fase 3** (Diseño Visual de la Cara Animada).
+
+### 2026-08-06: Ejecución de Fases 3 a 6 (Cliente Táctil Completo)
+- **Estado:** Completado
+- **Acciones:**
+  - **Fase 3 (Diseño Visual):** Se generaron múltiples variaciones visuales de la cara de TONTO (estado *Idle*, *Listening*, *Thinking*, *Speaking*, *Error*) y se iteró el diseño hasta conseguir una apariencia "flat", amigable y con animaciones sutiles (parpadeo en Idle).
+  - **Fase 4 (Spike Animación):** Se implementó `TontoFace` en Kivy (`client/tonto_face.py`) como un widget paramétrico dibujado por hardware, usando Canvas instructions (PushMatrix, Scale, Translate) para las transiciones.
+  - **Fase 5 y 6 (Cliente y Lógica de Voz):** Se integró `TontoTouchUI` (`client/touch_ui.py`) que orquesta:
+    - La conexión con `POST /chat/audio` desde el micrófono en un thread separado.
+    - Un `ProgressButton` personalizado con barra de progreso durante la escucha (`record_seconds`).
+    - Soporte multiplataforma (`TONTO_AUDIO_MODE="pc"` o `raspberry`) que normaliza el volumen del micrófono con `numpy` para mejorar la calidad de STT de Whisper.
+    - TTS nativo en PC (`System.Speech` de PowerShell forzado a voz en español).
+  - Se actualizaron las instrucciones de `backend/openai_client.py` a español estricto para evitar desviaciones del LLM durante falsos positivos del STT.
+- **Próximos pasos:** 
+  - Comenzar con la **Fase 7** (Kiosk Mode, Fallback y Validación Final en Raspberry).

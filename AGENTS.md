@@ -57,6 +57,10 @@ Before choosing or executing ANY work item, you MUST read the following files to
 - Keep the backend as a lightweight monolith for the MVP.
 - Do not add or restore Go CI checks until Go is explicitly selected for an active backend implementation.
 - Keep the Raspberry client as a simple Python process.
+- The Python client supports two audio modes via the `TONTO_AUDIO_MODE` environment variable:
+  - `raspberry` (default): Uses `arecord` and `espeak`.
+  - `pc`: Uses `sounddevice`, `soundfile`, and Windows `System.Speech`. Requires dependencies from `client/requirements-pc.txt`.
+- When running the Kivy touch UI on Windows via `python -m client.main`, agents MUST set `KIVY_NO_ARGS="1"` to avoid argparse collisions.
 - Use typed data structures where they clarify request/response contracts.
 - Use clear names over clever abstractions.
 - Handle obvious failure cases, especially backend timeouts and unavailable TTS.

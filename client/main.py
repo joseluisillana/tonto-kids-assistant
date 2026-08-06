@@ -7,6 +7,7 @@ import socket
 import subprocess
 import sys
 import threading
+import tempfile
 import uuid
 from typing import Callable, Optional
 import urllib.error
@@ -20,7 +21,7 @@ DEFAULT_TTS_ARGS = "-v es -s 135 -g 8"
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="TONTO Kids Assistant Client")
-    parser.add_argument("--mode", choices=["text", "voice"], default="text")
+    parser.add_argument("--mode", choices=["text", "voice", "touch"], default="text")
     args = parser.parse_args()
 
     backend_url = os.environ.get("TONTO_BACKEND_URL")
@@ -33,7 +34,12 @@ def main() -> int:
     print("TONTO Kids Assistant Client")
     print(f"Session: {session_id}")
 
-    if args.mode == "text":
+    if args.mode == "touch":
+        # Launch the Kivy app
+        from client.touch_ui import TontoTouchApp
+        TontoTouchApp().run()
+        return 0
+    elif args.mode == "text":
         return text_loop(backend_url, session_id)
     return voice_loop(backend_url, session_id)
 
@@ -72,7 +78,7 @@ def voice_loop(backend_url: str, session_id: str) -> int:
         record_seconds = max(1, min(10, int(record_seconds_default)))
     except ValueError:
         record_seconds = 6
-    audio_path = os.environ.get("TONTO_AUDIO_PATH", "/tmp/tonto-turn.wav")
+    audio_path = os.environ.get("TONTO_AUDIO_PATH", os.path.join(tempfile.gettempdir(), "tonto-turn.wav"))
 
     print("Voice mode: press Enter to record, or type a message.")
     print("Type 'exit' or 'quit' to stop.")
@@ -136,6 +142,40 @@ def capture_audio(
     wav_path: str,
     show_progress: bool = False,
 ) -> Optional[bytes]:
+    mode = os.environ.get("TONTO_AUDIO_MODE", "raspberry").lower()
+    if mode == "pc":
+        try:
+            import sounddevice as sd
+            import soundfile as sf
+            import numpy as np
+        except ImportError:
+            print("Librerias 'sounddevice', 'soundfile' y 'numpy' son necesarias para el modo PC.")
+            print("Instalalas usando: pip install -r client/requirements-pc.txt")
+            return None
+            
+        if show_progress:
+            print(f"Listening for {seconds}s... (PC Mode)")
+            
+        fs = 16000
+        recording = sd.rec(int(seconds * fs), samplerate=fs, channels=1, dtype='float32')
+        sd.wait()
+        
+        # Normalize volume to improve STT transcription
+        max_amp = np.max(np.abs(recording))
+        if max_amp > 0:
+            recording = (recording / max_amp) * 0.95
+        
+        if show_progress:
+            print("Listening complete.")
+            
+        sf.write(wav_path, recording, fs, format='WAV', subtype='PCM_16')
+        
+        try:
+            with open(wav_path, "rb") as f:
+                return f.read()
+        except FileNotFoundError:
+            return None
+
     cmd = ["arecord"]
     if device:
         cmd.extend(["-D", device])
@@ -323,6 +363,19 @@ def send_audio(
 
 
 def speak(text: str) -> None:
+    mode = os.environ.get("TONTO_AUDIO_MODE", "raspberry").lower()
+    if mode == "pc":
+        escaped_text = text.replace("'", "''")
+        ps_script = (
+            "Add-Type -AssemblyName System.Speech; "
+            "$s = New-Object System.Speech.Synthesis.SpeechSynthesizer; "
+            "$v = $s.GetInstalledVoices() | Where-Object { $_.VoiceInfo.Culture -like '*es-*' } | Select-Object -First 1; "
+            "if ($v) { $s.SelectVoice($v.VoiceInfo.Name) }; "
+            f"$s.Speak('{escaped_text}')"
+        )
+        subprocess.run(["powershell", "-Command", ps_script], check=False, stderr=subprocess.DEVNULL)
+        return
+
     tts_command = os.environ.get("TONTO_TTS_COMMAND", "espeak")
     tts_args = shlex.split(os.environ.get("TONTO_TTS_ARGS", DEFAULT_TTS_ARGS))
 

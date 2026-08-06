@@ -1,0 +1,22 @@
+[Unit]
+Description=TONTO Kids Assistant Touch UI
+After=network.target sound.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/tonto-kids-assistant
+# Ajusta la IP del backend según tu red
+Environment="TONTO_BACKEND_URL=http://192.168.1.10:8000"
+# Forzar EGL nativo para Raspberry Pi OS Lite (headless)
+Environment="KIVY_GL_BACKEND=gl"
+Environment="KIVY_WINDOW=egl_rpi"
+Environment="KCFG_KIVY_LOG_LEVEL=warning"
+ExecStart=/home/pi/tonto-kids-assistant/.venv/bin/python -m client.main --mode touch
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
