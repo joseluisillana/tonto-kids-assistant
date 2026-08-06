@@ -312,6 +312,14 @@ Instalar herramientas necesarias para Semana 1:
 sudo apt install -y git python3 python3-venv python3-pip espeak
 ```
 
+### 6.1. Preparacion para Interfaz Tactil Kivy (Opcional - Post-MVP)
+
+Para poder ejecutar la interfaz gráfica basada en Kivy directamente desde la terminal (aprovechando aceleración por hardware y soporte táctil sin instalar un servidor X11 completo), son necesarias estas dependencias del sistema operativo:
+
+```bash
+sudo apt install -y libmtdev1 libgles2 libgl1 libegl1 libsdl2-2.0-0
+```
+
 Validar versiones y rutas:
 
 ```bash
