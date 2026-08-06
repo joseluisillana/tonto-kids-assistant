@@ -320,6 +320,26 @@ Para poder ejecutar la interfaz gráfica basada en Kivy directamente desde la te
 sudo apt install -y libmtdev1 libgles2 libgl1 libegl1 libsdl2-2.0-0
 ```
 
+Para validar que Kivy reconoce correctamente la aceleración EGL y la pantalla táctil nativa, instalar Kivy en el entorno virtual y arrancar un spike:
+
+```bash
+.venv/bin/pip install kivy
+KIVY_WINDOW=egl_rpi KIVY_GL_BACKEND=gl .venv/bin/python spikes/ui_kivy/main.py
+```
+
+La salida esperada de la terminal debe confirmar el motor OpenGL de Broadcom y el soporte nativo multi-touch (mtdev) calibrado a la resolución de 800x480:
+
+```text
+[INFO   ] [GL          ] Using the "OpenGL" graphics system
+[INFO   ] [GL          ] Backend used <gl>
+[INFO   ] [GL          ] OpenGL vendor <b'Broadcom'>
+[INFO   ] [GL          ] OpenGL renderer <b'VC4 V3D 2.1'>
+[INFO   ] [ProbeSysfs  ] device match: /dev/input/eventX
+[INFO   ] [MTD         ] Read event from </dev/input/eventX>
+[INFO   ] [MTD         ] </dev/input/eventX> range position X is 0 - 800
+[INFO   ] [MTD         ] </dev/input/eventX> range position Y is 0 - 480
+```
+
 Validar versiones y rutas:
 
 ```bash
@@ -676,3 +696,4 @@ NotebookLM debe leer la copia exportada, pero la fuente oficial sigue siendo est
 | 2026-05-15 | Semana 1 | Se valida prueba punto a punto Raspberry -> backend LAN -> OpenAI -> TTS por salida de auriculares/jack. |
 | 2026-05-18 | Semana 3 | Se documentan comandos reproducibles para validar microfono USB con `arecord`, grabacion WAV corta y reproduccion local con `aplay` antes de implementar STT. |
 | 2026-06-09 | Semana 5 | Se documenta clave SSH dedicada `tonto-agent` para el Agent Capability Pack, con generacion, instalacion, validacion y revocacion sin guardar secretos en repo. |
+| 2026-08-06 | Post-MVP | Se documentan dependencias del sistema (`libmtdev1`, `libgles2`, `libgl1`, `libegl1`, `libsdl2-2.0-0`) y comandos de validación para ejecutar interfaces táctiles de Kivy con aceleración por hardware sobre Raspberry Pi OS Lite (headless). |
