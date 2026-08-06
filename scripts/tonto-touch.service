@@ -10,7 +10,7 @@ WorkingDirectory=/home/pi/tonto-kids-assistant
 Environment="TONTO_BACKEND_URL=http://192.168.1.10:8000"
 # Forzar EGL nativo para Raspberry Pi OS Lite (headless)
 Environment="KIVY_GL_BACKEND=gl"
-Environment="KIVY_WINDOW=egl_rpi"
+Environment="KIVY_WINDOW=sdl2"
 Environment="KCFG_KIVY_LOG_LEVEL=warning"
 ExecStart=/home/pi/tonto-kids-assistant/.venv/bin/python -m client.main --mode touch
 Restart=on-failure

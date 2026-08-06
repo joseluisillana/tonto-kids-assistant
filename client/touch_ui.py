@@ -18,9 +18,11 @@ from client.tonto_face import TontoFace, FaceState
 from client.main import capture_audio, send_audio, speak, send_message
 
 Window.size = (800, 480)
-# Para forzar modo ventana en dev
+# En Raspberry Pi Lite (headless), forzamos el provider sdl2 y aceleración
 if 'KIVY_WINDOW' not in os.environ:
     os.environ['KIVY_WINDOW'] = 'sdl2'
+if 'KIVY_GL_BACKEND' not in os.environ:
+    os.environ['KIVY_GL_BACKEND'] = 'gl'
 
 class ProgressButton(Button):
     progress = NumericProperty(0)
