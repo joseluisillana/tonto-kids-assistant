@@ -45,3 +45,16 @@
 - **Próximos pasos:** 
   - Hacer merge de la PR asociada a la Fase 1 (#93).
   - Comenzar con la **Fase 2** (Spike de Runtime y Stack Tecnológico).
+
+### 2026-08-06: Ejecución y Decisión de la Fase 2
+- **Estado:** Completado
+- **Acciones:**
+  - Se evaluó el stack de UI (Pygame, Tkinter, Chromium, Qt, Kivy) para el entorno headless Raspberry Pi OS Lite.
+  - Se descartaron las opciones dependientes de servidor X11.
+  - Aunque Pygame tiene un footprint de dependencias cero, se descartó a favor de Kivy tras constatar que Pygame en modo headless (directo de `/dev/input/`) sufre frecuentemente severas descalibraciones de coordenadas en pantallas USB táctiles.
+  - Kivy se seleccionó formalmente por su renderizado por hardware (OpenGL ES 2) y su robusto soporte de eventos touch nativos a nivel de kernel mediante `mtdev`.
+  - Se creó y validó el prototipo de Kivy localmente, incluso con un script de test automatizado (`spikes/ui_kivy/test_main.py`).
+  - Se registró la decisión final (D024) en `docs/decisions.md`.
+- **Próximos pasos:** 
+  - Hacer merge de la PR asociada a la Fase 2 (Issue #83).
+  - Comenzar con la **Fase 3** (Diseño Visual de la Cara Animada).
