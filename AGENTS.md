@@ -73,6 +73,7 @@ Before choosing or executing ANY work item, you MUST read the following files to
 
 - Treat the host machine as clean. Do not install Python packages globally.
 - Use the official PowerShell scripts in `scripts/` before inventing ad hoc setup, dev, test, or build commands.
+- **For ANY operational task, validation, status check, or UI/Backend execution**, you MUST first read the "Agent Capability Pack" section in `docs/ai-assisted-workflow.md` to use the canonical and safe execution scripts.
 - Python dependencies must be installed into the repo-local `.venv/`.
 - On Windows, use `.\.venv\Scripts\python.exe` when a direct Python command is unavoidable.
 - On Linux/macOS, use `.venv/bin/python` when a direct Python command is unavoidable.
