@@ -87,6 +87,7 @@ Before choosing or executing ANY work item, you MUST read the following files to
   - `.\scripts\dev.ps1 -Service backend|web|all`
   - `.\scripts\test.ps1 -Target python|web|all`
   - `.\scripts\build.ps1 -Target web|all`
+  - To launch the touch UI on the Raspberry Pi: `.\scripts\agent-raspberry.ps1 -Action exec -Command "./scripts/demo-touch.sh"`
 
 ## Git and Contribution Workflow
 
