@@ -696,4 +696,5 @@ NotebookLM debe leer la copia exportada, pero la fuente oficial sigue siendo est
 | 2026-05-15 | Semana 1 | Se valida prueba punto a punto Raspberry -> backend LAN -> OpenAI -> TTS por salida de auriculares/jack. |
 | 2026-05-18 | Semana 3 | Se documentan comandos reproducibles para validar microfono USB con `arecord`, grabacion WAV corta y reproduccion local con `aplay` antes de implementar STT. |
 | 2026-06-09 | Semana 5 | Se documenta clave SSH dedicada `tonto-agent` para el Agent Capability Pack, con generacion, instalacion, validacion y revocacion sin guardar secretos en repo. |
+| 2026-08-06 | Post-MVP | Se valida físicamente la Pantalla Táctil HDMI (Waveshare 5"), documentando su configuración de arranque (`config.txt`) y la validación de eventos táctiles (`evtest`). |
 | 2026-08-06 | Post-MVP | Se documentan dependencias del sistema (`libmtdev1`, `libgles2`, `libgl1`, `libegl1`, `libsdl2-2.0-0`) y comandos de validación para ejecutar interfaces táctiles de Kivy con aceleración por hardware sobre Raspberry Pi OS Lite (headless). |
