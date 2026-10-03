@@ -3,31 +3,28 @@
 ## Fase Actual: ANÁLISIS (DRAFT)
 
 **Estado:** 🟡 ESPERANDO "GO" PARA EJECUCIÓN.
-*(Las decisiones técnicas han sido validadas; la Spec incluye red, volúmenes, `.env` y la limpieza completa de ficheros de PowerShell).*
+*(Spec validada incluyendo infraestructura paralela, CI, hooks y documentación).*
 
-### Pasos pendientes para la Implementación:
+### Fases de Implementación:
 
-1. **Creación de Infraestructura Docker:**
-   - Crear `docker-compose.yml` en la raíz.
-   - Configurar los servicios `backend` (Python) y `web` (Node).
-   - Añadir soporte para cargar el fichero `.env`.
-   - Añadir volúmenes (`./backend:/app/backend`, `./web:/app/web`) para el **Hot Reloading**.
-   - Mapear el puerto `8000:8000` en el host (accesible por LAN para la Raspberry Pi) y `5173:5173` para la web.
+**FASE 1: Infraestructura Paralela (Docker y CLI)**
+*(Regla: No borrar nada existente)*
+- Crear `docker-compose.yml` en la raíz (servicios `backend` y `web`, soporte `.env`, mapeo de puertos y volúmenes).
+- Crear el CLI principal `tonto.sh` con los comandos (`setup`, `dev`, `test`, `build`).
+- Crear las alternativas en Bash para los scripts auxiliares: `scripts/agent-backend.sh`, `scripts/agent-raspberry.sh`, `scripts/export-docs-for-notebooklm.sh` y `scripts/install-git-hooks.sh`.
 
-2. **Creación del CLI Principal (`tonto.sh`):**
-   - Crear `tonto.sh` y darle permisos de ejecución.
-   - Implementar las subrutinas: `setup`, `dev`, `test`, `build`.
+**FASE 2: Migración de CI y Hooks**
+- Actualizar o clonar la lógica de `.github/workflows/ci.yml` para que no dependa de `pwsh` y en su lugar ejecute `./tonto.sh setup`, `./tonto.sh test all` y `./tonto.sh build all`. (Idealmente corriendo sobre Docker en la pipeline).
+- Actualizar la lógica del pre-commit hook (a través del nuevo `install-git-hooks.sh`) para asegurar que ya no busque `pwsh`.
 
-3. **Erradicación de PowerShell y Migración de Scripts Auxiliares:**
-   - Eliminar `setup-dev.ps1`, `dev.ps1`, `test.ps1`, `build.ps1`.
-   - Convertir `agent-backend.ps1` a `scripts/agent-backend.sh` (usando comandos docker internamente).
-   - Convertir `agent-raspberry.ps1` a `scripts/agent-raspberry.sh`.
-   - Convertir `export-docs-for-notebooklm.ps1` a bash.
-   - Convertir `install-git-hooks.ps1` a bash y actualizar la llamada al pre-commit.
-   - *Se eliminarán de forma definitiva todos los archivos `.ps1` del repositorio.*
+**FASE 3: Actualización de Documentación (Crítico para Agentes)**
+- Actualizar `AGENTS.md` para instruir el uso exclusivo de `tonto.sh` y los nuevos comandos Bash (y contenedores) en sustitución del entorno Windows nativo.
+- Ajustar referencias en `README.md` y otras especificaciones donde se mencionen comandos de PowerShell.
 
-4. **Actualización de Documentación:**
-   - Modificar `AGENTS.md` para instruir a futuros agentes de que deben usar Bash, Docker, y `tonto.sh` (además de los nuevos `.sh`).
-   - Ajustar referencias en `README.md` u otros documentos si es necesario.
+**FASE 4: Validación General**
+- Comprobar localmente que `./tonto.sh dev all`, `tonto.sh test all` y demás scripts auxiliares funcionan 100% como sus homólogos de PowerShell.
 
-*El plan permanecerá aquí. Cuando des luz verde, el agente comenzará con el Paso 1 escribiendo los archivos.*
+**FASE 5: Limpieza de Artefactos (Último paso, sin excepciones)**
+- Una vez completado y validado todo lo anterior, proceder a eliminar permanentemente del repositorio todos los ficheros `*.ps1`.
+
+*El plan permanecerá aquí. Esperando instrucción del usuario para comenzar la FASE 1.*
