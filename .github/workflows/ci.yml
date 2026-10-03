@@ -15,39 +15,16 @@ jobs:
   checks:
     name: Project checks
     runs-on: ubuntu-latest
-    env:
-      PIP_CACHE_DIR: ${{ github.workspace }}/.cache/pip
-      npm_config_cache: ${{ github.workspace }}/.cache/npm
-
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: |
-            backend/requirements.txt
-            client/requirements.txt
-            requirements-dev.txt
-
-      - name: Set up Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: npm
-          cache-dependency-path: web/package-lock.json
-
       - name: Set up project dependencies
-        shell: pwsh
-        run: ./scripts/setup-dev.ps1
+        run: ./tonto.sh setup
 
       - name: Run checks
-        shell: pwsh
-        run: ./scripts/test.ps1 -Target all
+        run: ./tonto.sh test all
 
       - name: Build
-        shell: pwsh
-        run: ./scripts/build.ps1 -Target all
+        run: ./tonto.sh build all

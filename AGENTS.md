@@ -72,17 +72,17 @@ Before choosing or executing ANY work item, you MUST read the following files to
 - Python dependencies must be installed into the repo-local `.venv/`.
 - On Windows, use `.\.venv\Scripts\python.exe` when a direct Python command is unavoidable.
 - On Linux/macOS, use `.venv/bin/python` when a direct Python command is unavoidable.
-- Run Python tests through `.\scripts\test.ps1 -Target python` or the `.venv` Python executable, never through a global `pytest`.
+- Run Python tests through `./tonto.sh test python` or the `.venv` Python executable, never through a global `pytest`.
 - Frontend dependencies must stay local to `web/node_modules/`.
 - Use `npm ci` or `npm install` only inside `web/`; never use `npm install -g` unless the user explicitly approves it.
 - Keep dependency caches local to `.cache/` when scripts support it; do not rely on user-profile caches such as global pip/npm caches.
 - If Codex or OpenCode sandboxing blocks network access or writes inside `.venv/`, `web/node_modules/`, or `.cache/`, request escalation for the official script command instead of switching to global tools.
 - If the build, test, setup, or dev workflow changes, update the scripts and documentation in the same change.
 - CI, humans, and agents should share the same command surface whenever practical:
-  - `.\scripts\setup-dev.ps1`
-  - `.\scripts\dev.ps1 -Service backend|web|all`
-  - `.\scripts\test.ps1 -Target python|web|all`
-  - `.\scripts\build.ps1 -Target web|all`
+  - `./tonto.sh setup`
+  - `./tonto.sh dev [backend|web|all]`
+  - `./tonto.sh test [python|web|all]`
+  - `./tonto.sh build [web|all]`
 
 ## Git and Contribution Workflow
 

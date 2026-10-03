@@ -60,3 +60,8 @@ flowchart TD
 - **NO** eliminar todavía ningún `.ps1` ni recursos actuales de Git/GitHub. Se construirán artefactos en paralelo (`tonto.sh`, `ci.yml` modificado u otro archivo, etc.). La fase de limpieza de `.ps1` será estrictamente **la última fase**.
 - **NO** modificar el código fuente de los servicios (backend, web, clientes) ni sus assets.
 - La documentación (especialmente `AGENTS.md`) es crítica y debe reflejar fielmente la nueva arquitectura para que los LLMs futuros no intenten invocar `.ps1`.
+
+## Validaciones
+
+Las validaciones pormenorizadas, pasos a seguir y sus evidencias para este plan se recogerán en un documento auxiliar enlazado: 
+- [Ver Validaciones y Evidencias](migrate-linux-docker-validation.md)
