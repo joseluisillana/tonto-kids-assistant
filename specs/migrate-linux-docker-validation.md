@@ -121,7 +121,9 @@ Este documento sirve como registro y checklist para las validaciones en las dife
     workflow_dispatch:
   ```
 - **Hallazgo:** El trigger `push` en GitHub Actions está configurado única y exclusivamente para la rama `main`.
-- Un `git push` a `chore/migrate-linux-docker` no dispara ninguna ejecución de CI a menos que exista un Pull Request abierto contra `main` o se lance manualmente con `workflow_dispatch`.
+- Se realizó el commit `d7b45cb` y push a `origin/chore/migrate-linux-docker` con éxito.
+- Al consultar la API de GitHub Actions (`/repos/.../actions/runs`), se confirmó que ningún workflow fue disparado (`total_count: 135`, sin nuevos runs iniciados).
+- Para que la CI corra en ramas secundarias, se requiere abrir un Pull Request contra `main`, añadir ramas a `push.branches` en `ci.yml`, o disparar manualmente vía `workflow_dispatch`.
 - Siguiendo la regla de no modificar código antes de consolidar el registro, se documenta la limitación sin alterar `ci.yml`.
 
 ---
