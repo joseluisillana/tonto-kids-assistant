@@ -8,7 +8,7 @@ cd "$REPO_ROOT"
 
 # Asegurar que el .env exista para docker compose
 if [ ! -f .env ]; then
-  touch .env
+  cp .env.example .env || touch .env
 fi
 
 print_usage() {
