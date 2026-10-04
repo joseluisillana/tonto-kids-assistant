@@ -113,21 +113,11 @@ Este documento sirve como registro y checklist para las validaciones en las dife
 ## 9. Validación de CI Remota (GitHub Actions)
 
 **Objetivo:** Subir un pequeño cambio a la rama remota (`chore/migrate-linux-docker`) y verificar en la pestaña "Actions" de GitHub que el pipeline arranca usando `./tonto.sh setup / test / build` y termina correctamente (verde).
-**Evidencia/Status:** **FALLIDO** / **BLOQUEADO** (Configuración de workflow)
-- Al inspeccionar `.github/workflows/ci.yml`:
-  ```yaml
-  on:
-    push:
-      branches:
-        - main
-    pull_request:
-    workflow_dispatch:
-  ```
-- **Hallazgo:** El trigger `push` en GitHub Actions está configurado única y exclusivamente para la rama `main`.
-- Se realizó el commit `d7b45cb` y push a `origin/chore/migrate-linux-docker` con éxito.
-- Al consultar la API de GitHub Actions (`/repos/.../actions/runs`), se confirmó que ningún workflow fue disparado (`total_count: 135`, sin nuevos runs iniciados).
-- Para que la CI corra en ramas secundarias, se requiere abrir un Pull Request contra `main`, añadir ramas a `push.branches` en `ci.yml`, o disparar manualmente vía `workflow_dispatch`.
-- Siguiendo la regla de no modificar código antes de consolidar el registro, se documenta la limitación sin alterar `ci.yml`.
+**Evidencia/Status:** **COMPLETADO** / **RESUELTO**
+- Originalmente el trigger `push` en GitHub Actions estaba configurado única y exclusivamente para la rama `main` (Issue #100).
+- Además, el paso de instalación de dependencias de npm fallaba en CI por problemas de permisos de escritura en la caché global.
+- Se resolvieron ambos problemas añadiendo soporte a ramas de convención (`feature/**`, `chore/**`, etc.) en `ci.yml` y definiendo `npm_config_cache=/tmp/.npm` en `docker-compose.yml`.
+- **Evidencia final:** Tras realizar un push a `chore/migrate-linux-docker`, la GitHub Action ejecutó exitosamente el pipeline pasando todos los tests y builds (Run ID: 37245512779).
 
 ---
 
@@ -143,7 +133,8 @@ Este documento sirve como registro y checklist para las validaciones en las dife
 4. **Validación de Raspberry Pi bloqueada por falta de credenciales SSH:** (Asociado a Issue [#99](https://github.com/joseluisillana/tonto-kids-assistant/issues/99)) - **RESUELTO**
    - **Descripción:** La validación contra hardware físico requería el archivo SSH, fallando en entornos sin hardware.
    - **Resolución:** Se añadió un modo "mock" (`TONTO_MOCK_HARDWARE=1` y flag `--skip-if-missing`) para saltar amablemente el check en entornos CI, además de arreglar un error de sintaxis en el bash remoting. El `preflight` ahora pasa exitosamente en hardware real.
-5. **Configuración de ramas en CI (`ci.yml`):** (Asociado a Issue [#100](https://github.com/joseluisillana/tonto-kids-assistant/issues/100))
+5. **Configuración de ramas en CI (`ci.yml`):** (Asociado a Issue [#100](https://github.com/joseluisillana/tonto-kids-assistant/issues/100)) - **RESUELTO**
    - **Descripción:** El flujo de GitHub Actions no escucha eventos `push` en ramas de tipo `chore/*` o `feature/*`, requiriendo un Pull Request formal o la activación manual para validar en CI remoto antes de mergear a `main`.
+   - **Resolución:** Se incluyeron los prefijos estándar del proyecto en `push.branches` y se mitigó el problema de permisos de caché que fallaba en la ejecución. CI reporta en verde y el Issue está cerrado.
 6. **Advertencia de sintaxis obsoleta en `docker-compose.yml`:** (Asociado a Issue [#101](https://github.com/joseluisillana/tonto-kids-assistant/issues/101))
    - **Descripción:** Cada ejecución de `docker compose` emite el aviso: `WARN[0000] the attribute 'version' is obsolete, it will be ignored, please remove it to avoid potential confusion`.
