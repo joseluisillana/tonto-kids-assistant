@@ -1,6 +1,27 @@
 #!/bin/bash
 set -eu
 
+SKIP_IF_MISSING=0
+POSITIONAL=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --skip-if-missing)
+      SKIP_IF_MISSING=1
+      shift
+      ;;
+    *)
+      POSITIONAL+=("$1")
+      shift
+      ;;
+  esac
+done
+
+if [ ${#POSITIONAL[@]} -gt 0 ]; then
+  set -- "${POSITIONAL[@]}"
+else
+  set --
+fi
+
 ACTION="${1:-}"
 COMMAND="${2:-}"
 
@@ -26,8 +47,17 @@ if ! command -v ssh >/dev/null 2>&1; then
 fi
 
 if [ ! -f "$PI_SSH_KEY" ]; then
-  echo "Dedicated SSH key not found at $PI_SSH_KEY." >&2
-  exit 1
+  if [ "${TONTO_MOCK_HARDWARE:-0}" = "1" ] || [ "$SKIP_IF_MISSING" -eq 1 ]; then
+    echo "Skipping hardware validation: SSH key not found at $PI_SSH_KEY and mock/skip flag is active."
+    exit 0
+  else
+    echo "Error: Dedicated SSH key not found at $PI_SSH_KEY." >&2
+    echo "If you want to test with a physical Raspberry Pi, generate a key or provide one:" >&2
+    echo "  ssh-keygen -t ed25519 -f $DEFAULT_KEY -N ''" >&2
+    echo "Or set the TONTO_PI_SSH_KEY environment variable to your key path." >&2
+    echo "If you are running in an environment without hardware (e.g. CI or automated agents), set TONTO_MOCK_HARDWARE=1 or pass --skip-if-missing." >&2
+    exit 1
+  fi
 fi
 
 invoke_ssh() {
