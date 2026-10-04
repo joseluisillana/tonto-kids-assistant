@@ -62,7 +62,8 @@ fi
 
 invoke_ssh() {
   local remote_cmd="$1"
-  ssh -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=5 -i "$PI_SSH_KEY" "${PI_USER}@${PI_HOST}" "sh -lc '$remote_cmd'"
+  local escaped_cmd="${remote_cmd//\'/\'\"\'\"\'}"
+  ssh -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=5 -i "$PI_SSH_KEY" "${PI_USER}@${PI_HOST}" "sh -lc '$escaped_cmd'"
 }
 
 bootstrap_repo() {
