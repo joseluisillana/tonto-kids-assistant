@@ -156,3 +156,4 @@ a `.cache/pip` y `.cache/npm` dentro del workspace, igual que
 
 - `specs/parallel-agent-workflow.md`: define el patrón de trabajo por unidad coherente, rama corta, PR pequeña y worktree dedicado cuando hay agentes o tareas en paralelo.
 - `docs/plans/parallel-agent-workflow.md`: plan de implementación documental de ese workflow.
+- `specs/kivy-ui-docker-emulation.md`: Emulación en Docker de la Interfaz Táctil (Draft).
