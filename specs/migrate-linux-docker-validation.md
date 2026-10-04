@@ -130,15 +130,15 @@ Este documento sirve como registro y checklist para las validaciones en las dife
 
 ### Registro de Problemas (Issue Log)
 
-1. **Incompatibilidad del `.venv` entre el Contenedor y el Host:**
+1. **Incompatibilidad del `.venv` entre el Contenedor y el Host:** (Asociado a Issue [#96](https://github.com/joseluisillana/tonto-kids-assistant/issues/96))
    - **Descripción:** `tonto.sh setup` crea `.venv` dentro del contenedor montado. En la imagen base `python:3.12-slim`, Python está en `/usr/local/bin/python`. Por ello, los symlinks de `.venv/bin/python` apuntan a una ruta inexistente en el host Linux (donde está en `/usr/bin/python3`). Esto impide que scripts o comandos en el host usen `.venv/bin/python` directamente.
-2. **Falta de comando de parada/limpieza en `tonto.sh`:**
+2. **Falta de comando de parada/limpieza en `tonto.sh`:** (Asociado a Issue [#97](https://github.com/joseluisillana/tonto-kids-assistant/issues/97))
    - **Descripción:** `tonto.sh` cuenta con `setup`, `dev`, `test` y `build`, pero carece de un comando como `stop` o `down`. El usuario debe invocar manualmente `docker compose down` para limpiar contenedores y redes.
-3. **Ausencia de clave de inferencia en `.env`:**
+3. **Ausencia de clave de inferencia en `.env`:** (Asociado a Issue [#98](https://github.com/joseluisillana/tonto-kids-assistant/issues/98))
    - **Descripción:** Al iniciar el backend con `.env` vacío, cualquier llamada al endpoint `/chat` arroja un error 500 (`OPENAI_API_KEY is not set`), haciendo fallar las pruebas interactivas del cliente si no se configuran credenciales válidas o un modo de prueba/mock.
-4. **Validación de Raspberry Pi bloqueada por falta de credenciales SSH:**
+4. **Validación de Raspberry Pi bloqueada por falta de credenciales SSH:** (Asociado a Issue [#99](https://github.com/joseluisillana/tonto-kids-assistant/issues/99))
    - **Descripción:** La validación contra hardware físico requiere el archivo `/home/jose/.ssh/tonto_agent_ed25519` y una Raspberry Pi accesible en la red, elementos no presentes en el entorno actual de desarrollo.
-5. **Configuración de ramas en CI (`ci.yml`):**
+5. **Configuración de ramas en CI (`ci.yml`):** (Asociado a Issue [#100](https://github.com/joseluisillana/tonto-kids-assistant/issues/100))
    - **Descripción:** El flujo de GitHub Actions no escucha eventos `push` en ramas de tipo `chore/*` o `feature/*`, requiriendo un Pull Request formal o la activación manual para validar en CI remoto antes de mergear a `main`.
-6. **Advertencia de sintaxis obsoleta en `docker-compose.yml`:**
+6. **Advertencia de sintaxis obsoleta en `docker-compose.yml`:** (Asociado a Issue [#101](https://github.com/joseluisillana/tonto-kids-assistant/issues/101))
    - **Descripción:** Cada ejecución de `docker compose` emite el aviso: `WARN[0000] the attribute 'version' is obsolete, it will be ignored, please remove it to avoid potential confusion`.
