@@ -52,7 +52,7 @@ def call_inference(history: list[dict[str, str]], message: str) -> str:
 def call_openai(history: list[dict[str, str]], message: str) -> str:
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
-        return "Esta es una respuesta simulada porque no has configurado la clave API en el archivo .env. ¡Pero el flujo funciona!"
+        raise HTTPException(status_code=500, detail="OPENAI_API_KEY is not set")
 
     payload = {
         "model": os.environ.get("OPENAI_MODEL", DEFAULT_OPENAI_MODEL),
@@ -96,7 +96,7 @@ def call_openai(history: list[dict[str, str]], message: str) -> str:
 def call_devexpert(history: list[dict[str, str]], message: str) -> str:
     api_key = os.environ.get("DEVEXPERT_API_KEY")
     if not api_key:
-        return "Esta es una respuesta simulada porque no has configurado la clave API en el archivo .env. ¡Pero el flujo funciona!"
+        raise HTTPException(status_code=500, detail="DEVEXPERT_API_KEY is not set")
 
     base_url = os.environ.get("DEVEXPERT_BASE_URL", DEVEXPERT_BASE_URL).rstrip("/")
     payload = {
