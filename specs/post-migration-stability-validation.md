@@ -2,6 +2,13 @@
 
 Fecha: 2026-10-05. Tracking: #107. Rama: `docs/post-migration-stability-validation`.
 
+Estado vigente en la rama de PR #115: nueve puntos COMPLETADOS, voz real y
+recuperación del emulador aceptadas; CI 09ef3b3 success. #115 lista para revisión
+sin borrador; #108 pendiente de integrar #115 y verificar su CI global.
+#107 abierta por integración, no por fallos activos de esta reparación.
+P-107-14 aplazado por operador en #114; P-107-15 retirado como bloqueo.
+No se declara release publicada ni merge en main; #88 sigue fuera de alcance.
+
 ## Objetivo y alcance
 
 Obtener una versión candidata estable del estado actual post-MVP, verificando

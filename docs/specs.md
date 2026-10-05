@@ -9,6 +9,11 @@ La cobertura automatizada de Kivy se implementa en
 `docs/plans/kivy-ui-testing-coverage-plan.md` e issue #105. Usa widgets reales
 en Docker con SDL2/Xvfb; la validación física y kiosk siguen en #88.
 
+La validación Linux/Docker #107 tiene nueve puntos completados en rama de
+PR #115, lista para revisión sin borrador y pendiente de integración en #108.
+Registro vigente: specs/migrate-linux-docker-validation.md. Volumen #114
+aplazado; no cambia el alcance físico de #88.
+
 Sistema educativo de IA física para niños.
 
 El primer loop mínimo ya quedó validado en las semanas 1 y 2:

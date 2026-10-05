@@ -319,8 +319,13 @@ las pruebas UI no capturan audio ni llaman al backend. Requiere ejecutar
 kiosk en Raspberry sigue siendo una validación separada.
 
 El emulador usa `http://backend:8000` dentro de Docker y TTS español con espeak.
-`dev ui` reconstruye la imagen y pasa `/dev/snd` y su grupo cuando están
-disponibles. Sin ese dispositivo, síntesis a WAV y pruebas Xvfb siguen siendo
+`dev ui` reconstruye la imagen y configura `/dev/snd` y los grupos de sus
+nodos de carácter mediante un override Compose temporal, retirado al salir.
+Respeta `COMPOSE_FILE`/`COMPOSE_PATH_SEPARATOR` exportados en el entorno y los
+archivos base/override convencionales. Si la selección de archivos Compose se
+configura únicamente en `.env`, el operador debe exportarla para `dev ui`; el
+helper no lee archivos de secretos. Kivy usa directorios temporales escribibles
+y arranca con `python -m client.touch_ui`. Sin ese dispositivo, síntesis a WAV y pruebas Xvfb siguen siendo
 posibles, pero micrófono y reproducción audible requieren hardware ALSA.
 El modo PC y Raspberry usan espeak para sintetizar voz en Linux.
 
@@ -370,3 +375,14 @@ Python/venv/pip no están disponibles; no instala paquetes del sistema.
 Las cachés pip/npm viven en `.cache/pip` y `.cache/npm` dentro del repositorio,
 con permisos del usuario. CI usa el mismo flujo Docker. La reutilización entre
 runners de CI no se configura en este cambio.
+# Selección de micrófono del emulador
+
+En modo PC, `TONTO_AUDIO_DEVICE` selecciona la entrada PortAudio por índice
+numérico o nombre; sin valor se usa la entrada predeterminada. Pasa esta variable
+al contenedor con `TONTO_AUDIO_DEVICE=5 ./tonto.sh dev ui`. Los índices dependen del equipo;
+no fijes un índice de hardware en el Compose compartido.
+En este equipo, 5 corresponde a DMIC hw:0,7 y admite 16 kHz; 4 no los admite.
+Consulta entradas con `docker compose run --rm --no-deps ui-emulator .venv/bin/python -m sounddevice`
+si la configuración del contenedor permite acceso a audio; el arranque oficial
+`dev ui` incorpora ese acceso. Un dispositivo incompatible muestra error y
+vuelve a permitir reintentar después de cuatro segundos.

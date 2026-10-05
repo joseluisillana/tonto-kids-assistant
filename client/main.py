@@ -157,8 +157,16 @@ def capture_audio(
             print(f"Listening for {seconds}s... (PC Mode)")
             
         fs = 16000
-        recording = sd.rec(int(seconds * fs), samplerate=fs, channels=1, dtype='float32')
-        sd.wait()
+        input_device = int(device) if device and device.isdecimal() else device or None
+        try:
+            recording = sd.rec(
+                int(seconds * fs), samplerate=fs, channels=1,
+                dtype='float32', device=input_device,
+            )
+            sd.wait()
+        except sd.PortAudioError:
+            print("No se pudo grabar: comprueba el micrófono y su compatibilidad con 16000 Hz.")
+            return None
         
         # Normalize volume to improve STT transcription
         max_amp = np.max(np.abs(recording))

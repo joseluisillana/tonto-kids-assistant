@@ -1,6 +1,11 @@
 # Plan P-107-10 — audio físico del emulador
 
-Estado: propuesta pendiente de revisión. Spec linux-emulator-audio-device-startup.
+Estado: implementación y validación COMPLETADAS; pendiente de merge PR #115
+en #108. PR #115 abierta, sin borrador y sin conflictos al verificar.
+Spec linux-emulator-audio-device-startup.
+CI 09ef3b3 aprobado: runs 37375271391 y 37375276476. Esta reconciliación solo
+actualiza estados documentales; no modifica comportamiento de implementación.
+El historial de ampliaciones de abajo no representa pendientes vigentes.
 D025 excluye DevExpert real: no es dependencia de esta reparación.
 
 1. Desde rama integrada de #108, crear fix/linux-emulator-audio-device-startup.
@@ -24,3 +29,39 @@ modificar permisos del sistema. Usa configuración Compose temporal para audio,
 pruebas enfocadas, comandos oficiales y validación humana fuera del sandbox.
 No imprimas configuración expandida ni leas secretos. Documenta nuevos fallos,
 no aceptes audio físico por mocks. Mantén #107 abierta mientras falten criterios.
+
+
+## Ampliación autorizada P-107-11
+
+Operador aprueba directorios Kivy/cache escribibles en /tmp y ejecución como
+módulo. Actualizar Compose en esta misma reparación y repetir arranque/regresiones.
+Ventana abierta con audio group 29; aceptación física aún pendiente de completar.
+
+## Reparación P-107-12 — implementada y validada físicamente
+
+1. Hacer que capture_audio PC aplique device a sounddevice.rec; convertir índice
+   numérico configurado y conservar nombres/default cuando corresponda.
+2. Añadir test enfocado que verifique selección efectiva y default existente.
+3. Probar entrada DMIC explícita con configuración temporal del emulador,
+   sin cambiar dispositivo de salida ni volumen del host. No fijar índices
+   de este equipo en el Compose compartido.
+4. Recuperar transcript real y validar tres turnos, voz y retorno a idle.
+   Si persiste vacío, comparar señal de captura antes de normalizar y rutas
+   de entrada; documentar resultado antes de ampliar la reparación.
+
+Handoff: implementar solo tras aprobación, sin nuevas dependencias ni cambios
+Raspberry. Mantener registros P-107-12 y punto 3 FALLIDO hasta aceptación real.
+
+Operador confirma tres turnos con entrada 5/DMIC hw:0,7; audio físico validado.
+Antes del cierre: preparar reparación enfocada de P-107-13, documentar selección
+local reproducible y diagnosticar P-107-14 sin cambiar sistema ni dependencias.
+No declarar estabilidad completa mientras estos pendientes no tengan dictamen.
+Ampliación aprobada: manejar PortAudioError en captura, testear apertura/espera,
+transmitir selección por Compose y documentar comando oficial. Ejecutar suites,
+build, prueba física con entrada incompatible (error y reset), reinicio con
+entrada compatible, tres turnos y limpieza; registrar CI final antes de merge.
+P-107-14 aplazado por operador: #114 enlaza documento local, fuera de este cierre.
+Ejecución local completada: error/reset físico, selección oficial, tres turnos y
+limpieza validados. P-107-15 retirado como bloqueo por operador, red posible.
+CI confirmado y PR #115 preparada para revisión. Falta merge con autorización
+del operador. Mantener #107 abierta hasta integración final de #108.

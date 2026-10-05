@@ -464,3 +464,11 @@ Las fases 1–6 están cerradas. La cobertura de Kivy (#105) añade pruebas de
 widgets reales en Docker/Xvfb al comando `./tonto.sh test all`, con spec y plan
 `kivy-ui-testing-coverage`. La fase 7 (#88), kiosk y validación final en
 Raspberry, permanece pendiente y requiere evidencia de hardware separada.
+
+## Validación post-migración — estado 2026-10-05
+
+#107: los nueve puntos de validación completados en la rama de #115, con
+voz web/Raspberry/emulador, recuperación de captura y limpieza aceptadas.
+PR #115 lista para revisión, sin borrador; pendiente integración en #108
+y comprobación global antes de main. Volumen del emulador aplazado en #114;
+protección de secretos #110 y touch físico #88 mantienen seguimiento separado.

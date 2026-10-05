@@ -70,14 +70,8 @@ case "$COMMAND" in
       docker compose up web
     elif [ "$TARGET" == "ui" ]; then
       echo "Iniciando emulador de UI..."
-      audio_args=()
-      if [ -d /dev/snd ]; then
-        audio_devices=(/dev/snd/*)
-        audio_args=(--device /dev/snd --group-add "$(stat -c '%g' "${audio_devices[0]}")")
-      else
-        echo "Audio hardware unavailable (/dev/snd missing); audible speech and microphone require a Linux audio device."
-      fi
-      docker compose run --rm --build "${audio_args[@]}" ui-emulator
+      source scripts/ui-emulator.sh
+      run_ui_emulator
     else
       echo "Starting backend and web..."
       docker compose up backend web

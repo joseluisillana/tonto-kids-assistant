@@ -14,20 +14,27 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | --- | --- | --- |
 | 1. Backend + web | COMPLETADO | `./tonto.sh dev all`: Uvicorn 8000 y Vite 7.3.3 en 443 ms. Health `{"status":"ok"}` HTTP 200; web HEAD HTTP 200. `/chat` real HTTP 200, 2.244706 s, `{"success":true,"response_text":"¡Ok! ¿Tienes alguna pregunta?"}`. Cuerpo `{}` devuelve HTTP 422 con campos session_id/message obligatorios. |
 | 2. Limpieza básica | COMPLETADO | Fallo inicial conservado en P-107-01; reparación fix/docker-cleanup revalidada: down retira backend/web, dos emuladores previos y red, exit 0; sin contenedores/redes del proyecto y puertos libres. |
-| 3. Cliente host + UI Linux | FALLIDO | Software backend/TTS previamente validado; al probar audio real fuera del sandbox, dev ui exit 1: unknown flag --device. Grupo elegido 0 (by-path) en vez de 29 (dispositivos). Nuevo P-107-10. Audio físico pendiente tras reparar arranque. |
+| 3. Cliente host + UI Linux | COMPLETADO | Arranque oficial con TONTO_AUDIO_DEVICE=5, tres turnos físicos aceptados y backend HTTP 200; captura incompatible muestra ERROR y vuelve a reposo tras 4 s. P-107-10/11/12/13 resueltos. P-107-14 aplazado en #114; P-107-15 retirado como bloqueo por operador. Limpieza oficial exit 0, sin contenedores/redes, dependencias conservadas. |
 | 4. Limpieza host | COMPLETADO | Tras reparación: segunda llamada down exit 0 sin residuales; nuevo arranque backend/web HTTP 200 y stop retira servicios, one-off de control y red. Histórico P-107-01. |
 | 5. Raspberry real | COMPLETADO | Reintento por IP 192.168.1.183 con identidad SSH verificada: preflight exit 0, health LAN OK, USB disponible, 3/3 turnos reales con transcript correcto, continuidad y TTS. Cliente exit 0; backend 3 POST /chat/audio HTTP 200. Operador confirma «si, todo correcto». Detalle en Revalidación Raspberry encendida; mDNS sigue fallando P-107-03. |
 | 6. Limpieza Raspberry | COMPLETADO | Cliente/audio Raspberry ya terminaban y LAN health tras parada fallaba correctamente (curl 7). Reparación del bloqueo Docker revalidada: elimina también emuladores y red, sin residuales ni puertos; conserva dependencias. No se repiten voz ni UI física para este cambio CLI. Histórico P-107-01. |
 | 7. Setup/tests/build | COMPLETADO | Setup y cachés reparados en #112; lockfile compatible corregido, instalación limpia exit 0. Audit dev/prod 0 vulnerabilidades, npm ls válido. 97 Python + 24 Kivy + web y build pasan; smokes texto y cliente HTTP de voz contra backend real pasan. Evidencias al final; CI de esta reparación se registra tras finalizar. |
 | 8. Auxiliares/docs | COMPLETADO | Helpers previamente validados; guías operativas README/demo/SSH/workflow y planes vigentes actualizados a Bash/Docker/.env. bash -n y git diff --check pasan. demo-touch físico sigue excluido en #88. P-107-04 resuelto. |
-| 9. CI remoto | COMPLETADO | Push a rama documental. Run 37302071237 sobre SHA 2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2: completed/success; setup, checks y build success. Cambios posteriores solo añaden evidencias documentales; consultar checks de PR para su SHA final. |
+| 9. CI remoto | COMPLETADO | PR #115, SHA 09ef3b329fd3ad1005359fc549643575407a43e0: ambos Project checks pasan, runs 37375271391 (1m25s) y 37375276476 (1m45s). CI global de #108 se verifica tras integrar #115. |
 
-Pendientes vigentes: arranque/audio físico del emulador (punto 3, P-107-10).
+Pendientes vigentes: revisión/merge de PR #115 y cierre de integración de #108.
+Los nueve puntos COMPLETADOS en esta rama. PR #115 sin borrador, CI aprobado
+para 09ef3b3; no queda implementación ni validación funcional pendiente aquí.
+Los checks del commit documental de reconciliación deben finalizar antes de merge.
+P-107-14 aplazado al backlog #114. Selección de entrada reproducible documentada;
+audio físico y recuperación del emulador validados.
 Smoke DevExpert real: NO APLICA por decisión D025 (deprecado, no operarlo).
 Chrome: tres turnos/audibilidad/contador/auto-stop aprobados por el operador;
 mDNS y preflight Raspberry por nombre revalidados. Raspberry voz/audibilidad, setup, caches, auditorías,
 CORS, auxiliares y cobertura Kivy tienen evidencia completada.
 Los tests con mocks no equivalen a aceptación de audio real.
+Desde Registro de Problemas se conserva el historial cronológico: estados
+intermedios FALLIDO/PENDIENTE/draft no sustituyen la tabla vigente de arriba.
 
 ### Registro de Problemas — pasada #107
 
@@ -574,7 +581,7 @@ Se mantienen activos durante la validación guiada. No se cambia producto.
 - CI integrado de #108 sobre 5d0a52e: Project checks push/PR SUCCESS,
   runs 37332129154 (1m24s) y 37332141132 (1m28s).
 
-**P-107-10 — ABIERTO, arranque dev ui con hardware audio:**
+**P-107-10 — RESUELTO Y REVALIDADO; descripción inicial, arranque dev ui con hardware audio:**
 
 ```text
 ./tonto.sh dev ui
@@ -607,3 +614,137 @@ no se requieren credenciales. Referencias previas a credencial ausente/pending
 son evidencia histórica anterior a esta decisión. OpenAI real sigue validado.
 Spec y plan integral actualizados; sin cambios de código/configuración/runtime.
 Punto 3 sigue FALLIDO por P-107-10; plan de reparación del emulador vigente.
+
+
+### Reparación arranque Linux con audio — 2026-10-05
+
+Rama fix/linux-emulator-audio-device-startup, spec/plan emparejados.
+Helper scripts/ui-emulator.sh: dispositivos/grupos en override temporal;
+ignora by-path y deduplica grupos de nodos de carácter, stat -L. Preserva
+archivos personalizados exportados y overrides convencionales. Temporal se
+retira por trap EXIT; no genera config expandida ni accede a secretos.
+Tests: siete casos nuevos con fixtures (sin dispositivo, by-path, grupos múltiples,
+fallo Compose con/sin audio, archivos personalizados/separador y override estándar).
+104 Python pasan (0.69 s), 24 Kivy (1.16 s), web y build (43 módulos, 1.31 s).
+
+Arranque real con /dev/snd fuera del sandbox elige grupo 29 y crea contenedor;
+no vuelve unknown flag. P-107-10 RESUELTO. Nuevo bloqueo encontrado y documentado:
+
+**P-107-11 — RESUELTO CON APROBACIÓN:**
+
+```text
+PermissionError: [Errno 13] Permission denied: '/.kivy'
+```
+
+Override diagnóstico temporal de Kivy permite ventana, pero descubre:
+
+```text
+ModuleNotFoundError: No module named 'client'
+```
+
+Operador autoriza ambos ajustes. Compose usa KIVY_HOME=/tmp/.kivy-runtime y
+XDG_CACHE_HOME=/tmp/.cache; command .venv/bin/python -m client.touch_ui.
+Arranque oficial llega a Start application main loop; operador confirma ventana.
+Warnings MESA (fallback llvmpipe), clipboard xclip/xsel y mtdev event4/event9
+no bloquean ventana; no se instalan paquetes ni se amplía acceso a /dev/input.
+
+Revalidación final tras ambos ajustes: 104 Python (0.69 s), 24 Kivy
+(1.17 s), web y build (43 módulos, 1.39 s) pasan.
+
+**P-107-12 — ABIERTO: turno hablado del emulador rechazado con HTTP 422.**
+Operador: pasa de ESCUCHANDO a PENSANDO y después ERROR. Backend registra
+dos POST /chat/audio desde 172.18.0.4 con 422. El WAV generado tiene 16000 Hz,
+96000 muestras, 6 s, pico 0.950012 y RMS 0.228277 (70541 muestras no nulas).
+Existe señal; estas métricas no demuestran que sea voz del micrófono correcto.
+En backend/audio_router.py, la respuesta 422 explícita corresponde a una
+transcripción vacía. También puede existir validación de formulario 422;
+no se ha recuperado el cuerpo de esas respuestas y la causa definitiva sigue
+pendiente. No se atribuye el fallo al TTS, que aún no se alcanza.
+Siguiente diagnóstico guiado: turno en modo texto para aislar respuesta/TTS
+y repetición hablada con mensaje visible. No se corrige código por esta incidencia.
+
+Actualización del operador: dos turnos en MODO TEXTO funcionan perfectamente;
+backend confirma dos POST /chat HTTP 200 desde el emulador. Respuesta y TTS
+físico validados en ese recorrido. Nuevo intento hablado sigue fallando;
+logs posteriores muestran otros dos POST /chat/audio HTTP 422.
+Se intenta recuperar el detalle mediante reenvío del WAV existente, pero el
+contenedor one-off ya no existe; no se envía audio y no se recupera el cuerpo
+del rechazo. Solo backend/web siguen activos. P-107-12 permanece abierto;
+la hipótesis de transcripción vacía aún requiere evidencia del cuerpo HTTP.
+Reintento con emulador abierto: reenvío del WAV existente confirma HTTP 422,
+`{"detail":"Audio did not contain recognizable speech"}`. Se descarta error de
+formulario para esta grabación: la transcripción queda vacía. WAV: 16000 Hz,
+96000 muestras, pico 0.950012, RMS 0.225005. PortAudio default [8,8] corresponde
+a ALSA default; enumera también hw:0,0 y entradas DMIC hw:0,6 / hw:0,7.
+Operador confirma que el mismo micrófono y volumen funcionan en web sin gritar;
+otro intento hablado en emulador falla. No requiere pronunciar una frase exacta.
+Inspección: capture_audio en modo pc recibe device, pero sd.rec no lo usa;
+TONTO_AUDIO_DEVICE no permite seleccionar entrada en esa ruta actualmente.
+Hipótesis: ruta ALSA/default distinta de Chrome; no se declara causa confirmada.
+Operador aprueba reparación de selección de entrada. Modo PC ahora pasa
+device a sd.rec, convierte índice numérico y preserva nombre/default.
+Tres casos de test verifican el argumento efectivo sin hardware/dependencias
+opcionales. ./tonto.sh test all: 107 Python (0.44 s), 24 Kivy (1.05 s), web OK.
+Emulador reiniciado con override temporal /tmp/tonto-ui-dmic-validation.yaml,
+TONTO_AUDIO_DEVICE=4 (PortAudio DMIC hw:0,6 en este equipo); no se fija el índice
+en configuración compartida ni se cambia salida/volumen. Prueba física pendiente.
+Prueba con entrada 4: operador observa ESCUCHANDO permanente. Log confirma
+sounddevice.PortAudioError: Invalid sample rate [PaErrorCode -9997].
+Worker voice_pipeline_thread termina sin recuperar estado. **P-107-13 ABIERTO:**
+excepción de captura PC sin manejo deja UI bloqueada; pendiente reparación
+específica, no se corrige durante esta validación.
+check_input_settings sin grabación: entradas 0/4 rechazan 16000 Hz;
+5 (DMIC hw:0,7) y 8 (default) admiten 16000 Hz. Override temporal cambia a
+entrada 5 para continuar la prueba aprobada sin conversión de audio/dependencias.
+Resultado entrada 5: operador confirma «Ahora ha funcionado, he realizado 3
+turnos». Backend registra cuatro POST /chat/audio HTTP 200 desde 172.18.0.3;
+se atribuyen tres turnos a la confirmación humana, sin inferir qué fue el cuarto.
+P-107-12 RESUELTO Y REVALIDADO con selección explícita compatible. Captura,
+transcripción, respuesta y TTS físicos aceptados para esa configuración.
+P-107-13 permanece abierto: no se ha reparado el manejo de excepción de captura.
+
+**P-107-14 — OBSERVACIÓN ABIERTA:** operador ajusta volumen del sistema mientras
+TONTO habla y nota que el control queda encasquillado durante unos segundos.
+El turno funciona; no se dispone de logs del control ni reproducción aislada
+que establezcan causa o frecuencia. No se atribuye a ALSA/PipeWire sin evidencia.
+Evaluar reproducción y respuesta del control de volumen antes del cierre estable;
+no modificar sistema/dependencias durante esta validación.
+Decisión posterior: aplazar P-107-14 en GitHub #114, enlazado con
+docs/issues/emulator-system-volume-delay.md; no bloquea esta reparación.
+P-107-13 reparado en código con aprobación: PortAudioError retorna fallo,
+UI muestra ERROR y usa reset existente. Validación física pendiente.
+Selección reproducible: TONTO_AUDIO_DEVICE=5 ./tonto.sh dev ui, sin override
+temporal; índice específico de este equipo, no fijado como default compartido.
+Regresiones iniciales de recuperación: 110 Python (0.44 s), 24 Kivy (1.00 s),
+web pasan; build 43 módulos (907 ms). Nuevo test de delegación de fallo de captura
+añadido después: repetir UI para confirmar su resultado. Prueba física de error
+con comando TONTO_AUDIO_DEVICE=4 ./tonto.sh dev ui en curso.
+Operador confirma prueba física negativa: muestra ERROR y vuelve a
+TOCA PARA HABLAR tras cuatro segundos. P-107-13 RESUELTO Y REVALIDADO.
+Suite UI ampliada: 25 tests pasan (1.03 s), incluido fallo de captura sin upload.
+Pendiente cierre final: nuevo arranque oficial con entrada 5, tres turnos,
+limpieza y CI del SHA final. P-107-14 queda aplazado en #114 por decisión humana.
+**P-107-15 — ABIERTO, primer intento tras arranque:** operador responde que
+el primer turno escuchó menos de un segundo, se cortó y no respondió. No se
+aprueba todavía la secuencia final. Backend registra cuatro POST /chat/audio
+HTTP 200 posteriores; no hay correlación que explique el primer intento.
+Log UI no muestra excepción nueva de worker. Solicitar estado exacto del primer
+fallo y confirmación de duración/respuesta/reset de los siguientes turnos.
+Sin nueva reparación durante esta validación. PR #115 draft contra #108.
+Decisión del operador: ignorar anomalía del primer intento porque el host sufrió
+intermitencia de red que pudo provocarla. P-107-15 RETIRADO COMO BLOQUEO por
+decisión humana; causa de red posible, no demostrada. Se conserva histórico.
+Se acepta confirmación de los tres turnos restantes y evidencia HTTP 200.
+./tonto.sh down exit 0: retira UI/backend/web y red, conserva dependencias.
+Punto 3 COMPLETADO. CI previo tiene un check pass y otro pending; se debe
+verificar SHA final antes del merge, no se declara CI final aprobado todavía.
+Próxima ejecución: conservar el contenedor y WAV hasta recuperar el detalle
+422; si es transcripción vacía, comprobar fuente de entrada y señal original
+antes de normalizar. Sin cambios de producto en esta actualización.
+
+**Audio físico pendiente de diagnóstico:** operador indica «Aparece la ventana,
+pero falla micrófono o voz». No se aprueba captura/TTS. Se solicita precisar
+estado del botón/error. Contenedor: UID 1000, grupos [29,1000]; PortAudio enumera
+10 dispositivos, default [8,8]. arecord muestra analog device 0 y DMIC 6/7;
+aplay muestra analog/HDMI. Host usa PulseAudio sobre PipeWire. No se atribuye aún
+causa ni se modifica ruta de audio/configuración del sistema.

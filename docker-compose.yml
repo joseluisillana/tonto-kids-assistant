@@ -42,12 +42,15 @@ services:
     environment:
       - DISPLAY=${DISPLAY:-:0}
       - KIVY_WINDOW=sdl2
+      - KIVY_HOME=/tmp/.kivy-runtime
+      - XDG_CACHE_HOME=/tmp/.cache
       - TONTO_AUDIO_MODE=pc
+      - TONTO_AUDIO_DEVICE=${TONTO_AUDIO_DEVICE:-}
       - TONTO_BACKEND_URL=http://backend:8000
       - XDG_RUNTIME_DIR=/tmp/runtime-dir
     depends_on:
       - backend
-    command: .venv/bin/python client/touch_ui.py
+    command: .venv/bin/python -m client.touch_ui
 
 volumes:
   backend-venv:
