@@ -16,12 +16,14 @@ las ejecuciones anteriores. Sin reparaciones de producto durante esta pasada.
 | 6. Limpieza Raspberry/backend | COMPLETADO | Demo exit0, sin procesos cliente/arecord/espeak Raspberry; helper stop, down exit0, sin contenedores/red, puertos cerrados (curl7), volumen dependencias conservado. |
 | 7. Setup/tests/build | COMPLETADO | setup exit0, npm ci 0 vulnerabilidades; test all tras setup: 110 Python 0.43s, 25 Kivy 1.02s, web pass. Build 43 módulos 863ms. Audit dev/prod 0; UID1000 caches1000:1000, Python /app/.venv/bin/python. |
 | 8. Auxiliares/docs | COMPLETADO | Bash syntax y diff-check pasan; export/hook exit0; helper start/status/health/stop y health negativo funcionan. Sin scripts .ps1/.psm1 ni llamadas PowerShell en runtime/CLI/CI. Raspberry helpers/demo pasan por IP segura. |
-| 9. CI remoto | PENDIENTE | Código integrado 7117313 aprobado; publicar evidencia final y comprobar su nuevo SHA. |
+| 9. CI remoto | COMPLETADO | Código7117313 y evidenciasc12f377 aprobados. Runs37380799527 (2m7s) y37380807200 (1m31s), ambos Project checks pass; los checks del cierre documental se verifican antes del merge. |
 
 Exclusiones vigentes: touch/kiosk físico #88; DevExpert NO APLICA D025.
 Volumen #114 aplazado por operador; secretos #110 seguimiento separado.
-Dictamen: VALIDACIÓN LOCAL COMPLETADA; ocho puntos finales completos.
-Pendiente únicamente CI de evidencias finales para emitir OK de migración.
+Dictamen: OK DE MIGRACIÓN LINUX/DOCKER EN EL ALCANCE VALIDADO; nueve puntos
+COMPLETADOS, sin fallos de producto bloqueantes en la pasada final. CI aprobado.
+Falta revisión/merge #108 en main; no se crea release/tag. Mantener #107 abierta
+hasta integración. mDNS requiere IP verificada en esta LAN; #114 aplazado.
 
 Preflight Raspberry por nombre vuelve a fallar: `Could not resolve hostname
 tonto-pi.local`, exit 255. Reaparición P-107-03, direccionamiento del entorno;
@@ -52,6 +54,8 @@ tonto-kids-assistant_backend-venv conservado. Raspberry sin procesos y checkout
 limpio en detached7117313; no se ha reinstalado ni modificado su configuración.
 No se reparó producto durante la pasada. Limitación mDNS documentada con acceso
 por IP/HostKeyAlias estricto; no constituye fallo del pipeline validado por IP.
+Health LAN tras stop comprobado desde Raspberry: curl7 esperado. CI c12f377
+success en runs37380799527/37380807200. Cierre documental sin cambios de producto.
 
 Este documento sirve como registro y checklist para las validaciones en las diferentes fases de la transición de scripts `.ps1` a Bash y Docker.
 

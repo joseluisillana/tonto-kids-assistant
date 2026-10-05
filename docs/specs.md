@@ -13,6 +13,10 @@ La validación Linux/Docker #107 tiene nueve puntos completados en rama de
 PR #115, lista para revisión sin borrador y pendiente de integración en #108.
 Registro vigente: specs/migrate-linux-docker-validation.md. Volumen #114
 aplazado; no cambia el alcance físico de #88.
+Pasada final sobre código7117313: nueve puntos COMPLETADOS y CI c12f377
+success; #115 mergeada en #108. OK de migración en alcance validado,
+pendiente revisión/merge #108 en main. La matriz final del registro prevalece
+sobre los estados históricos anteriores.
 
 Sistema educativo de IA física para niños.
 

@@ -145,4 +145,5 @@ tres turnos/contador/auto-stop confirmados por operador. Setup Docker exit0,
 Helpers/export/hook/sintaxis pasan; limpieza sin residuales conserva dependencias.
 mDNS falla; IP con HostKeyAlias estricto valida identidad y pipeline. No se
 reparó código durante pasada. #114 aplazado, #88 excluido, DevExpert NO APLICA.
-Pendiente CI del commit documental final antes del OK e integración de #108.
+CI c12f377 success (runs37380799527/37380807200). Nueve puntos COMPLETADOS:
+OK de migración en alcance validado, pendiente revisión/merge #108 en main.

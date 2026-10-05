@@ -472,3 +472,7 @@ voz web/Raspberry/emulador, recuperación de captura y limpieza aceptadas.
 PR #115 lista para revisión, sin borrador; pendiente integración en #108
 y comprobación global antes de main. Volumen del emulador aplazado en #114;
 protección de secretos #110 y touch físico #88 mantienen seguimiento separado.
+Pasada final integrada7117313 completada: nueve puntos y voz física revalidados,
+setup/tests/build/limpieza y CI c12f377 success. OK de migración en alcance
+acordado, pendiente revisión/merge #108. #115 ya integrada; los estados previos
+de esta sección son históricos. mDNS requiere acceso IP verificado en esta LAN.
