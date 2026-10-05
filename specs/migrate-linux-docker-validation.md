@@ -20,7 +20,7 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | 6. Limpieza Raspberry | PENDIENTE | Depende de 5; no hubo sesión Raspberry. |
 | 7. Setup/tests/build | FALLIDO | Setup exit 0 pero venv host no se crea (ensurepip ausente) y caché pip deshabilitada. Tests antes/después de setup: 78 Python + 24 UI + web pasan, exit 0. Build repetido tras setup: typecheck + 43 módulos Vite, 1.18 s, exit 0. npm audit completo exit 1, siete vulnerabilidades; producción audit omit-dev exit 0, cero. Ver P-107-05/06/07. |
 | 8. Auxiliares/docs | FALLIDO | `bash -n` por cada tonto.sh/scripts/*.sh exit 0; exportador y instalador hook exit 0. Helper apagado: Health unavailable; start/status/health/stop exit 0; status final Health unavailable. Runbooks desalineados P-107-04. Helpers demo físicos pendientes de acceso Raspberry. |
-| 9. CI remoto | PENDIENTE | Pendiente push y comprobación de SHA. |
+| 9. CI remoto | COMPLETADO | Push a rama documental. Run 37302071237 sobre SHA 2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2: completed/success; setup, checks y build success. Cambios posteriores solo añaden evidencias documentales; consultar checks de PR para su SHA final. |
 
 Ampliaciones pendientes: setup reproducible, micrófono/WAV/auto-stop/speech web
 en navegador, voz Raspberry y audibilidad, smoke real por proveedor, CORS,
@@ -115,7 +115,19 @@ audible PENDIENTE. No se atribuye fallo de backend al error speech.
   red en uso. No se borraron volúmenes ni se corrigieron scripts.
 - CI primer push: SHA `2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2`, run
   https://github.com/joseluisillana/tonto-kids-assistant/actions/runs/37302071237,
-  observado `in_progress`; aceptación pendiente del resultado final.
+  resultado final `completed/success`, Project checks success; setup 40 s,
+  checks 37 s y build 2 s, fin 13:19:41 Europe/Madrid.
+
+### Dictamen de esta pasada
+
+No apto todavía para cierre estable. Arranque/API, suites, build, exportador,
+hook y ciclo helper backend pasan. Permanecen fallos de limpieza, TTS y URL
+del emulador, setup host, caches y documentación. La auditoría npm requiere
+triage. Raspberry real, tres turnos repetibles de voz, contador web durante
+captura, audibilidad web y smoke DevExpert con credencial siguen pendientes.
+Touch/kiosk físico queda excluido en #88. Continuar sin corregir producto hasta
+completar pendientes o documentar su bloqueo; después planificar mitigaciones
+en trabajo separado y revalidar. #107 permanece abierta.
 
 **Cualquier problema encontrado durante estas pruebas se dejará evidenciado aquí y NO se resolverá de manera inmediata.** Una vez estén todas las evidencias, se decidirá el plan de mitigación.
 
