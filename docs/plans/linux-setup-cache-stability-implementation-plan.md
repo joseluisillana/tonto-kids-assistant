@@ -1,6 +1,6 @@
 # Plan del punto 7: setup y cachés
 
-Estado: propuesta pendiente de revisión del operador. Part of #107.
+Estado: aprobado por el operador; implementación en validación. Part of #107.
 Fuente: specs/linux-setup-cache-stability.md.
 
 ## Pasos

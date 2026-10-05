@@ -1,7 +1,7 @@
 # Estabilidad de setup y cachés tras migración
 
-Estado: propuesta para revisión, 2026-10-05. Part of #107.
-Problemas: P-107-05 y P-107-06. Sin implementación ni dependencias nuevas.
+Estado: plan aprobado e implementación en validación, 2026-10-05. Part of #107.
+Problemas: P-107-05 y P-107-06. Sin dependencias nuevas.
 
 ## Diagnóstico
 
@@ -24,7 +24,8 @@ está cerrada y no autoriza restaurar ese workflow.
   si falla. Informa de la precondición sin instalar paquetes de sistema.
 - Backend configura PIP_CACHE_DIR=/app/.cache/pip. Web monta únicamente
   .cache/npm del repo en /app/.cache/npm y configura npm_config_cache allí.
-  Preparar directorios como usuario del host; no ampliar permisos de todo el repo.
+  Preparar directorios como usuario del host; ajustar propietario solo del volumen
+  .venv y .cache/pip/npm si existen con otro UID. No ampliar permisos de todo el repo.
 - Mantener backend-venv y comandos oficiales. Fallos Docker/pip/npm obligatorios
   se propagan; ningún mensaje final de éxito oculta un fallo.
 - Alinear cache de construcción del emulador y distinguirla de la caché runtime;

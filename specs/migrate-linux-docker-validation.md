@@ -18,7 +18,7 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | 4. Limpieza host | COMPLETADO | Tras reparación: segunda llamada down exit 0 sin residuales; nuevo arranque backend/web HTTP 200 y stop retira servicios, one-off de control y red. Histórico P-107-01. |
 | 5. Raspberry real | COMPLETADO | Reintento por IP 192.168.1.183 con identidad SSH verificada: preflight exit 0, health LAN OK, USB disponible, 3/3 turnos reales con transcript correcto, continuidad y TTS. Cliente exit 0; backend 3 POST /chat/audio HTTP 200. Operador confirma «si, todo correcto». Detalle en Revalidación Raspberry encendida; mDNS sigue fallando P-107-03. |
 | 6. Limpieza Raspberry | COMPLETADO | Cliente/audio Raspberry ya terminaban y LAN health tras parada fallaba correctamente (curl 7). Reparación del bloqueo Docker revalidada: elimina también emuladores y red, sin residuales ni puertos; conserva dependencias. No se repiten voz ni UI física para este cambio CLI. Histórico P-107-01. |
-| 7. Setup/tests/build | FALLIDO | Setup exit 0 pero venv host no se crea (ensurepip ausente) y caché pip deshabilitada. Tests antes/después de setup: 78 Python + 24 UI + web pasan, exit 0. Build repetido tras setup: typecheck + 43 módulos Vite, 1.18 s, exit 0. npm audit completo exit 1, siete vulnerabilidades; producción audit omit-dev exit 0, cero. Ver P-107-05/06/07. |
+| 7. Setup/tests/build | FALLIDO | Setup Docker limpio y repetido exit 0; conserva entorno host. Cachés locales/permisos/reutilización pasan. 97 Python + 24 Kivy + web y build pasan. P-107-05/06 resueltos; P-107-07 sigue abierto: auditoría tras npm ci, 7 vulnerabilidades dev y 0 producción. |
 | 8. Auxiliares/docs | COMPLETADO | Helpers previamente validados; guías operativas README/demo/SSH/workflow y planes vigentes actualizados a Bash/Docker/.env. bash -n y git diff --check pasan. demo-touch físico sigue excluido en #88. P-107-04 resuelto. |
 | 9. CI remoto | COMPLETADO | Push a rama documental. Run 37302071237 sobre SHA 2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2: completed/success; setup, checks y build success. Cambios posteriores solo añaden evidencias documentales; consultar checks de PR para su SHA final. |
 
@@ -63,12 +63,12 @@ aprobadas posteriores se documentan por separado. No procede declarar versión e
 - Proveedor real activo: OpenAI. Comprobación sanitizada desde contenedor:
   `openai_key_present True`, `devexpert_key_present False`; smoke DevExpert real
   PENDIENTE por credencial ausente. Sus adaptadores sí están en tests simulados.
-- **P-107-05 — ABIERTO, entorno host degradado tras setup:** setup recrea .venv
+- **P-107-05 — RESUELTO Y REVALIDADO; descripción histórica, entorno host degradado tras setup:** setup recrea .venv
   pero falla `python3 -m venv`: ensurepip ausente; recomienda python3.12-venv.
   Wrapper continúa y devuelve 0. El CLI host funcionaba antes del setup;
   después no puede darse por reproducible su entorno de dependencias.
   No se instalaron paquetes de sistema ni se reparó el entorno.
-- **P-107-06 — ABIERTO, caché pip fuera del repo:** setup advierte
+- **P-107-06 — RESUELTO Y REVALIDADO; descripción histórica, caché pip fuera del repo:** setup advierte
   `WARNING: The directory '/.cache/pip' ... is not owned or is not writable ...
   The cache has been disabled`. Contenedor: HOME=/, uid=1000, PIP_CACHE_DIR=None.
   Compose web configura npm_config_cache=/tmp/.npm; no es caché .cache local.
@@ -447,3 +447,39 @@ no verificadas. Punto 3 PENDIENTE de esa aceptación; no atribuirle la audibilid
 ya confirmada en Raspberry. Punto 7 conserva los fallos setup/caché/audit.
 Speech web y proveedor real sin credencial conservan sus pendientes anteriores.
 No se ha leído ni modificado el archivo de secretos durante esta reparación.
+
+### Reparación setup y cachés — 2026-10-05
+
+Plan aprobado; rama fix/linux-setup-cache-stability, spec/plan
+linux-setup-cache-stability. Sin nuevas dependencias; manifests y lockfile sin cambios.
+
+- Checkout limpio git archive en /tmp/tonto-setup-validation-AqMewE,
+  proyecto Compose tonto-setup-validation-20261005, sin secretos copiados.
+- `./tonto.sh setup`: instala dependencias Python en volumen nuevo y web,
+  exit 0. Segunda ejecución exit 0; pip informa Requirement already satisfied,
+  npm instala 81 paquetes en 1 s. No se crea un Python host funcional.
+  Docker puede crear el directorio vacío de montaje .venv; no es un entorno IDE.
+- Cache discovery: pip /app/.cache/pip, npm /app/.cache/npm.
+  Directorios host UID:GID 1000:1000, modo 775 en checkout aislado;
+  tamaños 52M/29M. Pip en venv temporal instala requests con Using cached;
+  npm ci --offline --audit=false exit 0, 81 paquetes en 894 ms.
+- Tests aislados: 97 Python + 24 Kivy + web, exit 0. Build aislado:
+  43 módulos Vite, 842 ms, exit 0.
+- Setup en checkout principal exit 0; inode/tamaño/mtime del .venv/bin/python
+  host idénticos antes/después. Corrige propietario incorrecto de .cache/npm
+  únicamente en cachés/volumen Python, sin chmod/chown global del repo.
+- Tests finales del checkout: 97 Python (0.40 s), 24 Kivy (1.04 s), web pasan.
+  Build final: 43 módulos, 804 ms, exit 0. bash -n y diff --check pasan.
+- Setup host explícito en checkout aislado: exit 1 por permisos del directorio
+  .venv creado por el montaje Docker; error de Python visible y sin mensaje de
+  éxito. La ayuda pide comprobar permisos y venv/ensurepip. No instala sistema.
+  Tests del CLI prueban además preservación del entorno existente, ausencia de
+  Python host en setup Docker, error venv/pip y errores Docker/npm propagados.
+- down principal y aislado exit 0; redes retiradas, volumen aislado conservado,
+  cachés intactas. No se borran volúmenes ni datos previos del operador.
+
+Auditoría: consulta antes de reinstalación informó 14 vulnerabilidades;
+tras npm ci coincide con entorno limpio: 7 (2 low, 1 moderate, 4 high), exit 1;
+producción omit-dev 0, exit 0. Se conserva la observación previa; no se atribuye
+su diferencia a una causa demostrada. Triage propuesto en
+`docs/web-dependency-audit-triage.md`. Punto 7 continúa FALLIDO por P-107-07.
