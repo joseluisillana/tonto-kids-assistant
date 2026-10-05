@@ -32,7 +32,7 @@ Operador aprueba directorios Kivy/cache escribibles en /tmp y ejecución como
 módulo. Actualizar Compose en esta misma reparación y repetir arranque/regresiones.
 Ventana abierta con audio group 29; aceptación física aún pendiente de completar.
 
-## Reparación P-107-12 — aprobada e implementada; validación física pendiente
+## Reparación P-107-12 — implementada y validada físicamente
 
 1. Hacer que capture_audio PC aplique device a sounddevice.rec; convertir índice
    numérico configurado y conservar nombres/default cuando corresponda.
@@ -46,3 +46,8 @@ Ventana abierta con audio group 29; aceptación física aún pendiente de comple
 
 Handoff: implementar solo tras aprobación, sin nuevas dependencias ni cambios
 Raspberry. Mantener registros P-107-12 y punto 3 FALLIDO hasta aceptación real.
+
+Operador confirma tres turnos con entrada 5/DMIC hw:0,7; audio físico validado.
+Antes del cierre: preparar reparación enfocada de P-107-13, documentar selección
+local reproducible y diagnosticar P-107-14 sin cambiar sistema ni dependencias.
+No declarar estabilidad completa mientras estos pendientes no tengan dictamen.

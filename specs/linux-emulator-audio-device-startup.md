@@ -53,3 +53,9 @@ Propuesta aprobada por el operador e implementada: respetar selección explícit
 en modo PC, manteniendo default si no está configurada; probar dispositivo
 DMIC del equipo sin cambiar volumen/permisos ni añadir dependencias.
 No aceptar causa raíz ni audio físico hasta obtener turnos hablados completos.
+
+Resultado: operador valida tres turnos hablados completos con entrada PortAudio
+5 / DMIC hw:0,7 a 16 kHz; backend confirma HTTP 200. P-107-12 revalidado para
+esa selección. Quedan P-107-13 (recuperación de excepción de captura) y
+P-107-14 (demora observada del volumen del sistema), registrados sin reparar.
+La selección temporal debe documentarse como configuración local reproducible.

@@ -14,7 +14,7 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | --- | --- | --- |
 | 1. Backend + web | COMPLETADO | `./tonto.sh dev all`: Uvicorn 8000 y Vite 7.3.3 en 443 ms. Health `{"status":"ok"}` HTTP 200; web HEAD HTTP 200. `/chat` real HTTP 200, 2.244706 s, `{"success":true,"response_text":"¡Ok! ¿Tienes alguna pregunta?"}`. Cuerpo `{}` devuelve HTTP 422 con campos session_id/message obligatorios. |
 | 2. Limpieza básica | COMPLETADO | Fallo inicial conservado en P-107-01; reparación fix/docker-cleanup revalidada: down retira backend/web, dos emuladores previos y red, exit 0; sin contenedores/redes del proyecto y puertos libres. |
-| 3. Cliente host + UI Linux | FALLIDO | P-107-10 y P-107-11 reparados: override Compose temporal, grupo 29 real, Kivy temporal y ejecución como módulo; ventana abre. Operador indica que falla micrófono o voz; aceptación física sigue pendiente de diagnóstico. |
+| 3. Cliente host + UI Linux | FALLIDO | Arranque reparado y audio físico validado: operador confirma tres turnos completos con DMIC hw:0,7, entrada PortAudio 5. P-107-12 resuelto para esa selección; sigue abierto P-107-13 (captura incompatible deja ESCUCHANDO). Demora del volumen del sistema registrada como P-107-14. |
 | 4. Limpieza host | COMPLETADO | Tras reparación: segunda llamada down exit 0 sin residuales; nuevo arranque backend/web HTTP 200 y stop retira servicios, one-off de control y red. Histórico P-107-01. |
 | 5. Raspberry real | COMPLETADO | Reintento por IP 192.168.1.183 con identidad SSH verificada: preflight exit 0, health LAN OK, USB disponible, 3/3 turnos reales con transcript correcto, continuidad y TTS. Cliente exit 0; backend 3 POST /chat/audio HTTP 200. Operador confirma «si, todo correcto». Detalle en Revalidación Raspberry encendida; mDNS sigue fallando P-107-03. |
 | 6. Limpieza Raspberry | COMPLETADO | Cliente/audio Raspberry ya terminaban y LAN health tras parada fallaba correctamente (curl 7). Reparación del bloqueo Docker revalidada: elimina también emuladores y red, sin residuales ni puertos; conserva dependencias. No se repiten voz ni UI física para este cambio CLI. Histórico P-107-01. |
@@ -22,7 +22,9 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | 8. Auxiliares/docs | COMPLETADO | Helpers previamente validados; guías operativas README/demo/SSH/workflow y planes vigentes actualizados a Bash/Docker/.env. bash -n y git diff --check pasan. demo-touch físico sigue excluido en #88. P-107-04 resuelto. |
 | 9. CI remoto | COMPLETADO | Push a rama documental. Run 37302071237 sobre SHA 2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2: completed/success; setup, checks y build success. Cambios posteriores solo añaden evidencias documentales; consultar checks de PR para su SHA final. |
 
-Pendientes vigentes: audio físico del emulador (punto 3, P-107-12); arranque reparado.
+Pendientes vigentes: recuperación de errores de captura P-107-13 y evaluación
+de demora del volumen P-107-14; documentar selección reproducible del micrófono
+sin depender del override temporal. Audio físico del emulador validado.
 Smoke DevExpert real: NO APLICA por decisión D025 (deprecado, no operarlo).
 Chrome: tres turnos/audibilidad/contador/auto-stop aprobados por el operador;
 mDNS y preflight Raspberry por nombre revalidados. Raspberry voz/audibilidad, setup, caches, auditorías,
@@ -689,6 +691,19 @@ específica, no se corrige durante esta validación.
 check_input_settings sin grabación: entradas 0/4 rechazan 16000 Hz;
 5 (DMIC hw:0,7) y 8 (default) admiten 16000 Hz. Override temporal cambia a
 entrada 5 para continuar la prueba aprobada sin conversión de audio/dependencias.
+Resultado entrada 5: operador confirma «Ahora ha funcionado, he realizado 3
+turnos». Backend registra cuatro POST /chat/audio HTTP 200 desde 172.18.0.3;
+se atribuyen tres turnos a la confirmación humana, sin inferir qué fue el cuarto.
+P-107-12 RESUELTO Y REVALIDADO con selección explícita compatible. Captura,
+transcripción, respuesta y TTS físicos aceptados para esa configuración.
+P-107-13 permanece abierto: no se ha reparado el manejo de excepción de captura.
+
+**P-107-14 — OBSERVACIÓN ABIERTA:** operador ajusta volumen del sistema mientras
+TONTO habla y nota que el control queda encasquillado durante unos segundos.
+El turno funciona; no se dispone de logs del control ni reproducción aislada
+que establezcan causa o frecuencia. No se atribuye a ALSA/PipeWire sin evidencia.
+Evaluar reproducción y respuesta del control de volumen antes del cierre estable;
+no modificar sistema/dependencias durante esta validación.
 Próxima ejecución: conservar el contenedor y WAV hasta recuperar el detalle
 422; si es transcripción vacía, comprobar fuente de entrada y señal original
 antes de normalizar. Sin cambios de producto en esta actualización.
