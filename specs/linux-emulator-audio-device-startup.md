@@ -28,6 +28,7 @@ obligatorio que rompa CI. Sin dependencias nuevas ni servidores de audio nuevos.
    Operador confirma voz clara y micrófono. Registrar permisos/X11/ALSA u otros
    fallos encontrados sin repararlos dentro de esa validación.
 4. Suites/regresiones/build y CI pasan; registrar evidencia y actualizar punto 3
-   solo cuando se cumpla aceptación física. No cerrar #107 si falta DevExpert.
+   solo cuando se cumpla aceptación física. Respetar D025: DevExpert deprecado/NO APLICA; el cierre #107 depende de los
+   demás criterios vigentes.
 
 Plan: docs/plans/linux-emulator-audio-device-startup-implementation-plan.md.

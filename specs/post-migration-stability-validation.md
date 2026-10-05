@@ -32,8 +32,7 @@ o hardware no disponible quedan pendientes, nunca aprobados por mocks.
 9. Push de commits, CI del SHA validado, logs y URL de ejecución con resultado.
 
 Ampliaciones: widgets Kivy reales/Xvfb, regresión de estados/errores/reentrada,
-web micrófono/WAV/auto-stop/speech y texto en navegador, proveedores OpenAI y
-DevExpert por separado (tests simulados y smoke real distinguidos), coherencia
+web micrófono/WAV/auto-stop/speech y texto en navegador, OpenAI como proveedor real (tests simulados y smoke real distinguidos), coherencia
 de runbooks Linux, limpieza de contenedores one-off y arranque repetible.
 Usar suites existentes y fixtures existentes; no añadir dependencias ni tests
 de producto durante esta auditoría. No divulgar claves ni `.env`.
@@ -59,3 +58,11 @@ Registrar problemas y continuar salvo dependencia completamente bloqueante.
 Commits documentales tras preparación y grupos de comprobaciones.
 
 Plan: `docs/plans/post-migration-stability-validation-implementation-plan.md`.
+
+
+## Decisión de alcance — DevExpert, 2026-10-05 (D025)
+
+Por decisión explícita del operador, DevExpert está deprecado y no se operará.
+Smoke real DevExpert: NO APLICA, excluido de aceptación de esta pasada. No pedir
+credenciales ni considerarlo un bloqueo del cierre. Evidencias/tests existentes
+se conservan; no se elimina soporte ni se cambia runtime en esta decisión.

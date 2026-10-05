@@ -22,7 +22,8 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | 8. Auxiliares/docs | COMPLETADO | Helpers previamente validados; guías operativas README/demo/SSH/workflow y planes vigentes actualizados a Bash/Docker/.env. bash -n y git diff --check pasan. demo-touch físico sigue excluido en #88. P-107-04 resuelto. |
 | 9. CI remoto | COMPLETADO | Push a rama documental. Run 37302071237 sobre SHA 2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2: completed/success; setup, checks y build success. Cambios posteriores solo añaden evidencias documentales; consultar checks de PR para su SHA final. |
 
-Pendientes vigentes: audio físico del emulador (punto 3), smoke DevExpert real sin credencial.
+Pendientes vigentes: arranque/audio físico del emulador (punto 3, P-107-10).
+Smoke DevExpert real: NO APLICA por decisión D025 (deprecado, no operarlo).
 Chrome: tres turnos/audibilidad/contador/auto-stop aprobados por el operador;
 mDNS y preflight Raspberry por nombre revalidados. Raspberry voz/audibilidad, setup, caches, auditorías,
 CORS, auxiliares y cobertura Kivy tienen evidencia completada.
@@ -595,3 +596,14 @@ Dictamen actual: 8/9 completos, punto 3 FALLIDO por P-107-10 y aceptación de au
 físico pendiente. Web Chrome y mDNS revalidados. Smoke DevExpert real sigue
 pendiente de credencial configurada por el operador. Touch/kiosk #88 excluido.
 Backend/web quedan activos para continuar la validación guiada.
+
+
+### Decisión del operador — DevExpert deprecado, 2026-10-05
+
+D025 en docs/decisions.md. El operador indica «Márcalo como decisión el no
+operarlo porque está deprecado». Smoke real DevExpert: NO APLICA; retirado de
+pendientes/bloqueos de aceptación. No se ha ejecutado, no se marca COMPLETADO y
+no se requieren credenciales. Referencias previas a credencial ausente/pending
+son evidencia histórica anterior a esta decisión. OpenAI real sigue validado.
+Spec y plan integral actualizados; sin cambios de código/configuración/runtime.
+Punto 3 sigue FALLIDO por P-107-10; plan de reparación del emulador vigente.

@@ -9,6 +9,8 @@ histórico y añadiendo resultados actuales en la checklist de migración.
 
 Validaciones 1–9 y ampliaciones de la spec; solo documentos/evidencias en Git.
 Excluir validación física touch/kiosk #88, correcciones y nuevas dependencias.
+Decisión D025: DevExpert deprecado, smoke real NO APLICA; no operarlo ni pedir
+credenciales. OpenAI conserva la validación real de proveedor.
 
 ## Secuencia
 
@@ -31,6 +33,7 @@ Aplicar criterios de la spec: no declarar estable con fallos o pendientes.
 Lee AGENTS.md, roadmap, specs y último journal. Continúa #107 en la rama
 docs/post-migration-stability-validation. Lee la spec y el registro de migración.
 Ejecuta comprobaciones pendientes 1–9 y ampliaciones con scripts oficiales.
+Respeta D025: no operes DevExpert; su smoke real es NO APLICA.
 No arregles producto ni añadas dependencias: documenta cada error en Registro
 de Problemas, continúa cuando sea posible y haz commits documentales periódicos.
 No marques hardware, audibilidad o CI como aprobados sin evidencia real.

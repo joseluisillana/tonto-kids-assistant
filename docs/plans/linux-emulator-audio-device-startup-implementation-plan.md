@@ -1,6 +1,7 @@
 # Plan P-107-10 — audio físico del emulador
 
 Estado: propuesta pendiente de revisión. Spec linux-emulator-audio-device-startup.
+D025 excluye DevExpert real: no es dependencia de esta reparación.
 
 1. Desde rama integrada de #108, crear fix/linux-emulator-audio-device-startup.
 2. Sustituir device/group CLI por override temporal Compose en dev ui. Respetar

@@ -168,3 +168,11 @@ y producción cero, tests/build pasan; ver registro de validación para CI.
 - `specs/kivy-ui-docker-emulation.md`: Emulación en Docker de la Interfaz Táctil (Implemented).
 - `specs/kivy-ui-testing-coverage.md`: pruebas de widgets Kivy reales bajo Xvfb,
   integradas en `./tonto.sh test all`.
+
+
+## Decisión vigente de proveedor — 2026-10-05
+
+D025: DevExpert deprecado por decisión del operador; no operarlo para validación
+ni pedir credenciales. Smoke real NO APLICA en #107. OpenAI real validado.
+Histórico/adaptadores existentes conservados, sin cambio de runtime en esta
+actualización. Spec/plan post-migration-stability-validation reflejan la exclusión.

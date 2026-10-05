@@ -146,3 +146,18 @@ Use Kivy as the UI runtime for the Raspberry Pi Touch UI (Phase 2 spike decision
 The rationale is that Kivy provides hardware-accelerated OpenGL ES 2 rendering and robust native touch support via `mtdev` for headless environments (Raspberry Pi OS Lite without X11/Wayland). While Pygame was considered for its zero-dependency footprint, reading raw `/dev/input/` events without X11 often leads to severe touch coordinate calibration issues (inverted axes, offsets) on USB touchscreens.
 
 We accept the trade-off of installing some system-level dependencies (`apt` packages like `libmtdev1` or `libgles2`) on the Raspberry Pi OS Lite image in exchange for a reliable, calibrated multi-touch experience and superior UI capabilities.
+
+
+## D025 - DevExpert deprecado para la validación post-migración
+
+Fecha: 2026-10-05. Decisión explícita del operador, seguimiento #107.
+
+DevExpert se considera deprecado para la operación del proyecto y no se operará
+para ejecutar su smoke real. Esa comprobación queda NO APLICA por decisión de
+alcance, no COMPLETADA ni bloqueada por falta de credencial. OpenAI sigue siendo
+el proveedor real validado para esta pasada. No solicitar credenciales ni
+reactivar DevExpert sin una nueva decisión del operador.
+
+Se conservan código, pruebas y evidencias históricas; esta decisión documental
+no elimina adaptadores ni cambia configuración o runtime. La reparación del
+arranque/audio del emulador P-107-10 permanece pendiente e independiente.
