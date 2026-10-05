@@ -12,9 +12,9 @@ las ejecuciones anteriores. Sin reparaciones de producto durante esta pasada.
 | 2. Limpieza básica | COMPLETADO | down exit 0; sin contenedores/redes del proyecto; health/web posteriores curl 7 (puertos cerrados), dependencias conservadas. |
 | 3. Cliente host/emulador | COMPLETADO | Arranque oficial entrada 5/grupo29; operador confirma tres turnos audibles y reset; backend 3 POST audio 200. CLI tres turnos, memoria Alex, fallback texto sin espeak, exit 0. |
 | 4. Limpieza host | COMPLETADO | down exit 0 tras emulador; sin contenedores/red del proyecto, dependencias conservadas. |
-| 5. Raspberry voz | PENDIENTE | Preflight y voz real requieren Raspberry/operador. |
+| 5. Raspberry voz | COMPLETADO | IP/HostKeyAlias con identidad estricta, checkout 7117313; 3/3 turnos reales con transcript/respuesta, indicador 6s, exit0. Operador confirma avisos y respuestas claros. mDNS falla, acceso IP verificado funciona. |
 | 6. Limpieza Raspberry/backend | PENDIENTE | Tras prueba Raspberry. |
-| 7. Setup/tests/build | PENDIENTE | Ejecutar comandos oficiales. |
+| 7. Setup/tests/build | COMPLETADO | setup exit0, npm ci 0 vulnerabilidades; test all tras setup: 110 Python 0.43s, 25 Kivy 1.02s, web pass. Build 43 módulos 863ms. Audit dev/prod 0; UID1000 caches1000:1000, Python /app/.venv/bin/python. |
 | 8. Auxiliares/docs | PENDIENTE | Sintaxis, helpers, export/hook y legado operativo. |
 | 9. CI remoto | COMPLETADO | 7117313: runs 37377597270 (1m39s) y 37377603886 (1m32s), ambos Project checks pass. Revalidar tras evidencias finales. |
 
@@ -27,6 +27,22 @@ tonto-pi.local`, exit 255. Reaparición P-107-03, direccionamiento del entorno;
 reintento por IP conocida con verificación SSH normal, sin debilitar identidad.
 Sintaxis Bash completa, diff-check, exportador y hook pasan. Suites previas a
 setup: 110 Python (0.64 s), 25 Kivy (1.07 s), web OK. DevExpert no operado.
+Acceso IP inicial: host key verification failed (IP sin identidad propia).
+Reintento oficial vía IP y HostKeyAlias=tonto-pi.local, StrictHostKeyChecking=yes:
+preflight exit0, identidad tonto-pi/tonto-pi-user, tools/venv Python3.13.5,
+health LAN 200. No se modifica known_hosts ni se debilita verificación.
+Checkout Raspberry limpio cc7497a actualizado por fetch/switch detached al
+7117313 integrado; prueba física corresponde ahora a la revisión auditada.
+Backend helper start/status/health exit0; build previo setup 43 módulos 913ms.
+Raspberry sesión local-session-7dc3af3e-b2c6-4516-91d0-80c7f66c3715:
+1. Transcript «Hola tonto, ¿qué tal estás?»; respuesta saludo y pregunta.
+2. Transcript pregunta por estado/sistema/recursos; respuesta explica límites
+   y ofrece ayuda. No se atribuye acceso al sistema al asistente.
+3. Transcript «le dijo: Buenas noches.»; respuesta de despedida.
+Tres capturas de 6 s, STT/respuestas reales, demo exit0; operador confirma voz.
+Prueba Chrome repetida pendiente; no hereda su aceptación de la pasada anterior.
+Build final863ms; sin cambios de producto. Warnings conocidos Starlette/httpx,
+Kivy imghdr, MESA fallback llvmpipe y mtdev/clipboard no bloquean pruebas.
 
 Este documento sirve como registro y checklist para las validaciones en las diferentes fases de la transición de scripts `.ps1` a Bash y Docker.
 
