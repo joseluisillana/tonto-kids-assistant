@@ -42,13 +42,13 @@ def test_call_openai_uses_child_friendly_spanish_prompt(monkeypatch):
     assert response == "Claro, el Sol es una estrella."
     assert captured["timeout"] == 20
     assert captured["url"] == "https://api.openai.com/v1/responses"
-    assert "Always answer in Spanish" in captured["payload"]["instructions"]
-    assert "2 or 3 simple sentences" in captured["payload"]["instructions"]
-    assert "simple accurate facts" in captured["payload"]["instructions"]
-    assert "direct answer to the child's question" in captured["payload"]["instructions"]
-    assert "Avoid long lists, markdown, and lecture-style answers" in captured["payload"]["instructions"]
-    assert "greets you or says goodbye" in captured["payload"]["instructions"]
-    assert "recent conversation context" in captured["payload"]["instructions"]
+    assert "Responde SIEMPRE en español" in captured["payload"]["instructions"]
+    assert "2 o 3 frases simples" in captured["payload"]["instructions"]
+    assert "hechos simples y precisos" in captured["payload"]["instructions"]
+    assert "respuesta directa a la pregunta" in captured["payload"]["instructions"]
+    assert "Evita listas largas, formato markdown" in captured["payload"]["instructions"]
+    assert "saluda o se despide" in captured["payload"]["instructions"]
+    assert "contexto reciente de la conversación" in captured["payload"]["instructions"]
     assert captured["payload"]["max_output_tokens"] == MAX_OUTPUT_TOKENS
     assert "User: Hola TONTO, que es una estrella?" in captured["payload"]["input"]
     assert "User: Y el sol es una estrella?" in captured["payload"]["input"]
@@ -97,7 +97,7 @@ def test_call_inference_routes_to_devexpert(monkeypatch):
     assert captured["payload"]["model"] == "mimo-test"
     assert captured["payload"]["max_tokens"] == MAX_OUTPUT_TOKENS
     assert captured["payload"]["messages"][0]["role"] == "system"
-    assert "Always answer in Spanish" in captured["payload"]["messages"][0]["content"]
+    assert "Responde SIEMPRE en español" in captured["payload"]["messages"][0]["content"]
     assert captured["payload"]["messages"][1] == {"role": "user", "content": "Hola"}
     assert captured["payload"]["messages"][2] == {"role": "assistant", "content": "Hola, soy TONTO."}
     assert captured["payload"]["messages"][3] == {"role": "user", "content": "Que es la luna?"}
