@@ -18,7 +18,7 @@ print_usage() {
     echo "Comandos:"
     echo "  setup                 - Prepara el entorno (instala dependencias en los contenedores)"
     echo "  dev [backend|ui|web|all] - Inicia los servidores en modo desarrollo"
-    echo "  down                  - Detiene y limpia los contenedores y redes de desarrollo"
+    echo "  down (alias: stop)     - Limpia todos los contenedores y redes del proyecto, incluidos los temporales"
     echo "  test [python|ui|web|all] - Ejecuta los tests del proyecto"
     echo "  build [web|all]       - Compila los assets del proyecto web"
 }
@@ -62,7 +62,14 @@ case "$COMMAND" in
       docker compose up web
     elif [ "$TARGET" == "ui" ]; then
       echo "Iniciando emulador de UI..."
-      docker compose run --rm ui-emulator
+      audio_args=()
+      if [ -d /dev/snd ]; then
+        audio_devices=(/dev/snd/*)
+        audio_args=(--device /dev/snd --group-add "$(stat -c '%g' "${audio_devices[0]}")")
+      else
+        echo "Audio hardware unavailable (/dev/snd missing); audible speech and microphone require a Linux audio device."
+      fi
+      docker compose run --rm --build "${audio_args[@]}" ui-emulator
     else
       echo "Starting backend and web..."
       docker compose up backend web
@@ -70,8 +77,24 @@ case "$COMMAND" in
     ;;
     
   down|stop)
-    echo "Stopping and cleaning up containers..."
-    docker compose down
+    # Never print the full configuration: it may contain credentials from .env.
+    compose_config=$(docker compose config --format json)
+    project_name=$(sed -n 's/^  "name": "\([^"]*\)",\{0,1\}$/\1/p' <<< "$compose_config")
+    if [ -z "$project_name" ]; then
+      echo "Could not determine the Compose project name." >&2
+      exit 1
+    fi
+    echo "Stopping and cleaning up all containers for project $project_name..."
+    docker compose down --remove-orphans
+    remaining_containers=$(docker ps -aq --filter "label=com.docker.compose.project=$project_name")
+    remaining_networks=$(docker network ls -q --filter "label=com.docker.compose.project=$project_name")
+    if [ -n "$remaining_containers" ] || [ -n "$remaining_networks" ]; then
+      echo "Cleanup incomplete for project $project_name." >&2
+      echo "Remaining containers: ${remaining_containers:-none}" >&2
+      echo "Remaining networks: ${remaining_networks:-none}" >&2
+      exit 1
+    fi
+    echo "Project containers and networks removed. Dependency volumes preserved."
     echo "Note: To completely wipe the Docker-managed .venv, run: docker compose down -v"
     ;;
     
@@ -90,7 +113,7 @@ case "$COMMAND" in
     if [ "$TARGET" == "ui" ] || [ "$TARGET" == "all" ]; then
       echo "Running Kivy UI checks..."
       # Give Xvfb a normal parent for its startup signal and an isolated socket.
-      docker compose run --rm --build \
+      docker compose run --rm --build --no-deps \
         --volume /tmp/.X11-unix \
         -e PYTHONPATH=/app \
         -e PYTHONDONTWRITEBYTECODE=1 \

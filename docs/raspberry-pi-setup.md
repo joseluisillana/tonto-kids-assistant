@@ -173,13 +173,13 @@ Customisations applied:
 4. Esperar al menos 2-3 minutos en el primer arranque.
 5. Desde el ordenador de desarrollo, probar resolucion por hostname:
 
-```powershell
+```bash
 ping tonto-pi.local
 ```
 
 Si `tonto-pi.local` no resuelve, buscar la IP de la Raspberry en el router y usar esa IP para SSH:
 
-```powershell
+```bash
 ssh tonto-pi-user@<IP_DE_LA_RASPBERRY>
 ```
 
@@ -187,7 +187,7 @@ ssh tonto-pi-user@<IP_DE_LA_RASPBERRY>
 
 Desde el ordenador de desarrollo:
 
-```powershell
+```bash
 ssh tonto-pi-user@tonto-pi.local
 ```
 
@@ -215,23 +215,23 @@ El Agent Capability Pack de Semana 05 usa una clave SSH dedicada para que Codex,
 
 La clave privada vive fuera del repositorio. No copiar claves privadas, contrasenas ni tokens dentro del proyecto.
 
-En Windows, generar la clave dedicada desde el ordenador de desarrollo:
+En Linux, generar la clave dedicada desde el ordenador de desarrollo:
 
-```powershell
-ssh-keygen -t ed25519 -f "$env:USERPROFILE\.ssh\tonto_agent_ed25519" -C "tonto-agent"
+```bash
+ssh-keygen -t ed25519 -f "$HOME/.ssh/tonto_agent_ed25519" -C "tonto-agent"
 ```
 
 Usar `tonto_agent_ed25519` como nombre de archivo mantiene la clave neutral para Codex, OpenCode u otros agentes. No documentar la clave privada, el contenido de la clave publica, fingerprints reales ni randomart en el repositorio; si se necesita evidencia, registrar solo que la clave `tonto-agent` fue creada e instalada.
 
 Instalar la clave publica en la Raspberry:
 
-```powershell
-type "$env:USERPROFILE\.ssh\tonto_agent_ed25519.pub"
+```bash
+cat "$HOME/.ssh/tonto_agent_ed25519.pub"
 ```
 
 Copiar la linea completa que termina en `tonto-agent`. Despues, entrar por SSH con el metodo manual ya configurado:
 
-```powershell
+```bash
 ssh tonto-pi-user@tonto-pi.local
 ```
 
@@ -246,16 +246,16 @@ chmod 600 ~/.ssh/authorized_keys
 
 Pegar la clave publica `tonto-agent` en una sola linea. No pegar la clave privada.
 
-Tambien se puede instalar la clave publica desde Windows en un solo comando. Este comando copia solo la clave `.pub`; no imprime ni envia la clave privada:
+Tambien se puede instalar la clave publica desde Linux en un solo comando. Este comando copia solo la clave `.pub`; no imprime ni envia la clave privada:
 
-```powershell
-type "$env:USERPROFILE\.ssh\tonto_agent_ed25519.pub" | ssh tonto-pi-user@tonto-pi.local "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys"
+```bash
+cat "$HOME/.ssh/tonto_agent_ed25519.pub" | ssh tonto-pi-user@tonto-pi.local "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys && chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys"
 ```
 
-Validar desde Windows:
+Validar desde Linux:
 
-```powershell
-ssh -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=5 -i "$env:USERPROFILE\.ssh\tonto_agent_ed25519" tonto-pi-user@tonto-pi.local hostname
+```bash
+ssh -o BatchMode=yes -o IdentitiesOnly=yes -o ConnectTimeout=5 -i "$HOME/.ssh/tonto_agent_ed25519" tonto-pi-user@tonto-pi.local hostname
 ```
 
 Resultado esperado:
@@ -264,27 +264,27 @@ Resultado esperado:
 tonto-pi
 ```
 
-Si los valores por defecto no coinciden con la maquina local, configurar variables de entorno antes de usar `scripts/agent-raspberry.ps1`:
+Si los valores por defecto no coinciden con la maquina local, configurar variables de entorno antes de usar `scripts/agent-raspberry.sh`:
 
-```powershell
-$env:TONTO_PI_HOST = "tonto-pi.local"
-$env:TONTO_PI_USER = "tonto-pi-user"
-$env:TONTO_PI_SSH_KEY = "$env:USERPROFILE\.ssh\tonto_agent_ed25519"
-$env:TONTO_PI_REPO = "~/tonto-kids-assistant"
-$env:TONTO_BACKEND_URL = "http://<IP_DEL_PC_WINDOWS>:8000"
+```bash
+export TONTO_PI_HOST="tonto-pi.local"
+export TONTO_PI_USER="tonto-pi-user"
+export TONTO_PI_SSH_KEY="$HOME/.ssh/tonto_agent_ed25519"
+export TONTO_PI_REPO="~/tonto-kids-assistant"
+export TONTO_BACKEND_URL="http://<IP_DEL_HOST_LINUX>:8000"
 ```
 
 Usar el preflight del pack:
 
-```powershell
-.\scripts\agent-raspberry.ps1 -Action preflight
+```bash
+./scripts/agent-raspberry.sh preflight
 ```
 
 El helper usa `tonto-pi.local` por defecto. Si se necesita usar una IP fija o un alias SSH local distinto, sobreescribir `TONTO_PI_HOST`:
 
-```powershell
-$env:TONTO_PI_HOST = "<IP_O_ALIAS_DE_LA_RASPBERRY>"
-.\scripts\agent-raspberry.ps1 -Action preflight
+```bash
+export TONTO_PI_HOST="<IP_O_ALIAS_DE_LA_RASPBERRY>"
+./scripts/agent-raspberry.sh preflight
 ```
 
 Revocar la clave dedicada:
@@ -466,16 +466,16 @@ Donde `<BACKEND_HOST>` puede ser:
 
 En Windows, la primera validacion debe hacerse preferentemente con la IP LAN del PC. Los nombres `.local` pueden funcionar, pero no siempre se resuelven de forma fiable desde la Raspberry.
 
-El backend del PC debe estar escuchando en la red, no solo en `127.0.0.1`. Desde el PC Windows, arrancar el backend asi:
+El backend del PC debe estar escuchando en la red, no solo en `127.0.0.1`. Desde el host Linux, arrancar el backend asi:
 
-```powershell
-.\scripts\dev.ps1 -Service backend -AllowLan
+```bash
+./tonto.sh dev backend
 ```
 
 Desde la Raspberry, comprobar primero `/health`:
 
 ```bash
-curl http://<IP_DEL_PC_WINDOWS>:8000/health
+curl http://<IP_DEL_HOST_LINUX>:8000/health
 ```
 
 Resultado esperado:
@@ -487,7 +487,7 @@ Resultado esperado:
 Despues arrancar el cliente:
 
 ```bash
-TONTO_BACKEND_URL=http://<IP_DEL_PC_WINDOWS>:8000 .venv/bin/python client/main.py
+TONTO_BACKEND_URL=http://<IP_DEL_HOST_LINUX>:8000 .venv/bin/python client/main.py
 ```
 
 Estado validado el 2026-05-15: desde VSCode Remote SSH en la Raspberry se arranco el cliente, se envio un prompt manual, el backend en Windows respondio tras invocar OpenAI con `OPENAI_API_KEY` configurada como variable de entorno, y la respuesta se escucho por la salida de auriculares/jack.
@@ -497,8 +497,8 @@ Si `curl` o el cliente hacen timeout:
 - confirmar que Raspberry y PC estan en la misma red,
 - confirmar la IP actual del PC con `ipconfig`,
 - comprobar que el backend se arranco con `-AllowLan`,
-- permitir Python o el puerto `8000` en Windows Firewall para red privada,
-- reintentar `curl http://<IP_DEL_PC_WINDOWS>:8000/health`.
+- permitir Python o el puerto `8000` en Host firewall para red privada,
+- reintentar `curl http://<IP_DEL_HOST_LINUX>:8000/health`.
 
 Para Semana 1, esta prueba completa es opcional si el backend todavia no esta levantado. La validacion obligatoria de hardware es SSH, VSCode Remote SSH, audio y `espeak`.
 
@@ -523,7 +523,7 @@ Configuracion adicional para modo voz:
 Ejemplo con microfono USB:
 
 ```bash
-export TONTO_BACKEND_URL=http://<IP_DEL_PC_WINDOWS>:8000
+export TONTO_BACKEND_URL=http://<IP_DEL_HOST_LINUX>:8000
 export TONTO_AUDIO_DEVICE=plughw:<CARD>,<DEVICE>
 .venv/bin/python client/main.py --mode voice
 ```
@@ -600,16 +600,16 @@ En el ordenador de desarrollo:
 2. Instalar la extension oficial `Remote - SSH`.
 3. Confirmar que el comando SSH funciona desde una terminal local:
 
-```powershell
+```bash
 ssh tonto-pi-user@tonto-pi.local
 ```
 
 4. Crear o actualizar la configuracion SSH local.
 
-En Windows suele estar en:
+En Linux está en:
 
 ```text
-C:\Users\<USUARIO>\.ssh\config
+~/.ssh/config
 ```
 
 Entrada recomendada:
@@ -693,8 +693,8 @@ Esta guia vive en `docs/`, por lo que entra automaticamente en el flujo de expor
 
 Desde el ordenador de desarrollo, refrescar fuentes:
 
-```powershell
-.\scripts\export-docs-for-notebooklm.ps1
+```bash
+./scripts/export-docs-for-notebooklm.sh
 ```
 
 Comprobar que existe:
@@ -714,7 +714,7 @@ NotebookLM debe leer la copia exportada, pero la fuente oficial sigue siendo est
 | 2026-05-15 | Semana 1 | Se corrige el usuario validado de SSH a `tonto-pi-user`. |
 | 2026-05-15 | Semana 1 | Se valida primer arranque, paquetes base instalados y audio por jack con `espeak -v es "Prueba de audio"`. |
 | 2026-05-15 | Semana 1 | Se valida VSCode Remote SSH, terminal remota, `which espeak` y repositorio clonado en `/home/tonto-pi-user/tonto-kids-assistant`. |
-| 2026-05-15 | Semana 1 | Se documenta uso de `.\scripts\dev.ps1 -Service backend -AllowLan` para que la Raspberry alcance el backend del PC Windows en la LAN. |
+| 2026-05-15 | Semana 1 | Se documenta uso de `./tonto.sh dev backend` para que la Raspberry alcance el backend del host Linux en la LAN. |
 | 2026-05-15 | Semana 1 | Se valida prueba punto a punto Raspberry -> backend LAN -> OpenAI -> TTS por salida de auriculares/jack. |
 | 2026-05-18 | Semana 3 | Se documentan comandos reproducibles para validar microfono USB con `arecord`, grabacion WAV corta y reproduccion local con `aplay` antes de implementar STT. |
 | 2026-06-09 | Semana 5 | Se documenta clave SSH dedicada `tonto-agent` para el Agent Capability Pack, con generacion, instalacion, validacion y revocacion sin guardar secretos en repo. |

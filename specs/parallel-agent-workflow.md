@@ -120,39 +120,39 @@ Do not create issues for every tiny edit. A small documentation typo or one-line
 
 Create a parallel worktree from `main`:
 
-```powershell
+```bash
 git switch main
 git pull --ff-only
-git worktree add ..\tonto-worktrees\week-04-phase4-raspberry-listening-indicator -b feature/week-04-phase4-raspberry-listening-indicator main
+git worktree add ../tonto-worktrees/week-04-phase4-raspberry-listening-indicator -b feature/week-04-phase4-raspberry-listening-indicator main
 ```
 
 List active worktrees:
 
-```powershell
+```bash
 git worktree list
 ```
 
 Remove a completed worktree:
 
-```powershell
-git worktree remove ..\tonto-worktrees\week-04-phase4-raspberry-listening-indicator
+```bash
+git worktree remove ../tonto-worktrees/week-04-phase4-raspberry-listening-indicator
 ```
 
 Prune stale worktree metadata:
 
-```powershell
+```bash
 git worktree prune
 ```
 
 Create a GitHub Issue for a phase or parallel work item:
 
-```powershell
+```bash
 gh issue create --title "Week 04 Phase 4: Raspberry listening indicator" --body "Tracks implementation, validation, and evidence for the Raspberry terminal listening/time indicator."
 ```
 
 Create and inspect a PR with GitHub CLI:
 
-```powershell
+```bash
 git push -u origin feature/week-04-phase4-raspberry-listening-indicator
 gh pr create --base main --head feature/week-04-phase4-raspberry-listening-indicator
 gh pr view --json url,state,mergeable,headRefName,baseRefName
