@@ -17,9 +17,9 @@ print_usage() {
     echo ""
     echo "Comandos:"
     echo "  setup                 - Prepara el entorno (instala dependencias en los contenedores)"
-    echo "  dev [backend|web|all] - Inicia los servidores en modo desarrollo"
+    echo "  dev [backend|ui|web|all] - Inicia los servidores en modo desarrollo"
     echo "  down                  - Detiene y limpia los contenedores y redes de desarrollo"
-    echo "  test [python|web|all] - Ejecuta los tests del proyecto"
+    echo "  test [python|ui|web|all] - Ejecuta los tests del proyecto"
     echo "  build [web|all]       - Compila los assets del proyecto web"
 }
 
@@ -81,10 +81,31 @@ case "$COMMAND" in
       docker compose run --rm backend /bin/bash -c "
         export PYTHONDONTWRITEBYTECODE=1
         .venv/bin/python scripts/check_syntax.py
-        .venv/bin/python -m pytest -p no:cacheprovider tests
+        .venv/bin/python -m pytest -p no:cacheprovider tests \
+          --ignore=tests/test_tonto_face.py \
+          --ignore=tests/test_touch_ui.py
       "
     fi
-    
+
+    if [ "$TARGET" == "ui" ] || [ "$TARGET" == "all" ]; then
+      echo "Running Kivy UI checks..."
+      # Give Xvfb a normal parent for its startup signal and an isolated socket.
+      docker compose run --rm --build \
+        --volume /tmp/.X11-unix \
+        -e PYTHONPATH=/app \
+        -e PYTHONDONTWRITEBYTECODE=1 \
+        -e KIVY_WINDOW=sdl2 \
+        -e KIVY_NO_ARGS=1 \
+        -e KIVY_HOME=/tmp/.kivy-test \
+        -e KIVY_CLIPBOARD=dummy \
+        -e LIBGL_ALWAYS_SOFTWARE=1 \
+        -e XDG_CACHE_HOME=/tmp/.cache \
+        -e SDL_AUDIODRIVER=dummy \
+        -e SDL_VIDEODRIVER=x11 \
+        ui-emulator /bin/bash -c 'xvfb-run -a -e /dev/stderr .venv/bin/python -m pytest \
+          -p no:cacheprovider tests/test_tonto_face.py tests/test_touch_ui.py -v; result=$?; exit "$result"'
+    fi
+
     if [ "$TARGET" == "web" ] || [ "$TARGET" == "all" ]; then
       echo "Running Web checks..."
       docker compose run --rm web npm run test

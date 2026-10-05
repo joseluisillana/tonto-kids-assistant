@@ -456,3 +456,11 @@ TONTO MVP está “done” desde 2026-06-18 porque:
 - el flujo conversacional funciona extremo a extremo,
 - el sistema puede presentarse sin configuración manual compleja,
 - y el proyecto está documentado de forma clara y mantenible.
+
+## Trabajo activo post-MVP — UI táctil (2026-10-05)
+
+La UI con cara animada sigue `specs/raspberry-touch-ui.md` y la épica #81.
+Las fases 1–6 están cerradas. La cobertura de Kivy (#105) añade pruebas de
+widgets reales en Docker/Xvfb al comando `./tonto.sh test all`, con spec y plan
+`kivy-ui-testing-coverage`. La fase 7 (#88), kiosk y validación final en
+Raspberry, permanece pendiente y requiere evidencia de hardware separada.
