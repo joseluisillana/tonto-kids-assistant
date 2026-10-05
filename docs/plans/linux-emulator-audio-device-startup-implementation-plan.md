@@ -31,3 +31,18 @@ no aceptes audio físico por mocks. Mantén #107 abierta mientras falten criteri
 Operador aprueba directorios Kivy/cache escribibles en /tmp y ejecución como
 módulo. Actualizar Compose en esta misma reparación y repetir arranque/regresiones.
 Ventana abierta con audio group 29; aceptación física aún pendiente de completar.
+
+## Propuesta P-107-12 — pendiente de aprobación
+
+1. Hacer que capture_audio PC aplique device a sounddevice.rec; convertir índice
+   numérico configurado y conservar nombres/default cuando corresponda.
+2. Añadir test enfocado que verifique selección efectiva y default existente.
+3. Probar entrada DMIC explícita con configuración temporal del emulador,
+   sin cambiar dispositivo de salida ni volumen del host. No fijar índices
+   de este equipo en el Compose compartido.
+4. Recuperar transcript real y validar tres turnos, voz y retorno a idle.
+   Si persiste vacío, comparar señal de captura antes de normalizar y rutas
+   de entrada; documentar resultado antes de ampliar la reparación.
+
+Handoff: implementar solo tras aprobación, sin nuevas dependencias ni cambios
+Raspberry. Mantener registros P-107-12 y punto 3 FALLIDO hasta aceptación real.

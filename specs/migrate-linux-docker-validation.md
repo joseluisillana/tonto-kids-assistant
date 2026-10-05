@@ -664,6 +664,16 @@ Se intenta recuperar el detalle mediante reenvío del WAV existente, pero el
 contenedor one-off ya no existe; no se envía audio y no se recupera el cuerpo
 del rechazo. Solo backend/web siguen activos. P-107-12 permanece abierto;
 la hipótesis de transcripción vacía aún requiere evidencia del cuerpo HTTP.
+Reintento con emulador abierto: reenvío del WAV existente confirma HTTP 422,
+`{"detail":"Audio did not contain recognizable speech"}`. Se descarta error de
+formulario para esta grabación: la transcripción queda vacía. WAV: 16000 Hz,
+96000 muestras, pico 0.950012, RMS 0.225005. PortAudio default [8,8] corresponde
+a ALSA default; enumera también hw:0,0 y entradas DMIC hw:0,6 / hw:0,7.
+Operador confirma que el mismo micrófono y volumen funcionan en web sin gritar;
+otro intento hablado en emulador falla. No requiere pronunciar una frase exacta.
+Inspección: capture_audio en modo pc recibe device, pero sd.rec no lo usa;
+TONTO_AUDIO_DEVICE no permite seleccionar entrada en esa ruta actualmente.
+Hipótesis: ruta ALSA/default distinta de Chrome; no se declara causa confirmada.
 Próxima ejecución: conservar el contenedor y WAV hasta recuperar el detalle
 422; si es transcripción vacía, comprobar fuente de entrada y señal original
 antes de normalizar. Sin cambios de producto en esta actualización.

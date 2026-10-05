@@ -44,3 +44,12 @@ COMPOSE_FILE/PATH_SEPARATOR exportados se preservan. Selección Compose oculta
 solo en .env requiere export explícito del operador; no se lee el archivo de
 secretos para descubrirla. Pruebas cubren archivos personalizados con espacios.
 Micrófono/TTS siguen en validación; no equivalen al arranque de ventana.
+## Diagnóstico adicional P-107-12
+
+Arranque y dos turnos texto/TTS físicos validados; voz sigue FALLIDA por
+transcripción vacía (cuerpo HTTP 422 confirmado). Mismo micrófono funciona en
+Chrome. Modo PC ignora el argumento device al llamar sd.rec.
+Propuesta pendiente de aprobación: respetar selección explícita de entrada
+en modo PC, manteniendo default si no está configurada; probar dispositivo
+DMIC del equipo sin cambiar volumen/permisos ni añadir dependencias.
+No aceptar causa raíz ni audio físico hasta obtener turnos hablados completos.
