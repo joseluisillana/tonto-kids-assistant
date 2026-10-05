@@ -82,3 +82,46 @@
   1. En lugar de generar imágenes abstractas con GenAI, capturar la interfaz Kivy real ya implementada. Ejecutar el código en un entorno aislado con `xvfb` para obtener capturas de los distintos estados de la cara (`Idle`, `Speaking`, `Listening`, etc.) y guardarlas en `docs/assets/` como referencia final.
   2. Implementar la infraestructura de `ui-emulator` en el `docker-compose.yml` local.
   3. Ejecutar y testear `client/touch_ui.py` en este entorno Docker.
+
+## 2026-10-05 — Cobertura de tests para la UI Kivy
+
+Tras el merge de la Issue #84 en `main`, se detectó que la suite de CI no cubría ningún
+código de la UI gráfica (`client/tonto_face.py`, `client/touch_ui.py`).
+
+**Estado:** Implementado y validado localmente en
+`feature/kivy-ui-testing-coverage`. Tracking: #105, Part of #81.
+
+La implementación heredada estaba sin commit y sustituía Kivy por mocks; varios
+tests asignaban los valores que luego comprobaban y no ejecutaban constructores.
+El borrador asumía un proveedor `headless` que no existe en la instalación
+Kivy 2.3.0 inspeccionada. Se corrigieron la spec y su plan antes del cierre.
+
+- Añadidos 24 tests de widgets Kivy reales: constructores/canvas, cinco estados,
+  destinos ERROR/SPEAKING, cancelación de eventos, configuración de backend,
+  bindings, guards, éxito/error, retorno a IDLE y delegación de texto/audio.
+- Audio, HTTP y ejecución de workers se simulan en su punto de uso; Kivy y sus
+  animaciones no se sustituyen. Clock procesa callbacks y animaciones.
+- `test ui` usa `ui-emulator`, SDL2, Mesa software y Xvfb. El socket X11 queda en
+  un volumen temporal, con permisos 1777 preparados en el Dockerfile. Un padre
+  Bash evita el bloqueo de la señal de arranque de xvfb-run como PID 1.
+- Retirado el hook global Kivy de conftest. `test python` excluye los dos módulos
+  gráficos y `test all` ejecuta python → ui → web, como ya invoca CI.
+- Actualizados spec/plan, comandos de README y resúmenes de estado de roadmap y
+  specs. Sin nuevas dependencias ni cambios de código de producto.
+
+**Validación (2026-10-05):**
+
+- `./tonto.sh test ui`: 24 tests pasan, exit 0.
+- `./tonto.sh test all`: sintaxis Python correcta, 78 tests Python + 24 tests UI
+  pasan y suite web pasa, exit 0.
+- `./tonto.sh build web`: typecheck y build Vite pasan, exit 0.
+- `bash -n tonto.sh` y `git diff --check`: pasan.
+
+Persisten avisos de deprecación de Starlette/httpx e imghdr de Kivy; no se
+introdujeron dependencias para resolverlos. La validación con display virtual
+no demuestra funcionamiento táctil/OpenGL ES en Raspberry: Fase 7 (#88) sigue
+pendiente. La emulación y los assets de Fase 3 ya están integrados vía PR #104,
+superando los pendientes de la entrada anterior del diario.
+
+**Spec:** `specs/kivy-ui-testing-coverage.md`.
+**Plan:** `docs/plans/kivy-ui-testing-coverage-plan.md`.

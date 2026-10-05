@@ -326,17 +326,27 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 
 Usa estos comandos en vez de instalar dependencias o lanzar herramientas a mano:
 
-```powershell
-.\scripts\setup-dev.ps1
-.\scripts\dev.ps1 -Service backend
-.\scripts\dev.ps1 -Service backend -AllowLan
-.\scripts\dev.ps1 -Service web
-.\scripts\dev.ps1 -Service all
-.\scripts\test.ps1 -Target all
-.\scripts\build.ps1 -Target all
-.\scripts\export-docs-for-notebooklm.ps1
-.\scripts\install-git-hooks.ps1
+```bash
+./tonto.sh setup
+./tonto.sh dev backend
+./tonto.sh dev web
+./tonto.sh dev ui
+./tonto.sh dev all
+./tonto.sh test python
+./tonto.sh test ui
+./tonto.sh test web
+./tonto.sh test all
+./tonto.sh build all
+./scripts/export-docs-for-notebooklm.sh
+./scripts/install-git-hooks.sh
 ```
+
+`test ui` construye la imagen `ui-emulator` y ejecuta widgets Kivy reales con
+SDL2 y Xvfb, sin pantalla física ni servidor X del host. Usa renderizado por
+software y un socket X11 temporal aislado. `test all` ejecuta Python, UI y web;
+las pruebas UI no capturan audio ni llaman al backend. Requiere ejecutar
+`setup` primero para preparar el volumen de dependencias. La prueba táctil y
+kiosk en Raspberry sigue siendo una validación separada.
 
 En entornos Windows, Python usa siempre el entorno virtual local `.venv/`. En Linux/Docker (vía `tonto.sh`), el `.venv` local sirve únicamente para alimentar el autocompletado del IDE, mientras que Docker maneja y aísla las dependencias reales del contenedor en un volumen propio (`backend-venv`). Las dependencias web viven en `web/node_modules/`. No instales paquetes Python o npm globales para trabajar en el MVP.
 

@@ -2,6 +2,13 @@
 
 ## Visión General
 
+**Estado actual (2026-10-05):** el MVP está cerrado desde 2026-06-18. El trabajo
+activo es la UI táctil post-MVP definida en `specs/raspberry-touch-ui.md`.
+La cobertura automatizada de Kivy se implementa en
+`specs/kivy-ui-testing-coverage.md`, con plan en
+`docs/plans/kivy-ui-testing-coverage-plan.md` e issue #105. Usa widgets reales
+en Docker con SDL2/Xvfb; la validación física y kiosk siguen en #88.
+
 Sistema educativo de IA física para niños.
 
 El primer loop mínimo ya quedó validado en las semanas 1 y 2:
@@ -10,7 +17,7 @@ El primer loop mínimo ya quedó validado en las semanas 1 y 2:
 texto manual -> backend -> OpenAI -> respuesta -> TTS local en Raspberry
 ```
 
-El foco activo de la semana 3 es preparar y validar el primer pipeline de voz real:
+El foco de la semana 3 fue preparar y validar el primer pipeline de voz real:
 
 ```text
 voz -> captura Raspberry -> STT backend -> /chat -> respuesta -> TTS local en Raspberry
@@ -156,4 +163,6 @@ a `.cache/pip` y `.cache/npm` dentro del workspace, igual que
 
 - `specs/parallel-agent-workflow.md`: define el patrón de trabajo por unidad coherente, rama corta, PR pequeña y worktree dedicado cuando hay agentes o tareas en paralelo.
 - `docs/plans/parallel-agent-workflow.md`: plan de implementación documental de ese workflow.
-- `specs/kivy-ui-docker-emulation.md`: Emulación en Docker de la Interfaz Táctil (Draft).
+- `specs/kivy-ui-docker-emulation.md`: Emulación en Docker de la Interfaz Táctil (Implemented).
+- `specs/kivy-ui-testing-coverage.md`: pruebas de widgets Kivy reales bajo Xvfb,
+  integradas en `./tonto.sh test all`.

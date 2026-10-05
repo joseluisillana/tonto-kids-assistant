@@ -1,117 +1,74 @@
 # Kivy UI Testing Coverage
 
-**Status:** Draft
+**Status:** Implemented
 **Date:** 2026-10-05
 **Branch:** `feature/kivy-ui-testing-coverage`
+**Tracking:** #105, part of #81
 
-## 1. Contexto
+## Contexto y objetivo
 
-Tras la implementación de la interfaz táctil Kivy (Issue #84, Fases 3-6) y su merge en `main`, la suite de tests del proyecto no incluye ninguna cobertura sobre el código de la UI gráfica:
+La UI táctil post-MVP ya implementa `client/tonto_face.py` y
+`client/touch_ui.py`, pero CI no ejercitaba esos módulos. Añadir pruebas de
+widgets reales, estados y callbacks sin pantalla física, micrófono, llamadas
+HTTP ni reproducción de voz. Mantener intacto el código de producto.
 
-- `client/tonto_face.py` — Componente de cara animada (`TontoFace`, `FaceState`, transiciones de estado)
-- `client/touch_ui.py` — Aplicación Kivy táctil (`TontoTouchUI`, `ProgressButton`, callbacks de interacción)
+## Alcance
 
-La ausencia de tests sobre estos módulos es una brecha de estabilidad: cualquier regresión en la lógica de estados o en los callbacks de la UI pasaría desapercibida en CI.
+- `tests/test_tonto_face.py`: constantes, constructor y canvas reales, los cinco
+  estados, repetición de IDLE, destino de animaciones ERROR/SPEAKING y cancelación
+  de eventos al salir de SPEAKING.
+- `tests/test_touch_ui.py`: construcción real de ProgressButton/TontoTouchUI,
+  configuración de backend, modo texto, eventos enlazados a botones/input,
+  protección frente a entradas vacías o estado ocupado, éxito/error/reset,
+  reproducción delegada y contratos de llamadas de texto/audio.
+- `tonto.sh test ui`, integración en `test all`, ayuda y evidencia documental.
+- No comparar píxeles ni validar hardware, kiosk o proveedores reales. La Fase 7
+  sigue siendo un trabajo separado (#88).
 
-El reto técnico es que ambos módulos importan Kivy al nivel de módulo, lo que impide un `import` directo en un entorno sin display. La solución es utilizar el modo headless de Kivy (`KIVY_WINDOW=headless`, `KIVY_NO_ENV_CONFIG=1`) que permite levantar el runtime sin SDL2/OpenGL.
+## Entorno reproducible
 
-## 2. Objetivos
+Ejecutar Kivy 2.3.0 real en `ui-emulator` mediante SDL2 y Xvfb. La instalación
+actual no incluye un proveedor de ventana `headless`; esa premisa del borrador
+se descarta. El Dockerfile existente ya instala Xvfb y sus dependencias.
 
-1. Añadir una suite de tests unitarios para `client/tonto_face.py` que valide la lógica de estados sin display.
-2. Añadir tests unitarios básicos para `client/touch_ui.py` que validen la construcción del widget y los callbacks.
-3. Extender `tonto.sh test` con un target `ui` que ejecute estos tests dentro del contenedor `ui-emulator` (que ya tiene las dependencias Kivy instaladas).
-4. Incluir el target `ui` dentro de `./tonto.sh test all` para que la validación completa cubra backend + web + UI.
+`./tonto.sh test ui` debe:
 
-## 3. Alcance
+1. Ejecutar pytest con `.venv/bin/python` del volumen Docker existente.
+2. Usar `xvfb-run -a` y un volumen temporal `/tmp/.X11-unix`, sustituyendo el
+   socket del host solo para esta ejecución. No requiere DISPLAY del host.
+3. Establecer KIVY_WINDOW=sdl2, SDL_VIDEODRIVER=x11,
+   LIBGL_ALWAYS_SOFTWARE=1 y SDL_AUDIODRIVER=dummy.
+4. Usar KIVY_NO_ARGS=1 para que Kivy no interprete argumentos de pytest,
+   KIVY_HOME=/tmp/.kivy-test, KIVY_CLIPBOARD=dummy y XDG_CACHE_HOME=/tmp/.cache.
+5. Desactivar bytecode y caché de pytest. No configurar Kivy globalmente en
+   `tests/conftest.py` ni simular módulos Kivy mediante sys.modules.
 
-**Incluido:**
+El Dockerfile prepara `/tmp/.X11-unix` con permisos 1777 para el volumen
+temporal. El target reconstruye la imagen cuando cambia el Dockerfile y usa un
+wrapper Bash como padre de xvfb-run, conservando el código de salida de pytest.
+Ejecutar xvfb-run directamente como PID 1 bloqueó su señal de arranque durante
+la validación; no debe eliminarse ese wrapper sin verificar este recorrido.
 
-- `tests/test_tonto_face.py` — Tests de `FaceState` y `TontoFace.set_state()` en modo headless.
-- `tests/test_touch_ui.py` — Tests de construcción del `TontoTouchUI` y `ProgressButton` en modo headless.
-- Actualización de `tonto.sh` para añadir `test ui` y ampliar `test all`.
-- Actualización del help text de `tonto.sh`.
-- Actualización del diario del proyecto.
+Los constructores deben ejecutarse normalmente: no sustituirlos por `__new__`
+ni reproducir la lógica del producto dentro del test. Se simulan operaciones
+externas en `client.touch_ui`, donde se resuelven sus imports, y los workers
+para que no ejecuten audio/red. Los callbacks `mainthread` se procesan con
+`Clock.tick()`. Las animaciones reales avanzan con el reloj hasta sus valores
+destino, con plazo acotado de dos segundos; no asumir que el destino es visible
+inmediatamente tras `set_state`. Limpiar eventos y animaciones entre tests.
 
-**Excluido:**
+## Integración y aceptación
 
-- Tests de integración end-to-end con display real (pertenecen a Fase 7 / Kiosk).
-- Tests de animación visual/píxel (no son unitarios; requieren renderizado real).
-- Cambios en el código de producto (`tonto_face.py`, `touch_ui.py`).
-- Cambios en el Dockerfile o docker-compose más allá de lo estrictamente necesario para ejecutar los tests.
+- `test python` conserva sus comprobaciones de sintaxis y suite existente,
+  excluyendo únicamente los dos módulos gráficos.
+- `test all` ejecuta python → ui → web. CI ya utiliza este comando.
+- `test ui` devuelve 0 con todos los tests reales pasando sin pantalla física.
+- `test all` devuelve 0 y backend/web siguen pasando.
+- La ayuda y documentación describen el entorno y sus límites.
+- No añadir dependencias, modificar arquitectura ni tocar código de producto.
 
-## 4. Comportamiento esperado de los tests
+## Riesgos
 
-### 4.1 `tests/test_tonto_face.py`
-
-El entorno headless se configura mediante variables de entorno antes de cualquier import de Kivy.
-Esto se centraliza en `tests/conftest.py` como un fixture de sesión.
-
-Tests:
-
-| Test | Qué verifica |
-|---|---|
-| `test_face_state_constants` | `FaceState` expone exactamente las 5 constantes: `IDLE`, `LISTENING`, `THINKING`, `SPEAKING`, `ERROR` |
-| `test_initial_state_is_idle` | Al construir `TontoFace`, `current_state` es `FaceState.IDLE` |
-| `test_set_state_changes_current_state` | `set_state(s)` actualiza `current_state` para cada uno de los 5 estados |
-| `test_set_state_idle_idempotent` | Llamar `set_state(IDLE)` dos veces seguidas no lanza excepción |
-| `test_set_state_error_properties` | Tras `set_state(ERROR)`, el widget tiene `eyebrow_angle == 40` |
-| `test_set_state_speaking_properties` | Tras `set_state(SPEAKING)`, el widget tiene `mouth_oval_opacity == ... ` (animación iniciada) |
-
-### 4.2 `tests/test_touch_ui.py`
-
-| Test | Qué verifica |
-|---|---|
-| `test_progress_button_constructs` | `ProgressButton` se construye sin lanzar excepciones |
-| `test_touch_ui_constructs` | `TontoTouchUI` se construye con las variables de entorno de backend correctas |
-| `test_touch_ui_backend_url_from_env` | `TONTO_BACKEND_URL` se lee correctamente en el constructor |
-| `test_touch_ui_default_backend_url` | Sin `TONTO_BACKEND_URL`, el valor por defecto es `http://127.0.0.1:8000` |
-
-### 4.3 `tonto.sh test ui`
-
-```bash
-./tonto.sh test ui
-```
-
-Ejecutará dentro del contenedor `ui-emulator`:
-
-```bash
-KIVY_WINDOW=headless KIVY_NO_ENV_CONFIG=1 KIVY_HOME=/tmp/.kivy \
-  .venv/bin/python -m pytest tests/test_tonto_face.py tests/test_touch_ui.py -v
-```
-
-### 4.4 `tonto.sh test all`
-
-Pasará a ejecutar secuencialmente: `python` → `ui` → `web`.
-
-## 5. Estrategia de entorno headless
-
-El fixture de sesión en `conftest.py` establecerá las variables de entorno **antes** de que pytest cargue cualquier módulo de test:
-
-```python
-# tests/conftest.py (añadir al existente)
-import os
-
-def pytest_configure(config):
-    """Configure Kivy headless mode before any module import."""
-    os.environ.setdefault("KIVY_WINDOW", "headless")
-    os.environ.setdefault("KIVY_NO_ENV_CONFIG", "1")
-    os.environ.setdefault("KIVY_HOME", "/tmp/.kivy-test")
-```
-
-Esto es suficiente para que el runtime Kivy se inicialice sin SDL2 en el contenedor `ui-emulator`.
-
-## 6. Criterios de Aceptación (DoD)
-
-1. `./tonto.sh test ui` ejecuta correctamente dentro del contenedor `ui-emulator` y retorna código 0.
-2. Los tests de `test_tonto_face.py` y `test_touch_ui.py` pasan sin requerir display real.
-3. `./tonto.sh test all` incluye la ejecución de los tests de UI y retorna código 0 si todos pasan.
-4. El help de `tonto.sh` refleja el nuevo target `ui`.
-5. Ningún test de backend ni web se ve afectado.
-
-## 7. Riesgos
-
-| Riesgo | Mitigación |
-|---|---|
-| Kivy headless no disponible en imagen `backend` | Los tests de UI se ejecutan exclusivamente en el contenedor `ui-emulator` que ya tiene Kivy |
-| `conftest.py` afecta a tests de backend | Las variables de entorno solo las necesita Kivy; son inocuas para FastAPI/pytest estándar |
-| Animaciones de Kivy asíncronas dificultan la aserción de propiedades | Los tests comprueban el estado **justo después** de `set_state()`, antes de que el `Clock` avance |
+La validación con Mesa por software no sustituye la prueba de OpenGL ES/touch en
+Raspberry. El volumen de dependencias requiere `./tonto.sh setup` en un checkout
+limpio. Xvfb debe aislarse de los sockets del host para evitar colisiones.
