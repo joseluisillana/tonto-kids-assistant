@@ -78,3 +78,27 @@ La precisión de transcripción de OpenAI Whisper cae drásticamente con audios 
 
 ### 4. Precisión de Idioma (LLM)
 Las instrucciones del sistema de TONTO (`TONTO_INSTRUCTIONS`) fueron traducidas íntegramente al español para evitar desviaciones del LLM en casos donde Whisper entregue transcripciones dudosas (como toses o ruido ambiente mal interpretado como inglés).
+
+## Diseños y Estados Visuales (Fase 3)
+
+El diseño visual de TONTO se renderiza vectorialmente a través de Kivy para garantizar fluidez sin depender de assets pre-renderizados. A continuación, las capturas del diseño resultante ejecutado en el emulador de Docker para los 5 estados principales de interacción:
+
+**Estado: Idle (Reposo)**
+*Cara neutral y parpadeos aleatorios.*
+![Idle](../docs/assets/ui_concept_idle.png)
+
+**Estado: Listening (Escuchando)**
+*Ojos y cejas levantadas prestando atención.*
+![Listening](../docs/assets/ui_concept_listening.png)
+
+**Estado: Thinking (Pensando)**
+*Ojos moviéndose de lado a lado asimétricamente.*
+![Thinking](../docs/assets/ui_concept_thinking.png)
+
+**Estado: Speaking (Hablando)**
+*Boca abierta pulsando en altura y cejas amables.*
+![Speaking](../docs/assets/ui_concept_speaking.png)
+
+**Estado: Error**
+*Ojos pequeños, cejas fruncidas y boca triste en caso de fallo de red o hardware.*
+![Error](../docs/assets/ui_concept_error.png)
