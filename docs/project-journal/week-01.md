@@ -12,7 +12,7 @@ Establish the project foundation and keep the first MVP slice narrow: a minimal 
 - Backend MVP language is Python/FastAPI.
 - Go is deferred and excluded from active MVP CI gates.
 - React + TypeScript + Vite web validation client exists for backend testing and demo support.
-- Official PowerShell scripts exist for setup, dev, tests, and builds.
+- Official Bash scripts exist for setup, dev, tests, and builds.
 
 ## Key Decisions
 

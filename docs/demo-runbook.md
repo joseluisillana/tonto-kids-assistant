@@ -28,7 +28,7 @@ The scripts inherit environment variables from the shell that starts them. No sc
 
 ### OpenAI backend
 
-In the backend PowerShell terminal:
+In the backend Bash terminal:
 
 ```powershell
 $env:TONTO_INFERENCE_PROVIDER = "openai"
@@ -42,7 +42,7 @@ OpenAI is also the default when `TONTO_INFERENCE_PROVIDER` is unset.
 
 ### DevExpert backend
 
-In the backend PowerShell terminal:
+In the backend Bash terminal:
 
 ```powershell
 $env:TONTO_INFERENCE_PROVIDER = "devexpert"

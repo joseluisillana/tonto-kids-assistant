@@ -18,7 +18,7 @@ Use this checklist with `docs/demo-runbook.md`. The runbook explains the full op
 - [ ] Repository is available on Raspberry at `~/tonto-kids-assistant` or `TONTO_PI_REPO`.
 - [ ] Python virtual environment exists on Windows and Raspberry.
 - [ ] Raspberry has `arecord`, `aplay`, `espeak`, `curl`, `git`, and `.venv/bin/python`.
-- [ ] Required provider API key is configured in the backend PowerShell terminal.
+- [ ] Required provider API key is configured in the backend Bash terminal.
 - [ ] No real API keys, tokens, passwords, or SSH private keys are printed, recorded, or committed.
 
 ## 2. Choose Provider
@@ -27,7 +27,7 @@ Use OpenAI as the primary presentation provider unless there is a specific reaso
 
 ### OpenAI
 
-In the backend PowerShell terminal:
+In the backend Bash terminal:
 
 ```powershell
 $env:TONTO_INFERENCE_PROVIDER = "openai"
@@ -43,7 +43,7 @@ Expected use:
 
 ### DevExpert
 
-In the backend PowerShell terminal:
+In the backend Bash terminal:
 
 ```powershell
 $env:TONTO_INFERENCE_PROVIDER = "devexpert"
@@ -61,7 +61,7 @@ Expected use:
 
 ## 3. Backend Verification
 
-Start the backend with LAN access from the configured backend PowerShell terminal:
+Start the backend with LAN access from the configured backend Bash terminal:
 
 ```powershell
 .\scripts\dev.ps1 -Service backend -AllowLan
@@ -69,7 +69,7 @@ Start the backend with LAN access from the configured backend PowerShell termina
 
 Keep the backend terminal open.
 
-Verify local health from another PowerShell terminal:
+Verify local health from another Bash terminal:
 
 ```powershell
 Invoke-RestMethod -Uri "http://127.0.0.1:8000/health" -Method Get

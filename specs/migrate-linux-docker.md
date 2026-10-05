@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Sustituir la totalidad de los scripts de operación y de asistentes de IA actuales basados en PowerShell (`*.ps1`) por alternativas basadas en Bash. Toda la ejecución de las operaciones de desarrollo se realizará a través de contenedores Docker, sin instalar dependencias locales (Node, Python) en el host, garantizando que el proyecto sea ejecutable desde cualquier OS que cuente con Docker y Bash.
+Sustituir la totalidad de los scripts de operación y de asistentes de IA actuales basados en Bash (`*.ps1`) por alternativas basadas en Bash. Toda la ejecución de las operaciones de desarrollo se realizará a través de contenedores Docker, sin instalar dependencias locales (Node, Python) en el host, garantizando que el proyecto sea ejecutable desde cualquier OS que cuente con Docker y Bash.
 
 ## Estado actual
 
@@ -17,12 +17,12 @@ Sustituir la totalidad de los scripts de operación y de asistentes de IA actual
    El `docker-compose.yml` mapeará el código fuente del host (`./backend` y `./web`) dentro de los contenedores para aplicar cambios de código al instante.
 3. **Manejo de Secretos y Configuración:** 
    Se empleará un fichero `.env` en la raíz cargado por `docker-compose`.
-4. **Erradicación de PowerShell (Estrategia Paralela):** 
-   Ningún script de PowerShell (`*.ps1`) permanecerá en la versión final del proyecto, **PERO** durante la implementación se construirán las alternativas de Bash en paralelo. Solo cuando se haya validado su funcionamiento al 100%, se procederá con la limpieza final de los artefactos legacy de Windows 11 / PowerShell.
+4. **Erradicación de Bash (Estrategia Paralela):** 
+   Ningún script de Bash (`*.ps1`) permanecerá en la versión final del proyecto, **PERO** durante la implementación se construirán las alternativas de Bash en paralelo. Solo cuando se haya validado su funcionamiento al 100%, se procederá con la limpieza final de los artefactos legacy de Windows 11 / Bash.
 5. **Integración Continua (GitHub Actions) y Hooks:** 
-   El workflow de CI actual (`ci.yml`), que está acoplado a PowerShell, será migrado para usar la nueva infraestructura basada en Bash y Docker. Los hooks de git (`pre-commit`) se reescribirán para invocar los nuevos scripts `.sh` sin depender de `pwsh`.
+   El workflow de CI actual (`ci.yml`), que está acoplado a Bash, será migrado para usar la nueva infraestructura basada en Bash y Docker. Los hooks de git (`pre-commit`) se reescribirán para invocar los nuevos scripts `.sh` sin depender de `pwsh`.
 6. **Actualización de Documentación Agéntica y General:** 
-   Todas las referencias en `AGENTS.md`, `README.md`, planes y cualquier otra documentación deben ser actualizadas para que los agentes y humanos sepan usar los nuevos scripts (`tonto.sh`, etc.) y descarten por completo la antigua vía PowerShell.
+   Todas las referencias en `AGENTS.md`, `README.md`, planes y cualquier otra documentación deben ser actualizadas para que los agentes y humanos sepan usar los nuevos scripts (`tonto.sh`, etc.) y descarten por completo la antigua vía Bash.
 
 ## Análisis y Contexto del Proyecto
 
@@ -38,7 +38,7 @@ TONTO es un asistente físico educativo diseñado para niños. Captura voz, la t
 
 ```mermaid
 flowchart TD
-    subgraph Host Actual (Dependiente de PowerShell)
+    subgraph Host Actual (Dependiente de Bash)
         A1[setup-dev.ps1 / dev.ps1] -->|Nativo| A2(Host Processes)
         B1[ci.yml / pre-commit] -->|Llama pwsh| B2(Host Processes)
         C1[agent-*.ps1 / export-*.ps1] -->|Herramientas| C2(Host Processes)

@@ -41,7 +41,7 @@ spikes/           # Pruebas de concepto experimentales
 shared/           # Modelos compartidos (si se necesitan)
 docs/             # Documentación, specs, journal, planes
 specs/            # Especificaciones detalladas
-scripts/          # Scripts PowerShell de automatización
+scripts/          # Scripts Bash de automatización
 tests/            # Tests Python
 ```
 
@@ -82,7 +82,7 @@ tests/            # Tests Python
 - Cliente web de validación con captura de micrófono y reproducción de voz
 - Indicador visual de escucha en terminal (Raspberry) y en UI (web)
 - Script de arranque de demo en Raspberry
-- Scripts PowerShell para setup, dev, test, build
+- Scripts Bash para setup, dev, test, build
 - Agent Capability Pack para operaciones de backend y SSH a Raspberry
 - Tests Python y web
 - Documentación completa: specs, arquitectura, roadmap, journal semanal, planes
@@ -228,7 +228,7 @@ Toda spec nueva o modificada materialmente sigue este ciclo:
 - Python: `.venv/` local al repo, nunca global
 - Web: `node_modules/` dentro de `web/`, nunca global
 - Cachés: `.cache/` local, no depender de cachés de perfil de usuario
-- Windows: PowerShell scripts oficiales
+- Windows: Bash scripts oficiales
 - Raspberry: bash scripts
 
 ---

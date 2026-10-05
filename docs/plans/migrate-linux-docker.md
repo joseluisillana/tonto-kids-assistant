@@ -19,10 +19,10 @@
 
 **FASE 3: Actualización de Documentación (Crítico para Agentes)**
 - Actualizar `AGENTS.md` para instruir el uso exclusivo de `tonto.sh` y los nuevos comandos Bash (y contenedores) en sustitución del entorno Windows nativo.
-- Ajustar referencias en `README.md` y otras especificaciones donde se mencionen comandos de PowerShell.
+- Ajustar referencias en `README.md` y otras especificaciones donde se mencionen comandos de Bash.
 
 **FASE 4: Validación General**
-- Comprobar localmente que `./tonto.sh dev all`, `tonto.sh test all` y demás scripts auxiliares funcionan 100% como sus homólogos de PowerShell.
+- Comprobar localmente que `./tonto.sh dev all`, `tonto.sh test all` y demás scripts auxiliares funcionan 100% como sus homólogos de Bash.
 
 **FASE 5: Limpieza de Artefactos (Último paso, sin excepciones)**
 - Una vez completado y validado todo lo anterior, proceder a eliminar permanentemente del repositorio todos los ficheros `*.ps1`.
