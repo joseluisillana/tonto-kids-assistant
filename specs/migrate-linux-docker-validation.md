@@ -14,7 +14,7 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | --- | --- | --- |
 | 1. Backend + web | COMPLETADO | `./tonto.sh dev all`: Uvicorn 8000 y Vite 7.3.3 en 443 ms. Health `{"status":"ok"}` HTTP 200; web HEAD HTTP 200. `/chat` real HTTP 200, 2.244706 s, `{"success":true,"response_text":"¡Ok! ¿Tienes alguna pregunta?"}`. Cuerpo `{}` devuelve HTTP 422 con campos session_id/message obligatorios. |
 | 2. Limpieza básica | COMPLETADO | Fallo inicial conservado en P-107-01; reparación fix/docker-cleanup revalidada: down retira backend/web, dos emuladores previos y red, exit 0; sin contenedores/redes del proyecto y puertos libres. |
-| 3. Cliente host + UI Linux | FALLIDO | Arranque reparado y audio físico validado: operador confirma tres turnos completos con DMIC hw:0,7, entrada PortAudio 5. P-107-12 resuelto para esa selección; sigue abierto P-107-13 (captura incompatible deja ESCUCHANDO). Demora del volumen del sistema registrada como P-107-14. |
+| 3. Cliente host + UI Linux | COMPLETADO | Arranque oficial con TONTO_AUDIO_DEVICE=5, tres turnos físicos aceptados y backend HTTP 200; captura incompatible muestra ERROR y vuelve a reposo tras 4 s. P-107-10/11/12/13 resueltos. P-107-14 aplazado en #114; P-107-15 retirado como bloqueo por operador. Limpieza oficial exit 0, sin contenedores/redes, dependencias conservadas. |
 | 4. Limpieza host | COMPLETADO | Tras reparación: segunda llamada down exit 0 sin residuales; nuevo arranque backend/web HTTP 200 y stop retira servicios, one-off de control y red. Histórico P-107-01. |
 | 5. Raspberry real | COMPLETADO | Reintento por IP 192.168.1.183 con identidad SSH verificada: preflight exit 0, health LAN OK, USB disponible, 3/3 turnos reales con transcript correcto, continuidad y TTS. Cliente exit 0; backend 3 POST /chat/audio HTTP 200. Operador confirma «si, todo correcto». Detalle en Revalidación Raspberry encendida; mDNS sigue fallando P-107-03. |
 | 6. Limpieza Raspberry | COMPLETADO | Cliente/audio Raspberry ya terminaban y LAN health tras parada fallaba correctamente (curl 7). Reparación del bloqueo Docker revalidada: elimina también emuladores y red, sin residuales ni puertos; conserva dependencias. No se repiten voz ni UI física para este cambio CLI. Histórico P-107-01. |
@@ -22,9 +22,9 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | 8. Auxiliares/docs | COMPLETADO | Helpers previamente validados; guías operativas README/demo/SSH/workflow y planes vigentes actualizados a Bash/Docker/.env. bash -n y git diff --check pasan. demo-touch físico sigue excluido en #88. P-107-04 resuelto. |
 | 9. CI remoto | COMPLETADO | Push a rama documental. Run 37302071237 sobre SHA 2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2: completed/success; setup, checks y build success. Cambios posteriores solo añaden evidencias documentales; consultar checks de PR para su SHA final. |
 
-Pendientes vigentes: recuperación de errores de captura P-107-13 y evaluación
-de demora del volumen P-107-14; documentar selección reproducible del micrófono
-sin depender del override temporal. Audio físico del emulador validado.
+Pendientes vigentes: CI del SHA final y revisión/merge de PR #115 y #108.
+P-107-14 aplazado al backlog #114. Selección de entrada reproducible documentada;
+audio físico y recuperación del emulador validados.
 Smoke DevExpert real: NO APLICA por decisión D025 (deprecado, no operarlo).
 Chrome: tres turnos/audibilidad/contador/auto-stop aprobados por el operador;
 mDNS y preflight Raspberry por nombre revalidados. Raspberry voz/audibilidad, setup, caches, auditorías,
@@ -726,6 +726,13 @@ HTTP 200 posteriores; no hay correlación que explique el primer intento.
 Log UI no muestra excepción nueva de worker. Solicitar estado exacto del primer
 fallo y confirmación de duración/respuesta/reset de los siguientes turnos.
 Sin nueva reparación durante esta validación. PR #115 draft contra #108.
+Decisión del operador: ignorar anomalía del primer intento porque el host sufrió
+intermitencia de red que pudo provocarla. P-107-15 RETIRADO COMO BLOQUEO por
+decisión humana; causa de red posible, no demostrada. Se conserva histórico.
+Se acepta confirmación de los tres turnos restantes y evidencia HTTP 200.
+./tonto.sh down exit 0: retira UI/backend/web y red, conserva dependencias.
+Punto 3 COMPLETADO. CI previo tiene un check pass y otro pending; se debe
+verificar SHA final antes del merge, no se declara CI final aprobado todavía.
 Próxima ejecución: conservar el contenedor y WAV hasta recuperar el detalle
 422; si es transcripción vacía, comprobar fuente de entrada y señal original
 antes de normalizar. Sin cambios de producto en esta actualización.

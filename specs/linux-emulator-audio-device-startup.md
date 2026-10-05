@@ -63,3 +63,7 @@ Operador autoriza reparar P-107-13 y configuración reproducible: capturar
 PortAudioError al abrir/esperar captura y retornar fallo para ERROR y reset
 existente de cuatro segundos. Compose transmite TONTO_AUDIO_DEVICE exportado.
 P-107-14 se aplaza en #114 y docs/issues/emulator-system-volume-delay.md.
+Aceptación local completada: recuperación física ERROR/reset 4 s confirmada,
+arranque oficial con selección exportada y tres turnos aceptados; limpieza exit 0.
+Anomalía del primer intento retirada como bloqueo por el operador tras reportar
+intermitencia de red (causa posible). Pendiente CI del SHA final y revisión PR #115.

@@ -56,3 +56,7 @@ transmitir selección por Compose y documentar comando oficial. Ejecutar suites,
 build, prueba física con entrada incompatible (error y reset), reinicio con
 entrada compatible, tres turnos y limpieza; registrar CI final antes de merge.
 P-107-14 aplazado por operador: #114 enlaza documento local, fuera de este cierre.
+Ejecución local completada: error/reset físico, selección oficial, tres turnos y
+limpieza validados. P-107-15 retirado como bloqueo por operador, red posible.
+Pendiente comprobar CI del SHA final, preparar PR #115 para revisión y merge
+solo con autorización del operador. Mantener #107 abierta hasta integración final.
