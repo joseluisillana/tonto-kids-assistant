@@ -483,3 +483,9 @@ tras npm ci coincide con entorno limpio: 7 (2 low, 1 moderate, 4 high), exit 1;
 producción omit-dev 0, exit 0. Se conserva la observación previa; no se atribuye
 su diferencia a una causa demostrada. Triage propuesto en
 `docs/web-dependency-audit-triage.md`. Punto 7 continúa FALLIDO por P-107-07.
+
+CI de reparación sobre c403ded: ambos Project checks COMPLETADO/SUCCESS.
+Push: https://github.com/joseluisillana/tonto-kids-assistant/actions/runs/37322280811
+(1m31s). PR #112: https://github.com/joseluisillana/tonto-kids-assistant/actions/runs/37322356646
+(2m8s). Setup/test/build pasan en runner limpio. El commit posterior solo añade
+esta evidencia; consultar checks de #112 para su SHA documental final.
