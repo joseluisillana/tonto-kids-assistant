@@ -465,14 +465,10 @@ widgets reales en Docker/Xvfb al comando `./tonto.sh test all`, con spec y plan
 `kivy-ui-testing-coverage`. La fase 7 (#88), kiosk y validación final en
 Raspberry, permanece pendiente y requiere evidencia de hardware separada.
 
-## Validación post-migración — estado 2026-10-05
+## Validación post-migración — completada 2026-10-06
 
-#107: los nueve puntos de validación completados en la rama de #115, con
-voz web/Raspberry/emulador, recuperación de captura y limpieza aceptadas.
-PR #115 lista para revisión, sin borrador; pendiente integración en #108
-y comprobación global antes de main. Volumen del emulador aplazado en #114;
-protección de secretos #110 y touch físico #88 mantienen seguimiento separado.
-Pasada final integrada7117313 completada: nueve puntos y voz física revalidados,
-setup/tests/build/limpieza y CI c12f377 success. OK de migración en alcance
-acordado, pendiente revisión/merge #108. #115 ya integrada; los estados previos
-de esta sección son históricos. mDNS requiere acceso IP verificado en esta LAN.
+#107: nueve puntos y voz física Chrome/Raspberry/emulador aceptados sobre7117313;
+setup/tests/build/limpieza y CI63d4099 success. Integración PR #108, con #115
+ya incorporada. OK de migración en alcance acordado; sin trabajo funcional pendiente.
+Volumen #114 aplazado, secretos #110 y touch/kiosk #88 separados. mDNS requiere
+acceso IP con identidad SSH verificada en esta LAN. No se crea release/tag.

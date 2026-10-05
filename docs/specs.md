@@ -9,14 +9,12 @@ La cobertura automatizada de Kivy se implementa en
 `docs/plans/kivy-ui-testing-coverage-plan.md` e issue #105. Usa widgets reales
 en Docker con SDL2/Xvfb; la validación física y kiosk siguen en #88.
 
-La validación Linux/Docker #107 tiene nueve puntos completados en rama de
-PR #115, lista para revisión sin borrador y pendiente de integración en #108.
-Registro vigente: specs/migrate-linux-docker-validation.md. Volumen #114
-aplazado; no cambia el alcance físico de #88.
-Pasada final sobre código7117313: nueve puntos COMPLETADOS y CI c12f377
-success; #115 mergeada en #108. OK de migración en alcance validado,
-pendiente revisión/merge #108 en main. La matriz final del registro prevalece
-sobre los estados históricos anteriores.
+Validación Linux/Docker #107 COMPLETADA el 2026-10-06; integración PR #108.
+Código7117313: nueve puntos aceptados y CI63d4099 success, incluida voz física.
+Registro vigente: matriz final de specs/migrate-linux-docker-validation.md.
+OK de migración en alcance validado; #115 integrada. Limitaciones: IP verificada
+para Raspberry en esta LAN, volumen #114 aplazado, secretos #110 separados y
+touch/kiosk #88 excluido. No hay trabajo funcional pendiente en la spec de migración.
 
 Sistema educativo de IA física para niños.
 

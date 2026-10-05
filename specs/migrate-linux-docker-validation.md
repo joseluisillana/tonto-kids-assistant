@@ -22,8 +22,10 @@ Exclusiones vigentes: touch/kiosk físico #88; DevExpert NO APLICA D025.
 Volumen #114 aplazado por operador; secretos #110 seguimiento separado.
 Dictamen: OK DE MIGRACIÓN LINUX/DOCKER EN EL ALCANCE VALIDADO; nueve puntos
 COMPLETADOS, sin fallos de producto bloqueantes en la pasada final. CI aprobado.
-Falta revisión/merge #108 en main; no se crea release/tag. Mantener #107 abierta
-hasta integración. mDNS requiere IP verificada en esta LAN; #114 aplazado.
+Integración y cierre administrativo: PR #108 → main, issue #107 tras merge.
+No se crea release/tag. mDNS requiere IP verificada en esta LAN; #114 aplazado.
+Metadatos de spec/plan estabilizados para cierre; CI63d4099 success en
+runs37381170529 (1m38s) y37381176221 (1m42s). Sin cambios de producto.
 
 Preflight Raspberry por nombre vuelve a fallar: `Could not resolve hostname
 tonto-pi.local`, exit 255. Reaparición P-107-03, direccionamiento del entorno;

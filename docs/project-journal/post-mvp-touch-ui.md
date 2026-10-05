@@ -147,3 +147,11 @@ mDNS falla; IP con HostKeyAlias estricto valida identidad y pipeline. No se
 reparó código durante pasada. #114 aplazado, #88 excluido, DevExpert NO APLICA.
 CI c12f377 success (runs37380799527/37380807200). Nueve puntos COMPLETADOS:
 OK de migración en alcance validado, pendiente revisión/merge #108 en main.
+
+## 2026-10-06 — Preparación de cierre e integración #108
+
+Operador autoriza merge en main y cierre de #107. Metadatos de specs/planes,
+roadmap y resumen vigente estabilizados: COMPLETADOS, sin pendientes funcionales
+ni referencias vigentes a #115 como borrador. CI63d4099 success; confirmar
+checks del commit documental de metadatos antes de merge. Cerrar #107 después
+de integración, mantener #81/#88/#110/#114 abiertas. Sin cambios de comportamiento.

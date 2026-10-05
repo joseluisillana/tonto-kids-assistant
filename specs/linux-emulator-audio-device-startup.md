@@ -1,7 +1,8 @@
 # Arranque del emulador con audio físico Linux
 
-2026-10-05. Implementación y validación COMPLETADAS; PR #115 lista para revisión,
-sin borrador, pendiente de merge en #108. Part of #107, punto 3 COMPLETADO.
+Creada 2026-10-05; validación completada 2026-10-06.
+Estado: COMPLETADA. PR #115 mergeada en la rama de #108 (7117313).
+Tracking #107, punto 3 COMPLETADO; integración global #108.
 
 ## Estado vigente
 
@@ -11,7 +12,8 @@ correcta. 110 tests Python, 25 Kivy, web y build pasan. CI de código y evidenci
 09ef3b3 aprobado en runs 37375271391 y 37375276476; ambos Project checks success.
 P-107-14 aplazado en #114 con registro local; P-107-15 retirado como bloqueo
 por el operador. No queda implementación pendiente en esta reparación.
-Solo falta integración; #107 continúa abierta hasta cierre global de #108.
+La pasada integrada sobre 7117313 revalidó voz y limpieza; CI final63d4099 pasa.
+El cierre administrativo de #107 corresponde a la integración global de #108.
 Las secciones de diagnóstico posteriores conservan la secuencia histórica;
 sus pendientes intermedios quedan sustituidos por este estado vigente.
 

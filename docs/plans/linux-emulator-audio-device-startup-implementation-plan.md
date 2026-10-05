@@ -1,7 +1,7 @@
 # Plan P-107-10 — audio físico del emulador
 
-Estado: implementación y validación COMPLETADAS; pendiente de merge PR #115
-en #108. PR #115 abierta, sin borrador y sin conflictos al verificar.
+Estado: COMPLETADO. PR #115 mergeada en #108, commit7117313.
+Validación integrada y CI63d4099 aceptados; sin trabajo funcional pendiente.
 Spec linux-emulator-audio-device-startup.
 CI 09ef3b3 aprobado: runs 37375271391 y 37375276476. Esta reconciliación solo
 actualiza estados documentales; no modifica comportamiento de implementación.

@@ -1,21 +1,12 @@
 # Plan de validación integral post-migración
 
-Pasada final integrada sobre 7117313 ejecutada: puntos1–9 COMPLETADOS,
-voz Chrome/emulador/Raspberry y limpieza aceptados; CI c12f377 success.
-Dictamen OK de migración dentro del alcance, pendiente revisión/merge #108.
-Secuencia aplicada: matriz 1–9,
-arranque/API → limpieza → CLI/emulador/voz humana → limpieza → Raspberry
-preflight/voz humana → limpieza → setup/tests/build → helpers/docs → CI.
-Registrar logs sanitizados y commits periódicos; no reparar nuevos fallos.
-Prompt de continuación: ejecuta esta secuencia en la rama de #108, conserva
-histórico y actualiza la matriz final. No declares OK con pendientes físicos.
-
-Estado vigente: validación 1–9 COMPLETADA en rama de PR #115; CI 09ef3b3
-aprobado. Pendiente merge #115 → rama de #108, CI global y revisión de #108
-antes de main. #107 permanece abierta hasta integración. #114 es backlog
-aplazado; #88 excluida. Reconciliación documental sin cambios de comportamiento.
-El párrafo anterior conserva el estado preintegración de #115; la pasada final
-de este encabezado lo sustituye. No queda trabajo funcional de validación.
+Estado: COMPLETADO, 2026-10-06. Tracking #107; integración #108.
+Código auditado 7117313; nueve puntos y voz física aceptados, limpieza correcta.
+CI 63d4099 success en runs 37381170529 y 37381176221.
+No queda trabajo funcional; cerrar administrativamente #107 tras merge #108.
+#114 aplazado, #110 separado, #88 excluido y DevExpert NO APLICA D025.
+Las instrucciones siguientes documentan el procedimiento ejecutado y su handoff,
+no una nueva cola de pendientes. Metadatos estabilizados sin cambios de comportamiento.
 
 ## Objetivo y fuente
 

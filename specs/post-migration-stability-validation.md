@@ -1,20 +1,19 @@
 # Validación integral de estabilidad tras migración Linux/Docker
 
-Fecha: 2026-10-05. Tracking: #107. Rama: `docs/post-migration-stability-validation`.
+Creada: 2026-10-05. Validación completada: 2026-10-06.
+Estado: COMPLETADA — OK de migración en el alcance acordado.
+Tracking: #107. PR de integración: #108. Reparación del emulador: #115.
+Rama de trabajo histórica: `docs/post-migration-stability-validation`.
+Código auditado: 711731336bb7427d87a7c180eee43c837f8d1964.
+Evidencias finales y CI: 63d4099, runs 37381170529 y 37381176221, success.
+Registro canónico: matriz final al inicio de `specs/migrate-linux-docker-validation.md`.
 
-Nueva pasada final integrada ejecutada sobre 7117313 tras merge #115.
-La matriz inicial de specs/migrate-linux-docker-validation.md es ahora vigente;
-estados de la pasada anterior abajo son históricos. Nueve puntos COMPLETADOS,
-incluidos Chrome/emulador/Raspberry físicos, limpieza y CI c12f377 success.
-OK de migración en alcance validado; pendiente revisión/merge #108 en main.
-#114 aplazado; mDNS no resuelve pero acceso IP estricto validado.
-
-Estado vigente en la rama de PR #115: nueve puntos COMPLETADOS, voz real y
-recuperación del emulador aceptadas; CI 09ef3b3 success. #115 lista para revisión
-sin borrador; #108 pendiente de integrar #115 y verificar su CI global.
-#107 abierta por integración, no por fallos activos de esta reparación.
-P-107-14 aplazado por operador en #114; P-107-15 retirado como bloqueo.
-No se declara release publicada ni merge en main; #88 sigue fuera de alcance.
+Los nueve puntos pasan, incluida voz física Chrome/emulador/Raspberry y limpieza.
+El cierre administrativo de #107 se realiza tras integrar #108 en main.
+Sin trabajo funcional pendiente en esta spec; no se crea release/tag.
+Limitaciones: mDNS requiere IP con identidad SSH verificada en esta LAN;
+volumen #114 aplazado, secretos #110 separado y touch/kiosk #88 excluido.
+DevExpert NO APLICA D025. P-107-15 retirado como bloqueo por operador.
 
 ## Objetivo y alcance
 
