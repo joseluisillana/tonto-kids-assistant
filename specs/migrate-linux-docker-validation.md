@@ -18,8 +18,8 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | 4. Limpieza host | FALLIDO | Segunda ejecución `./tonto.sh down`, exit 0; backend eliminado, red todavía en uso por emuladores previos. Ver P-107-01. |
 | 5. Raspberry real | PENDIENTE | `./scripts/agent-raspberry.sh preflight`: exit 255, `ssh: Could not resolve hostname tonto-pi.local: Name or service not known`, reproducido fuera del sandbox. Host LAN 192.168.1.91. No preflight ni voz aprobados. Ver P-107-03. |
 | 6. Limpieza Raspberry | PENDIENTE | Depende de 5; no hubo sesión Raspberry. |
-| 7. Setup/tests/build | PENDIENTE | En ejecución; ahora incluye widgets Kivy reales. |
-| 8. Auxiliares/docs | PENDIENTE | Inspección detecta runbooks Windows; pendiente ejecución de auxiliares. |
+| 7. Setup/tests/build | FALLIDO | Setup exit 0 pero venv host no se crea (ensurepip ausente) y caché pip deshabilitada. Tests antes/después de setup: 78 Python + 24 UI + web pasan, exit 0. Build repetido tras setup: typecheck + 43 módulos Vite, 1.18 s, exit 0. npm audit completo exit 1, siete vulnerabilidades; producción audit omit-dev exit 0, cero. Ver P-107-05/06/07. |
+| 8. Auxiliares/docs | FALLIDO | `bash -n` por cada tonto.sh/scripts/*.sh exit 0; exportador y instalador hook exit 0. Helper apagado: Health unavailable; start y health exit 0. Runbooks desalineados P-107-04; ciclo stop pendiente. |
 | 9. CI remoto | PENDIENTE | Pendiente push y comprobación de SHA. |
 
 Ampliaciones pendientes: setup reproducible, micrófono/WAV/auto-stop/speech web
@@ -48,6 +48,43 @@ equivalen a aceptación de audio real.
   Impacto: demo Linux no reproducible siguiendo esas instrucciones.
 
 No se ha corregido código ni configuración. No procede declarar versión estable.
+
+### Evidencias ampliadas y nuevos problemas
+
+- CORS: `curl -i -X OPTIONS http://127.0.0.1:8000/chat` con Origin
+  `http://127.0.0.1:5173` y método POST devuelve HTTP 200,
+  `access-control-allow-origin: http://127.0.0.1:5173`, métodos GET/POST.
+- Proveedor real activo: OpenAI. Comprobación sanitizada desde contenedor:
+  `openai_key_present True`, `devexpert_key_present False`; smoke DevExpert real
+  PENDIENTE por credencial ausente. Sus adaptadores sí están en tests simulados.
+- **P-107-05 — ABIERTO, entorno host degradado tras setup:** setup recrea .venv
+  pero falla `python3 -m venv`: ensurepip ausente; recomienda python3.12-venv.
+  Wrapper continúa y devuelve 0. El CLI host funcionaba antes del setup;
+  después no puede darse por reproducible su entorno de dependencias.
+  No se instalaron paquetes de sistema ni se reparó el entorno.
+- **P-107-06 — ABIERTO, caché pip fuera del repo:** setup advierte
+  `WARNING: The directory '/.cache/pip' ... is not owned or is not writable ...
+  The cache has been disabled`. Contenedor: HOME=/, uid=1000, PIP_CACHE_DIR=None.
+  Compose web configura npm_config_cache=/tmp/.npm; no es caché .cache local.
+- **P-107-07 — ABIERTO, auditoría de dependencias de desarrollo:**
+  `docker compose run --rm web npm audit --json`: exit 1; 2 low (@babel/core,
+  esbuild), 1 moderate (baseline-browser-mapping), 4 high (browserslist,
+  nanoid, postcss, vite). `npm audit --omit=dev --json`: cero, exit 0.
+  Es un reporte del registry, no evidencia de explotación: algunos advisories
+  afectan Windows. Requiere valorar aplicabilidad antes de aceptar riesgo.
+  No se ejecutó npm audit fix ni se modificó el lockfile.
+- **P-107-08 — ABIERTO, backend inaccesible por defecto desde emulador:**
+  Con backend saludable, smoke urllib desde ui-emulator imprime
+  `backend-service 200` para http://backend:8000/health; después exit 1,
+  `urllib.error.URLError: <urlopen error [Errno 111] Connection refused>` para
+  http://127.0.0.1:8000/health. UI usa loopback por defecto y Compose no configura
+  TONTO_BACKEND_URL; loopback corresponde al propio contenedor.
+- Web navegador integrado: pregunta «¿Qué es una estrella?» pasa de Pensando
+  a Listo y muestra respuesta educativa; Actividad registra Respuesta recibida
+  y Speech no disponible. Fallback texto COMPLETADO en este navegador; speech
+  audible PENDIENTE en navegador compatible. Captura de voz iniciada; pendiente.
+- Warnings tests: Starlette/httpx deprecation (Python/UI) e imghdr de Kivy;
+  registrados sin introducir nuevas dependencias.
 
 **Cualquier problema encontrado durante estas pruebas se dejará evidenciado aquí y NO se resolverá de manera inmediata.** Una vez estén todas las evidencias, se decidirá el plan de mitigación.
 
