@@ -19,9 +19,9 @@ Este documento sirve como registro y checklist para las validaciones en las dife
   ```
 - Salida del cliente web:
   ```text
-  web-1      |   VITE v7.3.3  ready in 923 ms
+  web-1      |   VITE v7.3.3  ready in 641 ms
   web-1      |   ➜  Local:   http://localhost:5173/
-  web-1      |   ➜  Network: http://172.19.0.2:5173/
+  web-1      |   ➜  Network: http://172.19.0.3:5173/
   ```
 - Verificación de conectividad:
   - `curl -s http://127.0.0.1:8000/health` -> `{"status":"ok"}`
@@ -31,14 +31,16 @@ Este documento sirve como registro y checklist para las validaciones en las dife
 
 **Objetivo:** Verificar que los contenedores se detienen y se eliminan correctamente, dejando los puertos libres.
 **Evidencia/Status:** **COMPLETADO**
-- Comando ejecutado: `docker compose down` (nota: `tonto.sh` no dispone de subcomando `down`/`stop`).
+- Comando ejecutado: `./tonto.sh down`
 - Resultado:
   ```text
+  Stopping and cleaning up containers...
   ✔ Container tonto-kids-assistant-backend-1 Removed
   ✔ Container tonto-kids-assistant-web-1     Removed
   ✔ Network tonto-kids-assistant_default     Removed
+  Note: To completely wipe the Docker-managed .venv, run: docker compose down -v
   ```
-- Verificación: `docker compose ps` muestra 0 contenedores y los puertos 8000 y 5173 quedan liberados.
+- Verificación: `docker ps` muestra 0 contenedores y los puertos 8000 y 5173 quedan liberados.
 
 ## 3. Arranque Backend + UI Cliente Raspberry (Host Local)
 
