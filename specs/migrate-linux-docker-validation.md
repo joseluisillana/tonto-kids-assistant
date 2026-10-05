@@ -16,10 +16,10 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | 2. Limpieza básica | FALLIDO | `./tonto.sh down`, exit 0, elimina backend/web pero `Network ... Resource is still in use`. `docker compose ps --all` conserva dos ui-emulator one-off activos desde hace dos horas. `ss -ltnp`: 8000/5173 libres. Ver P-107-01. |
 | 3. Cliente host + UI Linux | FALLIDO | `./tonto.sh dev backend`; `.venv/bin/python client/main.py --mode text` con TONTO_BACKEND_URL local y tres entradas estrella/Sol/despedida: 3 respuestas coherentes, exit 0. Host sin espeak degrada a texto. Smoke `docker compose run --rm ui-emulator .venv/bin/python -c 'from client.main import speak; speak("Validación de voz Linux")'`: exit 1, FileNotFoundError powershell. Ver P-107-02. |
 | 4. Limpieza host | FALLIDO | Segunda ejecución `./tonto.sh down`, exit 0; backend eliminado, red todavía en uso por emuladores previos. Ver P-107-01. |
-| 5. Raspberry real | PENDIENTE | `./scripts/agent-raspberry.sh preflight`: exit 255, `ssh: Could not resolve hostname tonto-pi.local: Name or service not known`, reproducido fuera del sandbox. Host LAN 192.168.1.91. No preflight ni voz aprobados. Ver P-107-03. |
-| 6. Limpieza Raspberry | PENDIENTE | Depende de 5; no hubo sesión Raspberry. |
+| 5. Raspberry real | COMPLETADO | Reintento por IP 192.168.1.183 con identidad SSH verificada: preflight exit 0, health LAN OK, USB disponible, 3/3 turnos reales con transcript correcto, continuidad y TTS. Cliente exit 0; backend 3 POST /chat/audio HTTP 200. Operador confirma «si, todo correcto». Detalle en Revalidación Raspberry encendida; mDNS sigue fallando P-107-03. |
+| 6. Limpieza Raspberry | FALLIDO | Cliente y procesos audio Raspberry terminan, sin python/arecord/espeak residuales; down exit 0 elimina backend, LAN health falla como esperado (curl exit 7), 8000/5173 libres. Persisten dos emuladores previos y red en uso: P-107-01. |
 | 7. Setup/tests/build | FALLIDO | Setup exit 0 pero venv host no se crea (ensurepip ausente) y caché pip deshabilitada. Tests antes/después de setup: 78 Python + 24 UI + web pasan, exit 0. Build repetido tras setup: typecheck + 43 módulos Vite, 1.18 s, exit 0. npm audit completo exit 1, siete vulnerabilidades; producción audit omit-dev exit 0, cero. Ver P-107-05/06/07. |
-| 8. Auxiliares/docs | FALLIDO | `bash -n` por cada tonto.sh/scripts/*.sh exit 0; exportador y instalador hook exit 0. Helper apagado: Health unavailable; start/status/health/stop exit 0; status final Health unavailable. Runbooks desalineados P-107-04. Helpers demo físicos pendientes de acceso Raspberry. |
+| 8. Auxiliares/docs | FALLIDO | `bash -n` por cada tonto.sh/scripts/*.sh exit 0; exportador y instalador hook exit 0. Helper apagado: Health unavailable; start/status/health/stop exit 0; status final Health unavailable. Helper Raspberry preflight/exec y demo-raspberry.sh pasan en hardware real. Runbooks desalineados P-107-04; demo-touch físico excluido en #88. |
 | 9. CI remoto | COMPLETADO | Push a rama documental. Run 37302071237 sobre SHA 2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2: completed/success; setup, checks y build success. Cambios posteriores solo añaden evidencias documentales; consultar checks de PR para su SHA final. |
 
 Ampliaciones pendientes: setup reproducible, micrófono/WAV/auto-stop/speech web
@@ -43,7 +43,8 @@ equivalen a aceptación de audio real.
   Acceso por 192.168.1.183 funciona; la clave ed25519 coincide exactamente con
   la entrada ya confiada de tonto-pi.local. Se usa HostKeyAlias=tonto-pi.local y
   StrictHostKeyChecking=yes, sin cambiar known_hosts ni scripts. Preflight real
-  y health LAN pasan. Batería de voz en ejecución; el nombre mDNS sigue fallando.
+  y health LAN pasan. Batería de voz 3/3 completada; el nombre mDNS sigue fallando
+  y queda como problema abierto de direccionamiento, no como bloqueo de voz.
 - **P-107-04 — ABIERTO, documentación operacional desalineada:**
   `docs/demo-runbook.md` y `docs/demo-checklist.md` siguen indicando Windows,
   scripts dev.ps1/agent-backend.ps1 y que no se carga .env; tonto.sh sí crea
@@ -126,8 +127,9 @@ audible PENDIENTE. No se atribuye fallo de backend al error speech.
 No apto todavía para cierre estable. Arranque/API, suites, build, exportador,
 hook y ciclo helper backend pasan. Permanecen fallos de limpieza, TTS y URL
 del emulador, setup host, caches y documentación. La auditoría npm requiere
-triage. Raspberry real, tres turnos repetibles de voz, contador web durante
-captura, audibilidad web y smoke DevExpert con credencial siguen pendientes.
+triage. Raspberry real y tres turnos de voz quedan completados tras el reintento.
+Contador web durante captura, audibilidad web y smoke DevExpert con credencial
+siguen pendientes.
 Touch/kiosk físico queda excluido en #88. Continuar sin corregir producto hasta
 completar pendientes o documentar su bloqueo; después planificar mitigaciones
 en trabajo separado y revalidar. #107 permanece abierta.
@@ -179,7 +181,40 @@ subdevice disponible 1/1. `aplay -l`: card 0 bcm2835 Headphones y card 2 vc4hdmi
 Se lanza el helper `exec` con tres avisos espeak y entradas Enter a
 `./scripts/demo-raspberry.sh`, TONTO_RECORD_SECONDS=6, separación 40 s entre
 avisos. Inicio correcto y sesión `local-session-7ceda59d-08c9-4ec4-a783-282b6106451f`.
-Turnos y audibilidad pendientes de resultado y confirmación humana.
+Turnos completados, helper/cliente exit 0. La inspección del script remoto
+confirma que la diferencia respecto al actual es el mensaje de ayuda en caso
+de backend caído (dev.ps1 frente a tonto.sh); el arranque y loop utilizados
+coinciden. No se valida un checkout remoto actualizado completo.
+
+| Turno | Transcript real | Respuesta de TONTO |
+| --- | --- | --- |
+| 1 | ¿Qué es una estrella? | ¡Hola! Una estrella es un gran bola de gas que brilla en el cielo. Por ejemplo, el Sol es una estrella y nos da luz y calor. ¿Tienes otra pregunta? |
+| 2 | ¿Y el sol? | El Sol es una estrella que está muy cerca de nosotros, y es el centro de nuestro sistema solar. Sin el Sol, no tendríamos luz ni calor en la Tierra, ¡como un gran foco del cielo! ¿Te gustaría saber algo más? |
+| 3 | Gracias. Hasta luego. | ¡De nada! ¡Hasta luego! Si alguna vez tienes más preguntas, aquí estaré. ¡Cuídate! |
+
+Cada turno registra `Listening for 6s`, contador 1/6s hasta 6/6s,
+`Listening complete`, `Processing`, `Transcript` y `TONTO`; vuelve al prompt.
+La entrada final exit cierra el proceso con código 0. No aparecen errores TTS.
+Operador confirma audibilidad de avisos y respuestas: **«si, todo correcto»**.
+No se midió latencia HTTP por turno: no se infieren cifras de la separación
+de 40 s del guion; solo se acredita finalización de los tres turnos.
+
+Logs Docker (`docker compose logs --since 5m --no-color backend`):
+
+```text
+192.168.1.183:48058 - "GET /health HTTP/1.1" 200 OK
+192.168.1.183:47110 - "POST /chat/audio HTTP/1.1" 200 OK
+192.168.1.183:36230 - "POST /chat/audio HTTP/1.1" 200 OK
+192.168.1.183:54086 - "POST /chat/audio HTTP/1.1" 200 OK
+```
+
+Punto 6: `./tonto.sh down` exit 0, backend retirado, red `Resource is still in use`.
+`docker compose ps --all` conserva únicamente los dos emuladores anteriores.
+`ss -ltnp` confirma 8000/5173 libres. Desde Raspberry, inventario
+`ps -eo pid,comm,args` filtrado por python/python3/arecord/espeak no muestra
+procesos; curl LAN posterior falla con `BACKEND_AFTER_DOWN_EXIT=7`, esperado.
+No se detuvieron procesos ajenos ni se borraron volúmenes. Backend queda parado
+por la prueba explícita de limpieza; no se ejecutó UI touch ni kiosk.
 
 ---
 
