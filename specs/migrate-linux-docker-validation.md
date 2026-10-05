@@ -2,6 +2,53 @@
 
 Este documento sirve como registro y checklist para las validaciones en las diferentes fases de la transición de scripts `.ps1` a Bash y Docker.
 
+## Nueva pasada integral — 2026-10-05 (#107)
+
+Spec: `specs/post-migration-stability-validation.md`. Plan emparejado en
+`docs/plans/post-migration-stability-validation-implementation-plan.md`.
+Código auditado: `49a67b65be0a549fb7513c8797f0d28597f68be2`.
+Los puntos históricos posteriores se conservan como evidencia anterior.
+Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
+
+| Punto | Estado actual | Evidencia de nueva ejecución |
+| --- | --- | --- |
+| 1. Backend + web | COMPLETADO | `./tonto.sh dev all`: Uvicorn 8000 y Vite 7.3.3 en 443 ms. Health `{"status":"ok"}` HTTP 200; web HEAD HTTP 200. `/chat` real HTTP 200, 2.244706 s, `{"success":true,"response_text":"¡Ok! ¿Tienes alguna pregunta?"}`. Cuerpo `{}` devuelve HTTP 422 con campos session_id/message obligatorios. |
+| 2. Limpieza básica | FALLIDO | `./tonto.sh down`, exit 0, elimina backend/web pero `Network ... Resource is still in use`. `docker compose ps --all` conserva dos ui-emulator one-off activos desde hace dos horas. `ss -ltnp`: 8000/5173 libres. Ver P-107-01. |
+| 3. Cliente host + UI Linux | FALLIDO | `./tonto.sh dev backend`; `.venv/bin/python client/main.py --mode text` con TONTO_BACKEND_URL local y tres entradas estrella/Sol/despedida: 3 respuestas coherentes, exit 0. Host sin espeak degrada a texto. Smoke `docker compose run --rm ui-emulator .venv/bin/python -c 'from client.main import speak; speak("Validación de voz Linux")'`: exit 1, FileNotFoundError powershell. Ver P-107-02. |
+| 4. Limpieza host | FALLIDO | Segunda ejecución `./tonto.sh down`, exit 0; backend eliminado, red todavía en uso por emuladores previos. Ver P-107-01. |
+| 5. Raspberry real | PENDIENTE | `./scripts/agent-raspberry.sh preflight`: exit 255, `ssh: Could not resolve hostname tonto-pi.local: Name or service not known`, reproducido fuera del sandbox. Host LAN 192.168.1.91. No preflight ni voz aprobados. Ver P-107-03. |
+| 6. Limpieza Raspberry | PENDIENTE | Depende de 5; no hubo sesión Raspberry. |
+| 7. Setup/tests/build | PENDIENTE | En ejecución; ahora incluye widgets Kivy reales. |
+| 8. Auxiliares/docs | PENDIENTE | Inspección detecta runbooks Windows; pendiente ejecución de auxiliares. |
+| 9. CI remoto | PENDIENTE | Pendiente push y comprobación de SHA. |
+
+Ampliaciones pendientes: setup reproducible, micrófono/WAV/auto-stop/speech web
+en navegador, voz Raspberry y audibilidad, smoke real por proveedor, CORS,
+aislamiento venv/caches, auxiliares y cobertura Kivy. Los tests con mocks no
+equivalen a aceptación de audio real.
+
+### Registro de Problemas — pasada #107
+
+- **P-107-01 — ABIERTO, limpieza incompleta:** `down` devuelve 0 aunque quedan
+  `tonto-kids-assistant-ui-emulator-run-9fa66213b28a` y
+  `tonto-kids-assistant-ui-emulator-run-a6c50a5e1812` y la red no se elimina.
+  Son anteriores a esta pasada; no se detuvieron ni se eliminaron manualmente.
+  Impacto: no cumple limpieza total; backend/web sí liberan sus puertos.
+- **P-107-02 — ABIERTO, TTS Linux del emulador roto:** Compose configura
+  TONTO_AUDIO_MODE=pc; `client/main.py:376` ejecuta powershell/System.Speech
+  ausente de la imagen Linux. Smoke exit 1 con traceback FileNotFoundError.
+  La suite UI simula audio/TTS y por sí sola no prueba esta integración.
+- **P-107-03 — BLOQUEO EXTERNO:** hostname Raspberry no resoluble; se necesita
+  IP/disponibilidad real para repetir preflight y tres turnos. No usar skip/mock
+  como evidencia de aprobación. Solicitud al operador enviada.
+- **P-107-04 — ABIERTO, documentación operacional desalineada:**
+  `docs/demo-runbook.md` y `docs/demo-checklist.md` siguen indicando Windows,
+  scripts dev.ps1/agent-backend.ps1 y que no se carga .env; tonto.sh sí crea
+  .env y Compose lo carga. `scripts/demo-touch.sh` aconseja dev.ps1 en error.
+  Impacto: demo Linux no reproducible siguiendo esas instrucciones.
+
+No se ha corregido código ni configuración. No procede declarar versión estable.
+
 **Cualquier problema encontrado durante estas pruebas se dejará evidenciado aquí y NO se resolverá de manera inmediata.** Una vez estén todas las evidencias, se decidirá el plan de mitigación.
 
 ---
