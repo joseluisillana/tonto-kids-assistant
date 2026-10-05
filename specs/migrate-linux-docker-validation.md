@@ -14,7 +14,7 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | --- | --- | --- |
 | 1. Backend + web | COMPLETADO | `./tonto.sh dev all`: Uvicorn 8000 y Vite 7.3.3 en 443 ms. Health `{"status":"ok"}` HTTP 200; web HEAD HTTP 200. `/chat` real HTTP 200, 2.244706 s, `{"success":true,"response_text":"¡Ok! ¿Tienes alguna pregunta?"}`. Cuerpo `{}` devuelve HTTP 422 con campos session_id/message obligatorios. |
 | 2. Limpieza básica | COMPLETADO | Fallo inicial conservado en P-107-01; reparación fix/docker-cleanup revalidada: down retira backend/web, dos emuladores previos y red, exit 0; sin contenedores/redes del proyecto y puertos libres. |
-| 3. Cliente host + UI Linux | PENDIENTE | Reparación software revalidada: health HTTP 200 y chat real desde Kivy mediante http://backend:8000, espeak genera WAV español no silencioso, UI vuelve a idle. Audibilidad y micrófono físicos del emulador pendientes: host sin /dev/snd. Fallos históricos P-107-02/08 resueltos; detalle abajo. |
+| 3. Cliente host + UI Linux | FALLIDO | Software backend/TTS previamente validado; al probar audio real fuera del sandbox, dev ui exit 1: unknown flag --device. Grupo elegido 0 (by-path) en vez de 29 (dispositivos). Nuevo P-107-10. Audio físico pendiente tras reparar arranque. |
 | 4. Limpieza host | COMPLETADO | Tras reparación: segunda llamada down exit 0 sin residuales; nuevo arranque backend/web HTTP 200 y stop retira servicios, one-off de control y red. Histórico P-107-01. |
 | 5. Raspberry real | COMPLETADO | Reintento por IP 192.168.1.183 con identidad SSH verificada: preflight exit 0, health LAN OK, USB disponible, 3/3 turnos reales con transcript correcto, continuidad y TTS. Cliente exit 0; backend 3 POST /chat/audio HTTP 200. Operador confirma «si, todo correcto». Detalle en Revalidación Raspberry encendida; mDNS sigue fallando P-107-03. |
 | 6. Limpieza Raspberry | COMPLETADO | Cliente/audio Raspberry ya terminaban y LAN health tras parada fallaba correctamente (curl 7). Reparación del bloqueo Docker revalidada: elimina también emuladores y red, sin residuales ni puertos; conserva dependencias. No se repiten voz ni UI física para este cambio CLI. Histórico P-107-01. |
@@ -22,10 +22,11 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | 8. Auxiliares/docs | COMPLETADO | Helpers previamente validados; guías operativas README/demo/SSH/workflow y planes vigentes actualizados a Bash/Docker/.env. bash -n y git diff --check pasan. demo-touch físico sigue excluido en #88. P-107-04 resuelto. |
 | 9. CI remoto | COMPLETADO | Push a rama documental. Run 37302071237 sobre SHA 2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2: completed/success; setup, checks y build success. Cambios posteriores solo añaden evidencias documentales; consultar checks de PR para su SHA final. |
 
-Ampliaciones pendientes: setup reproducible, micrófono/WAV/auto-stop/speech web
-en navegador, voz Raspberry y audibilidad, smoke real por proveedor, CORS,
-aislamiento venv/caches, auxiliares y cobertura Kivy. Los tests con mocks no
-equivalen a aceptación de audio real.
+Pendientes vigentes: audio físico del emulador (punto 3), smoke DevExpert real sin credencial.
+Chrome: tres turnos/audibilidad/contador/auto-stop aprobados por el operador;
+mDNS y preflight Raspberry por nombre revalidados. Raspberry voz/audibilidad, setup, caches, auditorías,
+CORS, auxiliares y cobertura Kivy tienen evidencia completada.
+Los tests con mocks no equivalen a aceptación de audio real.
 
 ### Registro de Problemas — pasada #107
 
@@ -39,7 +40,7 @@ equivalen a aceptación de audio real.
   TONTO_AUDIO_MODE=pc; `client/main.py:376` ejecuta powershell/System.Speech
   ausente de la imagen Linux. Smoke exit 1 con traceback FileNotFoundError.
   La suite UI simula audio/TTS y por sí sola no prueba esta integración.
-- **P-107-03 — DESBLOQUEADO PARCIALMENTE:** reintento con Raspberry encendida:
+- **P-107-03 — REVALIDADO POR NOMBRE; incidencia inicial histórica:** reintento con Raspberry encendida:
   tonto-pi.local falla alternativamente con No route to host y resolución DNS.
   Acceso por 192.168.1.183 funciona; la clave ed25519 coincide exactamente con
   la entrada ya confiada de tonto-pi.local. Se usa HostKeyAlias=tonto-pi.local y
@@ -108,7 +109,7 @@ Captura, auto-stop, WAV, STT y respuesta real COMPLETADO en esta pasada;
 contador durante captura no observado, repetibilidad de tres turnos y speech
 audible PENDIENTE. No se atribuye fallo de backend al error speech.
 
-- **P-107-09 — LIMITACIÓN DE ENTORNO ABIERTA:** speech del navegador integrado
+- **P-107-09 — REVALIDADO EN CHROME; limitación del navegador integrado histórica:** speech del navegador integrado
   no disponible en texto y falla en turno de voz. Repetir en navegador compatible
   con confirmación humana de audibilidad para decidir si existe fallo de producto.
 - Exportador: `Exported NotebookLM source files to .../exports/notebooklm`,
@@ -539,3 +540,58 @@ https://github.com/joseluisillana/tonto-kids-assistant/actions/runs/37331356962.
 Setup, checks y build completos pasan. PR #113 abierta para revisión/integración.
 El commit siguiente solo registra esta evidencia; consultar checks de #113 para
 su SHA documental final.
+
+### Continuación de pendientes físicos — 2026-10-05
+
+Revisión 5d0a52e tras merge #113. Punto 7 integrado; 8/9 completos.
+Host sigue sin /dev/snd; navegador automatizable disponible: integrado, sin
+Chrome/Firefox conectados. Operador confirma que dispone de navegador externo
+y equipo Linux con audio. Se prepara prueba guiada de tres turnos web, contador
+y auto-stop 10 s. Resultados humanos aún PENDIENTES, no se anticipa aceptación.
+Backend/web arrancados con tonto.sh dev all, health ok y web HTTP 200.
+Se mantienen activos durante la validación guiada. No se cambia producto.
+
+
+### Resultados de continuación — 2026-10-05
+
+- Operador confirma navegador Chrome: «He usado chrome y ha ido perfecto,
+  da la prueba como válida». Respuesta a checklist explícito de tres turnos
+  relacionados, respuesta/voz clara, contador visible y auto-stop a 10 s.
+  Se acepta observación humana; no se inventan transcripts ni latencias.
+  Speech web, contador y repetibilidad COMPLETADO. P-107-09 deja de ser bloqueo
+  de aceptación: fallo limitado al navegador integrado, Chrome real validado.
+- Operador confirma que el equipo Linux con audio es este mismo. Lectura fuera
+  del sandbox: /dev/snd existe y hay Pulse/PipeWire. La falta previa de /dev/snd
+  era visibilidad del sandbox; no ausencia física de hardware. No se cambian
+  dispositivos, permisos del sistema ni servidores de audio.
+- getent hosts tonto-pi.local: 192.168.1.183, exit 0 fuera del sandbox.
+  Helper oficial preflight por nombre: identity tonto-pi/tonto-pi-user,
+  repo limpio en feature/issue-84-face-design; git/python3/curl/arecord/aplay/
+  espeak presentes; Python 3.13.5 y .venv correctos; backend LAN health ok,
+  exit 0. P-107-03 recuperado/revalidado sin modificar red ni scripts.
+  Esto evidencia funcionamiento actual, no garantiza ausencia de intermitencias.
+- CI integrado de #108 sobre 5d0a52e: Project checks push/PR SUCCESS,
+  runs 37332129154 (1m24s) y 37332141132 (1m28s).
+
+**P-107-10 — ABIERTO, arranque dev ui con hardware audio:**
+
+```text
+./tonto.sh dev ui
+Iniciando emulador de UI...
+unknown flag: --device
+exit 1
+Docker Compose version v5.5.1
+stat: /dev/snd/by-path => directory, gid 0
+stat: /dev/snd/controlC0 y pcm* => character special file, gid 29
+```
+
+Compose run --help no incluye --device ni --group-add. La rama hardware del
+wrapper no fue ejecutada en las pruebas anteriores dentro del sandbox.
+También selecciona el primer elemento del glob (directorio by-path), no un
+nodo de dispositivo, para el grupo. No se corrige producto durante esta pasada.
+Plan de reparación: specs/linux-emulator-audio-device-startup.md y plan emparejado.
+
+Dictamen actual: 8/9 completos, punto 3 FALLIDO por P-107-10 y aceptación de audio
+físico pendiente. Web Chrome y mDNS revalidados. Smoke DevExpert real sigue
+pendiente de credencial configurada por el operador. Touch/kiosk #88 excluido.
+Backend/web quedan activos para continuar la validación guiada.
