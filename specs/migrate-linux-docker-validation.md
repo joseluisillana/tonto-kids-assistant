@@ -45,23 +45,25 @@ Este documento sirve como registro y checklist para las validaciones en las dife
 ## 3. Arranque Backend + UI Cliente Raspberry (Host Local)
 
 **Objetivo:** Levantar el backend en Docker (`tonto.sh dev backend`) y correr el cliente físico simulado en la misma máquina o la interfaz Touch UI, verificando la conexión a `localhost`/`127.0.0.1`.
-**Evidencia/Status:** **COMPLETADO** / **RESUELTO**
-- Comando ejecutado para backend: `./tonto.sh dev backend` -> Arrancó correctamente en `http://0.0.0.0:8000`.
+**Evidencia/Status:** **COMPLETADO**
+- Comando ejecutado para backend: `./tonto.sh dev backend` -> Arrancó correctamente.
 - Intento de ejecución del cliente con el entorno virtual del proyecto:
-  `TONTO_BACKEND_URL=http://127.0.0.1:8000 .venv/bin/python client/main.py --mode text`
-  - **Error:** `bash: línea 1: .venv/bin/python: No existe el archivo o el directorio`
-  - **Causa:** `.venv` fue creado dentro del contenedor Docker (`python:3.12-slim`), por lo que su symlink apunta a `/usr/local/bin/python`, ruta inexistente en el host Linux (donde Python reside en `/usr/bin/python3`).
-- Intento alternativo con el Python del sistema en el host:
-  `printf "hola\nexit\n" | TONTO_BACKEND_URL=http://127.0.0.1:8000 python3 client/main.py --mode text`
-  - **Resultado:** El cliente se conectó a `http://127.0.0.1:8000/chat`, pero el backend respondió con error 500:
-    `Backend error (500). Please try again.`
-  - **Causa:** En el backend, `OPENAI_API_KEY` no está configurada en `.env` (el archivo `.env` está vacío por defecto), lo que provoca una excepción en `call_openai()`.
+  `printf "hola\n" | TONTO_BACKEND_URL=http://127.0.0.1:8000 .venv/bin/python client/main.py --mode text`
+- Resultado: El cliente se conectó correctamente y recibió respuesta del backend sin arrojar error 500:
+  ```text
+  TONTO Kids Assistant Client
+  Session: local-session-05159fe4-a367-4f4b-bdbb-9ca5630a4c62
+  Type a message and press Enter. Type 'exit' or 'quit' to stop.
+  > TONTO: ¡Hola! ¿Cómo estás? Si tienes alguna pregunta, estaré feliz de ayudarte.
+  Speech output not available. Make sure espeak is installed.
+  > 
+  ```
 
 ## 4. Parada y Limpieza (Tras Test Cliente Host)
 
 **Objetivo:** Detener servicios sin dejar procesos huérfanos.
 **Evidencia/Status:** **COMPLETADO**
-- Comando ejecutado: `docker compose down`
+- Comando ejecutado: `./tonto.sh down`
 - Verificación: `docker compose ps` y `ps aux | grep -E "uvicorn|main.py"` confirmaron 0 contenedores y 0 procesos residuales.
 
 ## 5. Arranque Backend + Raspberry Pi Real (Batería de Preguntas)
