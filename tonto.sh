@@ -18,7 +18,7 @@ print_usage() {
     echo "Comandos:"
     echo "  setup                 - Prepara el entorno (instala dependencias en los contenedores)"
     echo "  dev [backend|ui|web|all] - Inicia los servidores en modo desarrollo"
-    echo "  down                  - Detiene y limpia los contenedores y redes de desarrollo"
+    echo "  down (alias: stop)     - Limpia todos los contenedores y redes del proyecto, incluidos los temporales"
     echo "  test [python|ui|web|all] - Ejecuta los tests del proyecto"
     echo "  build [web|all]       - Compila los assets del proyecto web"
 }
@@ -70,8 +70,24 @@ case "$COMMAND" in
     ;;
     
   down|stop)
-    echo "Stopping and cleaning up containers..."
-    docker compose down
+    # Never print the full configuration: it may contain credentials from .env.
+    compose_config=$(docker compose config --format json)
+    project_name=$(sed -n 's/^  "name": "\([^"]*\)",\{0,1\}$/\1/p' <<< "$compose_config")
+    if [ -z "$project_name" ]; then
+      echo "Could not determine the Compose project name." >&2
+      exit 1
+    fi
+    echo "Stopping and cleaning up all containers for project $project_name..."
+    docker compose down --remove-orphans
+    remaining_containers=$(docker ps -aq --filter "label=com.docker.compose.project=$project_name")
+    remaining_networks=$(docker network ls -q --filter "label=com.docker.compose.project=$project_name")
+    if [ -n "$remaining_containers" ] || [ -n "$remaining_networks" ]; then
+      echo "Cleanup incomplete for project $project_name." >&2
+      echo "Remaining containers: ${remaining_containers:-none}" >&2
+      echo "Remaining networks: ${remaining_networks:-none}" >&2
+      exit 1
+    fi
+    echo "Project containers and networks removed. Dependency volumes preserved."
     echo "Note: To completely wipe the Docker-managed .venv, run: docker compose down -v"
     ;;
     

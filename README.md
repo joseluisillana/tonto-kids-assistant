@@ -337,9 +337,16 @@ Usa estos comandos en vez de instalar dependencias o lanzar herramientas a mano:
 ./tonto.sh test web
 ./tonto.sh test all
 ./tonto.sh build all
+./tonto.sh down
 ./scripts/export-docs-for-notebooklm.sh
 ./scripts/install-git-hooks.sh
 ```
+
+`down` (alias `stop`) detiene todos los contenedores del proyecto Compose,
+incluidos emuladores y tests temporales en ejecución, y elimina sus redes.
+Conserva los volúmenes de dependencias, `.venv` local y `web/node_modules`.
+Devuelve error si quedan contenedores o redes del proyecto; no limpia otros
+proyectos Docker.
 
 `test ui` construye la imagen `ui-emulator` y ejecuta widgets Kivy reales con
 SDL2 y Xvfb, sin pantalla física ni servidor X del host. Usa renderizado por
