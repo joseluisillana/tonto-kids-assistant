@@ -69,20 +69,35 @@ Este documento sirve como registro y checklist para las validaciones en las dife
 ## 5. Arranque Backend + Raspberry Pi Real (Batería de Preguntas)
 
 **Objetivo:** Levantar el backend (`tonto.sh dev backend`), comprobar la visibilidad en red LAN (`0.0.0.0:8000`), conectar el cliente de la Raspberry Pi de verdad y ejecutar una batería de preguntas para validar el Audio Loop en la nueva infraestructura de red.
-**Evidencia/Status:** **COMPLETADO** / **RESUELTO**
+**Evidencia/Status:** **COMPLETADO**
 - En `docker-compose.yml`, los puertos están correctamente expuestos en `0.0.0.0:8000`.
-- **Fase 1 (Bloqueada previamente):** Ejecución de `./scripts/agent-raspberry.sh preflight` fallaba con error duro por falta de clave. Se resolvió (Issue #99) añadiendo soporte para `TONTO_MOCK_HARDWARE=1` y `--skip-if-missing`, permitiendo bypass grácil en entornos CI, además de mejorar las instrucciones de configuración.
-- **Fase 2 (Validación en hardware real):** Tras configurar las claves físicas (`ssh-keygen` y `ssh-copy-id`), surgió un error de sintaxis bash por comillas simples mal escapadas en la invocación remota. Se corrigió en el script.
-- **Evidencia final:** Al ejecutar `./scripts/agent-raspberry.sh preflight` contra la Raspberry Pi, el resultado fue exitoso:
-  - Identidad validada: `tonto-pi`, usuario `tonto-pi-user`.
-  - Herramientas detectadas correctamente (`git`, `python3`, `curl`, `arecord`, `aplay`, `espeak`).
-  - Entorno Python verificado exitosamente (`Python 3.13.5`, `.venv/bin/python`).
+- Comando ejecutado: `./scripts/agent-raspberry.sh preflight`
+- Evidencia final: Al ejecutar `./scripts/agent-raspberry.sh preflight` contra la Raspberry Pi en modo interactivo (SSH), el resultado fue exitoso:
+  ```text
+  == identity ==
+  tonto-pi
+  tonto-pi-user
+  == repository ==
+  /home/tonto-pi-user/tonto-kids-assistant
+  ## feature/issue-84-face-design...origin/feature/issue-84-face-design
+  == tools ==
+  /usr/bin/git
+  /usr/bin/python3
+  /usr/bin/curl
+  /usr/bin/arecord
+  /usr/bin/aplay
+  /usr/bin/espeak
+  == python environment ==
+  Python 3.13.5
+  /home/tonto-pi-user/tonto-kids-assistant/.venv/bin/python
+  ```
 
 ## 6. Parada y Limpieza (Tras Test Raspberry)
 
 **Objetivo:** Verificar cierre limpio desde la red y liberación de recursos en el host.
 **Evidencia/Status:** **COMPLETADO**
-- Verificación: No quedaron servicios ni contenedores activos tras el intento (`docker compose ps` limpio).
+- Comando ejecutado: `./tonto.sh down`
+- Verificación: No quedaron servicios ni contenedores activos tras el intento (`docker compose ps` y `ps aux` limpios).
 
 ## 7. Validación de Scripts CLI Adicionales (`build`, `test`)
 
