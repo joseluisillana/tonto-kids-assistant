@@ -19,7 +19,7 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | 5. Raspberry real | PENDIENTE | `./scripts/agent-raspberry.sh preflight`: exit 255, `ssh: Could not resolve hostname tonto-pi.local: Name or service not known`, reproducido fuera del sandbox. Host LAN 192.168.1.91. No preflight ni voz aprobados. Ver P-107-03. |
 | 6. Limpieza Raspberry | PENDIENTE | Depende de 5; no hubo sesión Raspberry. |
 | 7. Setup/tests/build | FALLIDO | Setup exit 0 pero venv host no se crea (ensurepip ausente) y caché pip deshabilitada. Tests antes/después de setup: 78 Python + 24 UI + web pasan, exit 0. Build repetido tras setup: typecheck + 43 módulos Vite, 1.18 s, exit 0. npm audit completo exit 1, siete vulnerabilidades; producción audit omit-dev exit 0, cero. Ver P-107-05/06/07. |
-| 8. Auxiliares/docs | FALLIDO | `bash -n` por cada tonto.sh/scripts/*.sh exit 0; exportador y instalador hook exit 0. Helper apagado: Health unavailable; start y health exit 0. Runbooks desalineados P-107-04; ciclo stop pendiente. |
+| 8. Auxiliares/docs | FALLIDO | `bash -n` por cada tonto.sh/scripts/*.sh exit 0; exportador y instalador hook exit 0. Helper apagado: Health unavailable; start/status/health/stop exit 0; status final Health unavailable. Runbooks desalineados P-107-04. Helpers demo físicos pendientes de acceso Raspberry. |
 | 9. CI remoto | PENDIENTE | Pendiente push y comprobación de SHA. |
 
 Ampliaciones pendientes: setup reproducible, micrófono/WAV/auto-stop/speech web
@@ -85,6 +85,37 @@ No se ha corregido código ni configuración. No procede declarar versión estab
   audible PENDIENTE en navegador compatible. Captura de voz iniciada; pendiente.
 - Warnings tests: Starlette/httpx deprecation (Python/UI) e imghdr de Kivy;
   registrados sin introducir nuevas dependencias.
+
+### Resultado web real y cierre de auxiliares
+
+En navegador integrado, 2026-10-05 13:16–13:18 Europe/Madrid:
+
+1. Chat de texto: pregunta estrella → Pensando → respuesta visible → Listo.
+2. Escuchar: Solicitando permiso → Grabando audio → Tiempo maximo alcanzado.
+3. Enviar voz: Voz preparada en WAV → Transcripcion recibida → Respuesta
+   educativa lista. Transcript visible: `Hola tonto.`; respuesta visible:
+   `¡Hola! ¿Cómo estás? Si tienes alguna pregunta o algo que quieras saber,
+   ¡aquí estoy para ayudar!`.
+4. Estado final Error, `Speech synthesis failed`. No se confirmó audibilidad.
+
+Captura, auto-stop, WAV, STT y respuesta real COMPLETADO en esta pasada;
+contador durante captura no observado, repetibilidad de tres turnos y speech
+audible PENDIENTE. No se atribuye fallo de backend al error speech.
+
+- **P-107-09 — LIMITACIÓN DE ENTORNO ABIERTA:** speech del navegador integrado
+  no disponible en texto y falla en turno de voz. Repetir en navegador compatible
+  con confirmación humana de audibilidad para decidir si existe fallo de producto.
+- Exportador: `Exported NotebookLM source files to .../exports/notebooklm`,
+  exit 0. Hook: `Installed pre-commit hook at .../.git/hooks/pre-commit`, exit 0;
+  también ejecutado correctamente por cada commit documental.
+- Helper backend: start `Backend started successfully`, health/status
+  `Health: ok (http://127.0.0.1:8000/health)`, stop `Backend stopped`, exit 0;
+  status posterior `Health: unavailable`, exit 0.
+- Limpieza final: backend/web detenidos, dos emuladores previos siguen activos;
+  red en uso. No se borraron volúmenes ni se corrigieron scripts.
+- CI primer push: SHA `2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2`, run
+  https://github.com/joseluisillana/tonto-kids-assistant/actions/runs/37302071237,
+  observado `in_progress`; aceptación pendiente del resultado final.
 
 **Cualquier problema encontrado durante estas pruebas se dejará evidenciado aquí y NO se resolverá de manera inmediata.** Una vez estén todas las evidencias, se decidirá el plan de mitigación.
 
