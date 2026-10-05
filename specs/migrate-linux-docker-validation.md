@@ -13,14 +13,15 @@ las ejecuciones anteriores. Sin reparaciones de producto durante esta pasada.
 | 3. Cliente host/emulador | COMPLETADO | Arranque oficial entrada 5/grupo29; operador confirma tres turnos audibles y reset; backend 3 POST audio 200. CLI tres turnos, memoria Alex, fallback texto sin espeak, exit 0. |
 | 4. Limpieza host | COMPLETADO | down exit 0 tras emulador; sin contenedores/red del proyecto, dependencias conservadas. |
 | 5. Raspberry voz | COMPLETADO | IP/HostKeyAlias con identidad estricta, checkout 7117313; 3/3 turnos reales con transcript/respuesta, indicador 6s, exit0. Operador confirma avisos y respuestas claros. mDNS falla, acceso IP verificado funciona. |
-| 6. Limpieza Raspberry/backend | PENDIENTE | Tras prueba Raspberry. |
+| 6. Limpieza Raspberry/backend | COMPLETADO | Demo exit0, sin procesos cliente/arecord/espeak Raspberry; helper stop, down exit0, sin contenedores/red, puertos cerrados (curl7), volumen dependencias conservado. |
 | 7. Setup/tests/build | COMPLETADO | setup exit0, npm ci 0 vulnerabilidades; test all tras setup: 110 Python 0.43s, 25 Kivy 1.02s, web pass. Build 43 módulos 863ms. Audit dev/prod 0; UID1000 caches1000:1000, Python /app/.venv/bin/python. |
-| 8. Auxiliares/docs | PENDIENTE | Sintaxis, helpers, export/hook y legado operativo. |
-| 9. CI remoto | COMPLETADO | 7117313: runs 37377597270 (1m39s) y 37377603886 (1m32s), ambos Project checks pass. Revalidar tras evidencias finales. |
+| 8. Auxiliares/docs | COMPLETADO | Bash syntax y diff-check pasan; export/hook exit0; helper start/status/health/stop y health negativo funcionan. Sin scripts .ps1/.psm1 ni llamadas PowerShell en runtime/CLI/CI. Raspberry helpers/demo pasan por IP segura. |
+| 9. CI remoto | PENDIENTE | Código integrado 7117313 aprobado; publicar evidencia final y comprobar su nuevo SHA. |
 
 Exclusiones vigentes: touch/kiosk físico #88; DevExpert NO APLICA D025.
 Volumen #114 aplazado por operador; secretos #110 seguimiento separado.
-Dictamen: EN VALIDACIÓN, no emitir OK final mientras falten comprobaciones.
+Dictamen: VALIDACIÓN LOCAL COMPLETADA; ocho puntos finales completos.
+Pendiente únicamente CI de evidencias finales para emitir OK de migración.
 
 Preflight Raspberry por nombre vuelve a fallar: `Could not resolve hostname
 tonto-pi.local`, exit 255. Reaparición P-107-03, direccionamiento del entorno;
@@ -43,6 +44,14 @@ Tres capturas de 6 s, STT/respuestas reales, demo exit0; operador confirma voz.
 Prueba Chrome repetida pendiente; no hereda su aceptación de la pasada anterior.
 Build final863ms; sin cambios de producto. Warnings conocidos Starlette/httpx,
 Kivy imghdr, MESA fallback llvmpipe y mtdev/clipboard no bloquean pruebas.
+Chrome integrado: operador confirma tres turnos, voz clara, contador y auto-stop
+10 s; backend 3 POST /chat/audio desde host con HTTP200. Helper backend stop
+exit0, status informa unavailable y health exit1 esperado tras parada.
+Down final exit0, sin contenedores/red, puertos8000/5173 curl7; volumen
+tonto-kids-assistant_backend-venv conservado. Raspberry sin procesos y checkout
+limpio en detached7117313; no se ha reinstalado ni modificado su configuración.
+No se reparó producto durante la pasada. Limitación mDNS documentada con acceso
+por IP/HostKeyAlias estricto; no constituye fallo del pipeline validado por IP.
 
 Este documento sirve como registro y checklist para las validaciones en las diferentes fases de la transición de scripts `.ps1` a Bash y Docker.
 

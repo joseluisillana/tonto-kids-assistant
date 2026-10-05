@@ -1,6 +1,8 @@
 # Plan de validación integral post-migración
 
-Pasada final integrada sobre 7117313 autorizada: reiniciar matriz 1–9,
+Pasada final integrada sobre 7117313 ejecutada: puntos locales 1–8 COMPLETADOS,
+voz Chrome/emulador/Raspberry y limpieza aceptados; pendiente CI documental final.
+Secuencia aplicada: matriz 1–9,
 arranque/API → limpieza → CLI/emulador/voz humana → limpieza → Raspberry
 preflight/voz humana → limpieza → setup/tests/build → helpers/docs → CI.
 Registrar logs sanitizados y commits periódicos; no reparar nuevos fallos.

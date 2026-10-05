@@ -135,3 +135,14 @@ PR #115 sin borrador, lista para revisión y pendiente de merge en #108.
 #107 permanece abierta hasta integración global; volumen aplazado en #114,
 enlazado con docs/issues/emulator-system-volume-delay.md. #88 excluida.
 Reconciliación de estados/documentación; no cambia comportamiento de producto.
+
+## 2026-10-06 — Pasada final integrada de migración
+
+Código7117313 tras merge #115: API/CORS/negativos, CLI tres turnos y memoria,
+emulador tres turnos audibles, Raspberry tres turnos sobre mismo SHA y Chrome
+tres turnos/contador/auto-stop confirmados por operador. Setup Docker exit0,
+110 Python+25 Kivy+web pasan tras instalación; build43 módulos863ms, audits0.
+Helpers/export/hook/sintaxis pasan; limpieza sin residuales conserva dependencias.
+mDNS falla; IP con HostKeyAlias estricto valida identidad y pipeline. No se
+reparó código durante pasada. #114 aplazado, #88 excluido, DevExpert NO APLICA.
+Pendiente CI del commit documental final antes del OK e integración de #108.

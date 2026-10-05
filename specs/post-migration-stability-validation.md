@@ -2,10 +2,11 @@
 
 Fecha: 2026-10-05. Tracking: #107. Rama: `docs/post-migration-stability-validation`.
 
-Nueva pasada final integrada autorizada sobre 7117313 tras merge #115.
+Nueva pasada final integrada ejecutada sobre 7117313 tras merge #115.
 La matriz inicial de specs/migrate-linux-docker-validation.md es ahora vigente;
-estados de la pasada anterior abajo son históricos. Repetir comandos oficiales,
-voz física guiada y CI; documentar fallos sin corregirlos. #114 aplazado.
+estados de la pasada anterior abajo son históricos. Ocho puntos locales pasan,
+incluidos Chrome/emulador/Raspberry físicos y limpieza; falta CI de evidencias
+finales. #114 aplazado; mDNS no resuelve pero acceso IP estricto validado.
 
 Estado vigente en la rama de PR #115: nueve puntos COMPLETADOS, voz real y
 recuperación del emulador aceptadas; CI 09ef3b3 success. #115 lista para revisión
