@@ -27,6 +27,22 @@ services:
       - npm_config_cache=/tmp/.npm
     command: npm run dev -- --host 0.0.0.0 --port 5173
 
+  ui-emulator:
+    build:
+      context: .
+      dockerfile: client/Dockerfile.ui
+    user: "${DOCKER_UID:-1000}:${DOCKER_GID:-1000}"
+    volumes:
+      - .:/app
+      - backend-venv:/app/.venv
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    working_dir: /app
+    environment:
+      - DISPLAY=${DISPLAY:-:0}
+      - KIVY_WINDOW=sdl2
+      - TONTO_AUDIO_MODE=pc
+      - XDG_RUNTIME_DIR=/tmp/runtime-dir
+    command: .venv/bin/python client/touch_ui.py
+
 volumes:
   backend-venv:
-

@@ -79,6 +79,6 @@
   - Al revisar el estado de la **Issue #84**, se descubrió que, aunque el código de Kivy de la Fase 4, 5 y 6 se avanzó, los assets y referencias visuales de la **Fase 3** nunca se generaron ni se guardaron en el repositorio, a pesar de que la entrada anterior del diario indicaba lo contrario.
   - Al mismo tiempo, la rama `main` introdujo una migración a Linux y Docker, incluyendo una especificación pendiente para emular la UI de Kivy usando contenedores (`specs/kivy-ui-docker-emulation.md`).
 - **Próximos pasos (Plan de Acción Aprobado):**
-  1. Generar 2-3 variaciones conceptuales usando GenAI y guardarlas en el repositorio (cerrando realmente la Fase 3).
+  1. En lugar de generar imágenes abstractas con GenAI, capturar la interfaz Kivy real ya implementada. Ejecutar el código en un entorno aislado con `xvfb` para obtener capturas de los distintos estados de la cara (`Idle`, `Speaking`, `Listening`, etc.) y guardarlas en `docs/assets/` como referencia final.
   2. Implementar la infraestructura de `ui-emulator` en el `docker-compose.yml` local.
   3. Ejecutar y testear `client/touch_ui.py` en este entorno Docker.
