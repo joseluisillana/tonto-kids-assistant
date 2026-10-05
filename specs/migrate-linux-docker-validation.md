@@ -656,6 +656,18 @@ pendiente. No se atribuye el fallo al TTS, que aún no se alcanza.
 Siguiente diagnóstico guiado: turno en modo texto para aislar respuesta/TTS
 y repetición hablada con mensaje visible. No se corrige código por esta incidencia.
 
+Actualización del operador: dos turnos en MODO TEXTO funcionan perfectamente;
+backend confirma dos POST /chat HTTP 200 desde el emulador. Respuesta y TTS
+físico validados en ese recorrido. Nuevo intento hablado sigue fallando;
+logs posteriores muestran otros dos POST /chat/audio HTTP 422.
+Se intenta recuperar el detalle mediante reenvío del WAV existente, pero el
+contenedor one-off ya no existe; no se envía audio y no se recupera el cuerpo
+del rechazo. Solo backend/web siguen activos. P-107-12 permanece abierto;
+la hipótesis de transcripción vacía aún requiere evidencia del cuerpo HTTP.
+Próxima ejecución: conservar el contenedor y WAV hasta recuperar el detalle
+422; si es transcripción vacía, comprobar fuente de entrada y señal original
+antes de normalizar. Sin cambios de producto en esta actualización.
+
 **Audio físico pendiente de diagnóstico:** operador indica «Aparece la ventana,
 pero falla micrófono o voz». No se aprueba captura/TTS. Se solicita precisar
 estado del botón/error. Contenedor: UID 1000, grupos [29,1000]; PortAudio enumera
