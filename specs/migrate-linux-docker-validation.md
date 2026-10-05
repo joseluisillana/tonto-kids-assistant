@@ -121,13 +121,13 @@ Este documento sirve como registro y checklist para las validaciones en las dife
 - Ejecución de `scripts/export-docs-for-notebooklm.sh` y `install-git-hooks.sh`
 - Ejecución simulada de los helpers de agente: `scripts/agent-backend.sh status`, etc.
 **Evidencia/Status:** **COMPLETADO**
-- `scripts/export-docs-for-notebooklm.sh`: Exportó correctamente toda la documentación a `exports/notebooklm/` (`INDEX.md` y `NOTEBOOKLM_COMBINED.md`). Código de salida `0`.
-- `scripts/install-git-hooks.sh`: Instaló el hook ejecutable en `.git/hooks/pre-commit`. Código de salida `0`.
+- `scripts/export-docs-for-notebooklm.sh`: Exportó correctamente a `exports/notebooklm/`. Código `0`. Salida: `Exported NotebookLM source files to /home/jose/projects/tonto-kids-assistant/exports/notebooklm`
+- `scripts/install-git-hooks.sh`: Instaló el hook en `.git/hooks/pre-commit`. Código `0`. Salida: `Installed pre-commit hook at /home/jose/projects/tonto-kids-assistant/.git/hooks/pre-commit`
 - `scripts/agent-backend.sh`:
-  - `status`: Informa estado de contenedor y `Health: unavailable` con backend apagado. Código `0`.
-  - `start`: Levanta el backend con `docker compose up -d backend`, espera a que responda `{"status":"ok"}` y reporta `Backend started successfully.`. Código `0`.
-  - `health`: Reporta `Health: ok (http://127.0.0.1:8000/health)`. Código `0`.
-  - `stop`: Detiene y remueve el contenedor limpiamente con `docker compose stop/rm`. Código `0`.
+  - `status`: Informa `Health: unavailable` cuando está apagado, y `Health: ok (http://127.0.0.1:8000/health)` cuando está encendido.
+  - `start`: `[+] up 1/1 ... Backend started successfully.` Código `0`.
+  - `health`: `Health: ok (http://127.0.0.1:8000/health)` Código `0`.
+  - `stop`: `[+] stop 1/1 ... Backend stopped.` Código `0`.
 
 ## 9. Validación de CI Remota (GitHub Actions)
 
