@@ -13,11 +13,12 @@ fi
 
 print_usage() {
     echo "TONTO CLI (Linux/Docker)"
-    echo "Uso: ./tonto.sh {setup|dev|test|build} [target]"
+    echo "Uso: ./tonto.sh {setup|dev|down|test|build} [target]"
     echo ""
     echo "Comandos:"
     echo "  setup                 - Prepara el entorno (instala dependencias en los contenedores)"
     echo "  dev [backend|web|all] - Inicia los servidores en modo desarrollo"
+    echo "  down                  - Detiene y limpia los contenedores y redes de desarrollo"
     echo "  test [python|web|all] - Ejecuta los tests del proyecto"
     echo "  build [web|all]       - Compila los assets del proyecto web"
 }
@@ -50,6 +51,11 @@ case "$COMMAND" in
       echo "Starting backend and web..."
       docker compose up backend web
     fi
+    ;;
+    
+  down|stop)
+    echo "Stopping and cleaning up containers..."
+    docker compose down
     ;;
     
   test)
