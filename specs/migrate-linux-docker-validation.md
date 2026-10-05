@@ -136,5 +136,6 @@ Este documento sirve como registro y checklist para las validaciones en las dife
 5. **Configuración de ramas en CI (`ci.yml`):** (Asociado a Issue [#100](https://github.com/joseluisillana/tonto-kids-assistant/issues/100)) - **RESUELTO**
    - **Descripción:** El flujo de GitHub Actions no escucha eventos `push` en ramas de tipo `chore/*` o `feature/*`, requiriendo un Pull Request formal o la activación manual para validar en CI remoto antes de mergear a `main`.
    - **Resolución:** Se incluyeron los prefijos estándar del proyecto en `push.branches` y se mitigó el problema de permisos de caché que fallaba en la ejecución. CI reporta en verde y el Issue está cerrado.
-6. **Advertencia de sintaxis obsoleta en `docker-compose.yml`:** (Asociado a Issue [#101](https://github.com/joseluisillana/tonto-kids-assistant/issues/101))
+6. **Advertencia de sintaxis obsoleta en `docker-compose.yml`:** (Asociado a Issue [#101](https://github.com/joseluisillana/tonto-kids-assistant/issues/101)) - **RESUELTO**
    - **Descripción:** Cada ejecución de `docker compose` emite el aviso: `WARN[0000] the attribute 'version' is obsolete, it will be ignored, please remove it to avoid potential confusion`.
+   - **Resolución:** Se eliminó el atributo `version` del archivo `docker-compose.yml` ya que la especificación Compose V2 lo considera obsoleto, eliminando el ruido en la consola durante el desarrollo.
