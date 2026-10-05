@@ -33,8 +33,21 @@ TARGET=${2:-all}
 
 case "$COMMAND" in
   setup)
-    echo "Setting up Python virtual environment (Linux/Docker)..."
+    echo "Setting up Python virtual environment in Docker..."
+    docker compose run --rm -u root backend chown -R ${DOCKER_UID:-1000}:${DOCKER_GID:-1000} .venv
     docker compose run --rm backend /bin/bash -c "python -m venv .venv && .venv/bin/pip install -r backend/requirements.txt -r client/requirements.txt -r requirements-dev.txt"
+    
+    echo "Setting up Python virtual environment on Host (for IDE)..."
+    if command -v python3 &> /dev/null; then
+        rm -rf .venv
+        if python3 -m venv .venv; then
+            .venv/bin/pip install -r backend/requirements.txt -r client/requirements.txt -r requirements-dev.txt || echo "Warning: Could not install host dependencies, but container is setup."
+        else
+            echo "Warning: Could not create host .venv (maybe missing python3-venv?). Your IDE might lack autocompletion."
+        fi
+    else
+        echo "python3 not found on host. Skipping host .venv creation. (Your IDE might lack autocompletion)"
+    fi
     
     echo "Setting up Node environment (Linux/Docker)..."
     docker compose run --rm web npm ci
@@ -56,6 +69,7 @@ case "$COMMAND" in
   down|stop)
     echo "Stopping and cleaning up containers..."
     docker compose down
+    echo "Note: To completely wipe the Docker-managed .venv, run: docker compose down -v"
     ;;
     
   test)

@@ -4,6 +4,7 @@ services:
     user: "${DOCKER_UID:-1000}:${DOCKER_GID:-1000}"
     volumes:
       - .:/app
+      - backend-venv:/app/.venv
     working_dir: /app
     ports:
       - "8000:8000"
@@ -25,3 +26,7 @@ services:
       - VITE_BACKEND_URL=http://127.0.0.1:8000
       - npm_config_cache=/tmp/.npm
     command: npm run dev -- --host 0.0.0.0 --port 5173
+
+volumes:
+  backend-venv:
+
