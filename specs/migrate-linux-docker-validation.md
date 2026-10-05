@@ -38,9 +38,12 @@ equivalen a aceptación de audio real.
   TONTO_AUDIO_MODE=pc; `client/main.py:376` ejecuta powershell/System.Speech
   ausente de la imagen Linux. Smoke exit 1 con traceback FileNotFoundError.
   La suite UI simula audio/TTS y por sí sola no prueba esta integración.
-- **P-107-03 — BLOQUEO EXTERNO:** hostname Raspberry no resoluble; se necesita
-  IP/disponibilidad real para repetir preflight y tres turnos. No usar skip/mock
-  como evidencia de aprobación. Solicitud al operador enviada.
+- **P-107-03 — DESBLOQUEADO PARCIALMENTE:** reintento con Raspberry encendida:
+  tonto-pi.local falla alternativamente con No route to host y resolución DNS.
+  Acceso por 192.168.1.183 funciona; la clave ed25519 coincide exactamente con
+  la entrada ya confiada de tonto-pi.local. Se usa HostKeyAlias=tonto-pi.local y
+  StrictHostKeyChecking=yes, sin cambiar known_hosts ni scripts. Preflight real
+  y health LAN pasan. Batería de voz en ejecución; el nombre mDNS sigue fallando.
 - **P-107-04 — ABIERTO, documentación operacional desalineada:**
   `docs/demo-runbook.md` y `docs/demo-checklist.md` siguen indicando Windows,
   scripts dev.ps1/agent-backend.ps1 y que no se carga .env; tonto.sh sí crea
@@ -130,6 +133,53 @@ completar pendientes o documentar su bloqueo; después planificar mitigaciones
 en trabajo separado y revalidar. #107 permanece abierta.
 
 **Cualquier problema encontrado durante estas pruebas se dejará evidenciado aquí y NO se resolverá de manera inmediata.** Una vez estén todas las evidencias, se decidirá el plan de mitigación.
+
+### Revalidación Raspberry encendida — 2026-10-05
+
+Rama local `docs/post-migration-stability-validation`, checkout limpio al inicio.
+Backend Docker arrancado con `./scripts/agent-backend.sh start`, exit 0,
+`Backend started successfully`. URL LAN http://192.168.1.91:8000.
+
+El helper oficial se ejecuta en Bash con una función de shell que añade
+`-o HostKeyAlias=tonto-pi.local -o StrictHostKeyChecking=yes` a SSH, usando
+TONTO_PI_HOST=192.168.1.183. Solo resuelve direccionamiento y conserva la
+verificación de la identidad ya confiada; no modifica configuración persistente.
+
+Preflight con TONTO_BACKEND_URL LAN: exit 0:
+
+```text
+== identity ==
+tonto-pi
+tonto-pi-user
+== repository ==
+/home/tonto-pi-user/tonto-kids-assistant
+## feature/issue-84-face-design...origin/feature/issue-84-face-design
+== tools ==
+/usr/bin/git /usr/bin/python3 /usr/bin/curl
+/usr/bin/arecord /usr/bin/aplay /usr/bin/espeak
+== python environment ==
+Python 3.13.5
+/home/tonto-pi-user/tonto-kids-assistant/.venv/bin/python
+== backend health ==
+Checking http://192.168.1.91:8000/health
+{"status":"ok"}
+```
+
+Revisión Raspberry: `cc7497a5f98c9a04756a20ce563e9d70baa3d43a`, sin cambios
+locales. SHA256 client/main.py coincide con host:
+`45b98e705dd1a232f57ee213948626c492ebc10517ea4d7e1e190fee49b25183`.
+El script demo-raspberry.sh difiere: remoto
+`168e1c00206a5f914854ac932eb1d62cde7db099977e87abeb0314495bf75cc6`, host
+`f65ac0c6640e94c54b077f9e124767ee0d43fcfa0880d3b955d8eeefd49c8362`.
+No se actualizó el checkout remoto durante la auditoría.
+
+`arecord -l`: card 1 Device, USB PnP Sound Device, device 0 USB Audio,
+subdevice disponible 1/1. `aplay -l`: card 0 bcm2835 Headphones y card 2 vc4hdmi.
+
+Se lanza el helper `exec` con tres avisos espeak y entradas Enter a
+`./scripts/demo-raspberry.sh`, TONTO_RECORD_SECONDS=6, separación 40 s entre
+avisos. Inicio correcto y sesión `local-session-7ceda59d-08c9-4ec4-a783-282b6106451f`.
+Turnos y audibilidad pendientes de resultado y confirmación humana.
 
 ---
 
