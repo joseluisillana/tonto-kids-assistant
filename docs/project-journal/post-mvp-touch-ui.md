@@ -125,3 +125,13 @@ superando los pendientes de la entrada anterior del diario.
 
 **Spec:** `specs/kivy-ui-testing-coverage.md`.
 **Plan:** `docs/plans/kivy-ui-testing-coverage-plan.md`.
+
+## 2026-10-05 — Cierre validación del emulador Linux
+
+Punto 3 de #107 completado en PR #115: arranque Linux reparado, selección
+explícita de entrada PC, tres turnos físicos y recuperación ERROR/reset 4 s.
+110 Python, 25 Kivy, web/build y CI 09ef3b3 pasan; limpieza oficial correcta.
+PR #115 sin borrador, lista para revisión y pendiente de merge en #108.
+#107 permanece abierta hasta integración global; volumen aplazado en #114,
+enlazado con docs/issues/emulator-system-volume-delay.md. #88 excluida.
+Reconciliación de estados/documentación; no cambia comportamiento de producto.

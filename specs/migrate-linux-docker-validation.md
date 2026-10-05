@@ -20,9 +20,12 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | 6. Limpieza Raspberry | COMPLETADO | Cliente/audio Raspberry ya terminaban y LAN health tras parada fallaba correctamente (curl 7). Reparación del bloqueo Docker revalidada: elimina también emuladores y red, sin residuales ni puertos; conserva dependencias. No se repiten voz ni UI física para este cambio CLI. Histórico P-107-01. |
 | 7. Setup/tests/build | COMPLETADO | Setup y cachés reparados en #112; lockfile compatible corregido, instalación limpia exit 0. Audit dev/prod 0 vulnerabilidades, npm ls válido. 97 Python + 24 Kivy + web y build pasan; smokes texto y cliente HTTP de voz contra backend real pasan. Evidencias al final; CI de esta reparación se registra tras finalizar. |
 | 8. Auxiliares/docs | COMPLETADO | Helpers previamente validados; guías operativas README/demo/SSH/workflow y planes vigentes actualizados a Bash/Docker/.env. bash -n y git diff --check pasan. demo-touch físico sigue excluido en #88. P-107-04 resuelto. |
-| 9. CI remoto | COMPLETADO | Push a rama documental. Run 37302071237 sobre SHA 2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2: completed/success; setup, checks y build success. Cambios posteriores solo añaden evidencias documentales; consultar checks de PR para su SHA final. |
+| 9. CI remoto | COMPLETADO | PR #115, SHA 09ef3b329fd3ad1005359fc549643575407a43e0: ambos Project checks pasan, runs 37375271391 (1m25s) y 37375276476 (1m45s). CI global de #108 se verifica tras integrar #115. |
 
-Pendientes vigentes: CI del SHA final y revisión/merge de PR #115 y #108.
+Pendientes vigentes: revisión/merge de PR #115 y cierre de integración de #108.
+Los nueve puntos COMPLETADOS en esta rama. PR #115 sin borrador, CI aprobado
+para 09ef3b3; no queda implementación ni validación funcional pendiente aquí.
+Los checks del commit documental de reconciliación deben finalizar antes de merge.
 P-107-14 aplazado al backlog #114. Selección de entrada reproducible documentada;
 audio físico y recuperación del emulador validados.
 Smoke DevExpert real: NO APLICA por decisión D025 (deprecado, no operarlo).
@@ -30,6 +33,8 @@ Chrome: tres turnos/audibilidad/contador/auto-stop aprobados por el operador;
 mDNS y preflight Raspberry por nombre revalidados. Raspberry voz/audibilidad, setup, caches, auditorías,
 CORS, auxiliares y cobertura Kivy tienen evidencia completada.
 Los tests con mocks no equivalen a aceptación de audio real.
+Desde Registro de Problemas se conserva el historial cronológico: estados
+intermedios FALLIDO/PENDIENTE/draft no sustituyen la tabla vigente de arriba.
 
 ### Registro de Problemas — pasada #107
 

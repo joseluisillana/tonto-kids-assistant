@@ -1,5 +1,10 @@
 # Plan de validación integral post-migración
 
+Estado vigente: validación 1–9 COMPLETADA en rama de PR #115; CI 09ef3b3
+aprobado. Pendiente merge #115 → rama de #108, CI global y revisión de #108
+antes de main. #107 permanece abierta hasta integración. #114 es backlog
+aplazado; #88 excluida. Reconciliación documental sin cambios de comportamiento.
+
 ## Objetivo y fuente
 
 Ejecutar `specs/post-migration-stability-validation.md`, issue #107, conservando

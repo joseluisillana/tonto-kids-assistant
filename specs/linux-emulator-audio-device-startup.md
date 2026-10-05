@@ -1,6 +1,19 @@
 # Arranque del emulador con audio físico Linux
 
-2026-10-05. Implementación autorizada; validación física en curso. Part of #107, P-107-10, punto 3.
+2026-10-05. Implementación y validación COMPLETADAS; PR #115 lista para revisión,
+sin borrador, pendiente de merge en #108. Part of #107, punto 3 COMPLETADO.
+
+## Estado vigente
+
+P-107-10/11/12/13 resueltos y revalidados. Arranque oficial con selección
+exportada, tres turnos audibles, ERROR/reset tras cuatro segundos y limpieza
+correcta. 110 tests Python, 25 Kivy, web y build pasan. CI de código y evidencias
+09ef3b3 aprobado en runs 37375271391 y 37375276476; ambos Project checks success.
+P-107-14 aplazado en #114 con registro local; P-107-15 retirado como bloqueo
+por el operador. No queda implementación pendiente en esta reparación.
+Solo falta integración; #107 continúa abierta hasta cierre global de #108.
+Las secciones de diagnóstico posteriores conservan la secuencia histórica;
+sus pendientes intermedios quedan sustituidos por este estado vigente.
 
 ## Problema
 
@@ -66,4 +79,4 @@ P-107-14 se aplaza en #114 y docs/issues/emulator-system-volume-delay.md.
 Aceptación local completada: recuperación física ERROR/reset 4 s confirmada,
 arranque oficial con selección exportada y tres turnos aceptados; limpieza exit 0.
 Anomalía del primer intento retirada como bloqueo por el operador tras reportar
-intermitencia de red (causa posible). Pendiente CI del SHA final y revisión PR #115.
+intermitencia de red (causa posible). CI aprobado; PR #115 lista para revisión.

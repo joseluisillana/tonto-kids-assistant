@@ -1,6 +1,11 @@
 # Plan P-107-10 — audio físico del emulador
 
-Estado: autorizado, implementación y validación en curso. Spec linux-emulator-audio-device-startup.
+Estado: implementación y validación COMPLETADAS; pendiente de merge PR #115
+en #108. PR #115 abierta, sin borrador y sin conflictos al verificar.
+Spec linux-emulator-audio-device-startup.
+CI 09ef3b3 aprobado: runs 37375271391 y 37375276476. Esta reconciliación solo
+actualiza estados documentales; no modifica comportamiento de implementación.
+El historial de ampliaciones de abajo no representa pendientes vigentes.
 D025 excluye DevExpert real: no es dependencia de esta reparación.
 
 1. Desde rama integrada de #108, crear fix/linux-emulator-audio-device-startup.
@@ -58,5 +63,5 @@ entrada compatible, tres turnos y limpieza; registrar CI final antes de merge.
 P-107-14 aplazado por operador: #114 enlaza documento local, fuera de este cierre.
 Ejecución local completada: error/reset físico, selección oficial, tres turnos y
 limpieza validados. P-107-15 retirado como bloqueo por operador, red posible.
-Pendiente comprobar CI del SHA final, preparar PR #115 para revisión y merge
-solo con autorización del operador. Mantener #107 abierta hasta integración final.
+CI confirmado y PR #115 preparada para revisión. Falta merge con autorización
+del operador. Mantener #107 abierta hasta integración final de #108.
