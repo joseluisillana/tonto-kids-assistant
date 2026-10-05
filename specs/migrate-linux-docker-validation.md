@@ -107,12 +107,12 @@ Este documento sirve como registro y checklist para las validaciones en las dife
 **Evidencia/Status:** **COMPLETADO**
 - **Test all:** `./tonto.sh test all`
   - Chequeo de sintaxis Python: `Python syntax OK`
-  - Pytest: `78 passed, 1 warning in 0.40s` (warning menor de StarletteDeprecationWarning)
-  - Tests Web: `web tests passed` (`tsc -p tsconfig.test.json && node tests/run-tests.mjs`)
+  - Pytest: `78 passed, 1 warning in 0.41s` (warning menor de StarletteDeprecationWarning)
+  - Tests Web: `web tests passed` (`tsc -p tsconfig.test.json && node --experimental-specifier-resolution=node tests/run-tests.mjs`)
   - Código de salida: `0`
 - **Build all:** `./tonto.sh build all`
   - `tsc --noEmit && vite build`
-  - `✓ built in 1.75s` (generó `dist/index.html` y bundles)
+  - `✓ built in 1.60s` (generó `dist/index.html` y bundles)
   - Código de salida: `0`
 
 ## 8. Validación de Scripts Auxiliares de Agentes y Docs
