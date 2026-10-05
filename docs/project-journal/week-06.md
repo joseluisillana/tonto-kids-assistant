@@ -200,3 +200,13 @@ Closeout result:
 - Week 06 Phase 5 is complete.
 - The TONTO MVP is ready for presentation within the documented MVP scope and limitations.
 - No code, script, dependency, API, or behavior changes were made.
+
+
+## Post-MVP — reparación de setup/cachés Linux, 2026-10-05
+
+Plan aprobado por el operador; Part of #107. tonto.sh setup prepara Docker sin
+borrar .venv host; setup host es opcional y falla explícitamente. Compose usa
+cachés locales pip/npm con propietario UID/GID del host. Instalación limpia,
+repetida, pip cacheado y npm offline validados en checkout aislado sin secretos.
+97 tests Python, 24 Kivy, web y build pasan. No se añaden dependencias.
+P-107-05/06 resueltos; P-107-07 abierto (7 vulnerabilidades dev, 0 producción).

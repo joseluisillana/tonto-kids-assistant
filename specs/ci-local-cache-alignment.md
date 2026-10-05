@@ -1,5 +1,13 @@
 # CI Local Cache Alignment
 
+> Documento histórico del workflow anterior. Desde la migración, CI usa
+> Docker mediante tonto.sh; no ejecutar los comandos heredados de este registro
+> ni restaurar setup-python/setup-node. La propuesta vigente y su ejecución son
+> specs/linux-setup-cache-stability.md y
+> docs/plans/linux-setup-cache-stability-implementation-plan.md.
+> Issue #89 cerrada; las incidencias actuales se siguen en #107.
+
+
 ## Status
 
 Approved for implementation planning on 2026-07-20. Not implemented yet.

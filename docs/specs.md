@@ -118,12 +118,12 @@ GitHub tracking: issue #65 (parent), issues #66-#71 (phases).
 
 ## Mantenimiento post-MVP de CI
 
-La alineación de cachés locales de GitHub Actions está aprobada y pendiente de
-implementación. `specs/ci-local-cache-alignment.md` define que las cachés
-integradas de pip y npm deben conservarse, pero deben resolver respectivamente
-a `.cache/pip` y `.cache/npm` dentro del workspace. La revalidación de migración detecta aún desajustes de
-caché/setup (P-107-05/06); este objetivo no se considera ya cumplido. Su plan emparejado vive en
-`docs/plans/ci-local-cache-alignment-implementation-plan.md`.
+El workflow actual ejecuta setup/test/build mediante Docker y `tonto.sh`.
+La reparación de P-107-05/06 separa el entorno opcional del IDE y configura
+cachés locales pip/npm. Spec: `specs/linux-setup-cache-stability.md`; plan:
+`docs/plans/linux-setup-cache-stability-implementation-plan.md`. Las specs de
+ci-local-cache-alignment son registros del workflow anterior (issue #89 cerrada).
+La auditoría web P-107-07 permanece abierta; no se cambian dependencias aquí.
 
 ## Fuera de Alcance de Semana 5
 

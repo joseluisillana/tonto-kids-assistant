@@ -289,6 +289,8 @@ Usa estos comandos en vez de instalar dependencias o lanzar herramientas a mano:
 
 ```bash
 ./tonto.sh setup
+# Opcional: entorno Python del IDE, requiere Python/venv en el host
+./tonto.sh setup host
 ./tonto.sh dev backend
 ./tonto.sh dev web
 ./tonto.sh dev ui
@@ -359,3 +361,12 @@ MIT - Mantén simple, comparte código.
 ---
 
 _Proyecto TONTO: IA + Hardware = Aprendizaje Conversacional. Iteración semanal, no metas imposibles._
+
+### Setup y cachés Linux
+
+`./tonto.sh setup` prepara dependencias Docker y web; conserva el `.venv` del
+host. `./tonto.sh setup host` instala el entorno opcional del IDE y falla si
+Python/venv/pip no están disponibles; no instala paquetes del sistema.
+Las cachés pip/npm viven en `.cache/pip` y `.cache/npm` dentro del repositorio,
+con permisos del usuario. CI usa el mismo flujo Docker. La reutilización entre
+runners de CI no se configura en este cambio.
