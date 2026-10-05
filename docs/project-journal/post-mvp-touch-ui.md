@@ -125,3 +125,33 @@ superando los pendientes de la entrada anterior del diario.
 
 **Spec:** `specs/kivy-ui-testing-coverage.md`.
 **Plan:** `docs/plans/kivy-ui-testing-coverage-plan.md`.
+
+## 2026-10-05 — Cierre validación del emulador Linux
+
+Punto 3 de #107 completado en PR #115: arranque Linux reparado, selección
+explícita de entrada PC, tres turnos físicos y recuperación ERROR/reset 4 s.
+110 Python, 25 Kivy, web/build y CI 09ef3b3 pasan; limpieza oficial correcta.
+PR #115 sin borrador, lista para revisión y pendiente de merge en #108.
+#107 permanece abierta hasta integración global; volumen aplazado en #114,
+enlazado con docs/issues/emulator-system-volume-delay.md. #88 excluida.
+Reconciliación de estados/documentación; no cambia comportamiento de producto.
+
+## 2026-10-06 — Pasada final integrada de migración
+
+Código7117313 tras merge #115: API/CORS/negativos, CLI tres turnos y memoria,
+emulador tres turnos audibles, Raspberry tres turnos sobre mismo SHA y Chrome
+tres turnos/contador/auto-stop confirmados por operador. Setup Docker exit0,
+110 Python+25 Kivy+web pasan tras instalación; build43 módulos863ms, audits0.
+Helpers/export/hook/sintaxis pasan; limpieza sin residuales conserva dependencias.
+mDNS falla; IP con HostKeyAlias estricto valida identidad y pipeline. No se
+reparó código durante pasada. #114 aplazado, #88 excluido, DevExpert NO APLICA.
+CI c12f377 success (runs37380799527/37380807200). Nueve puntos COMPLETADOS:
+OK de migración en alcance validado, pendiente revisión/merge #108 en main.
+
+## 2026-10-06 — Preparación de cierre e integración #108
+
+Operador autoriza merge en main y cierre de #107. Metadatos de specs/planes,
+roadmap y resumen vigente estabilizados: COMPLETADOS, sin pendientes funcionales
+ni referencias vigentes a #115 como borrador. CI63d4099 success; confirmar
+checks del commit documental de metadatos antes de merge. Cerrar #107 después
+de integración, mantener #81/#88/#110/#114 abiertas. Sin cambios de comportamiento.

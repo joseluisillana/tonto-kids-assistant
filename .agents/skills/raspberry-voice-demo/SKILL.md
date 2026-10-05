@@ -39,19 +39,19 @@ Run from the repo root.
 1. Check backend status:
 
 ```bash
-.\scripts\agent-backend.sh status
+./scripts/agent-backend.sh status
 ```
 
 2. If needed, start it with LAN access:
 
 ```bash
-.\scripts\agent-backend.sh start
+./scripts/agent-backend.sh start
 ```
 
 3. Verify health:
 
 ```bash
-.\scripts\agent-backend.sh health
+./scripts/agent-backend.sh health
 ```
 
 4. Run a minimal provider smoke without printing secrets:
@@ -67,8 +67,8 @@ Discover or confirm the Host LAN IP. Do not use `127.0.0.1` as `TONTO_BACKEND_UR
 Set the backend URL and run preflight:
 
 ```bash
-export TONTO_BACKEND_URL= "http://<HOST_LAN_IP>:8000"
-.\scripts\agent-raspberry.sh preflight
+export TONTO_BACKEND_URL="http://<HOST_LAN_IP>:8000"
+./scripts/agent-raspberry.sh preflight
 ```
 
 Preflight should confirm Raspberry identity, repo presence, required tools, `.venv/bin/python`, and backend `/health`.
@@ -80,7 +80,7 @@ The Raspberry client records when it receives an empty Enter. Use `espeak` to te
 For two turns:
 
 ```bash
-export TONTO_BACKEND_URL= "http://<HOST_LAN_IP>:8000"; .\scripts\agent-raspberry.sh exec 'export TONTO_BACKEND_URL=http://<HOST_LAN_IP>:8000; export TONTO_RECORD_SECONDS=6; (sleep 6; espeak -v es -s 135 -g 8 "primera pregunta, habla ahora" >/dev/null 2>&1; sleep 1; printf "\n"; sleep 34; espeak -v es -s 135 -g 8 "segunda pregunta, habla ahora" >/dev/null 2>&1; sleep 1; printf "\nexit\n") | ./scripts/demo-raspberry.sh'
+export TONTO_BACKEND_URL="http://<HOST_LAN_IP>:8000"; ./scripts/agent-raspberry.sh exec 'export TONTO_BACKEND_URL=http://<HOST_LAN_IP>:8000; export TONTO_RECORD_SECONDS=6; (sleep 6; espeak -v es -s 135 -g 8 "primera pregunta, habla ahora" >/dev/null 2>&1; sleep 1; printf "\n"; sleep 34; espeak -v es -s 135 -g 8 "segunda pregunta, habla ahora" >/dev/null 2>&1; sleep 1; printf "\nexit\n") | ./scripts/demo-raspberry.sh'
 ```
 
 Tell the operator:
@@ -114,5 +114,5 @@ After live turns, summarize:
 If the user asks to stop the backend:
 
 ```bash
-.\scripts\agent-backend.sh stop
+./scripts/agent-backend.sh stop
 ```

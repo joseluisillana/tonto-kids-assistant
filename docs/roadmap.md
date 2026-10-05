@@ -464,3 +464,11 @@ Las fases 1–6 están cerradas. La cobertura de Kivy (#105) añade pruebas de
 widgets reales en Docker/Xvfb al comando `./tonto.sh test all`, con spec y plan
 `kivy-ui-testing-coverage`. La fase 7 (#88), kiosk y validación final en
 Raspberry, permanece pendiente y requiere evidencia de hardware separada.
+
+## Validación post-migración — completada 2026-10-06
+
+#107: nueve puntos y voz física Chrome/Raspberry/emulador aceptados sobre7117313;
+setup/tests/build/limpieza y CI63d4099 success. Integración PR #108, con #115
+ya incorporada. OK de migración en alcance acordado; sin trabajo funcional pendiente.
+Volumen #114 aplazado, secretos #110 y touch/kiosk #88 separados. mDNS requiere
+acceso IP con identidad SSH verificada en esta LAN. No se crea release/tag.

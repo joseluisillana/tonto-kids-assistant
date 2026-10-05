@@ -131,6 +131,19 @@ def test_voice_pipeline_uses_audio_contract(ui, monkeypatch):
     success.assert_called_once_with("Hola", "¡Hola!")
 
 
+def test_voice_capture_failure_reports_error_without_upload(ui, monkeypatch):
+    monkeypatch.setattr(touch_ui, "capture_audio", Mock(return_value=None))
+    monkeypatch.setattr("time.sleep", lambda seconds: None)
+    error = Mock()
+    upload = Mock()
+    monkeypatch.setattr(ui, "on_pipeline_error", error)
+    monkeypatch.setattr(ui, "set_thinking_state", Mock())
+    monkeypatch.setattr(touch_ui, "send_audio", upload)
+    ui.voice_pipeline_thread()
+    error.assert_called_once_with("No se pudo grabar. Comprueba el micrófono y su configuración.")
+    upload.assert_not_called()
+
+
 def test_text_pipeline_reports_backend_failure(ui, monkeypatch):
     send = Mock(return_value=None)
     error = Mock()

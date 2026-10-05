@@ -12,6 +12,7 @@ services:
       - .env
     environment:
       - PYTHONDONTWRITEBYTECODE=1
+      - PIP_CACHE_DIR=/app/.cache/pip
     command: .venv/bin/python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
 
   web:
@@ -19,12 +20,13 @@ services:
     user: "${DOCKER_UID:-1000}:${DOCKER_GID:-1000}"
     volumes:
       - ./web:/app/web
+      - ./.cache/npm:/app/.cache/npm
     working_dir: /app/web
     ports:
       - "5173:5173"
     environment:
       - VITE_BACKEND_URL=http://127.0.0.1:8000
-      - npm_config_cache=/tmp/.npm
+      - npm_config_cache=/app/.cache/npm
     command: npm run dev -- --host 0.0.0.0 --port 5173
 
   ui-emulator:
@@ -40,9 +42,15 @@ services:
     environment:
       - DISPLAY=${DISPLAY:-:0}
       - KIVY_WINDOW=sdl2
+      - KIVY_HOME=/tmp/.kivy-runtime
+      - XDG_CACHE_HOME=/tmp/.cache
       - TONTO_AUDIO_MODE=pc
+      - TONTO_AUDIO_DEVICE=${TONTO_AUDIO_DEVICE:-}
+      - TONTO_BACKEND_URL=http://backend:8000
       - XDG_RUNTIME_DIR=/tmp/runtime-dir
-    command: .venv/bin/python client/touch_ui.py
+    depends_on:
+      - backend
+    command: .venv/bin/python -m client.touch_ui
 
 volumes:
   backend-venv:

@@ -1,17 +1,17 @@
 # TONTO Demo Runbook
 
 **Audience:** Demo operator
-**Last Updated:** 2026-06-13
+**Last Updated:** 2026-10-05
 
 ## Prerequisites
 
-- Windows PC with backend running.
-- Raspberry Pi connected to the same LAN as the Windows PC.
+- Linux host with backend running.
+- Raspberry Pi connected to the same LAN as the Linux host.
 - USB audio device (microphone + speaker) connected to the Raspberry.
 - Waveshare 5" Touch Screen connected to the Raspberry (HDMI for video, USB for power/touch).
 - Python venv set up on the Raspberry.
-- Node.js and npm installed on Windows (for web client, optional).
-- One backend inference provider configured in the Windows backend terminal: OpenAI or DevExpert.
+- Docker Engine and Docker Compose installed; Node and npm run in containers.
+- One backend inference provider configured in the backend configuration in `.env`: OpenAI or DevExpert.
 
 ## Provider Selection
 
@@ -24,61 +24,58 @@ The supported values are:
 | `openai` | OpenAI Responses API | OpenAI audio transcriptions |
 | `devexpert` | DevExpert Chat Completions | DevExpert audio transcriptions |
 
-The scripts inherit environment variables from the shell that starts them. No script auto-loads `.env`; use `.env.example` as a local reference only.
+Docker Compose carga `.env` mediante `env_file`. El operador configura proveedor y credenciales tomando `.env.example` como plantilla. Los agentes no deben leer ni imprimir el archivo de secretos. Reiniciar el backend tras cambiar su configuración.
 
 ### OpenAI backend
 
-In the backend Bash terminal:
+El operador configura estos valores en `.env` (no mostrar ni registrar claves reales):
 
-```powershell
-$env:TONTO_INFERENCE_PROVIDER = "openai"
-$env:OPENAI_API_KEY = "<your-openai-api-key>"
-$env:OPENAI_MODEL = "gpt-4o-mini"
-$env:OPENAI_STT_MODEL = "gpt-4o-mini-transcribe"
-.\scripts\dev.ps1 -Service backend -AllowLan
+```dotenv
+TONTO_INFERENCE_PROVIDER="openai"
+OPENAI_API_KEY="<your-openai-api-key>"
+OPENAI_MODEL="gpt-4o-mini"
+OPENAI_STT_MODEL="gpt-4o-mini-transcribe"
 ```
 
 OpenAI is also the default when `TONTO_INFERENCE_PROVIDER` is unset.
 
 ### DevExpert backend
 
-In the backend Bash terminal:
+El operador configura estos valores en `.env` (no mostrar ni registrar claves reales):
 
-```powershell
-$env:TONTO_INFERENCE_PROVIDER = "devexpert"
-$env:DEVEXPERT_API_KEY = "<your-devexpert-api-key>"
-$env:DEVEXPERT_BASE_URL = "https://inference.devexpert.io/v1"
-$env:DEVEXPERT_CHAT_MODEL = "mimo-v2.5"
-$env:DEVEXPERT_STT_MODEL = "gpt-4o-mini-transcribe"
-.\scripts\dev.ps1 -Service backend -AllowLan
+```dotenv
+TONTO_INFERENCE_PROVIDER="devexpert"
+DEVEXPERT_API_KEY="<your-devexpert-api-key>"
+DEVEXPERT_BASE_URL="https://inference.devexpert.io/v1"
+DEVEXPERT_CHAT_MODEL="mimo-v2.5"
+DEVEXPERT_STT_MODEL="gpt-4o-mini-transcribe"
 ```
 
-Do not print or commit real API keys. If using `scripts/agent-backend.ps1`, set the same environment variables first and then run:
+Do not print or commit real API keys. If using `scripts/agent-backend.sh`, configure the same values in `.env` first and then run:
 
-```powershell
-.\scripts\agent-backend.ps1 -Action start -AllowLan
+```bash
+./scripts/agent-backend.sh start
 ```
 
 ### Provider smoke check
 
 After the backend starts, a text turn validates the active text provider:
 
-```powershell
-$body = @{ session_id = "provider-smoke"; message = "Responde solo: ok" } | ConvertTo-Json
-Invoke-RestMethod -Uri "http://127.0.0.1:8000/chat" -Method Post -ContentType "application/json" -Body $body
+```bash
+curl --fail --silent --show-error http://127.0.0.1:8000/chat -H "Content-Type: application/json" -d '{"session_id":"provider-smoke","message":"Responde solo: ok"}'
 ```
 
 The voice loop validates the active STT provider through `POST /chat/audio`; use the Raspberry or web demo flow below.
 
 ## Quick Start
 
-### 1. Start the backend (Windows)
+### 1. Start the backend (Linux/Docker)
 
-```powershell
-.\scripts\dev.ps1 -Service backend -AllowLan
+```bash
+./tonto.sh dev backend
 ```
 
-The backend starts on `0.0.0.0:8000` with whichever provider was configured in the shell. Keep this terminal open.
+The backend starts on `0.0.0.0:8000` with the provider configured by the operator in `.env`. Keep this terminal open.
 
 ### 2. Start the Raspberry client
 
@@ -89,10 +86,10 @@ cd ~/tonto-kids-assistant
 
 The script checks backend health, sets default env vars, and starts voice mode with `.venv/bin/python`.
 
-### 3. Start the web client (optional, Windows)
+### 3. Start the web client (optional, Linux/Docker)
 
-```powershell
-.\scripts\dev.ps1 -Service web
+```bash
+./tonto.sh dev web
 ```
 
 Open `http://127.0.0.1:5173/` in a browser.
@@ -177,14 +174,14 @@ Type `exit` and press Enter:
 
 ### Step 1: Start the backend
 
-```powershell
-.\scripts\dev.ps1 -Service backend -AllowLan
+```bash
+./tonto.sh dev backend
 ```
 
 ### Step 2: Start the web client
 
-```powershell
-.\scripts\dev.ps1 -Service web
+```bash
+./tonto.sh dev web
 ```
 
 ### Step 3: Open the browser
@@ -227,10 +224,10 @@ jack server is not running or cannot be started
 **Symptom:** Script shows `ERROR: Backend at http://... is not reachable`.
 
 **Fix:**
-1. Check the backend is running on Windows: `.\scripts\dev.ps1 -Service backend -AllowLan`
-2. Check the IP is correct: `ping <windows-pc-ip>` from Raspberry.
-3. Check firewall allows port 8000 on Windows.
-4. Verify `TONTO_BACKEND_URL` matches the Windows PC IP.
+1. Check the backend is running in Docker on Linux: `./tonto.sh dev backend`
+2. Check the IP is correct: `ping <linux-host-ip>` from Raspberry.
+3. Check firewall allows port 8000 on Linux.
+4. Verify `TONTO_BACKEND_URL` matches the Linux host IP.
 
 ### "arecord not found"
 

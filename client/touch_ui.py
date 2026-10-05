@@ -172,11 +172,10 @@ class TontoTouchUI(FloatLayout):
         wav_bytes = capture_audio(self.audio_device, self.record_seconds, self.wav_path, show_progress=False)
         
         if not wav_bytes:
-            # Simulate thinking and error for visual testing if mic fails on Windows
             self.set_thinking_state()
             import time
             time.sleep(1.5)
-            self.on_pipeline_error("Micrófono no detectado.\n(Usa el modo texto para ver todas las animaciones)")
+            self.on_pipeline_error("No se pudo grabar. Comprueba el micrófono y su configuración.")
             return
             
         self.set_thinking_state()

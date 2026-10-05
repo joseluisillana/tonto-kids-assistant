@@ -174,7 +174,7 @@ El asistente debe responder:
 - **Fase 0**: Kickoff
 - **Fase 1**: Runbook de demo y script de arranque (`demo-raspberry.sh`)
 - **Fase 2**: Pulido de UX conversacional (límite de tokens, validación con preguntas reales)
-- **Extra**: Agent Capability Pack (`agent-backend.ps1`, `agent-raspberry.ps1`)
+- **Extra**: Agent Capability Pack (`agent-backend.sh`, `agent-raspberry.sh`)
 - **Fase 3**: Resiliencia a errores (siguiente hito)
 
 ### Semana 6: Entrega Final
@@ -202,7 +202,7 @@ El asistente debe responder:
 2. Verificar rama actual con `git branch --show-current` y `git status`
 3. Si estás en `main`, crear rama nueva con el tipo y descripción adecuados
 4. Implementar cambios pequeños y directos
-5. Ejecutar tests: `.\scripts\test.ps1 -Target python` o `-Target web` o `-Target all`
+5. Ejecutar tests: `./tonto.sh test python` o `./tonto.sh test web` o `./tonto.sh test all`
 6. Actualizar docs/specs si el comportamiento, arquitectura, o alcance cambian
 7. Si una spec se crea o modifica materialmente, crear plan de implementación en `docs/plans/`
 8. Hacer commit y push; crear PR con `gh`
@@ -217,18 +217,18 @@ Toda spec nueva o modificada materialmente sigue este ciclo:
 ### Scripts obligatorios (no inventar comandos ad-hoc)
 | Comando | Propósito |
 |---------|-----------|
-| `.\scripts\setup-dev.ps1` | Crear .venv, instalar dependencias Python y web |
-| `.\scripts\dev.ps1 -Service backend\|web\|all` | Iniciar servicios |
-| `.\scripts\test.ps1 -Target python\|web\|all` | Ejecutar tests |
-| `.\scripts\build.ps1 -Target web\|all` | Build de producción |
-| `.\scripts\agent-backend.ps1 start\|stop\|status\|health` | Ciclo de vida del backend |
-| `.\scripts\agent-raspberry.ps1 preflight\|exec` | Operaciones SSH a Raspberry |
+| `./tonto.sh setup` | Crear .venv, instalar dependencias Python y web |
+| `./tonto.sh dev backend\|web\|all` | Iniciar servicios |
+| `./tonto.sh test python\|web\|all` | Ejecutar tests |
+| `./tonto.sh build web\|all` | Build de producción |
+| `./scripts/agent-backend.sh start\|stop\|status\|health` | Ciclo de vida del backend |
+| `./scripts/agent-raspberry.sh preflight\|exec` | Operaciones SSH a Raspberry |
 
 ### Entorno local
 - Python: `.venv/` local al repo, nunca global
 - Web: `node_modules/` dentro de `web/`, nunca global
 - Cachés: `.cache/` local, no depender de cachés de perfil de usuario
-- Windows: Bash scripts oficiales
+- Linux: Bash scripts oficiales
 - Raspberry: bash scripts
 
 ---
@@ -253,7 +253,7 @@ Toda spec nueva o modificada materialmente sigue este ciclo:
 ## ESTRATEGIA DE TESTING
 
 ### Tests Python (pytest + httpx)
-Ubicados en `tests/`, ejecutados con `.\scripts\test.ps1 -Target python`.
+Ubicados en `tests/`, ejecutados con `./tonto.sh test python`.
 - `conftest.py`: fixtures con TestClient, generador de WAV, tmp_path local al repo
 - `test_audio.py`: validación de WAV, campos requeridos, límites de tamaño, formato, errores STT
 - `test_client.py`: HTTP client, timeouts, errores, captura de audio, espeak, indicador de escucha
@@ -261,7 +261,7 @@ Ubicados en `tests/`, ejecutados con `.\scripts\test.ps1 -Target python`.
 - `test_stt_client.py`: STT, modelo custom, errores HTTP, timeouts
 
 ### Tests Web (Node test runner)
-Ubicados en `web/tests/`, ejecutados con `.\scripts\test.ps1 -Target web`.
+Ubicados en `web/tests/`, ejecutados con `./tonto.sh test web`.
 - `audio-utils.test.mjs`: encoding WAV, downsampling, recorte de silencio, normalización
 - `backendClient.test.mjs`: request/response del cliente backend
 

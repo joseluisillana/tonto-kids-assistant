@@ -29,7 +29,7 @@ check_backend_health() {
         attempt=$((attempt + 1))
     done
     echo "ERROR: Backend at $TONTO_BACKEND_URL is not reachable or not healthy after $HEALTH_RETRIES attempts."
-    echo "Make sure the backend is running: .\\scripts\\dev.ps1 -Service backend -AllowLan"
+    echo "Make sure the backend is running: ./tonto.sh dev backend"
     exit 1
 }
 

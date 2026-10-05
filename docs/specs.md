@@ -9,6 +9,13 @@ La cobertura automatizada de Kivy se implementa en
 `docs/plans/kivy-ui-testing-coverage-plan.md` e issue #105. Usa widgets reales
 en Docker con SDL2/Xvfb; la validación física y kiosk siguen en #88.
 
+Validación Linux/Docker #107 COMPLETADA el 2026-10-06; integración PR #108.
+Código7117313: nueve puntos aceptados y CI63d4099 success, incluida voz física.
+Registro vigente: matriz final de specs/migrate-linux-docker-validation.md.
+OK de migración en alcance validado; #115 integrada. Limitaciones: IP verificada
+para Raspberry en esta LAN, volumen #114 aplazado, secretos #110 separados y
+touch/kiosk #88 excluido. No hay trabajo funcional pendiente en la spec de migración.
+
 Sistema educativo de IA física para niños.
 
 El primer loop mínimo ya quedó validado en las semanas 1 y 2:
@@ -95,7 +102,7 @@ GitHub tracking: issue #33 (parent), issues #34-#38 (phases).
 
 Semana 5 also includes an extra workflow item, tracked by issue #43:
 
-- **Agent Capability Pack** — implemented and merged. Portable repo-owned Markdown and Bash helper scripts for backend lifecycle and Raspberry SSH operations. It added `scripts/agent-backend.ps1` and `scripts/agent-raspberry.ps1`; real Raspberry preflight passed with backend health. Spec: `specs/week-05-agent-capability-pack.md`; plan: `docs/plans/week-05-agent-capability-pack.md`.
+- **Agent Capability Pack** — implemented and merged. Portable repo-owned Markdown and Bash helper scripts for backend lifecycle and Raspberry SSH operations. Its current Linux entry points are `scripts/agent-backend.sh` and `scripts/agent-raspberry.sh`; real Raspberry preflight passed with backend health. Spec: `specs/week-05-agent-capability-pack.md`; plan: `docs/plans/week-05-agent-capability-pack.md`.
 
 Semana 5 also includes a planned extra MVP line for AI Expert course alignment:
 
@@ -118,12 +125,14 @@ GitHub tracking: issue #65 (parent), issues #66-#71 (phases).
 
 ## Mantenimiento post-MVP de CI
 
-La alineación de cachés locales de GitHub Actions está aprobada y pendiente de
-implementación. `specs/ci-local-cache-alignment.md` define que las cachés
-integradas de pip y npm deben conservarse, pero deben resolver respectivamente
-a `.cache/pip` y `.cache/npm` dentro del workspace, igual que
-`scripts/setup-dev.ps1`. Su plan emparejado vive en
-`docs/plans/ci-local-cache-alignment-implementation-plan.md`.
+El workflow actual ejecuta setup/test/build mediante Docker y `tonto.sh`.
+La reparación de P-107-05/06 separa el entorno opcional del IDE y configura
+cachés locales pip/npm. Spec: `specs/linux-setup-cache-stability.md`; plan:
+`docs/plans/linux-setup-cache-stability-implementation-plan.md`. Las specs de
+ci-local-cache-alignment son registros del workflow anterior (issue #89 cerrada).
+La auditoría web P-107-07 queda reparada mediante lockfile compatible, sin
+cambiar el manifest; spec/plan web-dependency-audit-remediation. Audits completos
+y producción cero, tests/build pasan; ver registro de validación para CI.
 
 ## Fuera de Alcance de Semana 5
 
@@ -144,7 +153,7 @@ a `.cache/pip` y `.cache/npm` dentro del workspace, igual que
 - Dispositivo visible con `arecord -l`. Validado como `USB PnP Sound Device`; el numero `card` puede variar y debe leerse antes de grabar.
 - Grabación WAV corta validada con `arecord -D plughw:<CARD>,<DEVICE> -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav`.
 - Reproducción local validada con `aplay ~/tonto-mic-check.wav`.
-- Backend arrancado con `.\scripts\dev.ps1 -Service backend -AllowLan`.
+- Backend arrancado con `./tonto.sh dev backend`.
 - Cliente Raspberry apuntando a `TONTO_BACKEND_URL`.
 - Subida manual a `POST /chat/audio` validada desde Raspberry con `curl` y respuesta `HTTP 200`.
 - STT backend validado manualmente desde Raspberry real el 2026-05-30: transcript `Hola tonto, explícame qué es una estrella.`, `TOTAL_TIME=5.395580`, respuesta educativa y TTS local audible.
@@ -166,3 +175,11 @@ a `.cache/pip` y `.cache/npm` dentro del workspace, igual que
 - `specs/kivy-ui-docker-emulation.md`: Emulación en Docker de la Interfaz Táctil (Implemented).
 - `specs/kivy-ui-testing-coverage.md`: pruebas de widgets Kivy reales bajo Xvfb,
   integradas en `./tonto.sh test all`.
+
+
+## Decisión vigente de proveedor — 2026-10-05
+
+D025: DevExpert deprecado por decisión del operador; no operarlo para validación
+ni pedir credenciales. Smoke real NO APLICA en #107. OpenAI real validado.
+Histórico/adaptadores existentes conservados, sin cambio de runtime en esta
+actualización. Spec/plan post-migration-stability-validation reflejan la exclusión.

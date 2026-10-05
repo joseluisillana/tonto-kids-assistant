@@ -37,10 +37,10 @@ Excluded:
 
 Use official project scripts whenever possible:
 
-```powershell
-.\scripts\test.ps1 -Target python
-.\scripts\test.ps1 -Target web
-.\scripts\build.ps1 -Target web
+```bash
+./tonto.sh test python
+./tonto.sh test web
+./tonto.sh build web
 git diff --check
 git status --short --branch
 ```

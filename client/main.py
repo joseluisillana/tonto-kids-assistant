@@ -157,8 +157,16 @@ def capture_audio(
             print(f"Listening for {seconds}s... (PC Mode)")
             
         fs = 16000
-        recording = sd.rec(int(seconds * fs), samplerate=fs, channels=1, dtype='float32')
-        sd.wait()
+        input_device = int(device) if device and device.isdecimal() else device or None
+        try:
+            recording = sd.rec(
+                int(seconds * fs), samplerate=fs, channels=1,
+                dtype='float32', device=input_device,
+            )
+            sd.wait()
+        except sd.PortAudioError:
+            print("No se pudo grabar: comprueba el micrófono y su compatibilidad con 16000 Hz.")
+            return None
         
         # Normalize volume to improve STT transcription
         max_amp = np.max(np.abs(recording))
@@ -363,19 +371,6 @@ def send_audio(
 
 
 def speak(text: str) -> None:
-    mode = os.environ.get("TONTO_AUDIO_MODE", "raspberry").lower()
-    if mode == "pc":
-        escaped_text = text.replace("'", "''")
-        ps_script = (
-            "Add-Type -AssemblyName System.Speech; "
-            "$s = New-Object System.Speech.Synthesis.SpeechSynthesizer; "
-            "$v = $s.GetInstalledVoices() | Where-Object { $_.VoiceInfo.Culture -like '*es-*' } | Select-Object -First 1; "
-            "if ($v) { $s.SelectVoice($v.VoiceInfo.Name) }; "
-            f"$s.Speak('{escaped_text}')"
-        )
-        subprocess.run(["powershell", "-Command", ps_script], check=False, stderr=subprocess.DEVNULL)
-        return
-
     tts_command = os.environ.get("TONTO_TTS_COMMAND", "espeak")
     tts_args = shlex.split(os.environ.get("TONTO_TTS_ARGS", DEFAULT_TTS_ARGS))
 
