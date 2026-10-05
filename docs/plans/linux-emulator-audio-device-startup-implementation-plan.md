@@ -32,7 +32,7 @@ Operador aprueba directorios Kivy/cache escribibles en /tmp y ejecución como
 módulo. Actualizar Compose en esta misma reparación y repetir arranque/regresiones.
 Ventana abierta con audio group 29; aceptación física aún pendiente de completar.
 
-## Propuesta P-107-12 — pendiente de aprobación
+## Reparación P-107-12 — aprobada e implementada; validación física pendiente
 
 1. Hacer que capture_audio PC aplique device a sounddevice.rec; convertir índice
    numérico configurado y conservar nombres/default cuando corresponda.

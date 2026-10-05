@@ -375,3 +375,9 @@ Python/venv/pip no están disponibles; no instala paquetes del sistema.
 Las cachés pip/npm viven en `.cache/pip` y `.cache/npm` dentro del repositorio,
 con permisos del usuario. CI usa el mismo flujo Docker. La reutilización entre
 runners de CI no se configura en este cambio.
+# Selección de micrófono del emulador
+
+En modo PC, `TONTO_AUDIO_DEVICE` selecciona la entrada PortAudio por índice
+numérico o nombre; sin valor se usa la entrada predeterminada. Pasa esta variable
+al contenedor mediante un override Compose local. Los índices dependen del equipo;
+no fijes un índice de hardware en el Compose compartido.

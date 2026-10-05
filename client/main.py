@@ -157,7 +157,11 @@ def capture_audio(
             print(f"Listening for {seconds}s... (PC Mode)")
             
         fs = 16000
-        recording = sd.rec(int(seconds * fs), samplerate=fs, channels=1, dtype='float32')
+        input_device = int(device) if device and device.isdecimal() else device
+        recording = sd.rec(
+            int(seconds * fs), samplerate=fs, channels=1,
+            dtype='float32', device=input_device,
+        )
         sd.wait()
         
         # Normalize volume to improve STT transcription

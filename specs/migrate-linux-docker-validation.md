@@ -674,6 +674,13 @@ otro intento hablado en emulador falla. No requiere pronunciar una frase exacta.
 Inspección: capture_audio en modo pc recibe device, pero sd.rec no lo usa;
 TONTO_AUDIO_DEVICE no permite seleccionar entrada en esa ruta actualmente.
 Hipótesis: ruta ALSA/default distinta de Chrome; no se declara causa confirmada.
+Operador aprueba reparación de selección de entrada. Modo PC ahora pasa
+device a sd.rec, convierte índice numérico y preserva nombre/default.
+Tres casos de test verifican el argumento efectivo sin hardware/dependencias
+opcionales. ./tonto.sh test all: 107 Python (0.44 s), 24 Kivy (1.05 s), web OK.
+Emulador reiniciado con override temporal /tmp/tonto-ui-dmic-validation.yaml,
+TONTO_AUDIO_DEVICE=4 (PortAudio DMIC hw:0,6 en este equipo); no se fija el índice
+en configuración compartida ni se cambia salida/volumen. Prueba física pendiente.
 Próxima ejecución: conservar el contenedor y WAV hasta recuperar el detalle
 422; si es transcripción vacía, comprobar fuente de entrada y señal original
 antes de normalizar. Sin cambios de producto en esta actualización.
