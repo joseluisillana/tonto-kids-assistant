@@ -123,7 +123,9 @@ La reparación de P-107-05/06 separa el entorno opcional del IDE y configura
 cachés locales pip/npm. Spec: `specs/linux-setup-cache-stability.md`; plan:
 `docs/plans/linux-setup-cache-stability-implementation-plan.md`. Las specs de
 ci-local-cache-alignment son registros del workflow anterior (issue #89 cerrada).
-La auditoría web P-107-07 permanece abierta; no se cambian dependencias aquí.
+La auditoría web P-107-07 queda reparada mediante lockfile compatible, sin
+cambiar el manifest; spec/plan web-dependency-audit-remediation. Audits completos
+y producción cero, tests/build pasan; ver registro de validación para CI.
 
 ## Fuera de Alcance de Semana 5
 

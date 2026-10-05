@@ -18,7 +18,7 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | 4. Limpieza host | COMPLETADO | Tras reparación: segunda llamada down exit 0 sin residuales; nuevo arranque backend/web HTTP 200 y stop retira servicios, one-off de control y red. Histórico P-107-01. |
 | 5. Raspberry real | COMPLETADO | Reintento por IP 192.168.1.183 con identidad SSH verificada: preflight exit 0, health LAN OK, USB disponible, 3/3 turnos reales con transcript correcto, continuidad y TTS. Cliente exit 0; backend 3 POST /chat/audio HTTP 200. Operador confirma «si, todo correcto». Detalle en Revalidación Raspberry encendida; mDNS sigue fallando P-107-03. |
 | 6. Limpieza Raspberry | COMPLETADO | Cliente/audio Raspberry ya terminaban y LAN health tras parada fallaba correctamente (curl 7). Reparación del bloqueo Docker revalidada: elimina también emuladores y red, sin residuales ni puertos; conserva dependencias. No se repiten voz ni UI física para este cambio CLI. Histórico P-107-01. |
-| 7. Setup/tests/build | FALLIDO | Setup Docker limpio y repetido exit 0; conserva entorno host. Cachés locales/permisos/reutilización pasan. 97 Python + 24 Kivy + web y build pasan. P-107-05/06 resueltos; P-107-07 sigue abierto: auditoría tras npm ci, 7 vulnerabilidades dev y 0 producción. |
+| 7. Setup/tests/build | COMPLETADO | Setup y cachés reparados en #112; lockfile compatible corregido, instalación limpia exit 0. Audit dev/prod 0 vulnerabilidades, npm ls válido. 97 Python + 24 Kivy + web y build pasan; smokes texto y cliente HTTP de voz contra backend real pasan. Evidencias al final; CI de esta reparación se registra tras finalizar. |
 | 8. Auxiliares/docs | COMPLETADO | Helpers previamente validados; guías operativas README/demo/SSH/workflow y planes vigentes actualizados a Bash/Docker/.env. bash -n y git diff --check pasan. demo-touch físico sigue excluido en #88. P-107-04 resuelto. |
 | 9. CI remoto | COMPLETADO | Push a rama documental. Run 37302071237 sobre SHA 2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2: completed/success; setup, checks y build success. Cambios posteriores solo añaden evidencias documentales; consultar checks de PR para su SHA final. |
 
@@ -72,7 +72,7 @@ aprobadas posteriores se documentan por separado. No procede declarar versión e
   `WARNING: The directory '/.cache/pip' ... is not owned or is not writable ...
   The cache has been disabled`. Contenedor: HOME=/, uid=1000, PIP_CACHE_DIR=None.
   Compose web configura npm_config_cache=/tmp/.npm; no es caché .cache local.
-- **P-107-07 — ABIERTO, auditoría de dependencias de desarrollo:**
+- **P-107-07 — RESUELTO Y REVALIDADO; auditoría inicial histórica, auditoría de dependencias de desarrollo:**
   `docker compose run --rm web npm audit --json`: exit 1; 2 low (@babel/core,
   esbuild), 1 moderate (baseline-browser-mapping), 4 high (browserslist,
   nanoid, postcss, vite). `npm audit --omit=dev --json`: cero, exit 0.
@@ -489,3 +489,53 @@ Push: https://github.com/joseluisillana/tonto-kids-assistant/actions/runs/373222
 (1m31s). PR #112: https://github.com/joseluisillana/tonto-kids-assistant/actions/runs/37322356646
 (2m8s). Setup/test/build pasan en runner limpio. El commit posterior solo añade
 esta evidencia; consultar checks de #112 para su SHA documental final.
+
+### Cierre P-107-07 / punto 7 — 2026-10-05
+
+Spec/plan web-dependency-audit-remediation. Rama fix/web-dependency-audit.
+Trabajo autorizado tras triage. Lockfile compatible corregido sin force,
+manifest sin cambios; versiones y todos los GHSA en docs/web-dependency-audit-triage.md.
+
+- Auditoría inicial: 7 (2 low, 1 moderate, 4 high), exit 1.
+- Reparación lockfile: audited 159 packages, found 0 vulnerabilities, exit 0.
+- ./tonto.sh setup: npm ci y Python Docker pasan, exit 0.
+- npm audit --json y npm audit --omit=dev --json: total 0, exit 0.
+- npm ls --all exit 0, sin árbol inválido.
+- Instalación limpia: git archive + lockfile corregido, checkout
+  /tmp/tonto-audit-validation-MuAjac, proyecto tonto-audit-validation-20261005.
+  Sin secretos copiados. Setup exit 0; audit completo total 0, exit 0.
+- ./tonto.sh test all: 97 Python (0.49 s), 24 Kivy (1.19 s), web pasan.
+- ./tonto.sh build all: Vite 7.3.6, 43 módulos, 1.21 s, exit 0.
+- ./tonto.sh dev all: Vite 7.3.6 ready 370 ms; backend saludable.
+- Navegador /admin: pregunta «¿Qué es una estrella?» → Estoy pensando →
+  respuesta educativa visible → Listo para hablar; latencia UI 3014 ms.
+  Speech synthesis failed sigue como P-107-09, no se acepta audibilidad.
+  Captura: /tmp/tonto-point7-web-smoke.png.
+- Smoke voz de integración, sin captura personal: espeak genera fixture WAV,
+  convertido a PCM mono 16 kHz, 3164 ms. Cliente HTTP web compilado
+  sendAudioTurn, sin sustituir fetch/backend, devuelve:
+
+```text
+HEALTH { status: 'ok' }
+AUDIO_TURN {"session_id":"point7-web-audio-smoke","transcript":"Platón, dime qué es una estrella.","response":"¡Hola! Una estrella es un gran esfera de gas brillante que brilla en el cielo. Por ejemplo, el Sol es una estrella muy cercana a nosotros y nos da luz y calor. ¿Te gustaría saber más sobre las estrellas?"}
+```
+
+Exit 0. STT confunde el nombre sintetizado TONTO con Platón, conserva la pregunta.
+Fixture valida transporte/STT/respuesta; no valida micrófono físico ni captura UI.
+La captura/auto-stop web real conserva su evidencia previa y sus pendientes.
+- down en ambos proyectos exit 0, redes/servicios retirados; cachés/volúmenes
+  conservados. diff --check pasa. No se modifican backend, UI ni secretos.
+
+Punto 7 COMPLETADO. Tabla principal: 8/9 completos, punto 3 pendiente de audio
+físico del emulador. Permanecen speech web/contador/repetibilidad, proveedor
+DevExpert real sin credencial y mDNS Raspberry como pendientes ampliados.
+No procede cerrar #107 ni declarar estabilidad integral todavía.
+
+CI P-107-07 sobre 4e2858397299518d2766cf75297fe05ff886ebad:
+Project checks push SUCCESS (1m30s),
+https://github.com/joseluisillana/tonto-kids-assistant/actions/runs/37331107651;
+Project checks PR SUCCESS (1m29s),
+https://github.com/joseluisillana/tonto-kids-assistant/actions/runs/37331356962.
+Setup, checks y build completos pasan. PR #113 abierta para revisión/integración.
+El commit siguiente solo registra esta evidencia; consultar checks de #113 para
+su SHA documental final.

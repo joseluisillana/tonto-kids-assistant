@@ -210,3 +210,14 @@ cachés locales pip/npm con propietario UID/GID del host. Instalación limpia,
 repetida, pip cacheado y npm offline validados en checkout aislado sin secretos.
 97 tests Python, 24 Kivy, web y build pasan. No se añaden dependencias.
 P-107-05/06 resueltos; P-107-07 abierto (7 vulnerabilidades dev, 0 producción).
+
+
+## Post-MVP — cierre auditoría web P-107-07, 2026-10-05
+
+Operador autoriza completar análisis y reparación. Lockfile actualizado dentro
+ de rangos existentes, sin nuevas dependencias directas ni cambios de producto.
+Auditorías completa/producción y npm ls pasan, también instalación limpia sin
+secretos. 97 Python, 24 Kivy, web y build pasan. Texto UI contra backend real
+pasa; fixture sintético enviado por cliente HTTP web valida STT/respuesta.
+Speech del navegador integrado sigue pendiente. Punto 7 completado; #107 sigue
+abierta. Spec/plan web-dependency-audit-remediation, evidencias en el registro.
