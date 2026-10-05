@@ -35,13 +35,13 @@ case "$COMMAND" in
   setup)
     echo "Setting up Python virtual environment in Docker..."
     docker compose run --rm -u root backend chown -R ${DOCKER_UID:-1000}:${DOCKER_GID:-1000} .venv
-    docker compose run --rm backend /bin/bash -c "python -m venv .venv && .venv/bin/pip install -r backend/requirements.txt -r client/requirements.txt -r requirements-dev.txt"
+    docker compose run --rm backend /bin/bash -c "python -m venv .venv && .venv/bin/pip install -r backend/requirements.txt -r client/requirements.txt -r client/requirements-pc.txt -r requirements-dev.txt"
     
     echo "Setting up Python virtual environment on Host (for IDE)..."
     if command -v python3 &> /dev/null; then
         rm -rf .venv
         if python3 -m venv .venv; then
-            .venv/bin/pip install -r backend/requirements.txt -r client/requirements.txt -r requirements-dev.txt || echo "Warning: Could not install host dependencies, but container is setup."
+            .venv/bin/pip install -r backend/requirements.txt -r client/requirements.txt -r client/requirements-pc.txt -r requirements-dev.txt || echo "Warning: Could not install host dependencies, but container is setup."
         else
             echo "Warning: Could not create host .venv (maybe missing python3-venv?). Your IDE might lack autocompletion."
         fi
@@ -60,6 +60,9 @@ case "$COMMAND" in
       docker compose up backend
     elif [ "$TARGET" == "web" ]; then
       docker compose up web
+    elif [ "$TARGET" == "ui" ]; then
+      echo "Iniciando emulador de UI..."
+      docker compose run --rm ui-emulator
     else
       echo "Starting backend and web..."
       docker compose up backend web

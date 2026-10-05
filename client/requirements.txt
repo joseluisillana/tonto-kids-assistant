@@ -1,2 +1,2 @@
-# Requirements for TONTO Kids Assistant Client
-# Add dependencies here as needed
+requests==2.32.3
+pytest==8.2.1

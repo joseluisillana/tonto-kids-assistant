@@ -59,3 +59,46 @@ Antes de escribir código o configurar hardware, se debe registrar el trabajo en
 - Un niño puede tocar la pantalla y hablar sin ver la terminal.
 - La experiencia de terminal previa sigue funcional y documentada como Plan B.
 - Todo el hardware y stack están documentados para reproducir una Raspberry idéntica.
+
+## Detalles Técnicos de Implementación (Fases 3-6)
+
+Durante el desarrollo de la interfaz táctil se han consolidado las siguientes decisiones técnicas:
+
+### 1. Stack Visual (Kivy)
+- El framework Kivy ha demostrado ser el más adecuado para renderizar directamente en el framebuffer de la Raspberry Pi sin entorno de escritorio, capturando eventos táctiles vía `mtdev`.
+- La cara animada (`TontoFace`) se dibuja paramétricamente usando `kivy.graphics` en vez de cargar GIFs, permitiendo escalado vectorial y rendimiento nativo.
+
+### 2. Pipeline de Audio Multiplataforma
+Se ha introducido la variable de entorno `TONTO_AUDIO_MODE` para permitir desarrollo sin fricción en equipos de escritorio:
+- `raspberry` (por defecto): Usa ALSA (`arecord`) para captura y `espeak` para síntesis de voz.
+- `pc`: Usa `sounddevice` y `soundfile` (captura) junto con `System.Speech` de PowerShell (síntesis forzando una voz en español). Dependencias listadas en `client/requirements-pc.txt`.
+
+### 3. Normalización y Calidad de Audio
+La precisión de transcripción de OpenAI Whisper cae drásticamente con audios de bajo volumen (frecuente en micrófonos integrados). En el modo `pc`, la captura se realiza en `float32` y se aplica una **normalización matemática (95% de la amplitud máxima)** usando `numpy` antes de guardar el WAV a 16kHz en PCM_16.
+
+### 4. Precisión de Idioma (LLM)
+Las instrucciones del sistema de TONTO (`TONTO_INSTRUCTIONS`) fueron traducidas íntegramente al español para evitar desviaciones del LLM en casos donde Whisper entregue transcripciones dudosas (como toses o ruido ambiente mal interpretado como inglés).
+
+## Diseños y Estados Visuales (Fase 3)
+
+El diseño visual de TONTO se renderiza vectorialmente a través de Kivy para garantizar fluidez sin depender de assets pre-renderizados. A continuación, las capturas del diseño resultante ejecutado en el emulador de Docker para los 5 estados principales de interacción:
+
+**Estado: Idle (Reposo)**
+*Cara neutral y parpadeos aleatorios.*
+![Idle](../docs/assets/ui_concept_idle.png)
+
+**Estado: Listening (Escuchando)**
+*Ojos y cejas levantadas prestando atención.*
+![Listening](../docs/assets/ui_concept_listening.png)
+
+**Estado: Thinking (Pensando)**
+*Ojos moviéndose de lado a lado asimétricamente.*
+![Thinking](../docs/assets/ui_concept_thinking.png)
+
+**Estado: Speaking (Hablando)**
+*Boca abierta pulsando en altura y cejas amables.*
+![Speaking](../docs/assets/ui_concept_speaking.png)
+
+**Estado: Error**
+*Ojos pequeños, cejas fruncidas y boca triste en caso de fallo de red o hardware.*
+![Error](../docs/assets/ui_concept_error.png)

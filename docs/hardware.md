@@ -214,6 +214,24 @@ La pantalla se conecta por HDMI (video) y USB (alimentación y touch). Para conf
    ```
    Selecciona el dispositivo `WaveShare WS...` de la lista y comprueba que aparecen eventos (`BTN_TOUCH`, `ABS_X`, `ABS_Y`) al tocar físicamente la pantalla.
 
+### Configuración Kiosk Mode (Touch UI)
+
+Para que la Raspberry arranque directamente la Touch UI con la cara animada sin entorno gráfico X11:
+
+1. **Instalar dependencias de Kivy en la Pi Lite:**
+   ```bash
+   sudo apt-get install -y libmtdev1 libgl1-mesa-dri libgles2-mesa libgl1-mesa-glx
+   ```
+2. **Instalar el servicio Systemd:**
+   En el repositorio encontrarás el archivo `scripts/tonto-touch.service`. Ajusta la IP del backend y cópialo al sistema:
+   ```bash
+   sudo cp scripts/tonto-touch.service /etc/systemd/system/
+   sudo systemctl daemon-reload
+   sudo systemctl enable tonto-touch.service
+   sudo systemctl start tonto-touch.service
+   ```
+3. El fallback por terminal sigue funcionando si el servicio de Kivy falla o si se detiene manualmente con `sudo systemctl stop tonto-touch.service` y se ejecuta `client/main.py --mode text`.
+
 ---
 
 # Hardware descartado para el MVP

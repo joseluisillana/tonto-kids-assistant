@@ -297,6 +297,28 @@ Revocar la clave dedicada:
 
 La revocacion no debe borrar otras claves de operador o VSCode Remote SSH.
 
+### 5.2. Permisos de Administrador (Sudo) sin contraseña para Agentes
+
+Para que agentes remotos puedan apagar la máquina, reiniciarla o gestionar el servicio de la interfaz gráfica sin quedarse bloqueados pidiendo contraseña por SSH, es necesario añadir reglas específicas en `sudoers`.
+
+Desde la Raspberry Pi, ejecutar:
+
+```bash
+sudo visudo /etc/sudoers.d/010_tonto-pi-user-nopasswd
+```
+
+Añadir las siguientes reglas:
+
+```text
+tonto-pi-user ALL=(ALL) NOPASSWD: /usr/sbin/poweroff
+tonto-pi-user ALL=(ALL) NOPASSWD: /usr/sbin/reboot
+tonto-pi-user ALL=(ALL) NOPASSWD: /bin/systemctl start tonto-touch.service
+tonto-pi-user ALL=(ALL) NOPASSWD: /bin/systemctl stop tonto-touch.service
+tonto-pi-user ALL=(ALL) NOPASSWD: /bin/systemctl restart tonto-touch.service
+```
+
+Guardar y salir (`Ctrl+O`, `Enter`, `Ctrl+X`). A partir de este momento, los comandos `sudo poweroff`, `sudo reboot` y la gestión del servicio `tonto-touch.service` no requerirán contraseña para este usuario.
+
 ## 6. Preparacion Minima del Sistema
 
 Actualizar paquetes:
@@ -698,3 +720,4 @@ NotebookLM debe leer la copia exportada, pero la fuente oficial sigue siendo est
 | 2026-06-09 | Semana 5 | Se documenta clave SSH dedicada `tonto-agent` para el Agent Capability Pack, con generacion, instalacion, validacion y revocacion sin guardar secretos en repo. |
 | 2026-08-06 | Post-MVP | Se valida físicamente la Pantalla Táctil HDMI (Waveshare 5"), documentando su configuración de arranque (`config.txt`) y la validación de eventos táctiles (`evtest`). |
 | 2026-08-06 | Post-MVP | Se documentan dependencias del sistema (`libmtdev1`, `libgles2`, `libgl1`, `libegl1`, `libsdl2-2.0-0`) y comandos de validación para ejecutar interfaces táctiles de Kivy con aceleración por hardware sobre Raspberry Pi OS Lite (headless). |
+| 2026-08-06 | Post-MVP | Se documenta configuración `NOPASSWD` en `/etc/sudoers.d/010_tonto-pi-user-nopasswd` para permitir a los agentes realizar `poweroff`, `reboot` y gestionar `tonto-touch.service` sin interactividad. |

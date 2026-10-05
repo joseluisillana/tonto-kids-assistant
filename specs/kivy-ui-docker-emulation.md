@@ -1,13 +1,13 @@
 # Kivy UI Docker Emulation
 
-**Status:** Draft
+**Status:** Implemented
 **Date:** 2026-10-05
 
 ## 1. Contexto
 
 Durante el desarrollo de la interfaz táctil basada en Kivy (Spike Fase 2) para la Raspberry Pi, se habilitó la posibilidad de emular la UI en el entorno local (host del desarrollador) utilizando una ventana SDL2 (`KIVY_WINDOW=sdl2`). Sin embargo, esto requiere instalar las dependencias gráficas de Kivy y bibliotecas del sistema (como `libsdl2-dev`, `libgl1`, etc.) directamente en el host del desarrollador.
 
-Para mantener el host limpio y garantizar que cualquier desarrollador pueda probar la UI de manera reproducible, se necesita un mecanismo de emulación basado en contenedores (Docker) que encapsule todas las dependencias necesarias.
+Para mantener el host limpio y garantizar que cualquier desarrollador pueda probar la UI de manera reproducible, se ha emulado con éxito utilizando contenedores (Docker) que encapsulan todas las dependencias necesarias.
 
 ## 2. Objetivos
 
