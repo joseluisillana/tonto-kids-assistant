@@ -398,6 +398,27 @@ def test_speak_calls_espeak(monkeypatch):
     assert args_captured == ["espeak", "-v", "es", "-s", "135", "-g", "8", "Hola mundo"]
 
 
+def test_pc_linux_speaks_with_espeak(monkeypatch):
+    monkeypatch.setenv("TONTO_AUDIO_MODE", "pc")
+    monkeypatch.setattr("client.main.sys.platform", "linux")
+    calls = []
+    monkeypatch.setattr("client.main.subprocess.run", lambda cmd, **kw: (
+        calls.append(cmd) or subprocess.CompletedProcess(cmd, 0)
+    ))
+    speak("Hola Linux")
+    assert calls == [["espeak", "-v", "es", "-s", "135", "-g", "8", "Hola Linux"]]
+
+
+@pytest.mark.parametrize("mode", ["pc", "raspberry"])
+def test_missing_tts_degrades_to_text(monkeypatch, capsys, mode):
+    monkeypatch.setenv("TONTO_AUDIO_MODE", mode)
+    def missing(*args, **kwargs):
+        raise FileNotFoundError("missing TTS executable")
+    monkeypatch.setattr("client.main.subprocess.run", missing)
+    speak("Respuesta visible")
+    assert "Speech output not available" in capsys.readouterr().out
+
+
 def test_speak_uses_configured_command(monkeypatch):
     monkeypatch.setenv("TONTO_TTS_COMMAND", "custom-tts")
     args_captured = []

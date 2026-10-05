@@ -123,8 +123,8 @@ Every plan should also state its workflow isolation:
 
 Run this whenever you want to refresh NotebookLM sources outside a commit:
 
-```powershell
-.\scripts\export-docs-for-notebooklm.ps1
+```bash
+./scripts/export-docs-for-notebooklm.sh
 ```
 
 The export is derived output and is ignored by Git.
@@ -135,8 +135,8 @@ The script writes individual source files, `INDEX.md`, and `NOTEBOOKLM_COMBINED.
 
 Run this once per clone:
 
-```powershell
-.\scripts\install-git-hooks.ps1
+```bash
+./scripts/install-git-hooks.sh
 ```
 
 It installs a local `pre-commit` hook that regenerates NotebookLM export files before each commit.

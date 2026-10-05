@@ -62,7 +62,14 @@ case "$COMMAND" in
       docker compose up web
     elif [ "$TARGET" == "ui" ]; then
       echo "Iniciando emulador de UI..."
-      docker compose run --rm ui-emulator
+      audio_args=()
+      if [ -d /dev/snd ]; then
+        audio_devices=(/dev/snd/*)
+        audio_args=(--device /dev/snd --group-add "$(stat -c '%g' "${audio_devices[0]}")")
+      else
+        echo "Audio hardware unavailable (/dev/snd missing); audible speech and microphone require a Linux audio device."
+      fi
+      docker compose run --rm --build "${audio_args[@]}" ui-emulator
     else
       echo "Starting backend and web..."
       docker compose up backend web
@@ -106,7 +113,7 @@ case "$COMMAND" in
     if [ "$TARGET" == "ui" ] || [ "$TARGET" == "all" ]; then
       echo "Running Kivy UI checks..."
       # Give Xvfb a normal parent for its startup signal and an isolated socket.
-      docker compose run --rm --build \
+      docker compose run --rm --build --no-deps \
         --volume /tmp/.X11-unix \
         -e PYTHONPATH=/app \
         -e PYTHONDONTWRITEBYTECODE=1 \

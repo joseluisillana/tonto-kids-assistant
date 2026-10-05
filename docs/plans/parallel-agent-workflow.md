@@ -75,7 +75,7 @@ Excluded:
 
 For this documentation-only workflow change:
 
-```powershell
+```bash
 git diff --check
 git status --short --branch
 ```
@@ -126,4 +126,4 @@ Delivery:
 ## Notes / Assumptions
 
 - This change documents the manual workflow first.
-- A helper script such as `scripts/new-workflow.ps1` can be considered later only if the manual workflow becomes repetitive.
+- A Bash helper script can be considered later only if the manual workflow becomes repetitive.

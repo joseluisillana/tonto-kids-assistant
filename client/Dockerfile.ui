@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libmtdev1 \
     xvfb \
     alsa-utils \
+    espeak \
     portaudio19-dev \
     gcc \
     && rm -rf /var/lib/apt/lists/*

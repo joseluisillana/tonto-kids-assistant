@@ -71,7 +71,7 @@ Tasks:
 
 Verification:
 
-```powershell
+```bash
 git diff --check
 git status --short --branch
 ```
@@ -137,8 +137,8 @@ Suggested files:
 
 Verification:
 
-```powershell
-.\scripts\test.ps1 -Target python
+```bash
+./tonto.sh test python
 git diff --check
 git status --short --branch
 ```
@@ -167,7 +167,7 @@ Task:
 - Do not implement STT provider switching in this phase.
 
 Verification:
-- Run .\scripts\test.ps1 -Target python.
+- Run ./tonto.sh test python.
 - Run git diff --check and git status --short --branch.
 
 Delivery:
@@ -198,8 +198,8 @@ Tasks:
 
 Verification:
 
-```powershell
-.\scripts\test.ps1 -Target python
+```bash
+./tonto.sh test python
 git diff --check
 git status --short --branch
 ```
@@ -228,7 +228,7 @@ Task:
 - Do not implement TTS provider switching.
 
 Verification:
-- Run .\scripts\test.ps1 -Target python.
+- Run ./tonto.sh test python.
 - Run git diff --check and git status --short --branch.
 
 Delivery:
@@ -258,8 +258,8 @@ Tasks:
 
 Verification:
 
-```powershell
-.\scripts\test.ps1 -Target python
+```bash
+./tonto.sh test python
 git diff --check
 git status --short --branch
 ```
@@ -286,7 +286,7 @@ Task:
 - Keep existing demo contracts and clients unchanged.
 
 Verification:
-- Run .\scripts\test.ps1 -Target python.
+- Run ./tonto.sh test python.
 - Run git diff --check and git status --short --branch.
 
 Delivery:
