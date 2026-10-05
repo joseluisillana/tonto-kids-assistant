@@ -714,6 +714,11 @@ Regresiones iniciales de recuperación: 110 Python (0.44 s), 24 Kivy (1.00 s),
 web pasan; build 43 módulos (907 ms). Nuevo test de delegación de fallo de captura
 añadido después: repetir UI para confirmar su resultado. Prueba física de error
 con comando TONTO_AUDIO_DEVICE=4 ./tonto.sh dev ui en curso.
+Operador confirma prueba física negativa: muestra ERROR y vuelve a
+TOCA PARA HABLAR tras cuatro segundos. P-107-13 RESUELTO Y REVALIDADO.
+Suite UI ampliada: 25 tests pasan (1.03 s), incluido fallo de captura sin upload.
+Pendiente cierre final: nuevo arranque oficial con entrada 5, tres turnos,
+limpieza y CI del SHA final. P-107-14 queda aplazado en #114 por decisión humana.
 Próxima ejecución: conservar el contenedor y WAV hasta recuperar el detalle
 422; si es transcripción vacía, comprobar fuente de entrada y señal original
 antes de normalizar. Sin cambios de producto en esta actualización.
