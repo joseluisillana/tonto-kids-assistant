@@ -57,10 +57,6 @@ Before choosing or executing ANY work item, you MUST read the following files to
 - Keep the backend as a lightweight monolith for the MVP.
 - Do not add or restore Go CI checks until Go is explicitly selected for an active backend implementation.
 - Keep the Raspberry client as a simple Python process.
-- The Python client supports two audio modes via the `TONTO_AUDIO_MODE` environment variable:
-  - `raspberry` (default): Uses `arecord` and `espeak`.
-  - `pc`: Uses `sounddevice`, `soundfile`, and Windows `System.Speech`. Requires dependencies from `client/requirements-pc.txt`.
-- When running the Kivy touch UI on Windows via `python -m client.main`, agents MUST set `KIVY_NO_ARGS="1"` to avoid argparse collisions.
 - Use typed data structures where they clarify request/response contracts.
 - Use clear names over clever abstractions.
 - Handle obvious failure cases, especially backend timeouts and unavailable TTS.
@@ -72,23 +68,20 @@ Before choosing or executing ANY work item, you MUST read the following files to
 ## Local Environment and Automation
 
 - Treat the host machine as clean. Do not install Python packages globally.
-- Use the official PowerShell scripts in `scripts/` before inventing ad hoc setup, dev, test, or build commands.
-- **For ANY operational task, validation, status check, or UI/Backend execution**, you MUST first read the "Agent Capability Pack" section in `docs/ai-assisted-workflow.md` to use the canonical and safe execution scripts.
+- Use the official Bash scripts in `scripts/` or `tonto.sh` before inventing ad hoc setup, dev, test, or build commands.
 - Python dependencies must be installed into the repo-local `.venv/`.
-- On Windows, use `.\.venv\Scripts\python.exe` when a direct Python command is unavoidable.
-- On Linux/macOS, use `.venv/bin/python` when a direct Python command is unavoidable.
-- Run Python tests through `.\scripts\test.ps1 -Target python` or the `.venv` Python executable, never through a global `pytest`.
+- Use `.venv/bin/python` when a direct Python command is unavoidable.
+- Run Python tests through `./tonto.sh test python` or the `.venv` Python executable, never through a global `pytest`.
 - Frontend dependencies must stay local to `web/node_modules/`.
 - Use `npm ci` or `npm install` only inside `web/`; never use `npm install -g` unless the user explicitly approves it.
 - Keep dependency caches local to `.cache/` when scripts support it; do not rely on user-profile caches such as global pip/npm caches.
 - If Codex or OpenCode sandboxing blocks network access or writes inside `.venv/`, `web/node_modules/`, or `.cache/`, request escalation for the official script command instead of switching to global tools.
 - If the build, test, setup, or dev workflow changes, update the scripts and documentation in the same change.
 - CI, humans, and agents should share the same command surface whenever practical:
-  - `.\scripts\setup-dev.ps1`
-  - `.\scripts\dev.ps1 -Service backend|web|all`
-  - `.\scripts\test.ps1 -Target python|web|all`
-  - `.\scripts\build.ps1 -Target web|all`
-  - To launch the touch UI on the Raspberry Pi: `.\scripts\agent-raspberry.ps1 -Action exec -Command "./scripts/demo-touch.sh"`
+  - `./tonto.sh setup`
+  - `./tonto.sh dev [backend|web|all]`
+  - `./tonto.sh test [python|web|all]`
+  - `./tonto.sh build [web|all]`
 
 ## Git and Contribution Workflow
 

@@ -31,7 +31,7 @@ voice -> Raspberry capture -> backend STT -> /chat -> response -> local TTS
 - [x] Confirm Raspberry can still run the Week 02 text loop against `TONTO_BACKEND_URL`.
 - [x] Confirm TTS output still works with `espeak`.
 
-PowerShell profile or oh-my-posh warnings are local shell noise unless an official script fails.
+Bash profile or oh-my-posh warnings are local shell noise unless an official script fails.
 
 The local Week 03 kickoff checklist is complete. Hardware voice validation remains separate and starts with microphone detection, WAV recording, and WAV playback on the Raspberry Pi.
 

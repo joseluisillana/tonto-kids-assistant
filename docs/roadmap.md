@@ -262,7 +262,7 @@ Convertir el sistema en una demo estable y repetible.
 
 Trabajo extra de Semana 5, trackeado en GitHub issue #43.
 
-Objetivo: definir un asset portable para agentes basado en Markdown del repo y scripts PowerShell oficiales, de modo que Codex, OpenCode u otros agentes puedan arrancar/parar backend y ejecutar preflights SSH en Raspberry sin inventar comandos ad hoc ni guardar secretos en el repositorio.
+Objetivo: definir un asset portable para agentes basado en Markdown del repo y scripts Bash oficiales, de modo que Codex, OpenCode u otros agentes puedan arrancar/parar backend y ejecutar preflights SSH en Raspberry sin inventar comandos ad hoc ni guardar secretos en el repositorio.
 
 Estado: implementado y mergeado en PR #45; issue #43 cerrada. El pack añadió `scripts/agent-backend.ps1` y `scripts/agent-raspberry.ps1`, documentó el workflow SSH con clave dedicada y validó preflight real desde Raspberry con backend health.
 

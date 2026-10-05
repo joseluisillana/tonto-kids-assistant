@@ -116,7 +116,7 @@ chmod +x scripts/demo-raspberry.sh
 
 **Issues found and fixed during validation:**
 - UTF-8 BOM at start of script caused warning (non-blocking). Fixed by saving without BOM.
-- Venv setup instructions in script referenced PowerShell command. Fixed to show bash instructions.
+- Venv setup instructions in script referenced Bash command. Fixed to show bash instructions.
 - Backend requirements incorrectly included in venv setup message. Fixed to only include client requirements.
 - `curl` hung without `--connect-timeout` when backend was unreachable. Fixed with 5s timeout.
 - Script lost execute permissions after `git pull`. Fixed by tracking as 100755 in git.
@@ -257,11 +257,11 @@ session ID: `local-session-e5866fdb-8930-430b-9ba2-081740636db8`.
 
 ### Objective
 
-Plan a portable AI development asset so Codex, OpenCode, and future agents can operate common backend and Raspberry validation tasks through repo-owned documentation and PowerShell helpers.
+Plan a portable AI development asset so Codex, OpenCode, and future agents can operate common backend and Raspberry validation tasks through repo-owned documentation and Bash helpers.
 
 ### Context
 
-During the attempt to complete Week 05 Phase 2, Codex correctly identified the need to validate 5+ demo questions on Raspberry, but started to improvise backend startup and Raspberry SSH commands. The project already has official PowerShell scripts and workflow docs, but it does not yet have a dedicated portable capability layer for agent-operated backend/Raspberry tasks.
+During the attempt to complete Week 05 Phase 2, Codex correctly identified the need to validate 5+ demo questions on Raspberry, but started to improvise backend startup and Raspberry SSH commands. The project already has official Bash scripts and workflow docs, but it does not yet have a dedicated portable capability layer for agent-operated backend/Raspberry tasks.
 
 ### Documents Created
 

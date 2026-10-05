@@ -38,7 +38,7 @@ Do not run Go checks in CI while the MVP backend language is Python/FastAPI and 
 
 ## D010 - Local automation and isolated environments
 
-Use PowerShell scripts under `scripts/` as the official command surface for setup, dev servers, tests, and builds. Python dependencies live in the repo-local `.venv/`; frontend dependencies live in `web/node_modules/`. Agents, humans, and CI should use the same scripts instead of installing packages globally or inventing one-off commands.
+Use Bash scripts under `scripts/` as the official command surface for setup, dev servers, tests, and builds. Python dependencies live in the repo-local `.venv/`; frontend dependencies live in `web/node_modules/`. Agents, humans, and CI should use the same scripts instead of installing packages globally or inventing one-off commands.
 
 ## D011 - Documentation source of truth
 
@@ -46,11 +46,11 @@ Use Markdown files in the repository as the source of truth for durable project 
 
 ## D012 - NotebookLM export automation
 
-Generate NotebookLM source files with `scripts/export-docs-for-notebooklm.ps1`. Install the local Git `pre-commit` hook with `scripts/install-git-hooks.ps1` so the export is refreshed before commits. The export folder is derived output and is ignored by Git.
+Generate NotebookLM source files with `scripts/export-docs-for-notebooklm.sh`. Install the local Git `pre-commit` hook with `scripts/install-git-hooks.sh` so the export is refreshed before commits. The export folder is derived output and is ignored by Git.
 
 ## D013 - Backend LAN exposure for Raspberry validation
 
-Keep the backend bound to `127.0.0.1` by default for local development. Use `.\scripts\dev.ps1 -Service backend -AllowLan` when the Raspberry Pi must reach the backend over the local network; the Raspberry should use the Windows PC LAN IP or a resolvable hostname in `TONTO_BACKEND_URL`.
+Keep the backend bound to `127.0.0.1` by default for local development. Use `./tonto.sh dev backend` when the Raspberry Pi must reach the backend over the local network; the Raspberry should use the Host LAN IP or a resolvable hostname in `TONTO_BACKEND_URL`.
 
 ## D014 - AI-assisted Git workflow
 
@@ -58,7 +58,7 @@ Use a lightweight GitHub Flow for human and AI-assisted project changes. Branch 
 
 ## D015 - NotebookLM combined source export
 
-Extend `scripts/export-docs-for-notebooklm.ps1` to generate `exports/notebooklm/NOTEBOOKLM_COMBINED.md` alongside the individual Markdown exports and `INDEX.md`. The combined file is the preferred source for routine NotebookLM refreshes because NotebookLM can duplicate many re-uploaded files instead of replacing them cleanly. The repository remains the source of truth, and `exports/notebooklm/` remains derived output ignored by Git.
+Extend `scripts/export-docs-for-notebooklm.sh` to generate `exports/notebooklm/NOTEBOOKLM_COMBINED.md` alongside the individual Markdown exports and `INDEX.md`. The combined file is the preferred source for routine NotebookLM refreshes because NotebookLM can duplicate many re-uploaded files instead of replacing them cleanly. The repository remains the source of truth, and `exports/notebooklm/` remains derived output ignored by Git.
 
 ## D016 - Provisional STT ownership
 
@@ -130,11 +130,11 @@ The detailed spec and plan are:
 
 ## D023 - Agent Capability Pack as portable AI development asset
 
-Use repository-owned Markdown and PowerShell helper scripts as the portable Agent Capability Pack for backend and Raspberry operations. This pack is the source of truth for AI-assisted agents and humans when running demo validation tasks that need backend lifecycle management or Raspberry SSH access.
+Use repository-owned Markdown and Bash helper scripts as the portable Agent Capability Pack for backend and Raspberry operations. This pack is the source of truth for AI-assisted agents and humans when running demo validation tasks that need backend lifecycle management or Raspberry SSH access.
 
 Tool-specific assets such as Codex skills, OpenCode prompts, plugins, or MCP tools may be added later, but they must wrap or delegate to the repository pack instead of becoming the canonical workflow.
 
-The pack uses key-based SSH for Raspberry access with a dedicated local key stored outside the repository, prefers existing official scripts such as `scripts/dev.ps1`, and must not commit secrets or introduce new dependencies. The paired spec and plan are:
+The pack uses key-based SSH for Raspberry access with a dedicated local key stored outside the repository, prefers existing official scripts such as `./tonto.sh dev`, and must not commit secrets or introduce new dependencies. The paired spec and plan are:
 
 - `specs/week-05-agent-capability-pack.md`
 - `docs/plans/week-05-agent-capability-pack.md`

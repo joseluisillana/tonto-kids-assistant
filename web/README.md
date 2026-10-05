@@ -13,13 +13,13 @@ This app is intentionally focused on MVP validation. It exists so the project ca
 
 ## Local Commands
 
-Run web tasks from the repository root through the official PowerShell scripts:
+Run web tasks from the repository root through the official `tonto.sh` wrapper:
 
-```powershell
-.\scripts\setup-dev.ps1
-.\scripts\dev.ps1 -Service web
-.\scripts\test.ps1 -Target web
-.\scripts\build.ps1 -Target web
+```bash
+./tonto.sh setup
+./tonto.sh dev web
+./tonto.sh test web
+./tonto.sh build web
 ```
 
 The web app uses local dependencies in `web/node_modules/`. Do not install npm packages globally for this project.

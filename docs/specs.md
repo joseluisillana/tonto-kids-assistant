@@ -88,7 +88,7 @@ GitHub tracking: issue #33 (parent), issues #34-#38 (phases).
 
 Semana 5 also includes an extra workflow item, tracked by issue #43:
 
-- **Agent Capability Pack** — implemented and merged. Portable repo-owned Markdown and PowerShell helper scripts for backend lifecycle and Raspberry SSH operations. It added `scripts/agent-backend.ps1` and `scripts/agent-raspberry.ps1`; real Raspberry preflight passed with backend health. Spec: `specs/week-05-agent-capability-pack.md`; plan: `docs/plans/week-05-agent-capability-pack.md`.
+- **Agent Capability Pack** — implemented and merged. Portable repo-owned Markdown and Bash helper scripts for backend lifecycle and Raspberry SSH operations. It added `scripts/agent-backend.ps1` and `scripts/agent-raspberry.ps1`; real Raspberry preflight passed with backend health. Spec: `specs/week-05-agent-capability-pack.md`; plan: `docs/plans/week-05-agent-capability-pack.md`.
 
 Semana 5 also includes a planned extra MVP line for AI Expert course alignment:
 
@@ -156,3 +156,4 @@ a `.cache/pip` y `.cache/npm` dentro del workspace, igual que
 
 - `specs/parallel-agent-workflow.md`: define el patrón de trabajo por unidad coherente, rama corta, PR pequeña y worktree dedicado cuando hay agentes o tareas en paralelo.
 - `docs/plans/parallel-agent-workflow.md`: plan de implementación documental de ese workflow.
+- `specs/kivy-ui-docker-emulation.md`: Emulación en Docker de la Interfaz Táctil (Draft).
