@@ -1,6 +1,6 @@
 # Plan P-107-10 — audio físico del emulador
 
-Estado: propuesta pendiente de revisión. Spec linux-emulator-audio-device-startup.
+Estado: autorizado, implementación y validación en curso. Spec linux-emulator-audio-device-startup.
 D025 excluye DevExpert real: no es dependencia de esta reparación.
 
 1. Desde rama integrada de #108, crear fix/linux-emulator-audio-device-startup.
@@ -24,3 +24,10 @@ modificar permisos del sistema. Usa configuración Compose temporal para audio,
 pruebas enfocadas, comandos oficiales y validación humana fuera del sandbox.
 No imprimas configuración expandida ni leas secretos. Documenta nuevos fallos,
 no aceptes audio físico por mocks. Mantén #107 abierta mientras falten criterios.
+
+
+## Ampliación autorizada P-107-11
+
+Operador aprueba directorios Kivy/cache escribibles en /tmp y ejecución como
+módulo. Actualizar Compose en esta misma reparación y repetir arranque/regresiones.
+Ventana abierta con audio group 29; aceptación física aún pendiente de completar.

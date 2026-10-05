@@ -1,6 +1,6 @@
 # Arranque del emulador con audio físico Linux
 
-2026-10-05. Propuesta para revisión. Part of #107, P-107-10, punto 3.
+2026-10-05. Implementación autorizada; validación física en curso. Part of #107, P-107-10, punto 3.
 
 ## Problema
 
@@ -32,3 +32,15 @@ obligatorio que rompa CI. Sin dependencias nuevas ni servidores de audio nuevos.
    demás criterios vigentes.
 
 Plan: docs/plans/linux-emulator-audio-device-startup-implementation-plan.md.
+
+
+## Ampliación aprobada durante validación
+
+P-107-11: arranque falla al crear /.kivy y, tras diagnóstico temporal, al importar
+client al ejecutar archivo. Operador aprueba ambos ajustes: KIVY_HOME y
+XDG_CACHE_HOME temporales escribibles; command Python como módulo client.touch_ui.
+No se cambian permisos del sistema, X11 ni dependencias. La ventana ya arranca.
+COMPOSE_FILE/PATH_SEPARATOR exportados se preservan. Selección Compose oculta
+solo en .env requiere export explícito del operador; no se lee el archivo de
+secretos para descubrirla. Pruebas cubren archivos personalizados con espacios.
+Micrófono/TTS siguen en validación; no equivalen al arranque de ventana.

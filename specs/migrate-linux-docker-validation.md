@@ -14,7 +14,7 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | --- | --- | --- |
 | 1. Backend + web | COMPLETADO | `./tonto.sh dev all`: Uvicorn 8000 y Vite 7.3.3 en 443 ms. Health `{"status":"ok"}` HTTP 200; web HEAD HTTP 200. `/chat` real HTTP 200, 2.244706 s, `{"success":true,"response_text":"¡Ok! ¿Tienes alguna pregunta?"}`. Cuerpo `{}` devuelve HTTP 422 con campos session_id/message obligatorios. |
 | 2. Limpieza básica | COMPLETADO | Fallo inicial conservado en P-107-01; reparación fix/docker-cleanup revalidada: down retira backend/web, dos emuladores previos y red, exit 0; sin contenedores/redes del proyecto y puertos libres. |
-| 3. Cliente host + UI Linux | FALLIDO | Software backend/TTS previamente validado; al probar audio real fuera del sandbox, dev ui exit 1: unknown flag --device. Grupo elegido 0 (by-path) en vez de 29 (dispositivos). Nuevo P-107-10. Audio físico pendiente tras reparar arranque. |
+| 3. Cliente host + UI Linux | FALLIDO | P-107-10 y P-107-11 reparados: override Compose temporal, grupo 29 real, Kivy temporal y ejecución como módulo; ventana abre. Operador indica que falla micrófono o voz; aceptación física sigue pendiente de diagnóstico. |
 | 4. Limpieza host | COMPLETADO | Tras reparación: segunda llamada down exit 0 sin residuales; nuevo arranque backend/web HTTP 200 y stop retira servicios, one-off de control y red. Histórico P-107-01. |
 | 5. Raspberry real | COMPLETADO | Reintento por IP 192.168.1.183 con identidad SSH verificada: preflight exit 0, health LAN OK, USB disponible, 3/3 turnos reales con transcript correcto, continuidad y TTS. Cliente exit 0; backend 3 POST /chat/audio HTTP 200. Operador confirma «si, todo correcto». Detalle en Revalidación Raspberry encendida; mDNS sigue fallando P-107-03. |
 | 6. Limpieza Raspberry | COMPLETADO | Cliente/audio Raspberry ya terminaban y LAN health tras parada fallaba correctamente (curl 7). Reparación del bloqueo Docker revalidada: elimina también emuladores y red, sin residuales ni puertos; conserva dependencias. No se repiten voz ni UI física para este cambio CLI. Histórico P-107-01. |
@@ -22,7 +22,7 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | 8. Auxiliares/docs | COMPLETADO | Helpers previamente validados; guías operativas README/demo/SSH/workflow y planes vigentes actualizados a Bash/Docker/.env. bash -n y git diff --check pasan. demo-touch físico sigue excluido en #88. P-107-04 resuelto. |
 | 9. CI remoto | COMPLETADO | Push a rama documental. Run 37302071237 sobre SHA 2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2: completed/success; setup, checks y build success. Cambios posteriores solo añaden evidencias documentales; consultar checks de PR para su SHA final. |
 
-Pendientes vigentes: arranque/audio físico del emulador (punto 3, P-107-10).
+Pendientes vigentes: audio físico del emulador (punto 3, P-107-12); arranque reparado.
 Smoke DevExpert real: NO APLICA por decisión D025 (deprecado, no operarlo).
 Chrome: tres turnos/audibilidad/contador/auto-stop aprobados por el operador;
 mDNS y preflight Raspberry por nombre revalidados. Raspberry voz/audibilidad, setup, caches, auditorías,
@@ -574,7 +574,7 @@ Se mantienen activos durante la validación guiada. No se cambia producto.
 - CI integrado de #108 sobre 5d0a52e: Project checks push/PR SUCCESS,
   runs 37332129154 (1m24s) y 37332141132 (1m28s).
 
-**P-107-10 — ABIERTO, arranque dev ui con hardware audio:**
+**P-107-10 — RESUELTO Y REVALIDADO; descripción inicial, arranque dev ui con hardware audio:**
 
 ```text
 ./tonto.sh dev ui
@@ -607,3 +607,58 @@ no se requieren credenciales. Referencias previas a credencial ausente/pending
 son evidencia histórica anterior a esta decisión. OpenAI real sigue validado.
 Spec y plan integral actualizados; sin cambios de código/configuración/runtime.
 Punto 3 sigue FALLIDO por P-107-10; plan de reparación del emulador vigente.
+
+
+### Reparación arranque Linux con audio — 2026-10-05
+
+Rama fix/linux-emulator-audio-device-startup, spec/plan emparejados.
+Helper scripts/ui-emulator.sh: dispositivos/grupos en override temporal;
+ignora by-path y deduplica grupos de nodos de carácter, stat -L. Preserva
+archivos personalizados exportados y overrides convencionales. Temporal se
+retira por trap EXIT; no genera config expandida ni accede a secretos.
+Tests: siete casos nuevos con fixtures (sin dispositivo, by-path, grupos múltiples,
+fallo Compose con/sin audio, archivos personalizados/separador y override estándar).
+104 Python pasan (0.69 s), 24 Kivy (1.16 s), web y build (43 módulos, 1.31 s).
+
+Arranque real con /dev/snd fuera del sandbox elige grupo 29 y crea contenedor;
+no vuelve unknown flag. P-107-10 RESUELTO. Nuevo bloqueo encontrado y documentado:
+
+**P-107-11 — RESUELTO CON APROBACIÓN:**
+
+```text
+PermissionError: [Errno 13] Permission denied: '/.kivy'
+```
+
+Override diagnóstico temporal de Kivy permite ventana, pero descubre:
+
+```text
+ModuleNotFoundError: No module named 'client'
+```
+
+Operador autoriza ambos ajustes. Compose usa KIVY_HOME=/tmp/.kivy-runtime y
+XDG_CACHE_HOME=/tmp/.cache; command .venv/bin/python -m client.touch_ui.
+Arranque oficial llega a Start application main loop; operador confirma ventana.
+Warnings MESA (fallback llvmpipe), clipboard xclip/xsel y mtdev event4/event9
+no bloquean ventana; no se instalan paquetes ni se amplía acceso a /dev/input.
+
+Revalidación final tras ambos ajustes: 104 Python (0.69 s), 24 Kivy
+(1.17 s), web y build (43 módulos, 1.39 s) pasan.
+
+**P-107-12 — ABIERTO: turno hablado del emulador rechazado con HTTP 422.**
+Operador: pasa de ESCUCHANDO a PENSANDO y después ERROR. Backend registra
+dos POST /chat/audio desde 172.18.0.4 con 422. El WAV generado tiene 16000 Hz,
+96000 muestras, 6 s, pico 0.950012 y RMS 0.228277 (70541 muestras no nulas).
+Existe señal; estas métricas no demuestran que sea voz del micrófono correcto.
+En backend/audio_router.py, la respuesta 422 explícita corresponde a una
+transcripción vacía. También puede existir validación de formulario 422;
+no se ha recuperado el cuerpo de esas respuestas y la causa definitiva sigue
+pendiente. No se atribuye el fallo al TTS, que aún no se alcanza.
+Siguiente diagnóstico guiado: turno en modo texto para aislar respuesta/TTS
+y repetición hablada con mensaje visible. No se corrige código por esta incidencia.
+
+**Audio físico pendiente de diagnóstico:** operador indica «Aparece la ventana,
+pero falla micrófono o voz». No se aprueba captura/TTS. Se solicita precisar
+estado del botón/error. Contenedor: UID 1000, grupos [29,1000]; PortAudio enumera
+10 dispositivos, default [8,8]. arecord muestra analog device 0 y DMIC 6/7;
+aplay muestra analog/HDMI. Host usa PulseAudio sobre PipeWire. No se atribuye aún
+causa ni se modifica ruta de audio/configuración del sistema.

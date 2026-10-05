@@ -319,8 +319,13 @@ las pruebas UI no capturan audio ni llaman al backend. Requiere ejecutar
 kiosk en Raspberry sigue siendo una validación separada.
 
 El emulador usa `http://backend:8000` dentro de Docker y TTS español con espeak.
-`dev ui` reconstruye la imagen y pasa `/dev/snd` y su grupo cuando están
-disponibles. Sin ese dispositivo, síntesis a WAV y pruebas Xvfb siguen siendo
+`dev ui` reconstruye la imagen y configura `/dev/snd` y los grupos de sus
+nodos de carácter mediante un override Compose temporal, retirado al salir.
+Respeta `COMPOSE_FILE`/`COMPOSE_PATH_SEPARATOR` exportados en el entorno y los
+archivos base/override convencionales. Si la selección de archivos Compose se
+configura únicamente en `.env`, el operador debe exportarla para `dev ui`; el
+helper no lee archivos de secretos. Kivy usa directorios temporales escribibles
+y arranca con `python -m client.touch_ui`. Sin ese dispositivo, síntesis a WAV y pruebas Xvfb siguen siendo
 posibles, pero micrófono y reproducción audible requieren hardware ALSA.
 El modo PC y Raspberry usan espeak para sintetizar voz en Linux.
 
