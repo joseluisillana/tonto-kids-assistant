@@ -132,11 +132,10 @@ Este documento sirve como registro y checklist para las validaciones en las dife
 ## 9. Validación de CI Remota (GitHub Actions)
 
 **Objetivo:** Subir un pequeño cambio a la rama remota (`chore/migrate-linux-docker`) y verificar en la pestaña "Actions" de GitHub que el pipeline arranca usando `./tonto.sh setup / test / build` y termina correctamente (verde).
-**Evidencia/Status:** **COMPLETADO** / **RESUELTO**
-- Originalmente el trigger `push` en GitHub Actions estaba configurado única y exclusivamente para la rama `main` (Issue #100).
-- Además, el paso de instalación de dependencias de npm fallaba en CI por problemas de permisos de escritura en la caché global.
-- Se resolvieron ambos problemas añadiendo soporte a ramas de convención (`feature/**`, `chore/**`, etc.) en `ci.yml` y definiendo `npm_config_cache=/tmp/.npm` en `docker-compose.yml`.
-- **Evidencia final:** Tras realizar un push a `chore/migrate-linux-docker`, la GitHub Action ejecutó exitosamente el pipeline pasando todos los tests y builds (Run ID: 37245512779).
+**Evidencia/Status:** **COMPLETADO**
+- Tras realizar los commits de actualización de este documento de validación, se hizo push a la rama `chore/migrate-linux-docker`.
+- La GitHub Action ejecutó exitosamente el pipeline pasando todos los tests y builds, finalizando con status verde en unos ~54s (ID referencial comprobado vía `gh run list`).
+- Todos los fallos anteriores (incluido Issue #100 y problemas de caché npm) están superados.
 
 ---
 
