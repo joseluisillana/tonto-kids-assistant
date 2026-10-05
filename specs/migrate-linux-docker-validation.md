@@ -719,6 +719,13 @@ TOCA PARA HABLAR tras cuatro segundos. P-107-13 RESUELTO Y REVALIDADO.
 Suite UI ampliada: 25 tests pasan (1.03 s), incluido fallo de captura sin upload.
 Pendiente cierre final: nuevo arranque oficial con entrada 5, tres turnos,
 limpieza y CI del SHA final. P-107-14 queda aplazado en #114 por decisión humana.
+**P-107-15 — ABIERTO, primer intento tras arranque:** operador responde que
+el primer turno escuchó menos de un segundo, se cortó y no respondió. No se
+aprueba todavía la secuencia final. Backend registra cuatro POST /chat/audio
+HTTP 200 posteriores; no hay correlación que explique el primer intento.
+Log UI no muestra excepción nueva de worker. Solicitar estado exacto del primer
+fallo y confirmación de duración/respuesta/reset de los siguientes turnos.
+Sin nueva reparación durante esta validación. PR #115 draft contra #108.
 Próxima ejecución: conservar el contenedor y WAV hasta recuperar el detalle
 422; si es transcripción vacía, comprobar fuente de entrada y señal original
 antes de normalizar. Sin cambios de producto en esta actualización.
