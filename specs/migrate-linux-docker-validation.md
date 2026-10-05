@@ -704,6 +704,16 @@ El turno funciona; no se dispone de logs del control ni reproducción aislada
 que establezcan causa o frecuencia. No se atribuye a ALSA/PipeWire sin evidencia.
 Evaluar reproducción y respuesta del control de volumen antes del cierre estable;
 no modificar sistema/dependencias durante esta validación.
+Decisión posterior: aplazar P-107-14 en GitHub #114, enlazado con
+docs/issues/emulator-system-volume-delay.md; no bloquea esta reparación.
+P-107-13 reparado en código con aprobación: PortAudioError retorna fallo,
+UI muestra ERROR y usa reset existente. Validación física pendiente.
+Selección reproducible: TONTO_AUDIO_DEVICE=5 ./tonto.sh dev ui, sin override
+temporal; índice específico de este equipo, no fijado como default compartido.
+Regresiones iniciales de recuperación: 110 Python (0.44 s), 24 Kivy (1.00 s),
+web pasan; build 43 módulos (907 ms). Nuevo test de delegación de fallo de captura
+añadido después: repetir UI para confirmar su resultado. Prueba física de error
+con comando TONTO_AUDIO_DEVICE=4 ./tonto.sh dev ui en curso.
 Próxima ejecución: conservar el contenedor y WAV hasta recuperar el detalle
 422; si es transcripción vacía, comprobar fuente de entrada y señal original
 antes de normalizar. Sin cambios de producto en esta actualización.

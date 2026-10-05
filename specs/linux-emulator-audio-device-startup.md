@@ -59,3 +59,7 @@ Resultado: operador valida tres turnos hablados completos con entrada PortAudio
 esa selección. Quedan P-107-13 (recuperación de excepción de captura) y
 P-107-14 (demora observada del volumen del sistema), registrados sin reparar.
 La selección temporal debe documentarse como configuración local reproducible.
+Operador autoriza reparar P-107-13 y configuración reproducible: capturar
+PortAudioError al abrir/esperar captura y retornar fallo para ERROR y reset
+existente de cuatro segundos. Compose transmite TONTO_AUDIO_DEVICE exportado.
+P-107-14 se aplaza en #114 y docs/issues/emulator-system-volume-delay.md.

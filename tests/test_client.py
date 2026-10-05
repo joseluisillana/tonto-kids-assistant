@@ -234,7 +234,7 @@ def test_send_audio_invalid_json(monkeypatch):
 #
 # capture_audio
 # PC selection must reach PortAudio; no hardware or optional packages needed.
-@pytest.mark.parametrize("configured,expected", [(None, None), ("4", 4), ("DMIC", "DMIC")])
+@pytest.mark.parametrize("configured,expected", [(None, None), ("", None), ("4", 4), ("DMIC", "DMIC")])
 def test_capture_audio_pc_selects_input(monkeypatch, tmp_path, configured, expected):
     calls = []
     recording = object()
@@ -269,6 +269,23 @@ def _audio_test_path(filename: str) -> str:
     root = Path(".cache") / "client-audio-tests"
     root.mkdir(parents=True, exist_ok=True)
     return str(root / filename)
+
+
+@pytest.mark.parametrize("stage", ["rec", "wait"])
+def test_capture_audio_pc_recovers_error(monkeypatch, tmp_path, stage):
+    class PortAudioError(Exception):
+        pass
+    def fail(*args, **kwargs):
+        raise PortAudioError("Invalid sample rate")
+    monkeypatch.setenv("TONTO_AUDIO_MODE", "pc")
+    monkeypatch.setitem(sys.modules, "sounddevice", SimpleNamespace(
+        PortAudioError=PortAudioError,
+        rec=fail if stage == "rec" else lambda *a, **kw: object(),
+        wait=fail if stage == "wait" else lambda: None,
+    ))
+    monkeypatch.setitem(sys.modules, "numpy", SimpleNamespace())
+    monkeypatch.setitem(sys.modules, "soundfile", SimpleNamespace())
+    assert capture_audio("4", 6, str(tmp_path / "turn.wav")) is None
 
 
 def test_capture_audio_calls_arecord_with_device(monkeypatch):

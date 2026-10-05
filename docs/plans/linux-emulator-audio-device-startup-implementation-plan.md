@@ -51,3 +51,8 @@ Operador confirma tres turnos con entrada 5/DMIC hw:0,7; audio físico validado.
 Antes del cierre: preparar reparación enfocada de P-107-13, documentar selección
 local reproducible y diagnosticar P-107-14 sin cambiar sistema ni dependencias.
 No declarar estabilidad completa mientras estos pendientes no tengan dictamen.
+Ampliación aprobada: manejar PortAudioError en captura, testear apertura/espera,
+transmitir selección por Compose y documentar comando oficial. Ejecutar suites,
+build, prueba física con entrada incompatible (error y reset), reinicio con
+entrada compatible, tres turnos y limpieza; registrar CI final antes de merge.
+P-107-14 aplazado por operador: #114 enlaza documento local, fuera de este cierre.

@@ -45,6 +45,7 @@ services:
       - KIVY_HOME=/tmp/.kivy-runtime
       - XDG_CACHE_HOME=/tmp/.cache
       - TONTO_AUDIO_MODE=pc
+      - TONTO_AUDIO_DEVICE=${TONTO_AUDIO_DEVICE:-}
       - TONTO_BACKEND_URL=http://backend:8000
       - XDG_RUNTIME_DIR=/tmp/runtime-dir
     depends_on:

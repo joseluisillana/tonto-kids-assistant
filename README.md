@@ -379,5 +379,10 @@ runners de CI no se configura en este cambio.
 
 En modo PC, `TONTO_AUDIO_DEVICE` selecciona la entrada PortAudio por índice
 numérico o nombre; sin valor se usa la entrada predeterminada. Pasa esta variable
-al contenedor mediante un override Compose local. Los índices dependen del equipo;
+al contenedor con `TONTO_AUDIO_DEVICE=5 ./tonto.sh dev ui`. Los índices dependen del equipo;
 no fijes un índice de hardware en el Compose compartido.
+En este equipo, 5 corresponde a DMIC hw:0,7 y admite 16 kHz; 4 no los admite.
+Consulta entradas con `docker compose run --rm --no-deps ui-emulator .venv/bin/python -m sounddevice`
+si la configuración del contenedor permite acceso a audio; el arranque oficial
+`dev ui` incorpora ese acceso. Un dispositivo incompatible muestra error y
+vuelve a permitir reintentar después de cuatro segundos.
