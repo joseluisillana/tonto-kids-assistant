@@ -530,3 +530,12 @@ Punto 7 COMPLETADO. Tabla principal: 8/9 completos, punto 3 pendiente de audio
 físico del emulador. Permanecen speech web/contador/repetibilidad, proveedor
 DevExpert real sin credencial y mDNS Raspberry como pendientes ampliados.
 No procede cerrar #107 ni declarar estabilidad integral todavía.
+
+CI P-107-07 sobre 4e2858397299518d2766cf75297fe05ff886ebad:
+Project checks push SUCCESS (1m30s),
+https://github.com/joseluisillana/tonto-kids-assistant/actions/runs/37331107651;
+Project checks PR SUCCESS (1m29s),
+https://github.com/joseluisillana/tonto-kids-assistant/actions/runs/37331356962.
+Setup, checks y build completos pasan. PR #113 abierta para revisión/integración.
+El commit siguiente solo registra esta evidencia; consultar checks de #113 para
+su SHA documental final.
