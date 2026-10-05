@@ -338,7 +338,7 @@ Usa estos comandos en vez de instalar dependencias o lanzar herramientas a mano:
 .\scripts\install-git-hooks.ps1
 ```
 
-Python usa siempre el entorno virtual local `.venv/`. Las dependencias web viven en `web/node_modules/`. No instales paquetes Python o npm globales para trabajar en el MVP.
+En entornos Windows, Python usa siempre el entorno virtual local `.venv/`. En Linux/Docker (vía `tonto.sh`), el `.venv` local sirve únicamente para alimentar el autocompletado del IDE, mientras que Docker maneja y aísla las dependencias reales del contenedor en un volumen propio (`backend-venv`). Las dependencias web viven en `web/node_modules/`. No instales paquetes Python o npm globales para trabajar en el MVP.
 
 `.\scripts\install-git-hooks.ps1` se ejecuta una vez por clon. Instala un hook local que actualiza la exportación para NotebookLM antes de cada commit.
 
