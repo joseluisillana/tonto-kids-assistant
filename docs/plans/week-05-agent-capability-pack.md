@@ -5,7 +5,7 @@
 
 ## Objective
 
-Implement `specs/week-05-agent-capability-pack.md` so AI-assisted agents can operate backend and Raspberry validation through repo-owned Markdown and PowerShell helpers.
+Implement `specs/week-05-agent-capability-pack.md` so AI-assisted agents can operate backend and Raspberry validation through repo-owned Markdown and Bash helpers.
 
 This is a workflow and tooling improvement for Week 05. It must not change TONTO product architecture or add dependencies.
 
@@ -104,7 +104,7 @@ git status --short --branch
 
 Implementation verification recorded on 2026-06-09:
 
-- `.\scripts\agent-backend.ps1 -Action start -AllowLan`: passed after switching agent startup away from external PowerShell stream redirection.
+- `.\scripts\agent-backend.ps1 -Action start -AllowLan`: passed after switching agent startup away from external Bash stream redirection.
 - `.\scripts\agent-backend.ps1 -Action health`: passed.
 - `.\scripts\agent-backend.ps1 -Action status`: passed.
 - `.\scripts\agent-backend.ps1 -Action stop`: passed and left `/health` unavailable.
@@ -142,7 +142,7 @@ Before editing:
 Task:
 - Add scripts/agent-backend.ps1 with start/stop/status/health.
 - Add scripts/agent-raspberry.ps1 with preflight/exec.
-- Use only existing repo scripts and standard PowerShell/OpenSSH.
+- Use only existing repo scripts and standard Bash/OpenSSH.
 - Do not add dependencies.
 - Do not store secrets in repo.
 - Update docs for SSH key creation, installation, use, and revocation.

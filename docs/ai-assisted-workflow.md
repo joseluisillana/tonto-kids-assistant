@@ -29,7 +29,7 @@ Codex can execute full repository changes, but the repository workflow is tool-a
 
 The Week 05 Agent Capability Pack is the portable command surface for AI-assisted agents and humans when operating backend and Raspberry validation tasks.
 
-Its source of truth is repository-owned Markdown and PowerShell scripts:
+Its source of truth is repository-owned Markdown and Bash scripts:
 
 - `specs/week-05-agent-capability-pack.md`
 - `docs/plans/week-05-agent-capability-pack.md`

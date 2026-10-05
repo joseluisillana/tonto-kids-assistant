@@ -44,7 +44,7 @@ Raspberry Pi reinstall and recovery steps are now documented in `docs/raspberry-
 - Web validation client exists with React, TypeScript, and Vite.
 - Raspberry-to-backend LAN validation exposed a local binding issue; the official dev script now has an explicit LAN mode for physical Raspberry tests.
 - First point-to-point demo succeeded from VSCode Remote SSH on Raspberry through backend LAN, OpenAI, and headphone/jack audio output.
-- Official PowerShell scripts exist for setup, dev, test, build, NotebookLM export, and Git hook installation.
+- Official Bash scripts exist for setup, dev, test, build, NotebookLM export, and Git hook installation.
 - Go is documented as deferred and excluded from active MVP CI gates.
 - NotebookLM export generated successfully with 18 source files.
 
@@ -62,7 +62,7 @@ Result:
 
 Known benign terminal noise:
 
-- PowerShell profile / oh-my-posh warnings appear in non-interactive shell output.
+- Bash profile / oh-my-posh warnings appear in non-interactive shell output.
 - These warnings did not fail scripts or tests.
 
 ## Open Items Before Tagging

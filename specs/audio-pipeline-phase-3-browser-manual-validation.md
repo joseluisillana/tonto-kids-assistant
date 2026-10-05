@@ -62,7 +62,7 @@ Registrar el navegador exacto usado. Si se usa otro navegador, registrar diferen
 
 ## Preparacion
 
-Desde PowerShell, en la raiz del repositorio:
+Desde Bash, en la raiz del repositorio:
 
 ```powershell
 git branch --show-current

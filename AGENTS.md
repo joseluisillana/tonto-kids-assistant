@@ -68,10 +68,9 @@ Before choosing or executing ANY work item, you MUST read the following files to
 ## Local Environment and Automation
 
 - Treat the host machine as clean. Do not install Python packages globally.
-- Use the official PowerShell scripts in `scripts/` before inventing ad hoc setup, dev, test, or build commands.
+- Use the official Bash scripts in `scripts/` or `tonto.sh` before inventing ad hoc setup, dev, test, or build commands.
 - Python dependencies must be installed into the repo-local `.venv/`.
-- On Windows, use `.\.venv\Scripts\python.exe` when a direct Python command is unavoidable.
-- On Linux/macOS, use `.venv/bin/python` when a direct Python command is unavoidable.
+- Use `.venv/bin/python` when a direct Python command is unavoidable.
 - Run Python tests through `./tonto.sh test python` or the `.venv` Python executable, never through a global `pytest`.
 - Frontend dependencies must stay local to `web/node_modules/`.
 - Use `npm ci` or `npm install` only inside `web/`; never use `npm install -g` unless the user explicitly approves it.

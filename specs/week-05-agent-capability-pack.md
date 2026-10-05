@@ -6,7 +6,7 @@
 
 ## Objective
 
-Create a portable Agent Capability Pack so Codex, OpenCode, and other AI-assisted agents can operate common TONTO development tasks through repository-owned Markdown and PowerShell helpers.
+Create a portable Agent Capability Pack so Codex, OpenCode, and other AI-assisted agents can operate common TONTO development tasks through repository-owned Markdown and Bash helpers.
 
 The pack exists to prevent agents from inventing ad hoc backend startup or Raspberry SSH commands during demo validation. It keeps the repository as the source of truth and makes the same command surface usable by humans and agents.
 

@@ -17,9 +17,9 @@ Before running commands, read:
 2. `docs/ai-assisted-workflow.md`
 3. `docs/demo-runbook.md`
 4. `docs/demo-checklist.md`
-5. `scripts/agent-backend.ps1`
-6. `scripts/agent-raspberry.ps1`
-7. `scripts/dev.ps1`
+5. `scripts/agent-backend.sh`
+6. `scripts/agent-raspberry.sh`
+7. `tonto.sh`
 8. `scripts/demo-raspberry.sh`
 
 ## Rules
@@ -34,42 +34,41 @@ Before running commands, read:
 
 ## Backend Workflow
 
-Run from the Windows repo root.
+Run from the repo root.
 
 1. Check backend status:
 
-```powershell
-.\scripts\agent-backend.ps1 -Action status
+```bash
+.\scripts\agent-backend.sh status
 ```
 
 2. If needed, start it with LAN access:
 
-```powershell
-.\scripts\agent-backend.ps1 -Action start -AllowLan
+```bash
+.\scripts\agent-backend.sh start
 ```
 
 3. Verify health:
 
-```powershell
-.\scripts\agent-backend.ps1 -Action health
+```bash
+.\scripts\agent-backend.sh health
 ```
 
 4. Run a minimal provider smoke without printing secrets:
 
-```powershell
-$body = @{ session_id = "raspberry-live-smoke"; message = "Responde solo: ok" } | ConvertTo-Json
-Invoke-RestMethod -Uri "http://127.0.0.1:8000/chat" -Method Post -ContentType "application/json" -Body $body
+```bash
+curl -s -X POST "http://127.0.0.1:8000/chat" -H "Content-Type: application/json" -d '{"session_id": "raspberry-live-smoke", "message": "Responde solo: ok"}'
 ```
 
 ## Raspberry Workflow
 
-Discover or confirm the Windows LAN IP. Do not use `127.0.0.1` as `TONTO_BACKEND_URL` for Raspberry.
+Discover or confirm the Host LAN IP. Do not use `127.0.0.1` as `TONTO_BACKEND_URL` for Raspberry.
 
 Set the backend URL and run preflight:
 
-```powershell
-$env:TONTO_BACKEND_URL = "http://<WINDOWS_LAN_IP>:8000"
-.\scripts\agent-raspberry.ps1 -Action preflight
+```bash
+export TONTO_BACKEND_URL= "http://<HOST_LAN_IP>:8000"
+.\scripts\agent-raspberry.sh preflight
 ```
 
 Preflight should confirm Raspberry identity, repo presence, required tools, `.venv/bin/python`, and backend `/health`.
@@ -80,8 +79,8 @@ The Raspberry client records when it receives an empty Enter. Use `espeak` to te
 
 For two turns:
 
-```powershell
-$env:TONTO_BACKEND_URL = "http://<WINDOWS_LAN_IP>:8000"; .\scripts\agent-raspberry.ps1 -Action exec -Command 'export TONTO_BACKEND_URL=http://<WINDOWS_LAN_IP>:8000; export TONTO_RECORD_SECONDS=6; (sleep 6; espeak -v es -s 135 -g 8 "primera pregunta, habla ahora" >/dev/null 2>&1; sleep 1; printf "\n"; sleep 34; espeak -v es -s 135 -g 8 "segunda pregunta, habla ahora" >/dev/null 2>&1; sleep 1; printf "\nexit\n") | ./scripts/demo-raspberry.sh'
+```bash
+export TONTO_BACKEND_URL= "http://<HOST_LAN_IP>:8000"; .\scripts\agent-raspberry.sh exec 'export TONTO_BACKEND_URL=http://<HOST_LAN_IP>:8000; export TONTO_RECORD_SECONDS=6; (sleep 6; espeak -v es -s 135 -g 8 "primera pregunta, habla ahora" >/dev/null 2>&1; sleep 1; printf "\n"; sleep 34; espeak -v es -s 135 -g 8 "segunda pregunta, habla ahora" >/dev/null 2>&1; sleep 1; printf "\nexit\n") | ./scripts/demo-raspberry.sh'
 ```
 
 Tell the operator:
@@ -96,8 +95,8 @@ For more turns, repeat the same pattern with enough `sleep` time for the previou
 
 If the user asks for the web validation client, use the official script:
 
-```powershell
-.\scripts\dev.ps1 -Service web
+```bash
+./tonto.sh dev web
 ```
 
 Then direct the user to `http://127.0.0.1:5173/` unless the script reports another URL. Do not change web code for this operation.
@@ -114,6 +113,6 @@ After live turns, summarize:
 
 If the user asks to stop the backend:
 
-```powershell
-.\scripts\agent-backend.ps1 -Action stop
+```bash
+.\scripts\agent-backend.sh stop
 ```
