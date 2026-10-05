@@ -1,5 +1,12 @@
 # Plan de validación integral post-migración
 
+Pasada final integrada sobre 7117313 autorizada: reiniciar matriz 1–9,
+arranque/API → limpieza → CLI/emulador/voz humana → limpieza → Raspberry
+preflight/voz humana → limpieza → setup/tests/build → helpers/docs → CI.
+Registrar logs sanitizados y commits periódicos; no reparar nuevos fallos.
+Prompt de continuación: ejecuta esta secuencia en la rama de #108, conserva
+histórico y actualiza la matriz final. No declares OK con pendientes físicos.
+
 Estado vigente: validación 1–9 COMPLETADA en rama de PR #115; CI 09ef3b3
 aprobado. Pendiente merge #115 → rama de #108, CI global y revisión de #108
 antes de main. #107 permanece abierta hasta integración. #114 es backlog

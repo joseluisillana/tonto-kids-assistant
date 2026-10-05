@@ -1,5 +1,33 @@
 # Validación de Migración a Linux y Docker (Bash)
 
+## Pasada final integrada — 2026-10-05, #107 / #108
+
+Revisión de producto: 711731336bb7427d87a7c180eee43c837f8d1964 (merge #115).
+Esta matriz es la aceptación vigente de la nueva pasada; lo posterior conserva
+las ejecuciones anteriores. Sin reparaciones de producto durante esta pasada.
+
+| Punto | Estado | Evidencia final integrada |
+| --- | --- | --- |
+| 1. Backend/web/API | COMPLETADO | dev all: Vite 7.3.6 252 ms, health/web HTTP 200; /chat real 200 en 1.888987 s, respuesta ok; cuerpo vacío 422; CORS OPTIONS 200 con origin 127.0.0.1:5173. |
+| 2. Limpieza básica | COMPLETADO | down exit 0; sin contenedores/redes del proyecto; health/web posteriores curl 7 (puertos cerrados), dependencias conservadas. |
+| 3. Cliente host/emulador | COMPLETADO | Arranque oficial entrada 5/grupo29; operador confirma tres turnos audibles y reset; backend 3 POST audio 200. CLI tres turnos, memoria Alex, fallback texto sin espeak, exit 0. |
+| 4. Limpieza host | COMPLETADO | down exit 0 tras emulador; sin contenedores/red del proyecto, dependencias conservadas. |
+| 5. Raspberry voz | PENDIENTE | Preflight y voz real requieren Raspberry/operador. |
+| 6. Limpieza Raspberry/backend | PENDIENTE | Tras prueba Raspberry. |
+| 7. Setup/tests/build | PENDIENTE | Ejecutar comandos oficiales. |
+| 8. Auxiliares/docs | PENDIENTE | Sintaxis, helpers, export/hook y legado operativo. |
+| 9. CI remoto | COMPLETADO | 7117313: runs 37377597270 (1m39s) y 37377603886 (1m32s), ambos Project checks pass. Revalidar tras evidencias finales. |
+
+Exclusiones vigentes: touch/kiosk físico #88; DevExpert NO APLICA D025.
+Volumen #114 aplazado por operador; secretos #110 seguimiento separado.
+Dictamen: EN VALIDACIÓN, no emitir OK final mientras falten comprobaciones.
+
+Preflight Raspberry por nombre vuelve a fallar: `Could not resolve hostname
+tonto-pi.local`, exit 255. Reaparición P-107-03, direccionamiento del entorno;
+reintento por IP conocida con verificación SSH normal, sin debilitar identidad.
+Sintaxis Bash completa, diff-check, exportador y hook pasan. Suites previas a
+setup: 110 Python (0.64 s), 25 Kivy (1.07 s), web OK. DevExpert no operado.
+
 Este documento sirve como registro y checklist para las validaciones en las diferentes fases de la transición de scripts `.ps1` a Bash y Docker.
 
 ## Nueva pasada integral — 2026-10-05 (#107)
