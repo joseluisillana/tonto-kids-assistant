@@ -95,7 +95,7 @@ GitHub tracking: issue #33 (parent), issues #34-#38 (phases).
 
 Semana 5 also includes an extra workflow item, tracked by issue #43:
 
-- **Agent Capability Pack** — implemented and merged. Portable repo-owned Markdown and Bash helper scripts for backend lifecycle and Raspberry SSH operations. It added `scripts/agent-backend.ps1` and `scripts/agent-raspberry.ps1`; real Raspberry preflight passed with backend health. Spec: `specs/week-05-agent-capability-pack.md`; plan: `docs/plans/week-05-agent-capability-pack.md`.
+- **Agent Capability Pack** — implemented and merged. Portable repo-owned Markdown and Bash helper scripts for backend lifecycle and Raspberry SSH operations. Its current Linux entry points are `scripts/agent-backend.sh` and `scripts/agent-raspberry.sh`; real Raspberry preflight passed with backend health. Spec: `specs/week-05-agent-capability-pack.md`; plan: `docs/plans/week-05-agent-capability-pack.md`.
 
 Semana 5 also includes a planned extra MVP line for AI Expert course alignment:
 
@@ -121,8 +121,8 @@ GitHub tracking: issue #65 (parent), issues #66-#71 (phases).
 La alineación de cachés locales de GitHub Actions está aprobada y pendiente de
 implementación. `specs/ci-local-cache-alignment.md` define que las cachés
 integradas de pip y npm deben conservarse, pero deben resolver respectivamente
-a `.cache/pip` y `.cache/npm` dentro del workspace, igual que
-`scripts/setup-dev.ps1`. Su plan emparejado vive en
+a `.cache/pip` y `.cache/npm` dentro del workspace. La revalidación de migración detecta aún desajustes de
+caché/setup (P-107-05/06); este objetivo no se considera ya cumplido. Su plan emparejado vive en
 `docs/plans/ci-local-cache-alignment-implementation-plan.md`.
 
 ## Fuera de Alcance de Semana 5
@@ -144,7 +144,7 @@ a `.cache/pip` y `.cache/npm` dentro del workspace, igual que
 - Dispositivo visible con `arecord -l`. Validado como `USB PnP Sound Device`; el numero `card` puede variar y debe leerse antes de grabar.
 - Grabación WAV corta validada con `arecord -D plughw:<CARD>,<DEVICE> -f S16_LE -r 16000 -c 1 -d 10 ~/tonto-mic-check.wav`.
 - Reproducción local validada con `aplay ~/tonto-mic-check.wav`.
-- Backend arrancado con `.\scripts\dev.ps1 -Service backend -AllowLan`.
+- Backend arrancado con `./tonto.sh dev backend`.
 - Cliente Raspberry apuntando a `TONTO_BACKEND_URL`.
 - Subida manual a `POST /chat/audio` validada desde Raspberry con `curl` y respuesta `HTTP 200`.
 - STT backend validado manualmente desde Raspberry real el 2026-05-30: transcript `Hola tonto, explícame qué es una estrella.`, `TOTAL_TIME=5.395580`, respuesta educativa y TTS local audible.

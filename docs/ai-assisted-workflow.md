@@ -33,8 +33,8 @@ Its source of truth is repository-owned Markdown and Bash scripts:
 
 - `specs/week-05-agent-capability-pack.md`
 - `docs/plans/week-05-agent-capability-pack.md`
-- `scripts/agent-backend.ps1`
-- `scripts/agent-raspberry.ps1`
+- `scripts/agent-backend.sh`
+- `scripts/agent-raspberry.sh`
 - `docs/raspberry-pi-setup.md`
 
 Tool-specific wrappers, Codex skills, OpenCode prompts, plugins, or MCP tools may be added later, but they must delegate to this repo-owned pack. They should not become the canonical workflow.
@@ -44,13 +44,13 @@ Use the pack when an agent needs to:
 - start, stop, status-check, or health-check the backend for validation,
 - run a Raspberry preflight over SSH,
 - execute a narrow command inside the Raspberry repo for evidence capture,
-- launch the Raspberry touch UI client (`.\scripts\agent-raspberry.ps1 -Action exec -Command "./scripts/demo-touch.sh"`).
+- launch the Raspberry touch UI client (`./scripts/agent-raspberry.sh exec "./scripts/demo-touch.sh"`).
 
 The pack deliberately does not automate passwords, store secrets, replace human voice demo validation, or change product behavior. Machine-specific values belong in local environment variables such as `TONTO_PI_HOST`, `TONTO_PI_USER`, `TONTO_PI_SSH_KEY`, `TONTO_PI_REPO`, and `TONTO_BACKEND_URL`.
 
 Python execution for project code must stay inside the repository virtual environment:
 
-- Windows backend, tests, and setup use `.venv\Scripts\python.exe`.
+- Linux backend, tests, and setup use the official Docker commands through `./tonto.sh`.
 - Raspberry client/demo commands use `.venv/bin/python`.
 - Host `python` or `python3` may be used only to create the virtual environment or to verify that the system Python exists.
 - Agents should not run project modules with bare `python`, `python3`, `pip`, or `pytest`.
@@ -92,7 +92,7 @@ The Raspberry voice demo skill is for operation only. It must not create product
 OpenCode is an additional interactive CLI used for implementation,
 repository inspection, documentation updates, review, and test verification.
 
-It runs on Windows through WSL2.
+It runs in Linux (including WSL2 when applicable).
 
 - **Provider**: DevExpert (OpenAI-compatible API).
 - **Base URL**: `https://inference.devexpert.io/v1`.
@@ -254,11 +254,11 @@ Too broad:
 
 Use a separate worktree whenever two agents could otherwise edit the same checkout:
 
-```powershell
+```bash
 git switch main
 git pull --ff-only
-git worktree add ..\tonto-worktrees\week-04-phase4-raspberry-listening-indicator -b feature/week-04-phase4-raspberry-listening-indicator main
-git worktree add ..\tonto-worktrees\week-04-phase4-web-listening-indicator -b feature/week-04-phase4-web-listening-indicator main
+git worktree add ../tonto-worktrees/week-04-phase4-raspberry-listening-indicator -b feature/week-04-phase4-raspberry-listening-indicator main
+git worktree add ../tonto-worktrees/week-04-phase4-web-listening-indicator -b feature/week-04-phase4-web-listening-indicator main
 git worktree list
 ```
 
@@ -275,9 +275,9 @@ Rules for parallel agents:
 
 Cleanup commands:
 
-```powershell
+```bash
 git worktree list
-git worktree remove ..\tonto-worktrees\<worktree-name>
+git worktree remove ../tonto-worktrees/<worktree-name>
 git worktree prune
 ```
 

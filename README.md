@@ -58,7 +58,7 @@ Queda fuera del primer loop automatizado: wake word, Arduino/LEDs, persistencia,
 
 ```
 ┌──────────────────────┐       HTTP /chat + /chat/audio       ┌──────────────────────┐
-│     Raspberry Pi     │──────────────────────────────────────►│      Windows PC      │
+│     Raspberry Pi     │──────────────────────────────────────►│      Linux host      │
 │    Thin Client v1.2  │                                       │      Backend IA      │
 │                      │                                       │   Python/FastAPI     │
 │ • Text input         │                                       │                      │
@@ -87,7 +87,7 @@ Queda fuera del primer loop automatizado: wake word, Arduino/LEDs, persistencia,
 - **Responsabilidades futuras**: wake word, control físico/Arduino y otras capacidades fuera del MVP inmediato.
 - **Tecnología**: Python estándar para el primer loop; dependencias de audio/GPIO se añadirán solo cuando entren en alcance.
 
-### Backend (Windows PC)
+### Backend (Linux host)
 
 - **Decisión MVP**: Python inicialmente para iteración rápida (FastAPI, OpenAI).
 - **Responsabilidades**: Llamadas OpenAI, gestión memoria, orquestación respuestas.
@@ -138,11 +138,11 @@ tonto-kids-assistant/
 │   ├── specs.md      # Specs activas
 │   └── decisions.md  # Decisiones técnicas
 ├── scripts/          # Automatización
-│   ├── setup-dev.ps1 # Setup local aislado
-│   ├── dev.ps1       # Servidores locales
-│   ├── test.ps1      # Tests y checks
-│   ├── build.ps1     # Builds reproducibles
-│   └── export-docs-for-notebooklm.ps1
+│   ├── agent-backend.sh # Control backend Docker
+│   ├── agent-raspberry.sh # Operaciones SSH
+│   ├── demo-raspberry.sh # Demo de voz
+│   ├── demo-touch.sh # Demo táctil
+│   └── export-docs-for-notebooklm.sh
 ├── tests/            # Tests automatizados
 ├── .gitignore
 └── README.md
@@ -265,62 +265,23 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 ### Prerrequisitos Confirmados
 
 - Raspberry Pi 3 Model B v1.2 con Raspberry Pi OS
-- PC Windows con Python 3.9+
+- Host Linux con Docker Engine y Docker Compose
 - VSCode con Remote SSH extension
 - Cuenta OpenAI API (para desarrollo)
 
 ### Setup Inicial
 
-1. **Clona y configura**
-
-   ```powershell
-   git clone <repo-url>
-   cd tonto-kids-assistant
-   .\scripts\setup-dev.ps1
-   ```
-
-2. **Levanta el backend**
-
-   ```powershell
-   $env:TONTO_INFERENCE_PROVIDER="openai"
-   $env:OPENAI_API_KEY="<your-openai-api-key>"
-   .\scripts\dev.ps1 -Service backend
-   ```
-
-   Para usar DevExpert Inference en lugar de OpenAI:
-
-   ```powershell
-   $env:TONTO_INFERENCE_PROVIDER="devexpert"
-   $env:DEVEXPERT_API_KEY="<your-devexpert-api-key>"
-   .\scripts\dev.ps1 -Service backend
-   ```
-
-   Para permitir que la Raspberry Pi acceda al backend desde la misma red:
-
-   ```powershell
-   .\scripts\dev.ps1 -Service backend -AllowLan
-   ```
-
-   En ese modo usa la IP LAN del PC Windows en `TONTO_BACKEND_URL`, por ejemplo `http://192.168.1.91:8000`.
-
-3. **Levanta el cliente web de validación**
-
-   ```powershell
-   .\scripts\dev.ps1 -Service web
-   ```
-
-4. **O levanta backend y web juntos**
-
-   ```powershell
-   .\scripts\dev.ps1 -Service all
-   ```
-
-5. **Verifica comunicación**
-   - Backend en `http://127.0.0.1:8000`
-   - Backend para Raspberry en LAN con `.\scripts\dev.ps1 -Service backend -AllowLan`
-   - Cliente conecta y recibe audio
-   - Web principal en `http://127.0.0.1:5173/`
-   - Panel tecnico en `http://127.0.0.1:5173/admin`
+1. Clona el repositorio y ejecuta `./tonto.sh setup` en Linux con Docker Compose.
+2. El operador configura proveedor y credenciales en `.env`, usando
+   `.env.example` como plantilla. Compose carga ese archivo; los agentes no
+   deben leer ni imprimir secretos. Consulta `docs/demo-runbook.md`.
+3. Ejecuta `./tonto.sh dev all` para backend y web, o
+   `./tonto.sh dev backend` para usar Raspberry/emulador.
+4. Backend local: `http://127.0.0.1:8000`; web: `http://127.0.0.1:5173/`.
+   Raspberry usa la IP LAN del host, por ejemplo `http://192.168.1.91:8000`.
+   Docker expone el backend en la LAN; el firewall debe permitir el puerto.
+5. Ejecuta `./tonto.sh dev ui` para el emulador Kivy. La captura/reproducción
+   física requiere dispositivo de audio disponible en el host.
 
 ### Comandos Oficiales
 
@@ -355,9 +316,15 @@ las pruebas UI no capturan audio ni llaman al backend. Requiere ejecutar
 `setup` primero para preparar el volumen de dependencias. La prueba táctil y
 kiosk en Raspberry sigue siendo una validación separada.
 
-En entornos Windows, Python usa siempre el entorno virtual local `.venv/`. En Linux/Docker (vía `tonto.sh`), el `.venv` local sirve únicamente para alimentar el autocompletado del IDE, mientras que Docker maneja y aísla las dependencias reales del contenedor en un volumen propio (`backend-venv`). Las dependencias web viven en `web/node_modules/`. No instales paquetes Python o npm globales para trabajar en el MVP.
+El emulador usa `http://backend:8000` dentro de Docker y TTS español con espeak.
+`dev ui` reconstruye la imagen y pasa `/dev/snd` y su grupo cuando están
+disponibles. Sin ese dispositivo, síntesis a WAV y pruebas Xvfb siguen siendo
+posibles, pero micrófono y reproducción audible requieren hardware ALSA.
+El modo PC y Raspberry usan espeak para sintetizar voz en Linux.
 
-`.\scripts\install-git-hooks.ps1` se ejecuta una vez por clon. Instala un hook local que actualiza la exportación para NotebookLM antes de cada commit.
+En Linux/Docker (vía `tonto.sh`), el `.venv` local sirve únicamente para alimentar el autocompletado del IDE, mientras que Docker maneja y aísla las dependencias reales del contenedor en un volumen propio (`backend-venv`). Las dependencias web viven en `web/node_modules/`. No instales paquetes Python o npm globales para trabajar en el MVP.
+
+`./scripts/install-git-hooks.sh` se ejecuta una vez por clon. Instala un hook local que actualiza la exportación para NotebookLM antes de cada commit.
 
 La exportación de NotebookLM genera fuentes individuales y `exports/notebooklm/NOTEBOOKLM_COMBINED.md`. Para refrescos normales en NotebookLM, usa el documento combinado como fuente principal.
 

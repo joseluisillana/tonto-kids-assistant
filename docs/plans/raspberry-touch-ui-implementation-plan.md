@@ -53,8 +53,8 @@ Excluded:
 
 ## Verification
 
-```powershell
-.\scripts\test.ps1 -Target python
+```bash
+./tonto.sh test python
 git status --short --branch
 ```
 (Además, pruebas funcionales manuales en el hardware físico para cada fase).

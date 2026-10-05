@@ -71,7 +71,7 @@ Durante el desarrollo de la interfaz táctil se han consolidado las siguientes d
 ### 2. Pipeline de Audio Multiplataforma
 Se ha introducido la variable de entorno `TONTO_AUDIO_MODE` para permitir desarrollo sin fricción en equipos de escritorio:
 - `raspberry` (por defecto): Usa ALSA (`arecord`) para captura y `espeak` para síntesis de voz.
-- `pc`: Usa `sounddevice` y `soundfile` (captura) junto con `System.Speech` de PowerShell (síntesis forzando una voz en español). Dependencias listadas en `client/requirements-pc.txt`.
+- `pc`: Usa `sounddevice` y `soundfile` para captura, y `espeak` para síntesis en español. Dependencias Python en `client/requirements-pc.txt`; espeak está incluido en la imagen Docker del emulador. Sin dispositivo ALSA no se valida reproducción audible.
 
 ### 3. Normalización y Calidad de Audio
 La precisión de transcripción de OpenAI Whisper cae drásticamente con audios de bajo volumen (frecuente en micrófonos integrados). En el modo `pc`, la captura se realiza en `float32` y se aplica una **normalización matemática (95% de la amplitud máxima)** usando `numpy` antes de guardar el WAV a 16kHz en PCM_16.

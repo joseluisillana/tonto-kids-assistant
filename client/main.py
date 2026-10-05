@@ -363,19 +363,6 @@ def send_audio(
 
 
 def speak(text: str) -> None:
-    mode = os.environ.get("TONTO_AUDIO_MODE", "raspberry").lower()
-    if mode == "pc":
-        escaped_text = text.replace("'", "''")
-        ps_script = (
-            "Add-Type -AssemblyName System.Speech; "
-            "$s = New-Object System.Speech.Synthesis.SpeechSynthesizer; "
-            "$v = $s.GetInstalledVoices() | Where-Object { $_.VoiceInfo.Culture -like '*es-*' } | Select-Object -First 1; "
-            "if ($v) { $s.SelectVoice($v.VoiceInfo.Name) }; "
-            f"$s.Speak('{escaped_text}')"
-        )
-        subprocess.run(["powershell", "-Command", ps_script], check=False, stderr=subprocess.DEVNULL)
-        return
-
     tts_command = os.environ.get("TONTO_TTS_COMMAND", "espeak")
     tts_args = shlex.split(os.environ.get("TONTO_TTS_ARGS", DEFAULT_TTS_ARGS))
 

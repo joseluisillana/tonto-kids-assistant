@@ -14,12 +14,12 @@ Esta tabla es la aceptación vigente; no hereda sus estados COMPLETADO.
 | --- | --- | --- |
 | 1. Backend + web | COMPLETADO | `./tonto.sh dev all`: Uvicorn 8000 y Vite 7.3.3 en 443 ms. Health `{"status":"ok"}` HTTP 200; web HEAD HTTP 200. `/chat` real HTTP 200, 2.244706 s, `{"success":true,"response_text":"¡Ok! ¿Tienes alguna pregunta?"}`. Cuerpo `{}` devuelve HTTP 422 con campos session_id/message obligatorios. |
 | 2. Limpieza básica | COMPLETADO | Fallo inicial conservado en P-107-01; reparación fix/docker-cleanup revalidada: down retira backend/web, dos emuladores previos y red, exit 0; sin contenedores/redes del proyecto y puertos libres. |
-| 3. Cliente host + UI Linux | FALLIDO | `./tonto.sh dev backend`; `.venv/bin/python client/main.py --mode text` con TONTO_BACKEND_URL local y tres entradas estrella/Sol/despedida: 3 respuestas coherentes, exit 0. Host sin espeak degrada a texto. Smoke `docker compose run --rm ui-emulator .venv/bin/python -c 'from client.main import speak; speak("Validación de voz Linux")'`: exit 1, FileNotFoundError powershell. Ver P-107-02. |
+| 3. Cliente host + UI Linux | PENDIENTE | Reparación software revalidada: health HTTP 200 y chat real desde Kivy mediante http://backend:8000, espeak genera WAV español no silencioso, UI vuelve a idle. Audibilidad y micrófono físicos del emulador pendientes: host sin /dev/snd. Fallos históricos P-107-02/08 resueltos; detalle abajo. |
 | 4. Limpieza host | COMPLETADO | Tras reparación: segunda llamada down exit 0 sin residuales; nuevo arranque backend/web HTTP 200 y stop retira servicios, one-off de control y red. Histórico P-107-01. |
 | 5. Raspberry real | COMPLETADO | Reintento por IP 192.168.1.183 con identidad SSH verificada: preflight exit 0, health LAN OK, USB disponible, 3/3 turnos reales con transcript correcto, continuidad y TTS. Cliente exit 0; backend 3 POST /chat/audio HTTP 200. Operador confirma «si, todo correcto». Detalle en Revalidación Raspberry encendida; mDNS sigue fallando P-107-03. |
 | 6. Limpieza Raspberry | COMPLETADO | Cliente/audio Raspberry ya terminaban y LAN health tras parada fallaba correctamente (curl 7). Reparación del bloqueo Docker revalidada: elimina también emuladores y red, sin residuales ni puertos; conserva dependencias. No se repiten voz ni UI física para este cambio CLI. Histórico P-107-01. |
 | 7. Setup/tests/build | FALLIDO | Setup exit 0 pero venv host no se crea (ensurepip ausente) y caché pip deshabilitada. Tests antes/después de setup: 78 Python + 24 UI + web pasan, exit 0. Build repetido tras setup: typecheck + 43 módulos Vite, 1.18 s, exit 0. npm audit completo exit 1, siete vulnerabilidades; producción audit omit-dev exit 0, cero. Ver P-107-05/06/07. |
-| 8. Auxiliares/docs | FALLIDO | `bash -n` por cada tonto.sh/scripts/*.sh exit 0; exportador y instalador hook exit 0. Helper apagado: Health unavailable; start/status/health/stop exit 0; status final Health unavailable. Helper Raspberry preflight/exec y demo-raspberry.sh pasan en hardware real. Runbooks desalineados P-107-04; demo-touch físico excluido en #88. |
+| 8. Auxiliares/docs | COMPLETADO | Helpers previamente validados; guías operativas README/demo/SSH/workflow y planes vigentes actualizados a Bash/Docker/.env. bash -n y git diff --check pasan. demo-touch físico sigue excluido en #88. P-107-04 resuelto. |
 | 9. CI remoto | COMPLETADO | Push a rama documental. Run 37302071237 sobre SHA 2c2757e11f0ae2fc3a72ed7a1bc45cb193e17bf2: completed/success; setup, checks y build success. Cambios posteriores solo añaden evidencias documentales; consultar checks de PR para su SHA final. |
 
 Ampliaciones pendientes: setup reproducible, micrófono/WAV/auto-stop/speech web
@@ -35,7 +35,7 @@ equivalen a aceptación de audio real.
   Eran anteriores a esta pasada y se conservaron durante la auditoría.
   Reparación aprobada: down --remove-orphans y verificación posterior por proyecto;
   ahora se retiran mediante el wrapper, incluida red. Evidencias al final.
-- **P-107-02 — ABIERTO, TTS Linux del emulador roto:** Compose configura
+- **P-107-02 — RESUELTO EN SOFTWARE (audibilidad física pendiente), TTS Linux del emulador roto:** Compose configura
   TONTO_AUDIO_MODE=pc; `client/main.py:376` ejecuta powershell/System.Speech
   ausente de la imagen Linux. Smoke exit 1 con traceback FileNotFoundError.
   La suite UI simula audio/TTS y por sí sola no prueba esta integración.
@@ -46,13 +46,14 @@ equivalen a aceptación de audio real.
   StrictHostKeyChecking=yes, sin cambiar known_hosts ni scripts. Preflight real
   y health LAN pasan. Batería de voz 3/3 completada; el nombre mDNS sigue fallando
   y queda como problema abierto de direccionamiento, no como bloqueo de voz.
-- **P-107-04 — ABIERTO, documentación operacional desalineada:**
+- **P-107-04 — RESUELTO; descripción histórica, documentación operacional desalineada:**
   `docs/demo-runbook.md` y `docs/demo-checklist.md` siguen indicando Windows,
   scripts dev.ps1/agent-backend.ps1 y que no se carga .env; tonto.sh sí crea
   .env y Compose lo carga. `scripts/demo-touch.sh` aconseja dev.ps1 en error.
   Impacto: demo Linux no reproducible siguiendo esas instrucciones.
 
-No se ha corregido código ni configuración. No procede declarar versión estable.
+En la auditoría inicial no se corrigió código ni configuración. Las reparaciones
+aprobadas posteriores se documentan por separado. No procede declarar versión estable.
 
 ### Evidencias ampliadas y nuevos problemas
 
@@ -78,7 +79,7 @@ No se ha corregido código ni configuración. No procede declarar versión estab
   Es un reporte del registry, no evidencia de explotación: algunos advisories
   afectan Windows. Requiere valorar aplicabilidad antes de aceptar riesgo.
   No se ejecutó npm audit fix ni se modificó el lockfile.
-- **P-107-08 — ABIERTO, backend inaccesible por defecto desde emulador:**
+- **P-107-08 — RESUELTO; descripción histórica, backend inaccesible por defecto desde emulador:**
   Con backend saludable, smoke urllib desde ui-emulator imprime
   `backend-service 200` para http://backend:8000/health; después exit 1,
   `urllib.error.URLError: <urlopen error [Errno 111] Connection refused>` para
@@ -408,3 +409,41 @@ siguen abiertos. Cambio limitado a limpieza CLI, pruebas y documentación.
 6. **Advertencia de sintaxis obsoleta en `docker-compose.yml`:** (Asociado a Issue [#101](https://github.com/joseluisillana/tonto-kids-assistant/issues/101)) - **RESUELTO**
    - **Descripción:** Cada ejecución de `docker compose` emite el aviso: `WARN[0000] the attribute 'version' is obsolete, it will be ignored, please remove it to avoid potential confusion`.
    - **Resolución:** Se eliminó el atributo `version` del archivo `docker-compose.yml` ya que la especificación Compose V2 lo considera obsoleto, eliminando el ruido en la consola durante el desarrollo.
+
+### Reparación emulador Linux y guías vigentes — 2026-10-05
+
+Rama `fix/linux-emulator-connection-tts`; spec y plan
+`specs/linux-emulator-connection-tts.md` y
+`docs/plans/linux-emulator-connection-tts-implementation-plan.md`.
+Paquete espeak en Docker aprobado explícitamente por el operador.
+Se elimina la ruta TTS heredada, se configura backend por DNS de Compose y
+se pasa ALSA/grupo al ejecutar dev ui cuando existe dispositivo.
+Las referencias antiguas del registro anterior son evidencia histórica.
+
+Resultados de ejecución:
+
+- `./tonto.sh test all`: 89 Python + 24 Kivy + checks web pasan, exit 0.
+- `./tonto.sh build all`: typecheck y Vite pasan, exit 0, 1.43 s.
+- Imagen ui reconstruida con espeak. Smoke Kivy real con Xvfb,
+  backend real y síntesis a WAV (sin sustituir backend/TTS por mocks):
+
+```text
+HEALTH_HTTP 200
+UI_BACKEND http://backend:8000
+RESPONSE Una estrella es una enorme bola de gas que brilla en el cielo porque produce luz y calor. Es como un gran faro en el espacio. ¿Tienes alguna otra pregunta sobre las estrellas?
+TTS_WAV 1 2 22050 397678 PEAK 31914
+UI_FINAL_STATE idle
+```
+
+WAV mono PCM 16 bits, 22050 Hz, 397678 frames, amplitud máxima 31914.
+El smoke final termina con exit 0. Warnings de clipboard xclip/xsel y caché
+Kivy no impiden el resultado; no se añaden dependencias por esos avisos.
+El primer intento dejó Xvfb abierto por exec de Bash; se paró su contenedor
+propio y se repitió con retorno explícito como el helper oficial de tests.
+`./tonto.sh down` final retira backend/red, exit 0.
+
+No existe /dev/snd en este host: síntesis verificada, audibilidad/captura física
+no verificadas. Punto 3 PENDIENTE de esa aceptación; no atribuirle la audibilidad
+ya confirmada en Raspberry. Punto 7 conserva los fallos setup/caché/audit.
+Speech web y proveedor real sin credencial conservan sus pendientes anteriores.
+No se ha leído ni modificado el archivo de secretos durante esta reparación.

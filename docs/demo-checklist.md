@@ -2,23 +2,23 @@
 
 **Audience:** demo operator
 **Purpose:** verify the TONTO MVP before presentation day and follow a stable demo sequence.
-**Last Updated:** 2026-06-14
+**Last Updated:** 2026-10-05
 
 Use this checklist with `docs/demo-runbook.md`. The runbook explains the full operating flow; this file is the presentation-day checklist.
 
 ## 1. Presentation Preconditions
 
-- [ ] Windows development PC is available and connected to power.
-- [ ] Raspberry Pi 3 is available, powered, and on the same LAN as the Windows PC.
+- [ ] Linux development host with Docker Compose is available and connected to power.
+- [ ] Raspberry Pi 3 is available, powered, and on the same LAN as the Linux host.
 - [ ] USB microphone and speaker/audio output are connected to the Raspberry.
 - [ ] Waveshare 5" Touch Screen connected to the Raspberry (HDMI for video, USB for power/touch).
-- [ ] The active LAN IP of the Windows PC is known.
-- [ ] Windows Firewall allows backend traffic on port `8000` for the current network.
-- [ ] Repository is available on Windows at the expected project path.
+- [ ] The active LAN IP of the Linux host is known.
+- [ ] Host firewall allows backend traffic on port `8000` for the current network.
+- [ ] Repository is available on Linux at the expected project path.
 - [ ] Repository is available on Raspberry at `~/tonto-kids-assistant` or `TONTO_PI_REPO`.
-- [ ] Python virtual environment exists on Windows and Raspberry.
+- [ ] Docker dependency volume is prepared on the host and Python venv exists on Raspberry.
 - [ ] Raspberry has `arecord`, `aplay`, `espeak`, `curl`, `git`, and `.venv/bin/python`.
-- [ ] Required provider API key is configured in the backend Bash terminal.
+- [ ] The operator configured the provider API key in `.env` consumed by Compose.
 - [ ] No real API keys, tokens, passwords, or SSH private keys are printed, recorded, or committed.
 
 ## 2. Choose Provider
@@ -27,13 +27,13 @@ Use OpenAI as the primary presentation provider unless there is a specific reaso
 
 ### OpenAI
 
-In the backend Bash terminal:
+El operador configura estos valores en `.env` (no mostrar ni registrar claves reales):
 
-```powershell
-$env:TONTO_INFERENCE_PROVIDER = "openai"
-$env:OPENAI_API_KEY = "<your-openai-api-key>"
-$env:OPENAI_MODEL = "gpt-4o-mini"
-$env:OPENAI_STT_MODEL = "gpt-4o-mini-transcribe"
+```dotenv
+TONTO_INFERENCE_PROVIDER="openai"
+OPENAI_API_KEY="<your-openai-api-key>"
+OPENAI_MODEL="gpt-4o-mini"
+OPENAI_STT_MODEL="gpt-4o-mini-transcribe"
 ```
 
 Expected use:
@@ -43,14 +43,14 @@ Expected use:
 
 ### DevExpert
 
-In the backend Bash terminal:
+El operador configura estos valores en `.env` (no mostrar ni registrar claves reales):
 
-```powershell
-$env:TONTO_INFERENCE_PROVIDER = "devexpert"
-$env:DEVEXPERT_API_KEY = "<your-devexpert-api-key>"
-$env:DEVEXPERT_BASE_URL = "https://inference.devexpert.io/v1"
-$env:DEVEXPERT_CHAT_MODEL = "mimo-v2.5"
-$env:DEVEXPERT_STT_MODEL = "gpt-4o-mini-transcribe"
+```dotenv
+TONTO_INFERENCE_PROVIDER="devexpert"
+DEVEXPERT_API_KEY="<your-devexpert-api-key>"
+DEVEXPERT_BASE_URL="https://inference.devexpert.io/v1"
+DEVEXPERT_CHAT_MODEL="mimo-v2.5"
+DEVEXPERT_STT_MODEL="gpt-4o-mini-transcribe"
 ```
 
 Expected use:
@@ -63,16 +63,16 @@ Expected use:
 
 Start the backend with LAN access from the configured backend Bash terminal:
 
-```powershell
-.\scripts\dev.ps1 -Service backend -AllowLan
+```bash
+./tonto.sh dev backend
 ```
 
 Keep the backend terminal open.
 
 Verify local health from another Bash terminal:
 
-```powershell
-Invoke-RestMethod -Uri "http://127.0.0.1:8000/health" -Method Get
+```bash
+curl --fail --silent --show-error http://127.0.0.1:8000/health
 ```
 
 Expected result:
@@ -83,9 +83,8 @@ Expected result:
 
 Run a text provider smoke:
 
-```powershell
-$body = @{ session_id = "presentation-smoke"; message = "Responde solo: ok" } | ConvertTo-Json
-Invoke-RestMethod -Uri "http://127.0.0.1:8000/chat" -Method Post -ContentType "application/json" -Body $body
+```bash
+curl --fail --silent --show-error http://127.0.0.1:8000/chat -H "Content-Type: application/json" -d '{"session_id":"provider-smoke","message":"Responde solo: ok"}'
 ```
 
 Expected result:
@@ -95,22 +94,22 @@ Expected result:
 
 Optional agent helper:
 
-```powershell
-.\scripts\agent-backend.ps1 -Action health
+```bash
+./scripts/agent-backend.sh health
 ```
 
 ## 4. Raspberry Verification
 
-Set the backend URL in the Windows terminal used for Raspberry helper commands:
+Set the backend URL in the Linux terminal used for Raspberry helper commands:
 
-```powershell
-$env:TONTO_BACKEND_URL = "http://<WINDOWS_LAN_IP>:8000"
+```bash
+export TONTO_BACKEND_URL="http://<HOST_LAN_IP>:8000"
 ```
 
 Run the Raspberry preflight when the dedicated SSH key is configured:
 
-```powershell
-.\scripts\agent-raspberry.ps1 -Action preflight
+```bash
+./scripts/agent-raspberry.sh preflight
 ```
 
 Expected checks:
@@ -127,7 +126,7 @@ If operating manually over SSH, run:
 cd ~/tonto-kids-assistant
 git status --short --branch
 arecord -l
-curl http://<WINDOWS_LAN_IP>:8000/health
+curl http://<HOST_LAN_IP>:8000/health
 ```
 
 Expected result:
@@ -153,7 +152,7 @@ On the Raspberry:
 
 ```bash
 cd ~/tonto-kids-assistant
-export TONTO_BACKEND_URL=http://<WINDOWS_LAN_IP>:8000
+export TONTO_BACKEND_URL=http://<HOST_LAN_IP>:8000
 ./scripts/demo-raspberry.sh
 ```
 
@@ -182,10 +181,10 @@ Accept the smoke if:
 
 Use the web client if it is part of the presentation or as a fallback.
 
-Start the web client on Windows:
+Start the web client on Linux:
 
-```powershell
-.\scripts\dev.ps1 -Service web
+```bash
+./tonto.sh dev web
 ```
 
 Open:
@@ -275,8 +274,8 @@ Do not force all seven turns if the presentation time is short. The minimum live
 
 Use the web voice loop if the browser microphone works:
 
-```powershell
-.\scripts\dev.ps1 -Service web
+```bash
+./tonto.sh dev web
 ```
 
 Then open `http://127.0.0.1:5173/`.
@@ -308,13 +307,13 @@ Check:
 
 - Backend terminal is still running.
 - Backend was started with `-AllowLan`.
-- `TONTO_BACKEND_URL` uses the Windows LAN IP, not `127.0.0.1`.
-- Windows Firewall allows port `8000`.
-- Raspberry and Windows PC are on the same network.
+- `TONTO_BACKEND_URL` uses the Linux host LAN IP, not `127.0.0.1`.
+- Host firewall allows port `8000`.
+- Raspberry and Linux host are on the same network.
 
 Fallback:
 
-- Use local web/text checks from Windows if LAN debugging would take too long.
+- Use local web/text checks from Linux if LAN debugging would take too long.
 
 ### Provider fails
 
@@ -340,7 +339,7 @@ Run this immediately before presenting:
 
 - [ ] Backend is running and `/health` returns `ok`.
 - [ ] Active provider is known: OpenAI or DevExpert.
-- [ ] Raspberry can reach `http://<WINDOWS_LAN_IP>:8000/health`.
+- [ ] Raspberry can reach `http://<HOST_LAN_IP>:8000/health`.
 - [ ] Raspberry voice smoke passed.
 - [ ] Speaker output is audible in the room.
 - [ ] Web client is open if used as fallback.
