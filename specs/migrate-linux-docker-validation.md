@@ -681,6 +681,14 @@ opcionales. ./tonto.sh test all: 107 Python (0.44 s), 24 Kivy (1.05 s), web OK.
 Emulador reiniciado con override temporal /tmp/tonto-ui-dmic-validation.yaml,
 TONTO_AUDIO_DEVICE=4 (PortAudio DMIC hw:0,6 en este equipo); no se fija el índice
 en configuración compartida ni se cambia salida/volumen. Prueba física pendiente.
+Prueba con entrada 4: operador observa ESCUCHANDO permanente. Log confirma
+sounddevice.PortAudioError: Invalid sample rate [PaErrorCode -9997].
+Worker voice_pipeline_thread termina sin recuperar estado. **P-107-13 ABIERTO:**
+excepción de captura PC sin manejo deja UI bloqueada; pendiente reparación
+específica, no se corrige durante esta validación.
+check_input_settings sin grabación: entradas 0/4 rechazan 16000 Hz;
+5 (DMIC hw:0,7) y 8 (default) admiten 16000 Hz. Override temporal cambia a
+entrada 5 para continuar la prueba aprobada sin conversión de audio/dependencias.
 Próxima ejecución: conservar el contenedor y WAV hasta recuperar el detalle
 422; si es transcripción vacía, comprobar fuente de entrada y señal original
 antes de normalizar. Sin cambios de producto en esta actualización.
