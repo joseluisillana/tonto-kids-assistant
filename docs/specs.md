@@ -6,7 +6,7 @@ El proceso de registros nuevos/migrados vive en [ai/README.md](../ai/README.md),
 con índices [specs](../ai/specs/INDEX.md) e [issues](../ai/issues/INDEX.md).
 Fase 1 integrada en PR #124 (`818e88e`), con ambas comprobaciones CI aprobadas.
 El índice nuevo registra [la migración histórica](../ai/specs/001-historical-records-migration/spec.md)
-implementada localmente, pendiente de revisión/integración. Su
+implementada y aceptada por el operador, preparada para integración. Su
 [mapa](../ai/specs/001-historical-records-migration/migration-map.md) y
 [evidencia de conservación](../ai/specs/001-historical-records-migration/metadata-review.md)
 registran 28 specs históricas, un documento local de issue y 64 fuentes trasladadas.

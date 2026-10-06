@@ -6,7 +6,7 @@ remain managed in GitHub and are linked, not imported.
 
 | id | title | status | updated |
 | --- | --- | --- | --- |
-| 001-historical-records-migration | Historical specs and issues migration | in-progress | 2026-10-06 |
+| 001-historical-records-migration | Historical specs and issues migration | done | 2026-10-06 |
 | 002-agent-instructions-hierarchy | Jerarquía portable de instrucciones para agentes | done | 2026-10-06 |
 | 003-agent-secrets-protection | #110 — reducción de exposiciones accidentales de secretos | done | 2026-10-06 |
 | 004-audio-pipeline-phase-3-web-loop | Audio Pipeline Phase 3 Web Loop | done | 2026-10-06 |

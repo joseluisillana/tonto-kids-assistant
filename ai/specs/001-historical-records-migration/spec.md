@@ -1,7 +1,7 @@
 ---
 id: "001-historical-records-migration"
 title: "Historical specs and issues migration"
-status: in-progress
+status: done
 owner: "Project operator"
 created: "2026-10-06"
 updated: "2026-10-06"
