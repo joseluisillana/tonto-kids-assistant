@@ -286,8 +286,10 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 4. Backend local: `http://127.0.0.1:8000`; web: `http://127.0.0.1:5173/`.
    Raspberry usa la IP LAN del host, por ejemplo `http://192.168.1.91:8000`.
    Docker expone el backend en la LAN; el firewall debe permitir el puerto.
-5. Ejecuta `./tonto.sh dev ui` para el emulador Kivy. La captura/reproducción
-   física requiere dispositivo de audio disponible en el host.
+5. Para el emulador Kivy en Docker Desktop Linux, ejecuta desde la raíz
+   `DOCKER_CONTEXT=desktop-linux ./tonto.sh dev ui`. En próximos arranques,
+   cierra primero la ventana anterior y espera a que termine su launcher.
+   La captura/reproducción física requiere audio disponible en el host.
 
 ### Comandos Oficiales
 
@@ -299,7 +301,8 @@ Usa estos comandos en vez de instalar dependencias o lanzar herramientas a mano:
 ./tonto.sh setup host
 ./tonto.sh dev backend
 ./tonto.sh dev web
-./tonto.sh dev ui
+# Emulador en Docker Desktop Linux; cerrar la ventana anterior antes de repetir
+DOCKER_CONTEXT=desktop-linux ./tonto.sh dev ui
 ./tonto.sh dev all
 ./tonto.sh test python
 ./tonto.sh test ui
@@ -354,7 +357,17 @@ el plugin ALSA está dentro de la imagen. Sin servicio de audio, UI/texto siguen
 disponibles y la voz muestra error de captura.
 
 Para Desktop, ejecuta `DOCKER_CONTEXT=desktop-linux ./tonto.sh setup` una vez y
-`DOCKER_CONTEXT=desktop-linux ./tonto.sh dev ui`. Backend se inicia como dependencia
+usa el siguiente comando desde la raíz del repositorio. **Para próximos arranques,
+cierra la ventana anterior y espera a que termine su launcher** antes de repetirlo:
+
+```bash
+DOCKER_CONTEXT=desktop-linux ./tonto.sh dev ui
+```
+
+El cierre retira los puentes y libera sus puertos; no inicies un segundo launcher
+mientras el anterior siga activo. Para Engine nativo, usa
+`DOCKER_CONTEXT=default ./tonto.sh dev ui` con sus precondiciones de hardware.
+Backend se inicia como dependencia
 en ese mismo contexto; los puertos del backend deben estar libres. Cierra la
 ventana o usa Ctrl+C para retirar contenedor UI y puentes; backend permanece.
 Los puertos locales de puente son 26024 (X11) y 24713 (audio), configurables con

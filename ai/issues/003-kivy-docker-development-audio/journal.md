@@ -184,6 +184,17 @@ Reparación guardada en commit 3bddad0 y publicada para revisión en
 La issue local permanece resolved hasta revisión/integración; no existe una issue
 GitHub duplicada. Backend y emulador oficiales siguen activos en Desktop.
 
+## Aclaración de operación humana y de agentes — 2026-10-07
+
+Operador exige registrar el comando explícito de próximos arranques y el cierre
+previo en documentación humana e instrucciones de agentes. Plan ampliado antes
+de editar. README actualizado en setup, comandos y ciclo Desktop; AGENTS raíz,
+client/AGENTS y scripts/AGENTS incorporan el mismo comando desde raíz, contexto
+explícito y espera de limpieza del launcher anterior. Backend permanece disponible.
+Misma issue 003 y PR #126; cambio documental sin alterar código ni servicios.
+Verificación de consistencia y git diff --check correctas; no requiere repetir
+pruebas de runtime. Estado resolved, pendiente revisión/integración.
+
 Intento de comparar dispositivos con compose run --device no ejecutó nada:
 esa opción no está admitida por run. No se extrae evidencia de audio de ese error.
 No hay dependencias nuevas ni reparación implementada. Pendiente concretar

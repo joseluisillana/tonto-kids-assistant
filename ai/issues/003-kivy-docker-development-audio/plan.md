@@ -76,6 +76,27 @@ las pruebas de widgets bajo Xvfb y los mocks no prueban hardware.
 
 ## Implementation prompt
 
+### Ampliación documental solicitada — 2026-10-07
+
+Integrar en esta misma issue y PR el comando explícito de próximos arranques:
+`DOCKER_CONTEXT=desktop-linux ./tonto.sh dev ui`, desde la raíz del repositorio
+y después de cerrar la ventana anterior y esperar a que termine su launcher.
+
+Ubicaciones previstas:
+- README.md: setup inicial, lista de comandos y explicación del ciclo de arranque
+  Desktop. Es la guía humana de esta operación; el runbook Raspberry no es su destino.
+- AGENTS.md: entrada común de operación del emulador y referencia al README.
+- client/AGENTS.md: instrucción para agentes que trabajan/validan la UI.
+- scripts/AGENTS.md: instrucción para agentes que operan el launcher y su limpieza.
+
+Mantener la vía nativa diferenciada y evitar depender del contexto global elegido.
+Explicar que el cierre libera puentes/puertos y conserva backend; no iniciar un
+segundo launcher mientras el anterior esté activo. No cambiar comportamiento,
+dependencias, servicios ni volver a ejecutar aceptación física por edición de prose.
+Verificar consistencia entre las cuatro ubicaciones y git diff --check; actualizar
+journal y publicar en la PR #126 de la misma rama. Estado resolved se conserva
+una vez incorporada esta aclaración, con revisión/integración aún pendientes.
+
 Leer AGENTS.md, workflow y locales aplicables, y los tres archivos del registro
 003-kivy-docker-development-audio. Ejecutar inicialmente solo la investigación
 de los pasos 1–5. Usar helpers oficiales y diagnósticos seguros. Partir de main,

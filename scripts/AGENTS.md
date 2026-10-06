@@ -36,6 +36,19 @@ in fixtures/stubs. Client/backend/web do not import these scripts.
 
 ## Impact and validation
 
+Operate the Docker Desktop Linux emulator from the repository root with:
+
+```bash
+DOCKER_CONTEXT=desktop-linux ./tonto.sh dev ui
+```
+
+Before repeating the command, close the previous UI window and wait until its
+launcher finishes removing the container, bridges and temporary override. Do not
+launch a second instance on occupied bridge ports. Backend remains running.
+Select Desktop explicitly rather than relying on the global Docker context;
+native Engine uses `DOCKER_CONTEXT=default`. Human instructions and prerequisites
+are in [README](../README.md#comandos-oficiales).
+
 Read [capability pack](../ai/specs/027-week-05-agent-capability-pack/spec.md) with its historical
 notice, [demo runbook](../docs/demo-runbook.md),
 [Raspberry setup](../docs/raspberry-pi-setup.md),
