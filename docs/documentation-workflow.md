@@ -75,7 +75,10 @@ Avoid:
 
 Use this routine at the end of meaningful work sessions:
 
-1. Ask Codex or OpenCode to update the journal and docs affected by the work.
+1. Update the affected ai/ record's journal.md and relevant documentation. Add a
+   project-journal summary only for a milestone change or project-wide decision;
+   link the record evidence rather than repeat its detailed log. Any development
+   agent or human can perform this routine.
 2. Run tests or checks relevant to the change.
 3. Commit code and documentation together.
 4. Let the `pre-commit` hook regenerate `exports/notebooklm/`.
@@ -106,10 +109,13 @@ For parallel work, keep evidence attached to the branch that produced it. If mul
 
 ## Spec Handoff Routine
 
-For new/migrated specs and issues, follow [ai/README.md](../ai/README.md) and
-use the record's plan.md/journal.md and INDEX.md. Legacy records retain their
-sources until migration; new indexes are not full history. Global journals
-retain milestone context and link record-specific evidence.
+For all registered local specs and issues, follow [ai/README.md](../ai/README.md)
+and use the record's plan.md/journal.md and INDEX.md. Migration is complete in
+this branch; retired source paths survive only as historical provenance in Git.
+Do not recreate docs/specs/, docs/issues/, specs/ or docs/plans/, or use legacy
+procedures/templates. Global journals preserve historical evidence and summarize
+cross-record milestones; they do not duplicate record journals or own local
+spec/issue status. GitHub issues remain managed on GitHub.
 
 Before creating or materially changing a spec, follow the canonical
 [Spec Handoff Workflow](ai-assisted-workflow.md#spec-handoff-workflow), including
@@ -134,7 +140,9 @@ be subdirectories of `exports/`; absolute equivalents are accepted. Repository
 root, source directories, `exports` itself, outside paths and symbolic links in
 the destination path are rejected before writing or deleting anything.
 
-Sources remain README/AGENTS, Markdown under docs/specs, and web/README.
+Sources remain README/AGENTS, Markdown under docs/, and web/README.
+The exporter also has a legacy specs/ selection, now empty; this is not an
+instruction to recreate that directory.
 The current selection excludes ai/: read it directly for the new process and
 records. This instrumentation does not change exporter coverage or scripts. The
 export rejects symbolic links in source trees (including broken/internal links),

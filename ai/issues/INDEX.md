@@ -1,8 +1,9 @@
 # Issue index
 
-Update this table in the same change as record metadata, obligatorily for every
-status change. Retain closed rows as history. Initially empty: historical migration
-is pending; consult the legacy sources linked in [the common process](../README.md).
+Update status/title/updated in the same change as record metadata; retain closed
+rows and IDs. This index covers registered local records only. GitHub issues
+remain managed in GitHub and are linked, not imported.
 
 | id | title | status | updated |
 | --- | --- | --- | --- |
+| 001-emulator-system-volume-delay | P-107-14 — demora del volumen | open | 2026-10-06 |

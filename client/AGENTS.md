@@ -30,10 +30,10 @@ shared/models.py is not imported. AI orchestration remains in backend.
 Helper changes affect terminal and touch flows; state/animation changes affect
 touch widget tests. Preserve HTTP shapes, text fallback, timeouts, unavailable
 TTS handling and cleanup of captured files. Do not interpret simulated audio or
-Xvfb as physical validation. Read [audio spec](../specs/audio-pipeline.md),
-[touch spec](../specs/raspberry-touch-ui.md),
-[Kivy coverage](../specs/kivy-ui-testing-coverage.md),
-[emulator spec](../specs/kivy-ui-docker-emulation.md) and
+Xvfb as physical validation. Read [audio spec](../ai/specs/005-audio-pipeline/spec.md),
+[touch spec](../ai/specs/021-raspberry-touch-ui/spec.md),
+[Kivy coverage](../ai/specs/013-kivy-ui-testing-coverage/spec.md),
+[emulator spec](../ai/specs/012-kivy-ui-docker-emulation/spec.md) and
 [Raspberry setup](../docs/raspberry-pi-setup.md) as applicable.
 
 From root: `./tonto.sh test python` for client helpers, `./tonto.sh test ui` for

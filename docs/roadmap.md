@@ -120,7 +120,7 @@ Introducir input de voz real en el sistema, empezando por captura real en Raspbe
 
 - [x] Micrófono USB integrado y validado.
 - [x] Captura básica de audio en Raspberry (WAV PCM 16 kHz mono reproducible) — validada manualmente con comandos `arecord`, no automatizada en cliente.
-- [x] Contrato `POST /chat/audio` documentado en `specs/audio-pipeline.md`.
+- [x] Contrato `POST /chat/audio` documentado en `ai/specs/005-audio-pipeline/spec.md`.
 - [x] Endpoint `POST /chat/audio` implementado con validación WAV, límites de tamaño/duración, y conexión al flujo conversacional existente.
 - [x] Tests automatizados del endpoint de audio.
 - [x] Prueba manual de subida WAV con `curl` desde la Raspberry validada el 2026-05-27 contra backend LAN (`HTTP 200`, transcript placeholder y `response` devuelta).
@@ -147,16 +147,16 @@ Validado el 2026-05-30 desde Raspberry real `tonto-pi` contra backend LAN `192.1
 
 Validado el 2026-05-30 desde Raspberry real `tonto-pi` contra backend LAN `192.168.1.91:8000`:
 
-- Plan de tracking de la validación: `specs/audio-pipeline-phase-2b-validation-guide.md`.
+- Plan de tracking de la validación: `ai/specs/005-audio-pipeline/artifacts/audio-pipeline-phase-2b-validation-guide.md`.
 
 - `client/main.py` actualizado con `--mode text` (original) y `--mode voice` (captura, subida, transcript/response, TTS).
 - 21 tests unitarios del cliente pasan sin hardware real: send_message, send_audio multipart, capture_audio, speak.
 - `client.main.py --mode voice` en Raspberry real registró `Recording...`, `Uploading...`, transcript real, respuesta speakable, fallback de texto y salida limpia.
 - `espeak` sonó audible, pero en esta pasada fue robótico y poco claro; los warnings ALSA/JACK no bloquearon la demo.
 - Después de esta evidencia se ajustó el cliente a `espeak -v es -s 135 -g 8` para mejorar inteligibilidad en frases largas.
-- `specs/audio-pipeline.md`, `docs/project-journal/week-03.md`, `docs/specs.md` y `README.md` se actualizaron para reflejar la validación real.
+- `ai/specs/005-audio-pipeline/spec.md`, `docs/project-journal/week-03.md`, `docs/specs.md` y `README.md` se actualizaron para reflejar la validación real.
 
-Conclusión: Phase 2B está implementada, fue validada inicialmente y quedó revalidada post-ajuste TTS el 2026-05-30 en Raspberry real siguiendo `specs/audio-pipeline-phase-2b-tts-revalidation.md`. Con `TONTO_TTS_ARGS="-v es -s 135 -g 8"`, la respuesta larga fue audible, más pausada, sin palabras atropelladas y suficientemente entendible para demo. Los warnings ALSA/JACK siguieron apareciendo, pero no bloquearon el audio. Esa revalidación desbloqueó Fase 3 web, que ya queda completada dentro de su alcance documentado.
+Conclusión: Phase 2B está implementada, fue validada inicialmente y quedó revalidada post-ajuste TTS el 2026-05-30 en Raspberry real siguiendo `ai/specs/005-audio-pipeline/artifacts/audio-pipeline-phase-2b-tts-revalidation.md`. Con `TONTO_TTS_ARGS="-v es -s 135 -g 8"`, la respuesta larga fue audible, más pausada, sin palabras atropelladas y suficientemente entendible para demo. Los warnings ALSA/JACK siguieron apareciendo, pero no bloquearon el audio. Esa revalidación desbloqueó Fase 3 web, que ya queda completada dentro de su alcance documentado.
 
 ### Riesgos
 
@@ -172,8 +172,8 @@ Usar el cliente web de validacion como superficie interactiva para probar el pip
 
 ### Entregables
 
-- [x] Documentar la fase en `specs/audio-pipeline-phase-3-web-loop.md`.
-- [x] Ampliar `specs/web-validation-client.md` con audio loop e instrumentacion.
+- [x] Documentar la fase en `ai/specs/004-audio-pipeline-phase-3-web-loop/spec.md`.
+- [x] Ampliar `ai/specs/025-web-validation-client/spec.md` con audio loop e instrumentacion.
 - [x] Implementar captura de microfono y generacion WAV desde la web sin cambiar el contrato backend.
 - [x] Mostrar transcript, response, latencia, estado tecnico y errores en la UI.
 - [x] Reproducir de forma audible y entendible la respuesta desde el navegador.
@@ -188,7 +188,7 @@ Usar el cliente web de validacion como superficie interactiva para probar el pip
 - Usar APIs nativas del navegador para speech output; no añadir backend TTS ni dependencias.
 - No introducir STT local, streaming, persistencia, auth ni UI avanzada.
 - No sustituir la validacion final con Raspberry: la web acelera desarrollo, pero el producto fisico sigue siendo el objetivo MVP.
-- Mantener Fase 3 dentro de `specs/audio-pipeline-phase-3-web-loop.md`: cliente web como superficie de validacion, WAV compatible y sin ampliar el backend a formatos comprimidos salvo decision explicita posterior.
+- Mantener Fase 3 dentro de `ai/specs/004-audio-pipeline-phase-3-web-loop/spec.md`: cliente web como superficie de validacion, WAV compatible y sin ampliar el backend a formatos comprimidos salvo decision explicita posterior.
 
 ### Evidencia
 
@@ -266,7 +266,7 @@ Objetivo: definir un asset portable para agentes basado en Markdown del repo y s
 
 Estado: implementado y mergeado en PR #45; issue #43 cerrada. El pack añadió `scripts/agent-backend.ps1` y `scripts/agent-raspberry.ps1`, documentó el workflow SSH con clave dedicada y validó preflight real desde Raspberry con backend health.
 
-La spec vive en `specs/week-05-agent-capability-pack.md` y el plan en `docs/plans/week-05-agent-capability-pack.md`.
+La spec vive en `ai/specs/027-week-05-agent-capability-pack/spec.md` y el plan en `ai/specs/027-week-05-agent-capability-pack/plan.md`.
 
 ## Extra — Inference Providers / DevExpert Inference
 
@@ -283,7 +283,7 @@ Estado: implementado hasta Phase 3, con parent issue #48. La línea se divide en
 
 Quedan fuera del alcance inicial el switching en caliente, fallback automático, balanceo, DevExpert TTS, Gemini y selectores UI. El backlog futuro queda trackeado en #53.
 
-La spec general vive en `specs/inference-providers.md`, las specs de proveedor en `specs/inference-provider-openai.md` y `specs/inference-provider-devexpert.md`, el plan en `docs/plans/inference-providers.md` y la skill repo-local en `.agents/skills/devexpert-inference/SKILL.md`.
+La spec general vive en `ai/specs/011-inference-providers/spec.md`, las specs de proveedor en `ai/specs/010-inference-provider-openai/spec.md` y `ai/specs/009-inference-provider-devexpert/spec.md`, el plan en `ai/specs/011-inference-providers/plan.md` y la skill repo-local en `.agents/skills/devexpert-inference/SKILL.md`.
 
 ## Prioridades
 
@@ -459,7 +459,7 @@ TONTO MVP está “done” desde 2026-06-18 porque:
 
 ## Trabajo activo post-MVP — UI táctil (2026-10-05)
 
-La UI con cara animada sigue `specs/raspberry-touch-ui.md` y la épica #81.
+La UI con cara animada sigue `ai/specs/021-raspberry-touch-ui/spec.md` y la épica #81.
 Las fases 1–6 están cerradas. La cobertura de Kivy (#105) añade pruebas de
 widgets reales en Docker/Xvfb al comando `./tonto.sh test all`, con spec y plan
 `kivy-ui-testing-coverage`. La fase 7 (#88), kiosk y validación final en
@@ -475,8 +475,8 @@ acceso IP con identidad SSH verificada en esta LAN. No se crea release/tag.
 
 ## Protección de secretos — definición #110 (2026-10-06)
 
-Spec: `specs/agent-secrets-protection.md`; plan:
-`docs/plans/agent-secrets-protection-implementation-plan.md`. Operador decide
+Spec: `ai/specs/003-agent-secrets-protection/spec.md`; plan:
+`ai/specs/003-agent-secrets-protection/plan.md`. Operador decide
 mantener workflow y .env; variable host descartada y aislamiento diferido.
 PR 1 integrada en #116 (8ef12ed), CI completa aprobada: limpieza y errores/logs
 chat/STT seguros. PR 2 integrada en #117 (0222d39), CI completa aprobada:

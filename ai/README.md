@@ -28,7 +28,7 @@ to record journals; they do not replace them.
 
 If work has no registered spec or issue, explicitly tell the user and wait for
 an OK before proceeding. An explicit OK already given for that same scope remains
-valid. An existing legacy record counts as registered work. The exception does
+valid. The exception does
 not remove prior planning or evidence requirements: record the authorization,
 plan and results in the existing project plan/journal documentation.
 The operator's explicit phase-1 instrumentation request authorizes creation of
@@ -45,23 +45,36 @@ its migration. Preserve all existing secret-safe diagnostic and operating rules.
 
 ## Transition and GitHub
 
-Historical records remain authoritative at their existing locations until
-individually migrated: [legacy index](../docs/specs.md), specs/, docs/plans/ and
-[project journals](../docs/project-journal/), plus linked GitHub issues. The new
-[spec index](specs/INDEX.md) and [issue index](issues/INDEX.md) are initially empty;
-they do not represent the full history. Do not create a duplicate new record
-just because a legacy record has not yet been migrated. New records use ai/;
-legacy records retain their existing plan/handoff locations during transition.
+The [spec index](specs/INDEX.md) and [local issue index](issues/INDEX.md) now cover
+the 28 migrated historical definitions, one existing local issue and new records.
+[Migration evidence](specs/001-historical-records-migration/metadata-review.md)
+records source/destination coverage, dates and status decisions. The retired
+specs/, docs/plans/ and docs/issues/ paths are recorded as provenance; current
+procedure, rules and templates belong exclusively to ai/. Original sources
+remain recoverable from the immutable Git baseline in that ledger.
+The [project overview](../docs/specs.md), shared [journals](../docs/project-journal),
+architecture, decisions, operating guides and visual assets keep their sources.
+The phase-1 instrumentation plan is retained as historical migration evidence.
+The old plan template has no legacy copy or operational references: use only
+ai/specs/_template/ and ai/issues/_template/.
+See [link impact](specs/001-historical-records-migration/cleanup-impact.md)
+for the authorized reference corrections and remaining external limitations.
 
-Every migrated record will have one canonical destination. Preserve provenance,
+Every migrated record has one canonical destination. Preserve provenance,
 original links and shared artifacts; migration must not invent dates, prior plans,
-validation or completion. Historical migration is phase 2, a separate work item;
-it is not performed by this instrumentation.
+validation or completion. Phase 2 relocates local history; GitHub issues remain
+remote references and are not part of the local record count.
 
 `related` is a YAML list of unambiguous repository-relative paths or full external
 URLs. Use it for specs, local issues, GitHub issues and original artifacts. IDs
 belong to separate local sequences; they are not GitHub issue numbers. GitHub
-keeps its numbers, URLs and history. Read linked issues and their parent/child
+keeps its numbers, URLs, definitions, lifecycle and history. Manage GitHub issues
+on GitHub; do not import or mirror them as local issue records. ai/issues/ holds
+repository-defined issues only, including existing local definitions migrated
+from the legacy structure. Every migrated local spec/issue must preserve correct
+full URLs to its corresponding GitHub tracking issue(s) in related. Distinguish
+tracking issues from contextual issue or PR references; never invent a link when
+no corresponding issue is documented. Read linked issues and their parent/child
 relationships when coordinating work; no one-to-one mapping is assumed.
 Local `resolved` does not automatically close GitHub. Keep parent issues open
 while child issues or other required tasks remain. PR closing keywords apply
@@ -69,3 +82,8 @@ only to issues fully completed, as required by the common workflow.
 
 The current NotebookLM export does not select ai/. Read ai/ directly; an export
 is not a complete source for this process. No exporter or CI change is included.
+
+Historical procedure, placement and template examples preserved in migrated
+specs/plans are evidence of earlier decisions. They do not authorize an alternate
+workflow: all ongoing work, including on historical records, uses the current
+ai/ rules and templates, its adjacent plan.md/journal.md and synchronized index.

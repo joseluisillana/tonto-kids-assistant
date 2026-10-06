@@ -34,8 +34,8 @@ Known gaps:
 
 ## Prepared Documents
 
-- `specs/week-05-demo-stability.md`
-- `docs/plans/week-05-demo-stability.md`
+- `ai/specs/028-week-05-demo-stability/spec.md`
+- `ai/specs/028-week-05-demo-stability/plan.md`
 - `docs/project-journal/week-05.md`
 
 ## Proposed Week 05 Phases
@@ -265,8 +265,8 @@ During the attempt to complete Week 05 Phase 2, Codex correctly identified the n
 
 ### Documents Created
 
-- `specs/week-05-agent-capability-pack.md`
-- `docs/plans/week-05-agent-capability-pack.md`
+- `ai/specs/027-week-05-agent-capability-pack/spec.md`
+- `ai/specs/027-week-05-agent-capability-pack/plan.md`
 
 ### Decisions Captured
 
@@ -358,10 +358,10 @@ This supports the AI Expert course context without changing the MVP product goal
 
 ### Documents Created
 
-- `specs/inference-providers.md`
-- `specs/inference-provider-openai.md`
-- `specs/inference-provider-devexpert.md`
-- `docs/plans/inference-providers.md`
+- `ai/specs/011-inference-providers/spec.md`
+- `ai/specs/010-inference-provider-openai/spec.md`
+- `ai/specs/009-inference-provider-devexpert/spec.md`
+- `ai/specs/011-inference-providers/plan.md`
 - `.agents/skills/devexpert-inference/SKILL.md`
 - `.agents/skills/devexpert-inference/references/endpoint-summary.md`
 

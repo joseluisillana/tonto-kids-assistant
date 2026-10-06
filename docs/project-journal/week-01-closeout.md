@@ -34,7 +34,7 @@ Raspberry Pi reinstall and recovery steps are now documented in `docs/raspberry-
 | First Raspberry end-to-end conversation | Complete | Raspberry client prompt reached backend, backend called OpenAI, response played locally | Validated manually with `OPENAI_API_KEY` provided as an environment variable. |
 | GitHub repository initialized | Complete | Git history and `origin/main` available | Repo is clean and synchronized. |
 | README and foundation docs created | Complete | `README.md`, `docs/README.md`, architecture, roadmap, specs, decisions | Docs now describe repo/Codex/NotebookLM workflow. |
-| MVP architecture defined | Complete | `docs/architecture.md`, `specs/conversation-loop.md` | First slice is explicitly text/backend/TTS. |
+| MVP architecture defined | Complete | `docs/architecture.md`, `ai/specs/007-conversation-loop/spec.md` | First slice is explicitly text/backend/TTS. |
 | Documentation workflow defined | Complete | `docs/documentation-workflow.md`, `docs/ai-assisted-workflow.md`, `docs/research/notebooklm.md` | Repo is source of truth; NotebookLM is synthesis. |
 
 ## Additional Work Completed

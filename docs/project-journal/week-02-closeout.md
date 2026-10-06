@@ -14,7 +14,7 @@ Weeks 1 and 2 are now considered closed in the documentation.
 - `backend/main.py` implements `/chat`, OpenAI calls, and short session history.
 - `client/main.py` sends `session_id` plus `message`, handles backend failures, and plays TTS locally.
 - `web/src/api/backendClient.ts` calls the same `/chat` contract from the browser client.
-- `specs/conversation-loop.md` now marks the end-to-end loop as complete.
+- `ai/specs/007-conversation-loop/spec.md` now marks the end-to-end loop as complete.
 - Manual validation on 2026-05-15 confirmed repeated conversation turns on the Raspberry Pi path.
 
 ## Week 02 Deliverables

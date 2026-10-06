@@ -34,12 +34,12 @@ Python image and mounted code. Read implementation before changing contracts.
 Keep client HTTP consumers aligned with response shapes and errors. State changes
 affect both text/audio routes. Provider edits preserve both adapters with mocks
 and the fixed errors/allowlisted logs of #110; apply D025 before any real calls.
-Read [inference specs](../specs/inference-providers.md), their
-[plan](../docs/plans/inference-providers.md) and
+Read [inference specs](../ai/specs/011-inference-providers/spec.md), their
+[plan](../ai/specs/011-inference-providers/plan.md) and
 [provider skill](../.agents/skills/devexpert-inference/SKILL.md) for adapter work.
-Read [audio contract](../specs/audio-pipeline.md),
-[conversation](../specs/conversation-loop.md) and
-[secret protection](../specs/agent-secrets-protection.md) when affected.
+Read [audio contract](../ai/specs/005-audio-pipeline/spec.md),
+[conversation](../ai/specs/007-conversation-loop/spec.md) and
+[secret protection](../ai/specs/003-agent-secrets-protection/spec.md) when affected.
 
 Use `./tonto.sh test python` from root (API, audio, chat/STT and diagnostics tests).
 Contract changes may require `./tonto.sh test web` and client/UI checks too.

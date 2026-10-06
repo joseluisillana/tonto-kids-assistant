@@ -38,8 +38,8 @@ The original Week 04 roadmap target, "memoria simple y estados físicos", is coh
 
 ## Prepared Documents
 
-- `specs/week-04-demo-stability.md`
-- `docs/plans/week-04-demo-stability.md`
+- `ai/specs/026-week-04-demo-stability/spec.md`
+- `ai/specs/026-week-04-demo-stability/plan.md`
 - `docs/project-journal/week-04.md`
 
 Related summaries updated:
@@ -357,10 +357,10 @@ For the MVP demo, prefer option 2 unless the final presentation specifically nee
 
 ### Prepared Indicator Specs and Plans
 
-- `specs/raspberry-listening-indicator.md`
-- `docs/plans/raspberry-listening-indicator.md`
-- `specs/web-listening-indicator.md`
-- `docs/plans/web-listening-indicator.md`
+- `ai/specs/020-raspberry-listening-indicator/spec.md`
+- `ai/specs/020-raspberry-listening-indicator/plan.md`
+- `ai/specs/024-web-listening-indicator/spec.md`
+- `ai/specs/024-web-listening-indicator/plan.md`
 
 ### Web Recording Limit Follow-up Decision (2026-06-07)
 
@@ -377,8 +377,8 @@ Human decision:
 
 Documentation updated on branch `docs/week-04-phase4-web-recording-limit`:
 
-- `specs/web-listening-indicator.md`
-- `docs/plans/web-listening-indicator.md`
+- `ai/specs/024-web-listening-indicator/spec.md`
+- `ai/specs/024-web-listening-indicator/plan.md`
 - `docs/specs.md`
 - `docs/roadmap.md`
 
@@ -446,14 +446,14 @@ Repair the web client so a recording duration indicator is visible in the main T
 
 ### Objective
 
-Validate the Raspberry listening indicator on real hardware per `specs/raspberry-listening-indicator.md` and close issue #27.
+Validate the Raspberry listening indicator on real hardware per `ai/specs/020-raspberry-listening-indicator/spec.md` and close issue #27.
 
 ### Pre-conditions (all met)
 
 - [x] Indicator implementation merged into `main` (`client/main.py:114-192`).
 - [x] Unit tests pass (`_format_listening_progress`, `_show_listening_indicator`, `_stop_listening_indicator`).
-- [x] Spec exists: `specs/raspberry-listening-indicator.md`.
-- [x] Plan exists: `docs/plans/raspberry-listening-indicator.md`.
+- [x] Spec exists: `ai/specs/020-raspberry-listening-indicator/spec.md`.
+- [x] Plan exists: `ai/specs/020-raspberry-listening-indicator/plan.md`.
 
 ### Implementation Status
 

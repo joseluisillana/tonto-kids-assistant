@@ -35,5 +35,5 @@ Do not require real provider credentials or hardware in automated tests.
 Preserve both provider adapters with mocks; D025 forbids real DevExpert operation.
 Canaries are fictitious; failures must not dump sensitive values. Test coverage
 does not establish audio quality, physical touch/kiosk, SSH readiness or live
-provider availability. Read [Kivy coverage spec](../specs/kivy-ui-testing-coverage.md)
-and [#110 spec](../specs/agent-secrets-protection.md) for these boundaries.
+provider availability. Read [Kivy coverage spec](../ai/specs/013-kivy-ui-testing-coverage/spec.md)
+and [#110 spec](../ai/specs/003-agent-secrets-protection/spec.md) for these boundaries.

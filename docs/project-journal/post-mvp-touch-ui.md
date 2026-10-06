@@ -20,8 +20,8 @@
 - **Estado:** Completado
 - **Acciones:**
   - Se definieron los documentos iniciales de planificación en la rama `docs/raspberry-touch-ui-spec`.
-  - Se actualizó la especificación en `specs/raspberry-touch-ui.md` para incluir el Diseño Visual (Fase 3) y redimensionar las fases posteriores.
-  - Se redactó el plan de implementación en `docs/plans/raspberry-touch-ui-implementation-plan.md`.
+  - Se actualizó la especificación en `ai/specs/021-raspberry-touch-ui/spec.md` para incluir el Diseño Visual (Fase 3) y redimensionar las fases posteriores.
+  - Se redactó el plan de implementación en `ai/specs/021-raspberry-touch-ui/plan.md`.
   - El usuario especificó el orden (hardware -> tech stack -> diseño visual -> spike animación -> ui -> face anim integration -> kiosk mode).
   - **Fase 0 ejecutada:** Se crearon los issues de seguimiento en GitHub mediante la CLI.
     - Parent Issue: #81
@@ -77,7 +77,7 @@
 - **Estado:** En progreso (Reapertura de la Fase 3)
 - **Acciones:**
   - Al revisar el estado de la **Issue #84**, se descubrió que, aunque el código de Kivy de la Fase 4, 5 y 6 se avanzó, los assets y referencias visuales de la **Fase 3** nunca se generaron ni se guardaron en el repositorio, a pesar de que la entrada anterior del diario indicaba lo contrario.
-  - Al mismo tiempo, la rama `main` introdujo una migración a Linux y Docker, incluyendo una especificación pendiente para emular la UI de Kivy usando contenedores (`specs/kivy-ui-docker-emulation.md`).
+  - Al mismo tiempo, la rama `main` introdujo una migración a Linux y Docker, incluyendo una especificación pendiente para emular la UI de Kivy usando contenedores (`ai/specs/012-kivy-ui-docker-emulation/spec.md`).
 - **Próximos pasos (Plan de Acción Aprobado):**
   1. En lugar de generar imágenes abstractas con GenAI, capturar la interfaz Kivy real ya implementada. Ejecutar el código en un entorno aislado con `xvfb` para obtener capturas de los distintos estados de la cara (`Idle`, `Speaking`, `Listening`, etc.) y guardarlas en `docs/assets/` como referencia final.
   2. Implementar la infraestructura de `ui-emulator` en el `docker-compose.yml` local.
@@ -123,8 +123,8 @@ no demuestra funcionamiento táctil/OpenGL ES en Raspberry: Fase 7 (#88) sigue
 pendiente. La emulación y los assets de Fase 3 ya están integrados vía PR #104,
 superando los pendientes de la entrada anterior del diario.
 
-**Spec:** `specs/kivy-ui-testing-coverage.md`.
-**Plan:** `docs/plans/kivy-ui-testing-coverage-plan.md`.
+**Spec:** `ai/specs/013-kivy-ui-testing-coverage/spec.md`.
+**Plan:** `ai/specs/013-kivy-ui-testing-coverage/plan.md`.
 
 ## 2026-10-05 — Cierre validación del emulador Linux
 
@@ -160,7 +160,7 @@ de integración, mantener #81/#88/#110/#114 abiertas. Sin cambios de comportamie
 
 Revisados issue original, estado y main `a985dac`, que integra #108.
 Rama `docs/issue-110-secrets-spec` desde main limpio. Spec
-`specs/agent-secrets-protection.md` y plan emparejado en DRAFT: matriz de
+`ai/specs/003-agent-secrets-protection/spec.md` y plan emparejado en DRAFT: matriz de
 operaciones, superficies actuales, canarios y aceptación por perfil.
 Se distingue endurecimiento del repo de aislamiento efectivo del agente.
 Decisiones de aislamiento/consumo/mediación Docker y SSH pendientes de revisión.
@@ -169,7 +169,7 @@ configuración expandida. Sin cambios de runtime ni dependencias.
 
 ### #110 — propuesta concreta de aislamiento
 
-Preparado `docs/agent-secrets-isolation-design.md`: evaluación preliminar del
+Preparado `ai/specs/003-agent-secrets-protection/artifacts/agent-secrets-isolation-design.md`: evaluación preliminar del
 perfil suministrado a la sesión y CLI Codex 0.160.0, con documentación oficial.
 Lectura del host y accesos Docker persistentes impiden acreditar aislamiento.
 OpenCode no encontrado en PATH; otros canales pendientes de pruebas.
@@ -183,7 +183,7 @@ permisos, secretos ni scripts, y no se ejecutan pruebas contra secretos reales.
 El operador prefiere mantener automatización actual. Aislamiento y operación
 solo humana quedan diferidos; spec/plan registran precedencia de esta decisión.
 Exploradas variables host, env_file externo y secretos Compose por archivo con
-fuentes Docker oficiales en `docs/agent-secrets-credential-options.md`.
+fuentes Docker oficiales en `ai/specs/003-agent-secrets-protection/artifacts/agent-secrets-credential-options.md`.
 Backend ya consulta entorno: Docker requiere suministrarlo explícitamente.
 Ninguna opción elegida ni aplicada; no se leen ni modifican secretos reales.
 
@@ -377,7 +377,7 @@ con éxito y su selección existente. Sin ampliar cobertura a todos los locales.
 
 Operador solicita aplicar el prompt adaptado, exclusivamente fase 1.
 Baseline `40342ee`; rama `docs/ai-specs-issues-process`. Plan previo:
-`docs/plans/ai-process-instrumentation-plan.md`. Creado proceso portable en inglés,
+`ai/specs/001-historical-records-migration/artifacts/ai-process-instrumentation-plan.md`. Creado proceso portable en inglés,
 con once documentos: entrada común, README/INDEX por tipo y seis plantillas.
 IDs locales independientes de GitHub, estados/condiciones explícitos, plan previo,
 journal propio y sincronización de índices; seguridad conserva controles actuales.
@@ -396,3 +396,102 @@ requieren tests funcionales para Markdown. Sin validación hardware/proveedor.
 Entrega local pendiente de revisión e integración; sin commit/PR para esta entrega.
 Fase 2 pendiente: inventario completo, mapa origen/destino, estados basados en
 evidencia, procedencia y conservación de relaciones/histórico.
+
+### 2026-10-06 — integración de fase 1 e inventario de migración
+
+Operador confirma CI verde y autoriza integrar #124 para continuar. Ambas
+comprobaciones remotas pass (1m40s y 1m34s); squash merge `818e88e`, main
+sincronizada y rama de fase 1 retirada. Se abre rama
+`docs/historical-records-migration` y registro
+`ai/specs/001-historical-records-migration/` con definición, plan previo,
+journal y mapa origen/destino. Estado in-progress e índice sincronizado.
+
+Inventario/mapa previo a traslado: 33 fuentes specs (28 definiciones y cinco
+guías/matriz auxiliar), 28 planes, un documento local de issue, ocho journals,
+cinco imágenes y documentación relacionada. GitHub devuelve 48 issues, 44
+cerradas/cuatro abiertas (#53/#81/#88/#114). IDs locales propuestos independientes;
+#114 integra su documento local, sin duplicar el registro. Compartidos conservan
+fuente única; faltan contraste de comentarios/PRs, fechas originales y revisión
+de estados ambiguos antes de importar. El mapa no reserva IDs históricos.
+
+Cobertura de archivos, tablas y 48 identidades únicas verificada. Ninguna fuente
+spec/plan/issue histórica trasladada ni GitHub modificado; sin runtime/hardware,
+dependencias, CI/scripts ni locales AGENTS.md. `git diff --check` pasa.
+Mapa preparado para revisión; la migración completa sigue pendiente, sin
+atribuir aceptación funcional a cierres administrativos o texto histórico.
+
+### 2026-10-06 — corrección de alcance: issues de GitHub permanecen en GitHub
+
+El operador aclara que no deben importarse las 48 issues remotas como registros
+locales. Su definición, operación e histórico permanecen en GitHub. La propuesta
+anterior de espejos locales queda descartada; el inventario remoto sirve solo
+para verificar enlaces/evidencia. Se ajustan spec, plan, mapa y proceso común.
+
+La migración se limita a registros ya definidos en el repositorio. El documento
+local de volumen se propone como `ai/issues/001-emulator-system-volume-delay/`,
+con referencia completa a #114; no es una copia de la issue remota. Matriz de
+28 definiciones locales y un documento local de issue con URLs correspondientes,
+separando tracking, fases y contexto. Donde no hay issue identificada se declara,
+sin inventarla. Ninguna fuente histórica trasladada ni GitHub modificado.
+
+### 2026-10-06 — plan de ejecución de la migración histórica
+
+Operador solicita planificar la spec 001. Plan ampliado con revisión de metadatos
+previa, cinco lotes seriales, conservación/verificación por lote, tratamiento de
+planes compartidos/retrospectivos, referencias GitHub y rutas antiguas navegables.
+Registro pasa de inventario in-progress a ejecución planned, con índice y resumen
+sincronizados. Sin traslado de fuentes, importación remota ni cambios funcionales.
+La ejecución posterior se hará contra este plan y el mapa revisado.
+
+### 2026-10-06 — implementación local de la migración histórica
+
+Operador solicita implementar el plan. Cinco lotes seriales completados:
+28 specs históricas y un documento de issue local, con 64 fuentes originales,
+planes/prompts y artefactos auxiliares conservados. Fuentes antiguas mantienen
+referencias al destino canónico y todas sus secciones navegables. Journals e
+imágenes compartidos permanecen en su ubicación. Las 48 issues consultadas
+siguen en GitHub; no se importan ni modifican, y `related` conserva las URLs
+correctas. Se actualizan exclusivamente rutas en 19 consumidores; raíz/índice
+reconcilian navegación y estados con evidencia. Skill local cambia solo dos rutas.
+
+Metadatos conservan fechas originales explícitas o primera fecha registrada en
+Git con su procedencia; propietarios no documentados se declaran desconocidos.
+Planes ausentes se etiquetan retrospectivos; proveedores enlazan el único plan
+compartido. Caché antigua permanece planned archivada/sustituida, sin autorización
+para ejecutar; touch in-progress (#88) y volumen local open (#114). Jerarquía y
+migración Linux integradas contrastadas con PRs; release v1.0.0 publicada verificada.
+
+Verificación: 64 originales coinciden byte a byte con baseline `818e88e` y ledger
+SHA-256; cuerpos migrados conservados salvo rutas y nueve espacios finales heredados; 30 definiciones registradas,
+tríos, campos/estados/fechas e índices coinciden. 998 enlaces locales a archivos,
+imágenes y fragmentos resuelven en 198 documentos; headings antiguos preservados;
+`git diff --check` pasa. Sin cambios no-Markdown, runtime, dependencias, CI/scripts,
+operación de proveedores/hardware ni nuevos tests funcionales. Export no incluye
+ai/ y no se amplía: navegar al repositorio para contratos canónicos.
+
+Entrega local lista para PR; spec de migración in-progress hasta revisión/CI e
+integración. No se cierran issues de producto por trasladar documentación.
+
+Commit de migración `4c765ea`; hook de export existente aprobado. Rama publicada
+y PR #125 abierta con evidencia/criterios de conservación. Índices/journals
+canónicos enlazan la revisión; CI e integración pendientes. Issues de GitHub
+sin modificaciones y checkout limpio después de registrar esta referencia.
+
+### 2026-10-06 — ampliación: retirar estructura antigua con impacto explícito
+
+Operador amplía la misma spec 001: eliminar también los directorios/archivos
+antiguos, garantizando conservación e informando de enlaces afectados para decidir.
+El plan añade retirada de 67 candidatos: 64 referencias de transición y tres
+archivos con información propia que deben conservarse primero en ai/. Se mantienen
+journals, imágenes, arquitectura/runbooks y docs/specs.md como fuentes compartidas.
+
+Informe cleanup-impact.md: seis URLs a main se romperían al retirar las rutas,
+cuatro en #81 activa y dos en #89 cerrada. Dos enlaces a SHA fijo permanecen
+válidos. Dos enlaces locales y 29 related de procedencia se pueden reparar antes;
+#114 contiene dos rutas textuales antiguas de navegación manual. Escaneo público:
+48 bodies de issues, 77 de PRs y 29 comentarios; sin revisiones/inline comments.
+Referencias externas no accesibles (bookmarks/chats/copias) no se pueden enumerar.
+
+Export aislado con fuentes públicas y sin specs/ pasa usando el script existente;
+sigue sin incluir ai/. No se eliminan archivos ni se editan mensajes/estados de
+GitHub en esta ampliación: decisión sobre impacto/tratamiento pendiente del operador.

@@ -311,17 +311,17 @@ Cloud deployment is intentionally not prioritized immediately after the MVP. It 
 
 ### Key Specs
 
-- `specs/audio-pipeline.md`
-- `specs/audio-pipeline-phase-3-web-loop.md`
-- `specs/web-validation-client.md`
-- `specs/raspberry-listening-indicator.md`
-- `specs/web-listening-indicator.md`
-- `specs/week-04-demo-stability.md`
-- `specs/week-05-demo-stability.md`
-- `specs/week-06-closeout.md`
-- `specs/inference-providers.md`
-- `specs/inference-provider-openai.md`
-- `specs/inference-provider-devexpert.md`
+- `ai/specs/005-audio-pipeline/spec.md`
+- `ai/specs/004-audio-pipeline-phase-3-web-loop/spec.md`
+- `ai/specs/025-web-validation-client/spec.md`
+- `ai/specs/020-raspberry-listening-indicator/spec.md`
+- `ai/specs/024-web-listening-indicator/spec.md`
+- `ai/specs/026-week-04-demo-stability/spec.md`
+- `ai/specs/028-week-05-demo-stability/spec.md`
+- `ai/specs/029-week-06-closeout/spec.md`
+- `ai/specs/011-inference-providers/spec.md`
+- `ai/specs/010-inference-provider-openai/spec.md`
+- `ai/specs/009-inference-provider-devexpert/spec.md`
 
 ### Key Journal Evidence
 

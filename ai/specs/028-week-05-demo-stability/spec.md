@@ -1,0 +1,246 @@
+---
+id: "028-week-05-demo-stability"
+title: "Week 05 Demo Stability and Experience"
+status: done
+owner: "Unknown — legacy ownership not recorded"
+created: "2026-06-08"
+updated: "2026-10-06"
+related:
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/week-05-demo-stability.md"
+  - "ai/specs/001-historical-records-migration/metadata-review.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/issues/33"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/issues/34"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/issues/35"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/issues/36"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/issues/37"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/issues/38"
+  - "docs/project-journal/week-05.md"
+  - "ai/specs/028-week-05-demo-stability/plan.md"
+---
+
+# Week 05 Demo Stability and Experience
+
+**Version:** 0.1
+**Status:** Complete (Phases 0-5)
+**Last Updated:** 2026-06-08
+
+## Objective
+
+Convert the validated TONTO voice loop into a stable, repeatable demo that an operator can run confidently multiple times.
+
+Week 04 delivered demo baseline validation, resilience fixes, conversation calibration, and non-physical listening indicators. Week 05 focuses on making the existing system demo-ready: clear startup, polished conversational UX, graceful error handling, and a successful multi-run rehearsal.
+
+## Current Baseline
+
+The validated system at the start of Week 05:
+
+```text
+Raspberry: Enter -> arecord WAV -> POST /chat/audio -> STT -> response -> espeak
+Web:       Mic button -> browser WAV -> POST /chat/audio -> STT -> response -> browser speech
+Text:      POST /chat -> response -> visible + TTS
+```
+
+Current state:
+- 52 Python tests pass.
+- Backend runs on `0.0.0.0:8000` with LAN access.
+- Raspberry voice loop validated with 2+ consecutive turns.
+- Web voice loop validated with visible indicator and auto-stop.
+- In-memory session history works.
+- Prompt calibrated for Spanish, child-friendly, short answers.
+- Listening indicators implemented and validated for both Raspberry and web.
+- ALSA/JACK warnings present but non-blocking.
+
+Known gaps for demo readiness:
+- Demo startup requires multiple manual commands and env vars.
+- No single runbook for demo operators.
+- Error messages are technical, not demo-friendly.
+- ALSA/JACK warnings clutter the terminal.
+- No structured demo rehearsal evidence.
+
+## Week 05 Framing
+
+The MVP rule applies: no new features unless they directly unblock the demo.
+
+Week 05 is about:
+1. **Reproducibility** — a demo operator can start and run the demo with minimal friction.
+2. **Conversational polish** — TONTO responses feel natural and educational for children.
+3. **Error clarity** — when something fails, the operator sees a clear message, not a stack trace.
+4. **Rehearsal proof** — the demo runs 3+ consecutive times without blocking failures.
+
+Week 05 is NOT about:
+- New features (wake word, Arduino, persistence, streaming).
+- Architecture changes.
+- New dependencies.
+- Broad UI redesign.
+
+## Phased Milestones
+
+### Phase 0 - Documentation Kickoff
+
+Purpose: prepare agents before implementation.
+
+Included:
+- Create this spec.
+- Create paired implementation plan.
+- Create Week 05 journal.
+- Create GitHub Issues for each implementation phase.
+- Update roadmap and specs summary.
+
+Excluded:
+- Code changes.
+- Tests or build changes.
+- New dependencies.
+
+Acceptance:
+- Week 05 spec exists.
+- Paired plan exists in `docs/plans/`.
+- Journal is started.
+- GitHub Issues exist for Phases 1-4.
+- Roadmap and specs summary point to Week 05.
+
+### Phase 1 - Demo Runbook and Startup Scripts
+
+Purpose: reduce the friction of starting a TONTO demo.
+
+Included:
+- A single startup script for the Raspberry demo flow.
+- A documented runbook with step-by-step operator instructions.
+- Environment variable documentation and defaults.
+- Health check before starting the demo.
+
+Excluded:
+- Backend changes.
+- Client behavior changes.
+- New dependencies.
+
+Acceptance:
+- A demo operator can start the demo with one or two commands.
+- The runbook documents the full demo flow: start, voice turns, stop.
+- The runbook documents known warnings (ALSA/JACK) and what to ignore.
+
+### Phase 2 - Conversational UX Polish
+
+Purpose: make TONTO responses feel more natural and engaging for children.
+
+Implementation note, 2026-06-08: Phase 2 applied a small prompt polish in
+`backend/openai_client.py`. TONTO now starts with a direct answer, uses one simple
+example or comparison when useful, avoids long lists/markdown/lecture-style
+answers, uses simple accurate facts instead of guessing, handles
+greetings/farewells naturally, and keeps using recent context for follow-up
+questions. `MAX_OUTPUT_TOKENS` was reduced from `220` to `180` to
+keep demo answers more speakable through Raspberry `espeak` and browser speech,
+then raised to `300` (issue #59) because 180 tokens truncated Spanish responses
+mid-sentence (`finish_reason: length`).
+
+Validation note, 2026-06-11: Phase 2 was validated from the real Raspberry with
+6 text-mode demo questions against the Windows LAN backend. See
+`docs/project-journal/week-05.md` for the command evidence and turn-by-turn
+results.
+
+Included:
+- Review current prompt calibration in `backend/openai_client.py`.
+- Test with real demo scenarios (greeting, questions, farewell).
+- Adjust response length, tone, or personality if needed.
+- Ensure context use feels natural across 3+ related turns.
+
+Excluded:
+- New AI models or providers.
+- Memory architecture changes.
+- Persistence.
+- Multi-agent orchestration.
+
+Acceptance:
+- TONTO answers a sequence of demo questions coherently.
+- Responses are short, Spanish, child-friendly, and educational.
+- The prompt changes (if any) are documented and tested.
+
+### Phase 3 - Error Resilience
+
+Purpose: make demo failures understandable and recoverable.
+
+Included:
+- Improve error messages for demo-facing scenarios.
+- Handle common failures gracefully: no mic, no backend, timeout, empty transcript.
+- Suppress or redirect ALSA/JACK warnings if possible without changing audio behavior.
+- Ensure the client recovers cleanly from errors (no hung processes).
+
+Excluded:
+- New APIs or endpoints.
+- Backend architecture changes.
+- New dependencies.
+
+Acceptance:
+- Common demo failures show a clear, non-technical message.
+- The client recovers from errors and can continue the demo.
+- ALSA/JACK warnings are either suppressed or documented as ignorable.
+
+### Phase 4 - Demo Rehearsal
+
+Purpose: prove the demo works repeatedly with both supported inference providers.
+
+Included:
+- Run the full demo flow 3+ consecutive times on Raspberry with the primary demo provider (OpenAI by default).
+- Run the full demo flow 3+ consecutive times on web (if practical).
+- Run a 1-turn smoke test on Raspberry with the alternative provider (DevExpert).
+- Record timing, success/failure, and any issues for each provider.
+- Document operator steps and any friction points.
+
+Excluded:
+- Code changes during rehearsal.
+- New features.
+
+Acceptance:
+- 3+ consecutive voice turns complete without blocking failures on the primary provider.
+- 1 smoke turn completes successfully on the alternative provider.
+- Any failure is documented with clear cause.
+- Evidence is recorded in `docs/project-journal/week-05.md` for both providers.
+
+### Phase 5 - Week 05 Closeout
+
+Purpose: end the week with evidence and a clear state for Week 06.
+
+Included:
+- Update `docs/project-journal/week-05.md`.
+- Update roadmap/specs for actual changes.
+- Record remaining risks for Week 06.
+
+Acceptance:
+- Week 05 has clear validation evidence.
+- Week 06 starts from a known state.
+
+## Risks
+
+- Adding features instead of polishing existing ones.
+- Over-engineering error handling.
+- Spending too much time on ALSA/JACK warnings.
+- Not running enough rehearsal turns.
+
+## Definition of Done
+
+Week 05 is done when:
+- A demo operator can start and run the demo with minimal friction.
+- TONTO responses are polished for the demo scenario.
+- Common errors are handled gracefully.
+- 3+ consecutive demo turns have been validated.
+- Evidence is recorded in the journal.
+
+## Migration provenance and supported current state
+
+- Original repository source: `specs/week-05-demo-stability.md` at baseline 818e88e.
+- First recorded Git date: 2026-06-08; actual original authoring date is unknown
+  unless explicitly recorded in the preserved body.
+- Last source Git date before migration: 2026-06-14.
+- Migration/update date: 2026-10-06. Legacy owner/authorship is not established;
+  the current owner field records that uncertainty, not a fabricated attribution.
+- Status decision: Week 05 phases 0-5 and final demo rehearsal completed 2026-06-13; preserved header date 2026-06-08 is not closure date.
+- Evidence: [source](../../../docs/project-journal/week-05.md).
+- Corresponding GitHub tracking issues: [GitHub issue](https://github.com/joseluisillana/tonto-kids-assistant/issues/33), [GitHub issue](https://github.com/joseluisillana/tonto-kids-assistant/issues/34), [GitHub issue](https://github.com/joseluisillana/tonto-kids-assistant/issues/35), [GitHub issue](https://github.com/joseluisillana/tonto-kids-assistant/issues/36), [GitHub issue](https://github.com/joseluisillana/tonto-kids-assistant/issues/37), [GitHub issue](https://github.com/joseluisillana/tonto-kids-assistant/issues/38).
+
+Historical headings below/above retain the original reported state. YAML status
+and this provenance annotation express the supported state after evidence review.
+Do not execute archived proposals or historical operating examples without a new
+authorized work item. No runtime or acceptance behavior changed by relocation.
+
+Maintain plan.md/journal.md and synchronize status/updated with the parent INDEX.md
+in the same change. No secrets, credentials, tokens, connection strings, PII or
+real customer data; sensitive configuration is described by parameter name only.

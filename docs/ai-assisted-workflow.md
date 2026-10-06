@@ -29,8 +29,8 @@ The Week 05 Agent Capability Pack is the portable command surface for AI-assiste
 
 Its source of truth is repository-owned Markdown and Bash scripts:
 
-- `specs/week-05-agent-capability-pack.md`
-- `docs/plans/week-05-agent-capability-pack.md`
+- `ai/specs/027-week-05-agent-capability-pack/spec.md`
+- `ai/specs/027-week-05-agent-capability-pack/plan.md`
 - `scripts/agent-backend.sh`
 - `scripts/agent-raspberry.sh`
 - `docs/raspberry-pi-setup.md`
@@ -56,7 +56,7 @@ TONTO may include repo-local Agent Skills under:
 
 These skills follow the portable Agent Skills pattern: a folder with `SKILL.md` frontmatter (`name`, `description`) and optional `references/`, `scripts/`, or `assets/` resources. Skills-compatible agents can discover them from the repository and load them when the task matches the description.
 
-Repo-local skills are useful for agent operating knowledge, but they do not replace project specs, plans, or durable decisions. Canonical behavior lives in registered definitions/plans and implementation: ai/ for new/migrated records, specs/ and docs/plans/ for unmigrated history.
+Repo-local skills are useful for agent operating knowledge, but they do not replace project specs, plans, or durable decisions. Canonical behavior lives in registered definitions/plans and implementation: ai/ for all registered local records.
 
 Use `.agents/skills/devexpert-inference/SKILL.md` when working with:
 
@@ -64,7 +64,7 @@ Use `.agents/skills/devexpert-inference/SKILL.md` when working with:
 - the `https://inference.devexpert.io/v1` OpenAI-compatible gateway,
 - TONTO inference provider selection,
 - DevExpert chat, STT, TTS, embeddings, or model configuration,
-- the extra MVP line in `specs/inference-providers.md`.
+- the extra MVP line in `ai/specs/011-inference-providers/spec.md`.
 
 When an inference change touches provider behavior, agents must preserve both OpenAI and DevExpert support through focused tests or documented validation.
 Apply [D025](decisions.md#d025---devexpert-deprecado-para-la-validación-post-migración)
@@ -312,7 +312,7 @@ git worktree remove ../tonto-worktrees/<worktree-name>
 git worktree prune
 ```
 
-The detailed project spec for this workflow is `specs/parallel-agent-workflow.md`, with its paired plan in `docs/plans/parallel-agent-workflow.md`.
+The detailed project spec for this workflow is `ai/specs/018-parallel-agent-workflow/spec.md`, with its paired plan in `ai/specs/018-parallel-agent-workflow/plan.md`.
 
 ## GitHub CLI and Issues
 
@@ -327,7 +327,7 @@ and interpolation disabled and reports only operation/exit code. Provider
 errors expose fixed messages and upstream HTTP status, never response bodies
 or exception reasons/chains. These controls reduce accidental exposure; they
 do not deny deliberate filesystem/Docker access. See
-`specs/agent-secrets-protection.md` and its paired plan.
+`ai/specs/003-agent-secrets-protection/spec.md` and its paired plan.
 
 Provider failures also emit WARNING JSON events through standard logging:
 provider, chat/stt operation, bounded failure category and optional HTTP status.
@@ -373,16 +373,23 @@ When an issue exists, reference it from the PR body to maintain tracking. Use Gi
 
 The [ai/ process](../ai/README.md) owns planning, lifecycles, journals, indexes
 and work without a registered record. New definitions use ai/specs/ or ai/issues/
-and their own plan.md/journal.md. Read all three files before acting. Existing
-legacy definitions and GitHub issues count as registered work and retain their
-locations until migration; do not create duplicates. Historical plans/prompts
-remain valid. Scope, handoff, verification and isolation requirements below
-still apply; legacy naming/template paths apply only to unmigrated records.
+and their own plan.md/journal.md. Read all three files before acting. GitHub issues remain registered remote work managed on GitHub; do not create
+local duplicates. Historical plans and prompts retain evidence, while current
+operation follows ai/ rules and templates. Scope, handoff, verification and
+isolation requirements below still apply.
+
+Retired specs/, docs/specs/, docs/issues/ and docs/plans/ directories must not be
+recreated as alternate registries or template locations. Complete authorized
+relocations by removing superseded sources and stale operational references
+after checking content preservation and link impact; retain only useful provenance.
+The ai/ record journal owns detailed work evidence. docs/project-journal/ retains
+shared historical evidence and summaries of cross-record milestones or project-wide
+decisions. Link record journals there instead of maintaining duplicate change logs.
 
 
 Always update affected definitions and docs when decisions change. Use
 docs/architecture.md for architecture decisions, docs/roadmap.md for milestone/scope,
-ai/ for new/migrated records, docs/specs.md and specs/ for unmigrated history,
+ai/ for registered records and docs/specs.md for the project overview,
 and README.md only for high-level orientation
 and setup. Include related docs/specs in the same change as behavior,
 architecture, setup, scope or workflow changes. Repo-local skills provide
@@ -392,8 +399,7 @@ journal or exports; it owns the documentation routine and evidence details.
 
 
 Whenever a spec is created or materially changed, the same change must create
-or update its execution plan: plan.md beside new/migrated definitions, or the
-existing paired docs/plans/ plan for unmigrated records.
+or update its execution plan: plan.md beside the registered definition.
 
 A material spec change is any change to:
 
@@ -412,7 +418,7 @@ The expected flow is:
 spec -> execution plan -> implementation prompt -> implementation -> validation evidence
 ```
 
-New/migrated plans use the corresponding ai/ template. Unmigrated plans use `docs/plans/TEMPLATE-spec-implementation-plan.md` unless an existing phase-specific plan already provides the same structure. The plan should include:
+Plans use the corresponding ai/specs/_template/ or ai/issues/_template/ template. The plan should include:
 
 - objective and source spec,
 - included and excluded scope,
@@ -426,18 +432,8 @@ whether it can run in parallel, collision risks and integration order if related
 work merges first. Purely editorial changes may omit a plan update only when the
 summary explicitly states that no implementation behavior changed.
 
-Legacy naming convention (new records follow ai/):
-
-```text
-specs/<feature-name>.md
-docs/plans/<feature-name>-implementation-plan.md
-```
-
-Existing phase plans may keep their established names, for example:
-
-```text
-docs/plans/week-03-phase-3-web-loop.md
-```
+Registered definitions follow the naming and folder conventions in ai/specs/README.md
+and ai/issues/README.md. Their execution plan is plan.md in the same folder.
 
 The prompt belongs inside the plan file by default. Create separate prompt files only if one spec truly needs multiple distinct implementation handoffs.
 

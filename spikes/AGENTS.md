@@ -10,7 +10,7 @@ consumer was found. Used as design evidence for the touch UI choice in D024.
 
 Product Kivy widgets live under [client](../client/AGENTS.md) and their verified
 tests under [tests](../tests/AGENTS.md). Read
-[touch spec](../specs/raspberry-touch-ui.md) and
+[touch spec](../ai/specs/021-raspberry-touch-ui/spec.md) and
 [decisions](../docs/decisions.md#d024---raspberry-touch-ui-tech-stack) before promoting
 experimental findings. Changes here do not automatically alter production
 architecture. No dedicated official spike test/build target exists; do not claim
