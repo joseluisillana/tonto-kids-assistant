@@ -372,3 +372,27 @@ para revisión/integración; issue #122 permanece abierta hasta completar ese fl
 
 Commit documental preparado; el hook pre-commit regeneró el export NotebookLM
 con éxito y su selección existente. Sin ampliar cobertura a todos los locales.
+
+### 2026-10-06 — instrumentación de specs/issues en ai/, fase 1
+
+Operador solicita aplicar el prompt adaptado, exclusivamente fase 1.
+Baseline `40342ee`; rama `docs/ai-specs-issues-process`. Plan previo:
+`docs/plans/ai-process-instrumentation-plan.md`. Creado proceso portable en inglés,
+con once documentos: entrada común, README/INDEX por tipo y seis plantillas.
+IDs locales independientes de GitHub, estados/condiciones explícitos, plan previo,
+journal propio y sincronización de índices; seguridad conserva controles actuales.
+Agente de desarrollo: Codex; decisiones y alcance pertenecen al operador.
+
+AGENTS.md raíz enlaza ai/; workflow, documentación común y plantilla heredada
+reconciliados. Registros heredados cuentan como trabajo registrado y conservan
+sus ubicaciones. No se crean registros concretos ni se migran specs, issues,
+planes, prompts o evidencias. Sin cambios de GitHub, locales AGENTS.md, producto,
+CI, dependencias, scripts ni export. Export actual no incluye ai/, límite explícito.
+
+Verificación local: once documentos ai/, enlaces relativos, campos YAML de ambas
+plantillas, recordatorios de seguridad/plan/journal/estado en seis plantillas e
+índices vacíos comprobados. Revisión de diff y `git diff --check` pasan. No se
+requieren tests funcionales para Markdown. Sin validación hardware/proveedor.
+Entrega local pendiente de revisión e integración; sin commit/PR para esta entrega.
+Fase 2 pendiente: inventario completo, mapa origen/destino, estados basados en
+evidencia, procedencia y conservación de relaciones/histórico.

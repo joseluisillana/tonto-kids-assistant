@@ -1,5 +1,9 @@
 # <Spec Name> Implementation Plan
 
+Legacy template for unmigrated records. New/migrated specs and issues use the
+ai/ templates and [common process](../../ai/README.md). Preserve existing plans
+and prompts during transition; do not duplicate records merely to relocate them.
+
 ## Objective
 
 Describe the concrete outcome this plan should produce. Keep it tied to the source spec and MVP milestone.

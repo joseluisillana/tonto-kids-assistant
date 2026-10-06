@@ -22,6 +22,25 @@
    impact and run relevant existing checks. If no local exists, use the nearest
    ancestor and the linked sources. Do not assume automatic instruction loading.
 
+## Planning and tracking in ai/
+
+Read [ai/README.md](ai/README.md) for the canonical planning/tracking process
+and new or migrated records. Before acting on `ai/specs/<id>/` or
+`ai/issues/<id>/`, read spec.md/issue.md, plan.md and journal.md. Plan before
+implementation and maintain the record journal. Synchronize every status change
+with its INDEX.md in the same change; keep metadata/index dates and titles aligned.
+Retain closed records and rows. Legacy specs/issues count as registered work and
+remain authoritative at their current locations until migrated; new indexes do
+not yet cover that history.
+
+For work without a registered spec/issue, explicitly notify the user and wait
+for an OK. An explicit OK already given for the same scope remains valid;
+planning and evidence still apply. ai/ adds process: architecture, conventions,
+security and operation in these instructions, local AGENTS.md and mandatory
+common workflow remain applicable. The explicitly authorized transition
+supersedes legacy placement rules for new records without editing local
+architectural instructions.
+
 ## Project overview
 
 TONTO is an educational physical assistant for children, optimized for a working,

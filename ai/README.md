@@ -1,0 +1,71 @@
+# AI-assisted planning and tracking
+
+This directory owns the planning and tracking process for new and migrated
+records. Any human or agent can follow it: no AI provider, model, IDE, extension,
+CLI, plugin or skill loader is required. Product inference providers are separate
+from the choice of development assistant.
+
+Read [root instructions](../AGENTS.md) and the mandatory
+[common workflow](../docs/ai-assisted-workflow.md). These retain architecture,
+conventions, permissions, Git, environment, operating commands and security.
+This process complements those instructions; it does not replace them.
+
+## Choosing a record
+
+Use a [spec](specs/README.md) to define a change, contract or capability with
+acceptance criteria. Use an [issue](issues/README.md) for a bounded problem or
+task, including validation and coordination. Link related records rather than
+duplicating requirements. One spec can relate to several issues and vice versa.
+
+Before acting on a record, read its spec.md/issue.md, plan.md and journal.md.
+Prepare plan.md before implementation, including verification and handoff.
+Maintain the record's journal with decisions, changes, evidence and pending work.
+Update metadata and the corresponding INDEX.md together; every status change
+must appear in the same change in both places. Update `updated` when any record
+content changes. Index titles and dates must match the record. Retain closed
+records, rows and IDs. Global milestone journals remain useful context and link
+to record journals; they do not replace them.
+
+If work has no registered spec or issue, explicitly tell the user and wait for
+an OK before proceeding. An explicit OK already given for that same scope remains
+valid. An existing legacy record counts as registered work. The exception does
+not remove prior planning or evidence requirements: record the authorization,
+plan and results in the existing project plan/journal documentation.
+The operator's explicit phase-1 instrumentation request authorizes creation of
+this structure without a concrete new spec/issue; its plan and global journal
+provide evidence.
+
+## Security
+
+Never include secrets, credentials, tokens, connection strings, PII or real
+customer data in records, plans, journals, examples or evidence. Describe sensitive
+configuration only by parameter name, never its value. Use fictional examples
+and sanitized evidence. Do not read credential files to prepare this process or
+its migration. Preserve all existing secret-safe diagnostic and operating rules.
+
+## Transition and GitHub
+
+Historical records remain authoritative at their existing locations until
+individually migrated: [legacy index](../docs/specs.md), specs/, docs/plans/ and
+[project journals](../docs/project-journal/), plus linked GitHub issues. The new
+[spec index](specs/INDEX.md) and [issue index](issues/INDEX.md) are initially empty;
+they do not represent the full history. Do not create a duplicate new record
+just because a legacy record has not yet been migrated. New records use ai/;
+legacy records retain their existing plan/handoff locations during transition.
+
+Every migrated record will have one canonical destination. Preserve provenance,
+original links and shared artifacts; migration must not invent dates, prior plans,
+validation or completion. Historical migration is phase 2, a separate work item;
+it is not performed by this instrumentation.
+
+`related` is a YAML list of unambiguous repository-relative paths or full external
+URLs. Use it for specs, local issues, GitHub issues and original artifacts. IDs
+belong to separate local sequences; they are not GitHub issue numbers. GitHub
+keeps its numbers, URLs and history. Read linked issues and their parent/child
+relationships when coordinating work; no one-to-one mapping is assumed.
+Local `resolved` does not automatically close GitHub. Keep parent issues open
+while child issues or other required tasks remain. PR closing keywords apply
+only to issues fully completed, as required by the common workflow.
+
+The current NotebookLM export does not select ai/. Read ai/ directly; an export
+is not a complete source for this process. No exporter or CI change is included.
