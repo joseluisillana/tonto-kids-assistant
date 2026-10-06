@@ -131,6 +131,23 @@ The export is derived output and is ignored by Git.
 
 The script writes individual source files, `INDEX.md`, and `NOTEBOOKLM_COMBINED.md`. Use the combined file as the primary NotebookLM source unless you need to inspect or import a specific document separately.
 
+The default destination remains `exports/notebooklm`. Custom destinations must
+be subdirectories of `exports/`; absolute equivalents are accepted. Repository
+root, source directories, `exports` itself, outside paths and symbolic links in
+the destination path are rejected before writing or deleting anything.
+
+Sources remain README/AGENTS, Markdown under docs/specs, and web/README. The
+export rejects symbolic links in source trees (including broken/internal links),
+hardlinked files and protected filename categories before reading contents.
+Validation failures leave the previous export intact. Output is prepared in a
+private staging directory and then replaces only the validated derived-output
+directory. Errors contain fixed messages rather than arbitrary paths/content.
+The pre-commit hook uses the same checks and stops the commit on export failure.
+
+Keep source documents public and avoid concurrent modifications during export.
+This validates paths and file types; it does not scan Markdown for credentials
+copied into a regular document. No credentials should be stored in those sources.
+
 ## Hook Installation
 
 Run this once per clone:
