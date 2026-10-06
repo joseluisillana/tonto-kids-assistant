@@ -230,3 +230,26 @@ PR 3 builds/montajes; PR 4 export NotebookLM. Las fases futuras no se implementa
 en esta entrega; #110 queda abierta. Roadmap reconciliado con decisión vigente.
 Validación local vigente: 136 Python, consulta Compose ficticia, sintaxis y diff
 check; sin revalidación de voz o teardown real. Mantener estos límites en la PR.
+
+### #110 — segunda entrega: tareas sin inyección de credenciales
+
+PR #116 mergeada con CI completa, main local/remoto 8ef12ed y rama anterior
+eliminada. Operador autoriza continuar secuencia; rama
+`fix/issue-110-secret-free-tasks` desde main limpio y actualizado.
+
+`docker-compose.tasks.yml` separa setup/tests/build del runtime: no env_file,
+puertos ni depends_on; CLI usa archivo explícito y --env-file /dev/null,
+ignora COMPOSE_FILE/COMPOSE_ENV_FILES/profiles runtime y retira las claves
+OpenAI/DevExpert heredadas, incluido setup host. Estos comandos ya no crean
+.env. Dev/SSH y provisión runtime sin cambios; mismas imágenes/cache/volumen.
+Personalización de proyecto: COMPOSE_PROJECT_NAME debe exportarse si se usaba
+solo dentro de .env. README/spec/plan documentan el límite. Archivos de secretos
+en bind mounts/build context siguen como PR 3; no se afirma aislamiento.
+
+Validación oficial sin overrides: setup exit 0 (npm audit 0), test all
+**151 Python + 25 UI** y web pasan; build all exit 0 (43 módulos). 15 tests nuevos
+de CLI/modelo y tests setup actualizados. Compose real con fixtures confirma
+tareas sin claves, configuración runtime preservada, volumen compartido y
+ausencia de requisito .env. Bash/diff check pasan. Warnings Starlette/httpx e
+imghdr previos. Sin lectura/modificación de credenciales reales ni dependencias
+nuevas. No se inicia/paraliza demo real; #110 permanece abierta.

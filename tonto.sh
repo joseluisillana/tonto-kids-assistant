@@ -7,11 +7,6 @@ export DOCKER_GID=$(id -g)
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$REPO_ROOT"
 
-# Asegurar que el .env exista para docker compose
-if [ ! -f .env ]; then
-  cp .env.example .env || touch .env
-fi
-
 print_usage() {
     echo "TONTO CLI (Linux/Docker)"
     echo "Uso: ./tonto.sh {setup|dev|down|test|build} [target]"
@@ -31,6 +26,22 @@ fi
 
 COMMAND=$1
 TARGET=${2:-all}
+
+case "$COMMAND" in
+  setup|test|build)
+    # Tasks use an explicit credential-free model, not runtime .env/overrides.
+    unset OPENAI_API_KEY DEVEXPERT_API_KEY COMPOSE_ENV_FILES COMPOSE_FILE COMPOSE_PROFILES
+    ;;
+  dev|down|stop)
+    if [ ! -f .env ]; then
+      cp .env.example .env || touch .env
+    fi
+    ;;
+esac
+
+task_compose() {
+  docker compose --env-file /dev/null -f "$REPO_ROOT/docker-compose.tasks.yml" "$@"
+}
 
 case "$COMMAND" in
   setup)
@@ -53,10 +64,10 @@ case "$COMMAND" in
       echo "Optional host environment is ready."
     elif [ "$TARGET" == "all" ]; then
       echo "Setting up Python virtual environment in Docker..."
-      docker compose run --rm -u root backend chown -R "$DOCKER_UID:$DOCKER_GID" .venv .cache/pip .cache/npm
-      docker compose run --rm backend /bin/bash -c "python -m venv .venv && .venv/bin/python -m pip install -r backend/requirements.txt -r client/requirements.txt -r client/requirements-pc.txt -r requirements-dev.txt"
+      task_compose run --rm -u root backend chown -R "$DOCKER_UID:$DOCKER_GID" .venv .cache/pip .cache/npm
+      task_compose run --rm backend /bin/bash -c "python -m venv .venv && .venv/bin/python -m pip install -r backend/requirements.txt -r client/requirements.txt -r client/requirements-pc.txt -r requirements-dev.txt"
       echo "Setting up Node environment in Docker..."
-      docker compose run --rm web npm ci
+      task_compose run --rm web npm ci
       echo "Docker development environment is ready. Host .venv preserved; use setup host for the optional IDE environment."
     else
       echo "Unknown setup target: $TARGET (expected host or all)." >&2
@@ -121,7 +132,7 @@ case "$COMMAND" in
   test)
     if [ "$TARGET" == "python" ] || [ "$TARGET" == "all" ]; then
       echo "Running Python checks..."
-      docker compose run --rm backend /bin/bash -c "
+      task_compose run --rm backend /bin/bash -c "
         export PYTHONDONTWRITEBYTECODE=1
         .venv/bin/python scripts/check_syntax.py
         .venv/bin/python -m pytest -p no:cacheprovider tests \
@@ -133,7 +144,7 @@ case "$COMMAND" in
     if [ "$TARGET" == "ui" ] || [ "$TARGET" == "all" ]; then
       echo "Running Kivy UI checks..."
       # Give Xvfb a normal parent for its startup signal and an isolated socket.
-      docker compose run --rm --build --no-deps \
+      task_compose run --rm --build --no-deps \
         --volume /tmp/.X11-unix \
         -e PYTHONPATH=/app \
         -e PYTHONDONTWRITEBYTECODE=1 \
@@ -151,14 +162,14 @@ case "$COMMAND" in
 
     if [ "$TARGET" == "web" ] || [ "$TARGET" == "all" ]; then
       echo "Running Web checks..."
-      docker compose run --rm web npm run test
+      task_compose run --rm web npm run test
     fi
     ;;
     
   build)
     if [ "$TARGET" == "web" ] || [ "$TARGET" == "all" ]; then
       echo "Building Web..."
-      docker compose run --rm web npm run build
+      task_compose run --rm web npm run build
     fi
     ;;
     

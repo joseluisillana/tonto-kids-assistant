@@ -478,7 +478,9 @@ acceso IP con identidad SSH verificada en esta LAN. No se crea release/tag.
 Spec: `specs/agent-secrets-protection.md`; plan:
 `docs/plans/agent-secrets-protection-implementation-plan.md`. Operador decide
 mantener workflow y .env; variable host descartada y aislamiento diferido.
-PR 1 implementada/validada localmente: limpieza y errores/logs chat/STT seguros,
-pendiente revisión e integración. PRs siguientes: setup/tests sin claves,
+PR 1 integrada en #116 (8ef12ed), CI completa aprobada: limpieza y errores/logs
+chat/STT seguros. PR 2 implementada y validada localmente: setup/tests/build sin
+inyección de claves, pendiente revisión/integración.
+PRs siguientes:
 build/montajes y export NotebookLM, secuencialmente tras merge de cada entrega.
 #110 sigue abierta; sin migración de secretos ni cambios de UI táctil.

@@ -1,7 +1,7 @@
-# #110 — diagnósticos sin exposición accidental de secretos
+# #110 — reducción de exposiciones accidentales de secretos
 
-Estado: primera reparación autorizada por el operador, 2026-10-06.
-Baseline: main a985dac. Rama: fix/issue-110-safe-diagnostics.
+Estado: PR 1 integrada; PR 2 implementada y validada localmente, 2026-10-06.
+Baseline PR 2: main 8ef12ed. Rama: fix/issue-110-secret-free-tasks.
 Tracking: https://github.com/joseluisillana/tonto-kids-assistant/issues/110.
 Plan: docs/plans/agent-secrets-protection-implementation-plan.md.
 
@@ -21,8 +21,8 @@ original de #110 ni autoriza cerrar la issue.
 
 | Entrega | Alcance | Estado |
 | --- | --- | --- |
-| PR 1 | Spec/plan, limpieza y errores/logs chat/STT seguros | Implementada, validada localmente; pendiente revisión/integración |
-| PR 2 | Setup/tests sin credenciales reales, mismos comandos | Pendiente |
+| PR 1 | Spec/plan, limpieza y errores/logs chat/STT seguros | Integrada en #116, main 8ef12ed; CI aprobada |
+| PR 2 | Setup/tests sin credenciales reales, mismos comandos | Implementada y validada localmente; pendiente revisión/integración |
 | PR 3 | Exclusión de secretos en builds y montajes innecesarios | Pendiente |
 | PR 4 | Exportación NotebookLM con fuentes/destinos seguros | Pendiente |
 
@@ -63,13 +63,32 @@ a leer la clave ni declarar rotación no verificada.
   configuración inválida, trazas y respuestas de endpoints reales con HTTP mock.
   Al fallar el harness imprime solo caso/resultado, nunca el valor.
 
-## Límites de esta entrega
+## Requisitos de PR 2 — tareas sin inyección de credenciales
+
+- Setup/test/build usan `docker-compose.tasks.yml` explícito y `--env-file
+  /dev/null`, sin heredar archivos/overrides de runtime ni COMPOSE_ENV_FILES.
+  Servicios backend/UI/web sin env_file, credenciales, puertos ni depends_on.
+- No crear, leer ni modificar .env en setup/test/build (incluido setup host).
+  Retirar OPENAI_API_KEY y DEVEXPERT_API_KEY heredadas del proceso de tareas.
+- Mismos comandos, cachés locales, imágenes y volumen backend-venv. Proyecto
+  por directorio como Compose por defecto; COMPOSE_PROJECT_NAME exportado se
+  respeta. Si antes se definía solo dentro de .env, exportarlo para compartir
+  volumen con runtime. COMPOSE_FILE/overrides del runtime no se usan para tareas.
+- Runtime dev/SSH y carga .env conservados. No iniciar ni parar backend real.
+- Tests con Compose real sobre fixtures verifican ausencia de variables y
+  dependencias; stubs cubren rutas CLI/fallos/no creación de .env. Tests/build
+  oficiales funcionan sin overrides temporales ni claves.
+- Los bind mounts y contexto build actuales pueden seguir dando acceso al
+  archivo .env; esa exclusión pertenece a PR 3. Esta fase impide inyección
+  accidental, no acredita aislamiento ni ausencia de secretos del filesystem.
+
+## Límites vigentes
 
 Compose todavía genera un modelo estructural internamente, pero sin resolver
 los env_file ni interpolar valores. No elimina el comando config ni garantiza
 seguridad de literales secretos introducidos en YAML: las configs públicas no
-deben contener credenciales. Otros comandos Docker, logs, acceso directo,
-setup/tests que heredan .env y build/export permanecen como seguimiento.
+deben contener credenciales. Otros comandos Docker, logs, acceso directo y
+exclusiones del filesystem de build/montajes/export permanecen como seguimiento.
 Los logs de fallos chat/STT de esta entrega sí están acotados; logs de otros
 componentes/herramientas no quedan cubiertos por esa garantía.
 No presentar esta mejora como aislamiento ni sanitización universal del host.
