@@ -28,7 +28,7 @@ to record journals; they do not replace them.
 
 If work has no registered spec or issue, explicitly tell the user and wait for
 an OK before proceeding. An explicit OK already given for that same scope remains
-valid. An existing legacy record counts as registered work. The exception does
+valid. The exception does
 not remove prior planning or evidence requirements: record the authorization,
 plan and results in the existing project plan/journal documentation.
 The operator's explicit phase-1 instrumentation request authorizes creation of
@@ -48,16 +48,17 @@ its migration. Preserve all existing secret-safe diagnostic and operating rules.
 The [spec index](specs/INDEX.md) and [local issue index](issues/INDEX.md) now cover
 the 28 migrated historical definitions, one existing local issue and new records.
 [Migration evidence](specs/001-historical-records-migration/metadata-review.md)
-records source/destination coverage, dates and status decisions. Legacy paths in
-specs/, docs/plans/ and docs/issues/ remain navigable transition pointers, not
-editable competing definitions. Update the canonical ai/ destination.
-The [project overview](../docs/specs.md), shared [journals](../docs/project-journal/),
+records source/destination coverage, dates and status decisions. The retired
+specs/, docs/plans/ and docs/issues/ paths are recorded as provenance; current
+procedure, rules and templates belong exclusively to ai/. Original sources
+remain recoverable from the immutable Git baseline in that ledger.
+The [project overview](../docs/specs.md), shared [journals](../docs/project-journal),
 architecture, decisions, operating guides and visual assets keep their sources.
-The legacy plan template and phase-1 instrumentation plan remain in docs/plans/.
-These remaining structural files and legacy transition paths are temporary: the
-operator extended migration spec 001 to retire them after preservation and an
-explicit decision on [external link impact](specs/001-historical-records-migration/cleanup-impact.md).
-No cleanup deletion has been performed at this planning stage.
+The phase-1 instrumentation plan is retained as historical migration evidence.
+The old plan template has no legacy copy or operational references: use only
+ai/specs/_template/ and ai/issues/_template/.
+See [link impact](specs/001-historical-records-migration/cleanup-impact.md)
+for the authorized reference corrections and remaining external limitations.
 
 Every migrated record has one canonical destination. Preserve provenance,
 original links and shared artifacts; migration must not invent dates, prior plans,
@@ -81,3 +82,8 @@ only to issues fully completed, as required by the common workflow.
 
 The current NotebookLM export does not select ai/. Read ai/ directly; an export
 is not a complete source for this process. No exporter or CI change is included.
+
+Historical procedure, placement and template examples preserved in migrated
+specs/plans are evidence of earlier decisions. They do not authorize an alternate
+workflow: all ongoing work, including on historical records, uses the current
+ai/ rules and templates, its adjacent plan.md/journal.md and synchronized index.

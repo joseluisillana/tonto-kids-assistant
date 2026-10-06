@@ -1,7 +1,6 @@
 # Legacy structure retirement — link impact and decision
 
-Prepared 2026-10-06 against PR #125 head b2cee31. No legacy file is deleted by
-this scope/plan extension. Counts describe the impact **if the listed paths are
+Prepared 2026-10-06 against PR #125 head b2cee31. The operator approved retirement and correction of the identified GitHub references. Counts describe the impact **if the listed paths are
 removed from the current branch/main**, not broken links today. The previous
 redirect-preservation policy is superseded by the requested retirement, subject
 to the operator's decision on the concrete external links below.
@@ -17,7 +16,7 @@ The following three files still contain information and cannot simply be deleted
 | remaining source | proposed destination before removal | purpose |
 | --- | --- | --- |
 | `specs/AGENTS.md` | `ai/specs/AGENTS.md` | Preserve local contract/validation instructions; adjust relative paths and obsolete placement references. |
-| `docs/plans/TEMPLATE-spec-implementation-plan.md` | `ai/specs/001-historical-records-migration/artifacts/legacy-spec-implementation-plan-template.md` | Keep the original template as historical evidence; ai/ templates remain the active process. |
+| `docs/plans/TEMPLATE-spec-implementation-plan.md` | Immutable original Git baseline (no legacy copy) | Retire without a legacy copy; only current ai/ templates govern work. |
 | `docs/plans/ai-process-instrumentation-plan.md` | `ai/specs/001-historical-records-migration/artifacts/ai-process-instrumentation-plan.md` | Preserve phase-1 plan and evidence without keeping the old plans directory. |
 
 Shared project journals, images, architecture, decisions, runbooks and docs/specs.md
@@ -147,7 +146,7 @@ source paths in active #114, with specific operator authorization. No other
 issue/PR/comment narrative, checklist or state changes are proposed.
 This preserves active #81 navigation and closed #89 evidence without duplicating
 issue content, importing remote issues or changing their status. Editing those
-remote references needs the operator's explicit authorization; none has been done.
+remote references needs the operator's explicit authorization; the operator approved these corrections and all eight references were updated.
 The canonical replacements in the table use main, whose new ai/ files are not
 yet available until PR #125 merges. Avoid an intermediate broken-link window:
 use the already published canonical snapshot at commit
@@ -163,10 +162,10 @@ and #114's two plain source references obsolete.
 
 Keeping compatibility files would avoid those failures but conflicts with the
 requested complete retirement, so it is not the proposed final structure.
-The cleanup remains pending this decision; all migration preservation checks
+The operator selected reference corrections and exclusive current ai/ templates; all migration preservation checks
 and external-link identities must be rechecked at the deletion/integration SHA.
 
-## Exact retirement manifest (pending decision, not deleted)
+## Exact authorized retirement manifest
 
 | legacy file to retire | preserved canonical destination | current treatment |
 | --- | --- | --- |
@@ -174,7 +173,7 @@ and external-link identities must be rechecked at the deletion/integration SHA.
 | `docs/agent-secrets-isolation-design.md` | `ai/specs/003-agent-secrets-protection/artifacts/agent-secrets-isolation-design.md` | Migrated transition document: verify source ledger/canonical body before removal |
 | `docs/agent-secrets-protection-draft.md` | `ai/specs/003-agent-secrets-protection/artifacts/agent-secrets-protection-draft.md` | Migrated transition document: verify source ledger/canonical body before removal |
 | `docs/issues/emulator-system-volume-delay.md` | `ai/issues/001-emulator-system-volume-delay/issue.md` | Migrated transition document: verify source ledger/canonical body before removal |
-| `docs/plans/TEMPLATE-spec-implementation-plan.md` | `ai/specs/001-historical-records-migration/artifacts/legacy-spec-implementation-plan-template.md` | Unique information: must preserve before removal |
+| `docs/plans/TEMPLATE-spec-implementation-plan.md` | Immutable original Git baseline (no legacy copy) | Unique information: must preserve before removal |
 | `docs/plans/agent-instructions-hierarchy-implementation-plan.md` | `ai/specs/002-agent-instructions-hierarchy/plan.md` | Migrated transition document: verify source ledger/canonical body before removal |
 | `docs/plans/agent-secrets-protection-implementation-plan.md` | `ai/specs/003-agent-secrets-protection/plan.md` | Migrated transition document: verify source ledger/canonical body before removal |
 | `docs/plans/ai-process-instrumentation-plan.md` | `ai/specs/001-historical-records-migration/artifacts/ai-process-instrumentation-plan.md` | Unique information: must preserve before removal |
@@ -237,3 +236,15 @@ and external-link identities must be rechecked at the deletion/integration SHA.
 | `specs/week-05-agent-capability-pack.md` | `ai/specs/027-week-05-agent-capability-pack/spec.md` | Migrated transition document: verify source ledger/canonical body before removal |
 | `specs/week-05-demo-stability.md` | `ai/specs/028-week-05-demo-stability/spec.md` | Migrated transition document: verify source ledger/canonical body before removal |
 | `specs/week-06-closeout.md` | `ai/specs/029-week-06-closeout/spec.md` | Migrated transition document: verify source ledger/canonical body before removal |
+
+## Execution evidence
+
+All 67 listed legacy files were retired after conservation checks for the 64
+migrated source bodies. Instructions moved to ai/specs/AGENTS.md and phase-1
+evidence to this spec's artifacts. The old template is retained only in baseline
+Git, without a legacy copy or operational references.
+Six URLs and two plain paths in #81/#89/#114 were corrected using published
+canonical commit b2cee312872f063780f020e03e57719ba4541fc5. Fresh issue reads match
+the prepared bodies exactly; titles and states are unchanged.
+Unknown external main-branch bookmarks to retired paths will fail after integration;
+the source ledger and immutable baseline provide recovery. Fixed-SHA links remain valid.

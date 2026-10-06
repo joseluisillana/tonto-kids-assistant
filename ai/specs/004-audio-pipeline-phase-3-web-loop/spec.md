@@ -6,7 +6,7 @@ owner: "Unknown — legacy ownership not recorded"
 created: "2026-06-02"
 updated: "2026-10-06"
 related:
-  - "specs/audio-pipeline-phase-3-web-loop.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/audio-pipeline-phase-3-web-loop.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "docs/project-journal/week-03.md#fase-3-web-loop-validation-evidence"
   - "ai/specs/004-audio-pipeline-phase-3-web-loop/plan.md"

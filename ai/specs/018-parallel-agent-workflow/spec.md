@@ -6,7 +6,7 @@ owner: "Unknown — legacy ownership not recorded"
 created: "2026-06-07"
 updated: "2026-10-06"
 related:
-  - "specs/parallel-agent-workflow.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/parallel-agent-workflow.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "docs/ai-assisted-workflow.md#parallel-agent-workflow"
   - "ai/specs/018-parallel-agent-workflow/plan.md"
@@ -178,7 +178,7 @@ gh pr checks
 - `docs/ai-assisted-workflow.md` documents isolated work items and parallel worktrees.
 - `AGENTS.md` includes mandatory rules for branch and worktree isolation.
 - `docs/documentation-workflow.md` explains how workflow evidence is captured.
-- `docs/plans/TEMPLATE-spec-implementation-plan.md` asks every plan to document workflow isolation.
+- `ai/specs/_template/plan.md` asks every plan to document workflow isolation.
 - Existing Phase 4 indicator plans state that Raspberry and web work should run in separate branches/worktrees.
 - The docs explain when to use GitHub Issues for phases, parallel work, and validation tracking.
 - The docs explain that `gh` is preferred for GitHub PR, check, and issue operations.

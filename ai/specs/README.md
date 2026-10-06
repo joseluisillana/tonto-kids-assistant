@@ -34,5 +34,5 @@ must update its row immediately, including title and updated date. Changes to
 any record file update spec.md's `updated` and the index date. Never remove done
 rows, folders or IDs. Capture decisions and evidence in the record journal.
 The historical local definitions are now migrated. Legacy source paths are
-transition pointers; edit canonical ai/ records. Shared journals/operating docs
+retired Git provenance; edit canonical ai/ records. Shared journals/operating docs
 remain at their sources, and GitHub issue history stays on GitHub.

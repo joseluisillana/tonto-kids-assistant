@@ -86,10 +86,10 @@ plan has one canonical owner and references from other records.
 
 | source | proposed destination / treatment |
 | --- | --- |
-| `docs/plans/TEMPLATE-spec-implementation-plan.md` | Keep as legacy template; new record templates already exist in ai/ |
+| `docs/plans/TEMPLATE-spec-implementation-plan.md` | Retired without a copy; recover original via baseline Git, use only current ai/ templates |
 | `docs/plans/agent-instructions-hierarchy-implementation-plan.md` | `ai/specs/002-agent-instructions-hierarchy/plan.md` |
 | `docs/plans/agent-secrets-protection-implementation-plan.md` | `ai/specs/003-agent-secrets-protection/plan.md` |
-| `docs/plans/ai-process-instrumentation-plan.md` | Keep phase-1 evidence here; relate to PR #124 and this migration, no retrospective spec invented |
+| `docs/plans/ai-process-instrumentation-plan.md` | ai/specs/001-historical-records-migration/artifacts/ai-process-instrumentation-plan.md; historical PR #124 evidence |
 | `docs/plans/ci-local-cache-alignment-implementation-plan.md` | `ai/specs/006-ci-local-cache-alignment/plan.md` |
 | `docs/plans/docker-cleanup-implementation-plan.md` | `ai/specs/008-docker-cleanup/plan.md` |
 | `docs/plans/inference-providers.md` | `ai/specs/011-inference-providers/plan.md` |

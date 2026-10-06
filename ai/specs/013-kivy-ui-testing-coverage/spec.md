@@ -6,7 +6,7 @@ owner: "Unknown — legacy ownership not recorded"
 created: "2026-10-05"
 updated: "2026-10-06"
 related:
-  - "specs/kivy-ui-testing-coverage.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/kivy-ui-testing-coverage.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "https://github.com/joseluisillana/tonto-kids-assistant/issues/105"
   - "https://github.com/joseluisillana/tonto-kids-assistant/issues/81"

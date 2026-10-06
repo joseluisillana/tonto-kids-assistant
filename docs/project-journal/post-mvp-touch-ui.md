@@ -377,7 +377,7 @@ con éxito y su selección existente. Sin ampliar cobertura a todos los locales.
 
 Operador solicita aplicar el prompt adaptado, exclusivamente fase 1.
 Baseline `40342ee`; rama `docs/ai-specs-issues-process`. Plan previo:
-`docs/plans/ai-process-instrumentation-plan.md`. Creado proceso portable en inglés,
+`ai/specs/001-historical-records-migration/artifacts/ai-process-instrumentation-plan.md`. Creado proceso portable en inglés,
 con once documentos: entrada común, README/INDEX por tipo y seis plantillas.
 IDs locales independientes de GitHub, estados/condiciones explícitos, plan previo,
 journal propio y sincronización de índices; seguridad conserva controles actuales.

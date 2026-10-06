@@ -11,7 +11,7 @@ Implement the repository documentation changes required by `ai/specs/018-paralle
   - `AGENTS.md`
   - `docs/ai-assisted-workflow.md`
   - `docs/documentation-workflow.md`
-  - `docs/plans/TEMPLATE-spec-implementation-plan.md`
+  - `ai/specs/_template/plan.md`
   - `docs/decisions.md`
   - `ai/specs/020-raspberry-listening-indicator/plan.md`
   - `ai/specs/024-web-listening-indicator/plan.md`
@@ -51,7 +51,7 @@ Excluded:
    - one branch/PR per coherent work item,
    - update from `main` after related PRs merge.
 5. Update `docs/documentation-workflow.md` with evidence expectations for each work item.
-6. Update `docs/plans/TEMPLATE-spec-implementation-plan.md` with a `Workflow Isolation` section.
+6. Update `ai/specs/_template/plan.md` with a `Workflow Isolation` section.
 7. Update existing Raspberry and web indicator plans to state they should run in separate branches/worktrees.
 8. Add GitHub CLI guidance:
    - `git` remains the default for local repo state and content changes.
@@ -102,7 +102,7 @@ Task:
 - Add explicit GitHub Issue tracking rules for phases, parallel tasks, validation, and multi-session work.
 - Add explicit `gh` usage guidance for GitHub PR/check/issue operations.
 - Keep GitHub Flow and short-lived branches as the base workflow.
-- Update AGENTS.md, docs/ai-assisted-workflow.md, docs/documentation-workflow.md, docs/plans/TEMPLATE-spec-implementation-plan.md, docs/decisions.md, and the Phase 4 indicator plans.
+- Update AGENTS.md, docs/ai-assisted-workflow.md, docs/documentation-workflow.md, ai/specs/_template/plan.md, docs/decisions.md, and the Phase 4 indicator plans.
 - Do not change product code.
 - Do not add scripts or dependencies.
 

@@ -6,7 +6,7 @@ owner: "Unknown — legacy ownership not recorded"
 created: "2026-06-13"
 updated: "2026-10-06"
 related:
-  - "specs/inference-providers.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/inference-providers.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "https://github.com/joseluisillana/tonto-kids-assistant/issues/48"
   - "https://github.com/joseluisillana/tonto-kids-assistant/issues/50"

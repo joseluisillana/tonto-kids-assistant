@@ -6,7 +6,7 @@ owner: "Unknown — legacy ownership not recorded"
 created: "2026-10-03"
 updated: "2026-10-06"
 related:
-  - "specs/migrate-linux-docker.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/migrate-linux-docker.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "https://github.com/joseluisillana/tonto-kids-assistant/issues/95"
   - "https://github.com/joseluisillana/tonto-kids-assistant/pull/108"

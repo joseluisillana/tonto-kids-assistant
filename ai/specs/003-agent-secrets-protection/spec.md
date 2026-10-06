@@ -6,7 +6,7 @@ owner: "Unknown — legacy ownership not recorded"
 created: "2026-10-06"
 updated: "2026-10-06"
 related:
-  - "specs/agent-secrets-protection.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/agent-secrets-protection.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "https://github.com/joseluisillana/tonto-kids-assistant/issues/110"
   - "https://github.com/joseluisillana/tonto-kids-assistant/pull/120"

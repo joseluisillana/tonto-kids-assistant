@@ -6,7 +6,7 @@ owner: "Unknown — legacy ownership not recorded"
 created: "2026-10-05"
 updated: "2026-10-06"
 related:
-  - "specs/kivy-ui-docker-emulation.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/kivy-ui-docker-emulation.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "ai/specs/019-post-migration-stability-validation/artifacts/migrate-linux-docker-validation.md"
   - "ai/specs/012-kivy-ui-docker-emulation/plan.md"

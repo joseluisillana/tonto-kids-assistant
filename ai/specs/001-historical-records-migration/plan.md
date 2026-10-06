@@ -22,7 +22,7 @@ with five validation/evidence artifacts, their mapped plans/prompts and relevant
 auxiliary design/backlog docs. Preserve references to eight shared journals and
 five existing visual assets, and repair affected consumers and old paths.
 The current map covers 33 specs/ artifacts and 28 docs/plans/ files; two plan
-files were retained during migration. Preserve those files and specs/AGENTS.md
+files were retained during migration. Preserve those files and ai/specs/AGENTS.md
 at the proposed ai/ destinations in cleanup-impact.md before final retirement.
 Reconcile counts against actual source/index state before assigning IDs.
 
@@ -109,9 +109,9 @@ remaining legacy sources until their owning batch is complete.
   canonical paths; roadmap/milestone and product statuses change only if actual
   migration provenance warrants a factual correction, not due to relocation.
 - Keep shared journals, decisions, architecture, runbooks, setup/report documents,
-  visual assets at their shared canonical locations. Relocate the legacy plan
-  template and phase-1 instrumentation evidence into this spec's artifacts at
-  stage 4, preserving their information and labelling the old template historical.
+  visual assets at their shared canonical locations. Relocate
+  phase-1 instrumentation evidence into this spec's artifacts at
+  stage 4. Recover the retired old template through Git; no legacy template copy.
 - Inspect Markdown references in component instructions and operational skills
   without rewriting their architecture/operating rules. Repair only links made
   stale by this migration. Retained transition pointers support external consumers.
@@ -148,11 +148,12 @@ decision. Migration authorization does not select a link-breakage policy.
 
 #### 4.2 Preserve remaining unique information and repair references
 
-- Move specs/AGENTS.md instructions to ai/specs/AGENTS.md with correct ancestors,
+- Move the former spec instructions to ai/specs/AGENTS.md with correct ancestors,
   scope/navigation and mandatory current planning rules. Preserve all operating,
   acceptance and safety rules; reconcile obsolete placement guidance explicitly.
-- Preserve docs/plans/TEMPLATE-spec-implementation-plan.md as a labelled legacy
-  template artifact and docs/plans/ai-process-instrumentation-plan.md as phase-1
+- Retire the old template without a legacy copy or operational references,
+  preserving its hash and immutable Git recovery location. Use only current ai/ templates.
+  Preserve ai/specs/001-historical-records-migration/artifacts/ai-process-instrumentation-plan.md as phase-1
   evidence in this spec's artifacts. No additional spec/issue records are needed.
 - Extend the hash/provenance ledger to all three sources. Verify existing bodies,
   assets/trios against the original 64-source ledger, including the documented
@@ -207,7 +208,8 @@ structure, and external effects handled according to the recorded operator choic
 New canonical destinations and artifact owners are listed in migration-map.md.
 Affected trees: ai/specs/, ai/issues/, legacy specs/, docs/plans/, docs/issues/,
 plus docs/specs.md, shared journal and narrowly affected Markdown references.
-Retirement also preserves three structural files in their proposed ai/ destinations,
+Retirement relocates instructions and phase-1 evidence, retains the old template
+only in Git,
 removes four standalone aliases under docs/, and fixes provenance/navigation.
 Read-only cleanup-impact.md contains the exact list and external decision boundary.
 No new runtime/development dependencies, tooling or permanent validators needed.
@@ -276,3 +278,11 @@ No secrets, credentials, tokens, connection strings, PII or real customer data.
 Sensitive configuration uses parameter names only, never values. Use sanitized
 public evidence and preserve existing protections. Maintain journal.md and keep
 spec.md/INDEX.md status and updated synchronized. Retain closed history.
+
+## Operator decisions for retirement
+
+The operator authorized correcting GitHub references in #81, #89 and #114.
+Those corrections preserve issue state, title and all other body content.
+The operator subsequently required current ai/ procedure, rules and templates
+exclusively: remove old template usage references and retain no legacy template copy.
+Its original bytes remain recoverable at the recorded Git baseline.

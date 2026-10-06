@@ -6,7 +6,7 @@ owner: "Unknown — legacy ownership not recorded"
 created: "2026-05-11"
 updated: "2026-10-06"
 related:
-  - "specs/conversation-loop.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/conversation-loop.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "docs/project-journal/week-02-closeout.md"
   - "ai/specs/007-conversation-loop/plan.md"

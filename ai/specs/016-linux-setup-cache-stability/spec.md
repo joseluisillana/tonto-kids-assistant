@@ -6,7 +6,7 @@ owner: "Unknown — legacy ownership not recorded"
 created: "2026-10-06"
 updated: "2026-10-06"
 related:
-  - "specs/linux-setup-cache-stability.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/linux-setup-cache-stability.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "https://github.com/joseluisillana/tonto-kids-assistant/issues/107"
   - "docs/project-journal/week-06.md#post-mvp--reparación-de-setupcachés-linux-2026-10-05"

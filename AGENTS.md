@@ -30,7 +30,7 @@ and new or migrated records. Before acting on `ai/specs/<id>/` or
 implementation and maintain the record journal. Synchronize every status change
 with its INDEX.md in the same change; keep metadata/index dates and titles aligned.
 Retain closed records and rows. The historical local definitions are now migrated
-and listed in the ai/ indexes; legacy paths are navigation pointers. Shared
+and listed in the ai/ indexes; retired paths remain Git provenance only. Shared
 milestone journals and operating docs retain their locations. GitHub issues remain
 defined/managed in GitHub; local records preserve corresponding full URLs in related.
 
@@ -77,7 +77,7 @@ The reconstruction prompt is [project genesis](docs/project-genesis.md).
 | [tests/](tests/AGENTS.md) | Python API/provider/client/CLI and real Kivy-widget tests; consumes implementation, not vice versa |
 | [spikes/](spikes/AGENTS.md) | Standalone Kivy exploration; not the product client or official CI suite |
 | [docs/](docs/AGENTS.md) | Architecture, decisions, workflow, journal, runbooks and execution plans |
-| [specs/](specs/AGENTS.md) | Legacy contract/validation links; canonical migrated records in ai/specs/ |
+| [ai/specs/](ai/specs/AGENTS.md) | Registered contracts, plans, journals and validation scope |
 | [.agents/skills/](.agents/skills/AGENTS.md) | Optional discoverable operating guidance, also readable manually; delegates to docs/scripts |
 
 Contract changes in backend affect both clients and their tests. The authoritative

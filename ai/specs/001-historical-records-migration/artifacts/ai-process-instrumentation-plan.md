@@ -30,7 +30,7 @@ CI, scripts/export y AGENTS.md locales. Sin dependencias nuevas.
 ## Archivos afectados
 
 `ai/**/*.md`, `AGENTS.md`, `docs/ai-assisted-workflow.md`,
-`docs/documentation-workflow.md`, `docs/plans/TEMPLATE-spec-implementation-plan.md`,
+`docs/documentation-workflow.md`, `ai/specs/_template/plan.md`,
 `docs/specs.md` y `docs/project-journal/post-mvp-touch-ui.md`.
 
 ## Verificación y aceptación
@@ -55,3 +55,11 @@ usando ai/ como fuente del nuevo proceso y conservando las reglas de operación,
 seguridad, handoff y Git. Mantener índices vacíos; documentar convivencia con
 registros heredados y límites del export. Validar los criterios anteriores y
 registrar resultados reales, sin atribuir integración o validación funcional.
+
+
+## Retirement provenance
+
+Original source `docs/plans/ai-process-instrumentation-plan.md` is preserved here for historical evidence.
+Retired 2026-10-06; this is not an active alternative template/process. Current
+planning uses ai/README.md and the ai/ templates. Original language, scope,
+prompts and acceptance text are retained with mapped paths adjusted.

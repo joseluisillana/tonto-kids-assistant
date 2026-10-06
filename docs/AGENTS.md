@@ -6,12 +6,11 @@ Read [root](../AGENTS.md), mandatory [AI workflow](ai-assisted-workflow.md) and
 This directory owns durable architecture/decisions, roadmap, specs index,
 project-journal, operating guides and plans. `architecture.md` explains design;
 `decisions.md` records dated decisions; `roadmap.md`/`specs.md` plus the newest
-dated journal entry give current state. `plans/` holds execution plans and the
-spec implementation template. Demo runbook/checklist and Raspberry setup provide
+dated journal entry give current state. Registered plans and templates live exclusively in ai/. Demo runbook/checklist and Raspberry setup provide
 operation context. Releases and final report preserve evidence, not new scope.
 
 Depends on: code/scripts/CI and validated human decisions as evidence;
-[specs](../specs/AGENTS.md) for contracts. Used by: every work item, operating
+[specs](../ai/specs/AGENTS.md) for contracts. Used by: every work item, operating
 skills and export/NotebookLM synthesis. No product runtime imports Markdown.
 Do not duplicate the detailed common rules here or restructure SDD directories.
 

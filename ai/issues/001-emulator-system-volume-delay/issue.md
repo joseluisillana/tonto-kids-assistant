@@ -6,7 +6,7 @@ owner: "Unknown — legacy ownership not recorded"
 created: "2026-10-06"
 updated: "2026-10-06"
 related:
-  - "docs/issues/emulator-system-volume-delay.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/docs/issues/emulator-system-volume-delay.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "https://github.com/joseluisillana/tonto-kids-assistant/issues/114"
   - "ai/specs/019-post-migration-stability-validation/artifacts/migrate-linux-docker-validation.md"

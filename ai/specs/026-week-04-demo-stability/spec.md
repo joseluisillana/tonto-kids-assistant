@@ -6,7 +6,7 @@ owner: "Unknown — legacy ownership not recorded"
 created: "2026-06-02"
 updated: "2026-10-06"
 related:
-  - "specs/week-04-demo-stability.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/week-04-demo-stability.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "https://github.com/joseluisillana/tonto-kids-assistant/issues/18"
   - "https://github.com/joseluisillana/tonto-kids-assistant/issues/19"

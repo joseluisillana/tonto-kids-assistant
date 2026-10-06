@@ -127,3 +127,16 @@ in relocated bodies to satisfy staged diff checks. Intentional Markdown hard
 breaks are retained. No content or acceptance criteria change; original hashes
 remain exact. The original body comparison accounts only for mapped path rewrites
 and this explicit whitespace normalization.
+
+## Additional structural sources preserved before retirement
+
+| original source | preserved destination | original SHA-256 |
+| --- | --- | --- |
+| `docs/plans/TEMPLATE-spec-implementation-plan.md` | Git baseline `818e88eacbac3989c091d1294c92e26ebeb663f7`; retired without a legacy copy | `f1d7f63dd332ca30f32ff1fdfc246067e7070ffde48c5c1758f5408211425986` |
+| `docs/plans/ai-process-instrumentation-plan.md` | `ai/specs/001-historical-records-migration/artifacts/ai-process-instrumentation-plan.md` | `8f3f1bd330336c74993521f01cfbb3d411e6f4e634ddb896bdaf00186e6e06ad` |
+| `specs/AGENTS.md` | `ai/specs/AGENTS.md` | `014385d256d39a32b0b49a0f4f59f87f6b057dea9ee38542e5a3d0d5ef391960` |
+
+The original instruction file remains recoverable at the same Git baseline.
+Active instructions preserve operating and safety rules while reconciling obsolete
+placement clauses with ai/. Only current ai/ rules and templates govern new work.
+The operator explicitly requested removal of legacy template references and copies.

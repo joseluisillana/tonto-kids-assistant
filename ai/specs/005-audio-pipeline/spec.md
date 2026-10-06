@@ -6,7 +6,7 @@ owner: "Unknown — legacy ownership not recorded"
 created: "2026-05-11"
 updated: "2026-10-06"
 related:
-  - "specs/audio-pipeline.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/audio-pipeline.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "docs/project-journal/week-03.md#fase-2b-post-tts-revalidation-evidence"
   - "ai/specs/005-audio-pipeline/plan.md"

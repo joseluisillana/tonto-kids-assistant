@@ -6,7 +6,7 @@ owner: "Unknown — legacy ownership not recorded"
 created: "2026-07-20"
 updated: "2026-10-06"
 related:
-  - "specs/ci-local-cache-alignment.md"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/ci-local-cache-alignment.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "https://github.com/joseluisillana/tonto-kids-assistant/issues/89"
   - "ai/specs/016-linux-setup-cache-stability/spec.md"

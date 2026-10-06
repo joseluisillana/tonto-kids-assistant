@@ -42,7 +42,8 @@ now follows its batches and verification gates.
 
 The operator extends this same spec on 2026-10-06 to remove the legacy structure,
 including temporary transition documents. Preserve unique information from
-specs/AGENTS.md and the two remaining docs/plans/ files in ai/ before retiring
+the original spec instructions and phase-1 plan in ai/; retire the old
+template with Git recovery only before removing
 specs/, docs/plans/, docs/issues/ and the mapped standalone artifact aliases.
 Shared journals, images and operating/architecture docs remain canonical.
 Physical retirement also removes active dependencies on old paths; historical
@@ -73,7 +74,7 @@ Do not rewrite original historical language or erase historical decisions.
 - External links that would stop resolving are individually reported with source,
   impact and replacement; retirement waits for the operator's explicit policy decision.
 - Every retired source is covered by preserved canonical content/provenance and
-  the source hash ledger; preserve the three remaining structural files first.
+  the source hash ledger; preserve instructions and phase-1 evidence; retain the old template only in Git.
 - The tracked tree has no specs/, docs/plans/, docs/issues/ or mapped standalone
   aliases after cleanup. Do not delete unrelated or untracked content.
 - Shared artifacts keep one canonical source; Git history is not rewritten.

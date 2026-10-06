@@ -36,6 +36,6 @@ Maintain [INDEX.md](INDEX.md) in the same change as metadata. Every status chang
 must update the row immediately; title and updated must match. Changes to any
 record file update issue.md's `updated` and the index date. Keep closed rows,
 folders and IDs. The existing local volume-delay document is migrated with its
-GitHub #114 reference; its old path is a transition pointer. GitHub issues remain
+GitHub #114 reference; its old path is retired Git provenance. GitHub issues remain
 on GitHub, so this index represents local definitions only. Local resolution does not close GitHub, and
 parents cannot close while required child or untracked tasks remain.
