@@ -182,6 +182,14 @@ If implementation and documentation disagree, pause and make the decision explic
 
 ## Assistant Behavior
 
+- Secret diagnostics (#110): keep the current `.env` and automated backend/SSH
+  workflow. Never read credential files or capture expanded Compose configs,
+  environment dumps, raw provider error bodies or shell traces for diagnosis.
+  Use official helpers with bounded output. Cleanup metadata disables env-file
+  resolution and interpolation; provider failures return fixed messages and
+  HTTP status. These reduce accidental exposure, not deliberate agent access.
+  See `specs/agent-secrets-protection.md` and its paired plan.
+
 - Read the existing repo context before making changes.
 - Respect the current milestone and keep scope narrow.
 - Ask before adding dependencies or changing architecture.

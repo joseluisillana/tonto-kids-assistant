@@ -5,6 +5,11 @@ Tracking: https://github.com/joseluisillana/tonto-kids-assistant/issues/110.
 Fecha: 2026-10-05. Rama solicitada: fix/docker-cleanup. Contexto: #107 y PR #109.
 Este documento es contexto de backlog para una issue, no una spec aprobada.
 
+Actualización 2026-10-06: se conserva este contexto original como historial.
+Spec vigente en borrador: `specs/agent-secrets-protection.md`; plan:
+`docs/plans/agent-secrets-protection-implementation-plan.md`. Reconciliados con
+main `a985dac` tras integrar #108 y cerrar #107. No autorizan implementación.
+
 ## Incidente comprobado
 
 Durante el análisis de limpieza Docker se ejecutó

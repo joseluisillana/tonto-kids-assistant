@@ -8,6 +8,7 @@ import urllib.request
 from fastapi import HTTPException
 
 from backend.state import MAX_HISTORY_MESSAGES
+from backend.provider_diagnostics import log_failure
 
 OPENAI_API_URL = "https://api.openai.com/v1/responses"
 DEVEXPERT_BASE_URL = "https://inference.devexpert.io/v1"
@@ -38,11 +39,12 @@ def call_inference(history: list[dict[str, str]], message: str) -> str:
     if provider == PROVIDER_DEVEXPERT:
         return call_devexpert(history, message)
 
+    log_failure("unknown", "chat", "invalid_provider")
     raise HTTPException(
         status_code=500,
         detail=(
             "Unsupported TONTO_INFERENCE_PROVIDER "
-            f"{provider!r}; expected '{PROVIDER_OPENAI}' or '{PROVIDER_DEVEXPERT}'"
+            f"configuration; expected '{PROVIDER_OPENAI}' or '{PROVIDER_DEVEXPERT}'"
         ),
     )
 
@@ -50,6 +52,7 @@ def call_inference(history: list[dict[str, str]], message: str) -> str:
 def call_openai(history: list[dict[str, str]], message: str) -> str:
     api_key = os.environ.get("OPENAI_API_KEY")
     if not api_key:
+        log_failure("openai", "chat", "missing_credential")
         raise HTTPException(status_code=500, detail="OPENAI_API_KEY is not set")
 
     payload = {
@@ -73,19 +76,24 @@ def call_openai(history: list[dict[str, str]], message: str) -> str:
         with urllib.request.urlopen(request, timeout=20) as response:
             data = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")
-        raise HTTPException(status_code=502, detail=f"OpenAI error: {detail}") from exc
+        log_failure("openai", "chat", "http", exc.code)
+        raise HTTPException(status_code=502, detail=f"OpenAI error: HTTP {exc.code}") from None
     except urllib.error.URLError as exc:
         if _is_timeout_reason(exc.reason):
-            raise HTTPException(status_code=504, detail="OpenAI request timed out") from exc
-        raise HTTPException(status_code=502, detail=f"OpenAI request failed: {exc.reason}") from exc
+            log_failure("openai", "chat", "timeout")
+            raise HTTPException(status_code=504, detail="OpenAI request timed out") from None
+        log_failure("openai", "chat", "network")
+        raise HTTPException(status_code=502, detail="OpenAI request failed") from None
     except TimeoutError as exc:
-        raise HTTPException(status_code=504, detail="OpenAI request timed out") from exc
+        log_failure("openai", "chat", "timeout")
+        raise HTTPException(status_code=504, detail="OpenAI request timed out") from None
     except JSONDecodeError as exc:
-        raise HTTPException(status_code=502, detail="OpenAI response was not valid JSON") from exc
+        log_failure("openai", "chat", "invalid_json")
+        raise HTTPException(status_code=502, detail="OpenAI response was not valid JSON") from None
 
     response_text = extract_response_text(data)
     if not response_text:
+        log_failure("openai", "chat", "missing_output")
         raise HTTPException(status_code=502, detail="OpenAI response did not include output_text")
 
     return response_text.strip()
@@ -94,6 +102,7 @@ def call_openai(history: list[dict[str, str]], message: str) -> str:
 def call_devexpert(history: list[dict[str, str]], message: str) -> str:
     api_key = os.environ.get("DEVEXPERT_API_KEY")
     if not api_key:
+        log_failure("devexpert", "chat", "missing_credential")
         raise HTTPException(status_code=500, detail="DEVEXPERT_API_KEY is not set")
 
     base_url = os.environ.get("DEVEXPERT_BASE_URL", DEVEXPERT_BASE_URL).rstrip("/")
@@ -117,19 +126,24 @@ def call_devexpert(history: list[dict[str, str]], message: str) -> str:
         with urllib.request.urlopen(request, timeout=20) as response:
             data = json.loads(response.read().decode("utf-8"))
     except urllib.error.HTTPError as exc:
-        detail = exc.read().decode("utf-8", errors="replace")
-        raise HTTPException(status_code=502, detail=f"DevExpert error: {detail}") from exc
+        log_failure("devexpert", "chat", "http", exc.code)
+        raise HTTPException(status_code=502, detail=f"DevExpert error: HTTP {exc.code}") from None
     except urllib.error.URLError as exc:
         if _is_timeout_reason(exc.reason):
-            raise HTTPException(status_code=504, detail="DevExpert request timed out") from exc
-        raise HTTPException(status_code=502, detail=f"DevExpert request failed: {exc.reason}") from exc
+            log_failure("devexpert", "chat", "timeout")
+            raise HTTPException(status_code=504, detail="DevExpert request timed out") from None
+        log_failure("devexpert", "chat", "network")
+        raise HTTPException(status_code=502, detail="DevExpert request failed") from None
     except TimeoutError as exc:
-        raise HTTPException(status_code=504, detail="DevExpert request timed out") from exc
+        log_failure("devexpert", "chat", "timeout")
+        raise HTTPException(status_code=504, detail="DevExpert request timed out") from None
     except JSONDecodeError as exc:
-        raise HTTPException(status_code=502, detail="DevExpert response was not valid JSON") from exc
+        log_failure("devexpert", "chat", "invalid_json")
+        raise HTTPException(status_code=502, detail="DevExpert response was not valid JSON") from None
 
     response_text = extract_chat_completion_text(data)
     if not response_text:
+        log_failure("devexpert", "chat", "missing_output")
         raise HTTPException(status_code=502, detail="DevExpert response did not include choices[0].message.content")
 
     return response_text.strip()

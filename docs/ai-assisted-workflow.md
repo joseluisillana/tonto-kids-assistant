@@ -285,6 +285,22 @@ The detailed project spec for this workflow is `specs/parallel-agent-workflow.md
 
 ## GitHub CLI and Issues
 
+### Secret-safe diagnostics (#110)
+
+Keep the existing `.env` and automated backend/SSH workflow. Do not capture
+expanded Compose configuration, environment dumps, raw provider errors or
+credential files for diagnosis. Cleanup uses metadata with env-file resolution
+and interpolation disabled and reports only operation/exit code. Provider
+errors expose fixed messages and upstream HTTP status, never response bodies
+or exception reasons/chains. These controls reduce accidental exposure; they
+do not deny deliberate filesystem/Docker access. See
+`specs/agent-secrets-protection.md` and its paired plan.
+
+Provider failures also emit WARNING JSON events through standard logging:
+provider, chat/stt operation, bounded failure category and optional HTTP status.
+No raw exceptions, payloads, URLs, credentials, conversations or audio are
+passed to the logger. No dedicated log files or new dependencies are introduced.
+
 Use `git` for local repository operations:
 
 - `git status --short --branch`

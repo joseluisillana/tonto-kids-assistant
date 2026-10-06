@@ -472,3 +472,13 @@ setup/tests/build/limpieza y CI63d4099 success. Integración PR #108, con #115
 ya incorporada. OK de migración en alcance acordado; sin trabajo funcional pendiente.
 Volumen #114 aplazado, secretos #110 y touch/kiosk #88 separados. mDNS requiere
 acceso IP con identidad SSH verificada en esta LAN. No se crea release/tag.
+
+## Protección de secretos — definición #110 (2026-10-06)
+
+Spec: `specs/agent-secrets-protection.md`; plan:
+`docs/plans/agent-secrets-protection-implementation-plan.md`. Operador decide
+mantener workflow y .env; variable host descartada y aislamiento diferido.
+PR 1 implementada/validada localmente: limpieza y errores/logs chat/STT seguros,
+pendiente revisión e integración. PRs siguientes: setup/tests sin claves,
+build/montajes y export NotebookLM, secuencialmente tras merge de cada entrega.
+#110 sigue abierta; sin migración de secretos ni cambios de UI táctil.
