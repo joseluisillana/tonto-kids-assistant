@@ -5,6 +5,13 @@ description: Use when working with DevExpert Inference, the OpenAI-compatible po
 
 # DevExpert Inference
 
+Before applying operating examples, read [D025](../../../docs/decisions.md#d025---devexpert-deprecado-para-la-validación-post-migración).
+DevExpert operation is deprecated: do not request credentials, run a real smoke
+or reactivate it without a new operator decision. Keep adapters/contracts covered
+with mocks. The defaults and public-doc references below preserve historical
+integration knowledge; they do not authorize live operation or assert current
+model availability. This annotation changes no runtime behavior.
+
 Use this skill when a task touches DevExpert Inference or TONTO inference provider behavior.
 
 This skill is designed for skills-compatible coding agents working in this repository. It requires internet access to verify live DevExpert docs when endpoint behavior or model availability matters.

@@ -1,5 +1,15 @@
 # TONTO Kids Assistant - Especificaciones Base
 
+## Reorganización de instrucciones de agentes — definición 2026-10-06
+
+`specs/agent-instructions-hierarchy.md` (implementada localmente; revisión e
+integración pendientes, #122) define una jerarquía
+portable de AGENTS.md con conservación atómica de reglas, fuentes canónicas
+y contexto progresivo. Plan: `docs/plans/agent-instructions-hierarchy-implementation-plan.md`.
+Raíz y diez locales proporcionan navegación; el detalle común permanece en
+docs/ai-assisted-workflow.md y la matriz de conservación en el plan.
+La reorganización posterior de Spec Driven Development queda fuera de este cambio.
+
 ## Visión General
 
 **Estado actual (2026-10-05):** el MVP está cerrado desde 2026-06-18. El trabajo

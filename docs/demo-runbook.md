@@ -1,5 +1,10 @@
 # TONTO Demo Runbook
 
+Before provider operation, apply [D025](decisions.md#d025---devexpert-deprecado-para-la-validación-post-migración):
+OpenAI is the real validated path. DevExpert examples below preserve historical
+setup and smoke knowledge, not permission to operate it. Do not request its
+credentials, run a real smoke or reactivate it without a new operator decision.
+
 **Audience:** Demo operator
 **Last Updated:** 2026-10-05
 

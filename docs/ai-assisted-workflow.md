@@ -1,29 +1,25 @@
 # AI-Assisted Workflow
 
-TONTO is both an AI product and an AI-assisted development project for the AI Expert course.
+TONTO is both an AI product and an AI-assisted development project for the AI
+Expert course. AI accelerates the work; the developer owns the decisions.
 
-The rule is simple:
+This is the canonical detailed procedure for all development agents and humans.
+Read it before any edit, formatter, generator or command that writes repository
+files. Start with [root instructions](../AGENTS.md), then read the applicable
+local AGENTS.md files and the sections triggered by the task below. No provider,
+model, IDE, extension, CLI of an agent, plugin or MCP is required to follow it.
 
-```text
-AI accelerates the work. The developer owns the decisions.
-```
+## Agent roles
 
-## Tool Roles
-
-## Codex
-
-Use Codex for project-level work:
-
-- implement focused code changes,
-- inspect the repository,
-- update documentation,
-- maintain the weekly journal,
-- reconcile docs after implementation,
-- generate test ideas and run official checks.
-
-Codex should follow the repo instructions in `AGENTS.md` and prefer the official scripts in `scripts/`.
-
-Codex can execute full repository changes, but the repository workflow is tool-agnostic. Codex-specific skills may help later, but they must not become the source of truth for project rules.
+Development agents may perform focused implementation, repository inspection,
+documentation updates, weekly journal maintenance, reconciliation after
+implementation, review, exploration, drafting, test ideas and official checks.
+Editor assistants can also help with boilerplate, small refactors, completions
+and implementation hints. All follow the same project rules, keep changes narrow
+and promote durable decisions back into repository documentation. Architecture
+decisions belong in decisions/specs, independent of which assistant helped.
+Project-level changes are allowed under the same workflow; tool-specific assets
+never become the source of truth for project rules.
 
 ## Agent Capability Pack
 
@@ -48,13 +44,6 @@ Use the pack when an agent needs to:
 
 The pack deliberately does not automate passwords, store secrets, replace human voice demo validation, or change product behavior. Machine-specific values belong in local environment variables such as `TONTO_PI_HOST`, `TONTO_PI_USER`, `TONTO_PI_SSH_KEY`, `TONTO_PI_REPO`, and `TONTO_BACKEND_URL`.
 
-Python execution for project code must stay inside the repository virtual environment:
-
-- Linux backend, tests, and setup use the official Docker commands through `./tonto.sh`.
-- Raspberry client/demo commands use `.venv/bin/python`.
-- Host `python` or `python3` may be used only to create the virtual environment or to verify that the system Python exists.
-- Agents should not run project modules with bare `python`, `python3`, `pip`, or `pytest`.
-
 ## Repo-Local Agent Skills
 
 TONTO may include repo-local Agent Skills under:
@@ -75,7 +64,15 @@ Use `.agents/skills/devexpert-inference/SKILL.md` when working with:
 - DevExpert chat, STT, TTS, embeddings, or model configuration,
 - the extra MVP line in `specs/inference-providers.md`.
 
-When an inference change touches provider behavior, agents must preserve both OpenAI and DevExpert support through focused tests or documented validation. Do not make DevExpert skill contents the only source of truth; keep the provider specs and plan updated when behavior, contracts, or validation requirements change.
+When an inference change touches provider behavior, agents must preserve both OpenAI and DevExpert support through focused tests or documented validation.
+Apply [D025](decisions.md#d025---devexpert-deprecado-para-la-validación-post-migración)
+before using any provider operating instructions: preserve both adapters with
+mock tests; do not request credentials, run a real DevExpert smoke or reactivate
+it without a new operator decision. Historical model defaults are not a live
+availability guarantee. Read SKILL.md and its public resources directly if your
+agent does not support skill discovery; no loader is required.
+Do not make DevExpert skill contents the only source of truth; keep the provider
+specs and plan updated when behavior, contracts, or validation requirements change.
 
 Use `.agents/skills/raspberry-voice-demo/SKILL.md` when operating live TONTO voice turns through the Raspberry client, including:
 
@@ -86,97 +83,6 @@ Use `.agents/skills/raspberry-voice-demo/SKILL.md` when operating live TONTO voi
 - optionally starting the web validation client if requested.
 
 The Raspberry voice demo skill is for operation only. It must not create product features, replace the demo runbook/checklist, or change repository behavior unless the user explicitly asks for documentation updates.
-
-## OpenCode
-
-OpenCode is an additional interactive CLI used for implementation,
-repository inspection, documentation updates, review, and test verification.
-
-It runs in Linux (including WSL2 when applicable).
-
-- **Provider**: DevExpert (OpenAI-compatible API).
-- **Base URL**: `https://inference.devexpert.io/v1`.
-- **Recommended model**: `deepseek-v4-flash`.
-- **Alternative model**: `deepseek-v4-pro`.
-- **Access note**: course access is active for 60 days and has a weekly limit to avoid accidental usage spikes.
-
-Codex remains the primary project assistant. OpenCode is part of the same AI-assisted tool stack and can also be used for project-level work:
-
-- implement focused code changes,
-- inspect the repository,
-- update documentation,
-- maintain the weekly journal,
-- reconcile docs after implementation,
-- generate test ideas and run official checks.
-
-OpenCode should follow the repo instructions in `AGENTS.md` and prefer the official scripts in `scripts/`, as Codex does.
-
-OpenCode can execute full repository changes when used for that work, but the repository workflow is tool-agnostic and may include more compatible tools over time.
-
-### OpenCode Configuration Reference
-
-If OpenCode needs to be reconfigured on the Windows/WSL2 development machine, the local configuration file is expected at:
-
-```text
-C:\Users\[Usuario]\.config\opencode\opencode.jsonc
-```
-
-This file is local machine configuration, not repository configuration. Never commit a real API key. Keep `apiKey` masked in documentation and examples:
-
-```jsonc
-{
-  "$schema": "https://opencode.ai/config.json",
-  "model": "DevExpert/deepseek-v4-flash",
-  "provider": {
-    "DevExpert": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "DevExpert",
-      "options": {
-        "baseURL": "https://inference.devexpert.io/v1",
-        "apiKey": "xxxxxxxxx"
-      },
-      "models": {
-        "deepseek-v4-flash": {
-          "name": "DevExpert deepseek-v4-flash",
-          "limit": {
-            "context": 200000,
-            "output": 65536
-          }
-        },
-        "deepseek-v4-pro": {
-          "name": "DevExpert deepseek-v4-pro",
-          "limit": {
-            "context": 200000,
-            "output": 65536
-          }
-        }
-      }
-    }
-  }
-}
-```
-
-## GitHub Copilot
-
-Use Copilot for local coding assistance:
-
-- boilerplate,
-- small refactors,
-- editor completions,
-- quick implementation hints.
-
-Copilot is useful inside the editor, but architectural decisions should still be reflected in `docs/decisions.md` or specs.
-
-## Cursor and Claude
-
-Cursor, Claude, or other assistants may be used for implementation help, review, exploration, or drafting.
-
-They should follow the same repository rules as Codex:
-
-- read `AGENTS.md` and the relevant docs before changing behavior,
-- keep changes narrow and aligned with the active MVP,
-- use the official scripts in `scripts/`,
-- promote durable decisions back into repository documentation.
 
 ## NotebookLM
 
@@ -189,6 +95,126 @@ Use NotebookLM to study and synthesize:
 - identify gaps in documentation.
 
 NotebookLM reads exported repository documentation. It does not replace the repository.
+
+## Development environment
+
+- Linux + Docker + Bash is the active development workflow. Do not add Windows
+  shell runtime paths or restore removed platform scripts. Keep historical
+  migration evidence as history, not as operating instructions.
+
+- Treat the host machine as clean. Do not install Python packages globally.
+- Use the official Bash scripts in `scripts/` or `tonto.sh` before inventing ad hoc setup, dev, test, or build commands.
+- Python dependencies must be installed into the repo-local `.venv/`.
+- Use `.venv/bin/python` when a direct Python command is unavoidable.
+- Run Python tests through `./tonto.sh test python` or the `.venv` Python executable, never through a global `pytest`.
+- Frontend dependencies must stay local to `web/node_modules/`.
+- Use `npm ci` or `npm install` only inside `web/`; never use `npm install -g` unless the user explicitly approves it.
+- Keep dependency caches local to `.cache/` when scripts support it; do not rely on user-profile caches such as global pip/npm caches.
+- If agent sandboxing blocks network access or writes inside `.venv/`, `web/node_modules/`, or `.cache/`, request escalation for the official script command instead of switching to global tools.
+- If the build, test, setup, or dev workflow changes, update the scripts and documentation in the same change.
+- CI, humans, and agents should share the same command surface whenever practical:
+  - `./tonto.sh setup`
+  - `./tonto.sh dev [backend|web|all]`
+  - `./tonto.sh test [python|web|all]`
+  - `./tonto.sh build [web|all]`
+
+Python execution for project code must stay inside the repository virtual environment:
+
+- Linux backend, tests, and setup use the official Docker commands through `./tonto.sh`.
+- Raspberry client/demo commands use `.venv/bin/python`.
+- Host `python` or `python3` may be used only to create the virtual environment or to verify that the system Python exists.
+- Agents should not run project modules with bare `python`, `python3`, `pip`, or `pytest`.
+
+Scope clarification from the Linux/Docker scripts: the normal host command
+surface uses the Docker-managed backend-venv volume at /app/.venv. The host
+.venv is optional IDE/direct-Python support via ./tonto.sh setup host; Raspberry
+uses its own repo-local .venv. Keep these separate. The setup/test/build task
+model excludes runtime credentials; do not introduce them into those tasks.
+Use ./tonto.sh test ui for Kivy and test all for Python + Kivy + web. Build all
+currently builds web. Read tonto.sh, docker-compose.tasks.yml and CI before
+assuming command coverage. There are no public lint/format targets to invent.
+
+
+## Coding and simplicity rules
+
+- Keep code small, direct, and easy to inspect.
+- Prefer plain Python and FastAPI patterns already present in the repo.
+- Keep the backend as a lightweight monolith for the MVP.
+- Do not add or restore Go CI checks until Go is explicitly selected for an active backend implementation.
+- Keep the Raspberry client as a simple Python process.
+- Use typed data structures where they clarify request/response contracts.
+- Use clear names over clever abstractions.
+- Handle obvious failure cases, especially backend timeouts and unavailable TTS.
+- Add or update focused tests when changing behavior.
+- Do not silently change architecture or milestone scope.
+- Do not rewrite unrelated files.
+- Do not implement future-scope features unless the user explicitly asks.
+
+### Simplicity rules
+
+- Start with the simplest end-to-end path that can work.
+- Prefer one endpoint before multiple endpoints.
+- Prefer one client loop before a framework or plugin system.
+- Prefer in-memory data before storage.
+- Prefer direct function calls before event buses, queues, or background workers.
+- Prefer explicit configuration before dynamic discovery.
+- Prefer readable scripts before complex automation.
+
+### Do not overengineer
+
+Avoid introducing:
+
+- microservices,
+- message brokers,
+- databases,
+- ORMs,
+- auth frameworks,
+- plugin systems,
+- background job systems,
+- observability stacks,
+- container orchestration,
+- complex dependency injection,
+- premature hardware abstractions,
+- production deployment machinery.
+
+These may become useful later, but they are not part of the current MVP milestone.
+
+## Approval boundaries
+
+Ask the user before introducing any new runtime or development dependency.
+
+When proposing a dependency, explain:
+
+- why it is needed now,
+- what simpler option was considered,
+- where it will be used,
+- whether it affects Raspberry Pi setup.
+
+Do not add packages just for convenience.
+
+Ask before changing architecture. Preserve existing authorization from the operator; do not silently change milestone scope.
+
+
+## Decisions and conflicts
+
+Read the existing repo context before making changes. Respect the current
+milestone and keep scope narrow. If a request conflicts with repository
+instructions, follow the user's latest explicit instruction and update the
+relevant docs when the decision is persistent. When unsure, choose the smallest
+reversible change that advances the MVP.
+
+If implementation and documentation disagree, pause the affected decision and
+make it explicit before continuing. Code is evidence, not permission to change a
+rule. Local instructions complement ancestors and do not relax global rules.
+Apply recorded current decisions to historical guidance; neither a deeper path
+nor a newer file modification date is sufficient to resolve a conflict. Session
+instructions and execution-environment permissions keep their own precedence.
+
+The root instructions intentionally do not track the active sprint or phase.
+Read roadmap, specs and the newest dated entry in project-journal before choosing
+or executing work; consult the affected contracts/plans. Preserve historical MVP
+limits while applying explicitly approved post-MVP work through its own spec.
+
 
 ## Git and PR Workflow
 
@@ -226,7 +252,10 @@ chore/update-test-script
 experiment/local-stt-spike
 ```
 
-Avoid tool-owned prefixes such as `codex/` for project branches. Branch names should describe the work, not the assistant that helped with it.
+Avoid tool-owned prefixes such as `codex/` for project branches unless the
+developer explicitly requests one. Branch names should describe the work, not
+the assistant that helped with it. Each coherent work item uses one branch and
+one focused PR, kept short-lived; related code, tests and documentation stay together.
 
 ## Parallel Agent Workflow
 
@@ -287,6 +316,8 @@ The detailed project spec for this workflow is `specs/parallel-agent-workflow.md
 
 ### Secret-safe diagnostics (#110)
 
+Never read credential files for diagnosis or capture shell traces. Use official helpers with bounded output.
+
 Keep the existing `.env` and automated backend/SSH workflow. Do not capture
 expanded Compose configuration, environment dumps, raw provider errors or
 credential files for diagnosis. Cleanup uses metadata with env-file resolution
@@ -338,6 +369,16 @@ When an issue exists, reference it from the PR body to maintain tracking. Use Gi
 
 ## Spec Handoff Workflow
 
+Always update docs/specs when decisions change. Use docs/architecture.md for
+architecture decisions, docs/roadmap.md for milestone/scope, docs/specs.md and
+specs/ for behavior/implementation, and README.md only for high-level orientation
+and setup. Include related docs/specs in the same change as behavior,
+architecture, setup, scope or workflow changes. Repo-local skills provide
+portable operating guidance, not canonical specs, plans or durable decisions.
+Read [documentation workflow](documentation-workflow.md) when updating docs,
+journal or exports; it owns the documentation routine and evidence details.
+
+
 Whenever a spec is created or materially changed, the same change should also create or update an execution plan in `docs/plans/`.
 
 A material spec change is any change to:
@@ -366,6 +407,11 @@ Execution plans should use `docs/plans/TEMPLATE-spec-implementation-plan.md` unl
 - verification commands,
 - an implementation prompt ready to paste into Codex, OpenCode, or another project assistant.
 
+Every plan also states branch name, whether a dedicated worktree is required,
+whether it can run in parallel, collision risks and integration order if related
+work merges first. Purely editorial changes may omit a plan update only when the
+summary explicitly states that no implementation behavior changed.
+
 Naming convention:
 
 ```text
@@ -381,7 +427,7 @@ docs/plans/week-03-phase-3-web-loop.md
 
 The prompt belongs inside the plan file by default. Create separate prompt files only if one spec truly needs multiple distinct implementation handoffs.
 
-Codex and OpenCode should treat this as project workflow, not as a model-specific skill. GitHub Copilot can help draft implementation details, but durable decisions and prompts must live in the repository.
+All agents should treat this as project workflow, not as a model-specific skill. Editor assistants can help draft implementation details, but durable decisions and prompts must live in the repository.
 
 ## Pre-Edit Gate for AI Assistants
 
@@ -396,7 +442,8 @@ Minimum required gate:
 5. If `main` has uncommitted changes, stop and ask before moving, stashing, committing, discarding, or editing those changes.
 6. Apply the same gate before running formatters, generators, export scripts, or other commands that write repository files.
 7. For parallel work, confirm the current checkout is the dedicated worktree for this work item.
-8. If the work item depends on a recently merged PR, update from `main` before editing.
+8. If a related PR merges while this work item is active, update from `main`
+   and reconcile conflicts before continuing, including documentation changes.
 
 ## Commit Messages
 
@@ -433,14 +480,12 @@ PRs should include:
 
 ## Weekly Routine
 
-At the end of each week:
-
-1. Review changes made during the week.
-2. Update `docs/project-journal/week-XX.md`.
-3. Update specs, roadmap, architecture, or decisions only if the project actually changed.
-4. Export sources for NotebookLM.
-5. Ask NotebookLM for a weekly summary and missing-docs checklist.
-6. Bring reviewed improvements back into the repo.
+At week end, follow [Update Routine](documentation-workflow.md#update-routine)
+and [Work Item Evidence](documentation-workflow.md#work-item-evidence): review
+the week's work, update its journal, update specs/roadmap/architecture/decisions
+only if the project changed, export sources, ask NotebookLM for a weekly summary
+and missing-docs checklist, and bring reviewed improvements back into the repo.
+NotebookLM remains optional synthesis of exported sources, never final truth.
 
 ## Evidence for the Course
 
@@ -453,3 +498,93 @@ Keep evidence of:
 - what limitations remain.
 
 The final report should explain not only what TONTO is, but how AI helped build it responsibly.
+
+## Historical tool context
+
+The following records earlier course tooling and local machine configuration,
+not requirements for a development agent or active operating instructions.
+Codex was the primary assistant; OpenCode was an additional project-level tool.
+Copilot supported editor tasks; Cursor, Claude and other assistants supported
+implementation, review, exploration and drafting under the same rules. These
+roles are preserved by the neutral Agent roles section above.
+
+Linux/Docker/Bash is now the active workflow. Do not restore removed Windows
+runtime scripts. D025 deprecates DevExpert operation: no credentials or real
+smoke without a new operator decision. The Windows path, models and access
+window below are historical references, not current availability claims.
+
+### OpenCode (historical)
+
+OpenCode is an additional interactive CLI used for implementation,
+repository inspection, documentation updates, review, and test verification.
+
+It runs in Linux (including WSL2 when applicable).
+
+- **Provider**: DevExpert (OpenAI-compatible API).
+- **Base URL**: `https://inference.devexpert.io/v1`.
+- **Recommended model**: `deepseek-v4-flash`.
+- **Alternative model**: `deepseek-v4-pro`.
+- **Access note**: course access is active for 60 days and has a weekly limit to avoid accidental usage spikes.
+
+Codex remains the primary project assistant. OpenCode is part of the same AI-assisted tool stack and can also be used for project-level work:
+
+- implement focused code changes,
+- inspect the repository,
+- update documentation,
+- maintain the weekly journal,
+- reconcile docs after implementation,
+- generate test ideas and run official checks.
+
+OpenCode should follow the repo instructions in `AGENTS.md` and prefer the official scripts in `scripts/`, as Codex does.
+
+OpenCode can execute full repository changes when used for that work, but the repository workflow is tool-agnostic and may include more compatible tools over time.
+
+### OpenCode Configuration Reference (historical)
+
+If OpenCode needs to be reconfigured on the Windows/WSL2 development machine, the local configuration file is expected at:
+
+```text
+C:\Users\[Usuario]\.config\opencode\opencode.jsonc
+```
+
+This file is local machine configuration, not repository configuration. Never commit a real API key. Keep `apiKey` masked in documentation and examples:
+
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "DevExpert/deepseek-v4-flash",
+  "provider": {
+    "DevExpert": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "DevExpert",
+      "options": {
+        "baseURL": "https://inference.devexpert.io/v1",
+        "apiKey": "xxxxxxxxx"
+      },
+      "models": {
+        "deepseek-v4-flash": {
+          "name": "DevExpert deepseek-v4-flash",
+          "limit": {
+            "context": 200000,
+            "output": 65536
+          }
+        },
+        "deepseek-v4-pro": {
+          "name": "DevExpert deepseek-v4-pro",
+          "limit": {
+            "context": 200000,
+            "output": 65536
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+
+
+The former root Tool Environment described Windows/WSL2 use with this provider
+and these same recommended/alternative models. That history is consolidated here;
+the common scripts, local dependencies, branches and scope rules now apply to all
+agents through the canonical sections above.

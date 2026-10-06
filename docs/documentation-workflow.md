@@ -83,7 +83,7 @@ Use this routine at the end of meaningful work sessions:
 
 When a phase, week, or active milestone changes, also check that agent-facing summaries did not become stale:
 
-- `AGENTS.md` should summarize the current state without replacing `docs/specs.md`, `docs/roadmap.md`, or the newest weekly journal as the source of truth.
+- `AGENTS.md` maps the architecture and mandates reading `docs/specs.md`, `docs/roadmap.md` and the newest dated journal entry. Do not copy active sprint/phase status into the map.
 - High-level summaries in `docs/architecture.md`, `docs/specs.md`, `docs/roadmap.md`, and `README.md` should not point agents toward an already completed phase.
 - This is a documentation consistency check only; it does not imply a product, architecture, or implementation change.
 
@@ -106,18 +106,11 @@ For parallel work, keep evidence attached to the branch that produced it. If mul
 
 ## Spec Handoff Routine
 
-When a spec is created or materially changed, create or update its execution plan in `docs/plans/` during the same documentation pass.
-
-Use `docs/plans/TEMPLATE-spec-implementation-plan.md` as the default structure. Each plan should include the source spec, scope, implementation outline, acceptance criteria, verification commands, and an implementation prompt ready for Codex/OpenCode.
-
-This keeps implementation handoff details in the repository instead of leaving them only in an AI chat. Purely editorial spec changes can skip a plan update when they do not change behavior, contracts, scope, validation, or acceptance criteria.
-
-Every plan should also state its workflow isolation:
-
-- branch name,
-- whether a dedicated Git worktree is required,
-- whether the work can run in parallel with other plans,
-- expected integration order if another related PR merges first.
+Before creating or materially changing a spec, follow the canonical
+[Spec Handoff Workflow](ai-assisted-workflow.md#spec-handoff-workflow), including
+the paired plan, ready-to-paste implementation prompt, editorial exception,
+naming, and workflow-isolation details required by the plan template. This
+procedure stays in the repository instead of only in a chat.
 
 ## Manual Export
 
@@ -156,4 +149,11 @@ Run this once per clone:
 ./scripts/install-git-hooks.sh
 ```
 
+The installer currently requires a clone with a `.git/` directory; do not assume it supports a linked worktree where `.git` is a file. This documents its existing limitation without changing the script.
+
 It installs a local `pre-commit` hook that regenerates NotebookLM export files before each commit.
+
+Local AGENTS.md files under backend/client/shared/scripts/tests/spikes/.agents
+are not all included by the current export source selection. Read the repository
+for the complete instruction hierarchy; do not treat NotebookLM as its loader.
+The export script and source selection are unchanged by the reorganization.

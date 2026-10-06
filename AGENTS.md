@@ -1,208 +1,136 @@
-# AGENTS.md
+# TONTO Kids Assistant — agent entry point
 
-Persistent instructions for Codex, OpenCode, and AI assistants working on TONTO Kids Assistant.
+## Before any work
 
-## Project Goal
+1. Read this file first. Before choosing or executing a work item, read
+   [roadmap](docs/roadmap.md), [specs index](docs/specs.md) and the newest dated
+   entry under [project journal](docs/project-journal/). Journal filenames alone
+   do not determine recency. These sources own milestone/sprint status.
+2. Read [AI-assisted workflow](docs/ai-assisted-workflow.md) before any edit,
+   formatter, generator or command that writes repository files. It owns the
+   detailed common rules, approvals, environment, Git, handoff and evidence.
+3. Run `git branch --show-current` and `git status --short --branch`. Do not edit
+   on `main` unless explicitly instructed. Use a project branch (`feature/`,
+   `fix/`, `docs/`, `chore/`, `experiment/`); no tool-owned prefix unless requested.
+   If main is dirty, stop and ask before moving, stashing, committing, discarding
+   or editing its changes. Parallel work requires separate branches/worktrees.
+   Follow the workflow's complete [pre-edit gate](docs/ai-assisted-workflow.md#pre-edit-gate-for-ai-assistants).
+4. Identify affected components. Read applicable local files listed below and
+   all ancestors before editing; a local complements this file without relaxing
+   global rules. For cross-component changes, read the relevant consumer and
+   dependency instructions, public contracts and key source files, then verify
+   impact and run relevant existing checks. If no local exists, use the nearest
+   ancestor and the linked sources. Do not assume automatic instruction loading.
 
-TONTO Kids Assistant is an educational physical assistant for children. The MVP goal is to validate a simple, reproducible conversation loop using accessible hardware:
+## Project overview
 
-1. A Raspberry Pi client sends a child interaction to a backend.
-2. The backend generates an educational response.
-3. The Raspberry Pi speaks the response aloud.
+TONTO is an educational physical assistant for children, optimized for a working,
+understandable, reproducible demo. A Raspberry Pi sends an interaction to a
+Python/FastAPI backend, which generates an educational response; the Raspberry
+speaks it aloud. The backend owns AI orchestration and short in-process history.
+The Raspberry is a thin client for device I/O, HTTP and local playback. The React,
+TypeScript and Vite web client validates the same HTTP/JSON contracts. Kivy touch
+UI is documented post-MVP work, not permission for broader product expansion.
 
-The project is demo-first. Prefer working, understandable prototypes over broad platform design.
+Flow: Raspberry capture or browser capture → compatible WAV → backend STT →
+conversation/provider → response → Raspberry espeak or browser native speech.
+Text `/chat` remains a fallback. No client imports the backend's orchestration.
+Go artifacts, if encountered, are legacy/evaluation, not active implementation
+or CI gates unless explicitly reactivated with updated docs/specs.
 
-For a complete autonomous prompt to rebuild this project from scratch with AI assistance, see `docs/project-genesis.md`.
+Read [architecture](docs/architecture.md) and [decisions](docs/decisions.md) for
+design context. The older architecture text contains initial Windows and shared
+model descriptions; the actual Linux/Docker command surface and source files
+below determine current implementation evidence. Do not silently resolve a
+conflict: follow [Decisions and conflicts](docs/ai-assisted-workflow.md#decisions-and-conflicts).
+The reconstruction prompt is [project genesis](docs/project-genesis.md).
 
-## Current MVP Architecture
+## Repository map and change impact
 
-- Monorepo with separate `backend/`, `client/`, `web/`, `spikes/`, `shared/`, `docs/`, `specs/`, `scripts/`, and `tests/` areas.
-- Backend for the MVP is Python with FastAPI.
-- Raspberry client is Python.
-- Communication is simple HTTP/JSON.
-- Go is not part of the active MVP implementation or CI gate. Treat any Go files as legacy/evaluation artifacts unless the user explicitly reactivates Go and updates the docs/specs.
-- The Raspberry Pi is a thin client. It handles local device I/O and audio playback, not AI orchestration.
-- The backend owns conversation orchestration and model/API integration.
-- Shared request/response contracts belong in `shared/` when needed.
-- Documentation and specs live in `docs/` and `specs/`.
+| Area / local instructions | Responsibility and relations |
+| --- | --- |
+| [backend/](backend/AGENTS.md) | FastAPI routes, provider chat/STT and in-memory history; HTTP consumed by client/web; tested in tests/ |
+| [client/](client/AGENTS.md) | Python text/voice loop, device audio and Kivy touch UI; consumes backend HTTP; launched by demo scripts/emulator; tested in tests/ |
+| [web/](web/AGENTS.md) | React validation pages, browser capture/speech and TypeScript HTTP client; consumes backend; owns web/tests |
+| [shared/](shared/AGENTS.md) | Reserved shared contracts; currently placeholder, not a runtime dependency imported by clients/backend |
+| [scripts/](scripts/AGENTS.md) | Bash operation, SSH, demos, emulator, export and syntax checks; supports runtime and CI; CLI scripts tested in tests/ |
+| [tests/](tests/AGENTS.md) | Python API/provider/client/CLI and real Kivy-widget tests; consumes implementation, not vice versa |
+| [spikes/](spikes/AGENTS.md) | Standalone Kivy exploration; not the product client or official CI suite |
+| [docs/](docs/AGENTS.md) | Architecture, decisions, workflow, journal, runbooks and execution plans |
+| [specs/](specs/AGENTS.md) | Product/workflow contracts and validation scope; no reorganization of SDD |
+| [.agents/skills/](.agents/skills/AGENTS.md) | Optional discoverable operating guidance, also readable manually; delegates to docs/scripts |
 
-## Current Implementation Milestone & Project State
+Contract changes in backend affect both clients and their tests. The authoritative
+models currently live in `backend/main.py` and `backend/audio_router.py`, with
+TypeScript counterparts in `web/src/types/conversation.ts` and `web/src/api/backendClient.ts`.
+`shared/models.py` is a placeholder; shared structures belong there when needed,
+without introducing a new contract layer as part of unrelated work.
 
-**CRITICAL MANDATE FOR AGENTS:**
-AGENTS.md does not track the current weekly sprint or active phase to avoid desynchronization. 
-Before choosing or executing ANY work item, you MUST read the following files to determine the active project state:
-1. `docs/roadmap.md` - For the current milestone status, what is completed, and overall scope.
-2. `docs/specs.md` - For active implementation constraints.
-3. The latest entry in `docs/project-journal/` (e.g., `week-06.md` or newer) - For the most immediate context of recent changes.
+## Global guardrails
 
-**Static Scope Constraints (Do not violate):**
-- Do not expose a manual WAV upload/file picker as part of the Phase 3 product/demo UI; WAV files are only acceptable as test fixtures or integration helpers.
-- Keep state in memory only if state is needed at all.
-- Optimize for clarity, debuggability, and a real demo.
+- Keep scope narrow, simple, debuggable and demo-first. Do not silently change
+  architecture/milestone scope, rewrite unrelated files or implement future
+  features without an explicit request. Apply the workflow's coding/simplicity
+  rules and handle obvious failures, especially timeouts and unavailable TTS.
+- Ask before new runtime/development dependencies or architecture changes.
+  Explain need, simpler alternative, use and Raspberry setup impact per
+  [Approval boundaries](docs/ai-assisted-workflow.md#approval-boundaries).
+- Keep state in memory only if needed. MVP exclusions remain: wake word, Arduino,
+  persistence/auth/accounts, advanced memory or multi-agent product architecture,
+  local AI/STT/audio models, advanced product UI beyond the narrow validation
+  surface, and automated audio capture/upload outside the specified web loop or
+  Raspberry work explicitly requested for the milestone. Approved post-MVP UI
+  uses its own spec; these limits do not undo existing approved implementation.
+- Never expose a manual WAV upload/file picker in the Phase 3 product/demo UI;
+  WAV fixtures/integration helpers are allowed. Do not add backend webm/ogg
+  transcoding without an explicit later decision.
+- Use official Linux/Docker/Bash commands, local dependencies/caches and the
+  environment rules in the workflow. No global packages or removed Windows
+  runtime paths. If sandboxing blocks official commands, request escalation for
+  those commands rather than switching to global tools.
+- Preserve `.env` and automated backend/SSH operation. Never read credentials
+  for diagnostics or capture expanded Compose config, environment dumps, raw
+  provider error bodies or shell traces. Use bounded official helpers. Read
+  [Secret-safe diagnostics](docs/ai-assisted-workflow.md#secret-safe-diagnostics-110)
+  and [the #110 spec](specs/agent-secrets-protection.md) before related work.
+  These controls reduce accidental exposure; they do not provide isolation.
+- Apply [D025](docs/decisions.md#d025---devexpert-deprecado-para-la-validación-post-migración)
+  before provider operation: DevExpert code/tests/history remain; no real smoke,
+  credentials request or reactivation without a new operator decision.
+- Keep behavior, tests and relevant documentation in one coherent work item.
+  Material spec changes require a paired plan and implementation prompt via
+  [Spec Handoff Workflow](docs/ai-assisted-workflow.md#spec-handoff-workflow).
+  Keep latest explicit user decisions and record persistent changes; make code/doc
+  discrepancies explicit before proceeding with the affected decision.
 
-**Explicitly out of scope for the MVP:**
-- No wake word.
-- No Arduino integration.
-- No advanced product UI beyond the web validation client and its narrow Phase 3 audio validation surface.
-- No persistence, authentication, or user accounts.
-- No advanced memory or multi-agent architecture.
-- No local AI models, local STT, or local audio models.
-- No backend transcoding of browser `webm`/`ogg` audio unless explicitly decided later.
-- No automated audio capture/upload beyond the narrow web validation loop or Raspberry client work explicitly requested for the active milestone.
+## Development workflows and testing
 
-## Coding Rules
+Run commands from the repository root; `tonto.sh` is the main entry point.
 
-- Keep code small, direct, and easy to inspect.
-- Prefer plain Python and FastAPI patterns already present in the repo.
-- Keep the backend as a lightweight monolith for the MVP.
-- Do not add or restore Go CI checks until Go is explicitly selected for an active backend implementation.
-- Keep the Raspberry client as a simple Python process.
-- Use typed data structures where they clarify request/response contracts.
-- Use clear names over clever abstractions.
-- Handle obvious failure cases, especially backend timeouts and unavailable TTS.
-- Add or update focused tests when changing behavior.
-- Do not silently change architecture or milestone scope.
-- Do not rewrite unrelated files.
-- Do not implement future-scope features unless the user explicitly asks.
+| Command | Existing purpose |
+| --- | --- |
+| `./tonto.sh setup` | Prepare Docker Python environment/dependencies and local web dependencies |
+| `./tonto.sh setup host` | Optional host .venv for IDE/direct Python; separate from Docker volume |
+| `./tonto.sh dev backend` / `dev web` / `dev all` | Run backend, web or both via runtime Compose |
+| `./tonto.sh dev ui` | Linux Kivy emulator; audible capture/playback requires host audio devices |
+| `./tonto.sh test python` | Python syntax and non-Kivy tests under tests/ |
+| `./tonto.sh test ui` | Real Kivy widgets in Docker/Xvfb, not hardware acceptance |
+| `./tonto.sh test web` | TypeScript test compilation and web/tests Node suite |
+| `./tonto.sh test all` | Python + Kivy + web checks; CI uses this |
+| `./tonto.sh build web` / `build all` | TypeScript check and Vite web build; CI uses build all |
+| `./tonto.sh down` (alias `stop`) | Project containers/networks cleanup; dependency volume preserved |
 
-## Local Environment and Automation
+CI is [.github/workflows/ci.yml](.github/workflows/ci.yml): setup, test all, build all.
+There are no public lint/format/generation targets to assume. Documentation-only
+changes need reference/meaning checks and `git diff --check`; choose behavior
+tests by the affected component. Automated tests do not establish physical voice,
+touch, kiosk or provider-real validation; use the appropriate runbook/spec.
 
-- Linux + Docker + Bash is the active development workflow. Do not add Windows
-  shell runtime paths or restore removed platform scripts. Keep historical
-  migration evidence as history, not as operating instructions.
-
-- Treat the host machine as clean. Do not install Python packages globally.
-- Use the official Bash scripts in `scripts/` or `tonto.sh` before inventing ad hoc setup, dev, test, or build commands.
-- Python dependencies must be installed into the repo-local `.venv/`.
-- Use `.venv/bin/python` when a direct Python command is unavoidable.
-- Run Python tests through `./tonto.sh test python` or the `.venv` Python executable, never through a global `pytest`.
-- Frontend dependencies must stay local to `web/node_modules/`.
-- Use `npm ci` or `npm install` only inside `web/`; never use `npm install -g` unless the user explicitly approves it.
-- Keep dependency caches local to `.cache/` when scripts support it; do not rely on user-profile caches such as global pip/npm caches.
-- If Codex or OpenCode sandboxing blocks network access or writes inside `.venv/`, `web/node_modules/`, or `.cache/`, request escalation for the official script command instead of switching to global tools.
-- If the build, test, setup, or dev workflow changes, update the scripts and documentation in the same change.
-- CI, humans, and agents should share the same command surface whenever practical:
-  - `./tonto.sh setup`
-  - `./tonto.sh dev [backend|web|all]`
-  - `./tonto.sh test [python|web|all]`
-  - `./tonto.sh build [web|all]`
-
-## Git and Contribution Workflow
-
-- Use the project branch convention `<type>/<short-kebab-description>`.
-- Use `feature/`, `fix/`, `docs/`, `chore/`, or `experiment/` as the initial branch types.
-- Prefer `docs/` for documentation-only changes.
-- Do not use tool-owned branch prefixes such as `codex/` unless the user explicitly asks for them.
-- Use one branch and one PR per coherent work item.
-- Keep work item branches short-lived and focused.
-- For parallel agent work, use one Git worktree per agent/work item. Do not run parallel agents in the same working tree or on the same branch.
-- Use `git` for local repository operations such as status, diff, branch, switch, worktree, add, commit, and log.
-- Prefer GitHub CLI (`gh`) for GitHub operations such as PR creation/view/checks/merge and issue creation/view/update.
-- For phases, parallel work, hardware validation, or multi-session work, create or reuse a GitHub Issue before implementation and reference it from the PR.
-- When creating PRs, DO NOT use auto-closing keywords (e.g., `Closes #XYZ`) for Parent/Epic issues unless ALL child issues and other un-tracked tasks within the parent are fully completed. Use `Part of #XYZ` to link without closing.
-- Use Conventional Commits when preparing commits, such as `feat:`, `fix:`, `docs:`, `chore:`, `test:`, or `refactor:`.
-- Keep PRs focused on one coherent change.
-- Include docs or specs in the same change when behavior, architecture, setup, scope, or workflow changes.
-- Follow `docs/ai-assisted-workflow.md` for the shared human and AI-assisted Git workflow.
-- When working with DevExpert Inference or inference provider behavior, use the repo-local Agent Skill at `.agents/skills/devexpert-inference/SKILL.md` if the agent supports skills; otherwise read it manually as project guidance.
-
-## Pre-Edit AI Workflow Gate
-
-Before any repository edit, agents must follow `docs/ai-assisted-workflow.md`.
-
-Minimum pre-edit gate:
-
-1. Run `git branch --show-current` and `git status --short --branch`.
-2. If the current branch is `main`, do not edit files yet. First create or switch to a project branch using `<type>/<short-kebab-description>`, unless the user explicitly says to work on `main`.
-3. Use `docs/` for documentation-only work, `fix/` for bug fixes, `feature/` for new behavior, `chore/` for maintenance, and `experiment/` for exploratory work.
-4. Do not use tool-owned prefixes such as `codex/` unless the user explicitly asks for them.
-5. If `main` has uncommitted changes, stop and ask before moving, stashing, committing, discarding, or editing those changes.
-6. Apply the same gate before running formatters, generators, export scripts, or other commands that write repository files.
-7. If another agent is working in parallel, create or use a separate Git worktree for this work item before editing.
-8. If a related PR merges while this work item is still active, update from `main` and reconcile conflicts before continuing.
-
-## Simplicity Rules
-
-- Start with the simplest end-to-end path that can work.
-- Prefer one endpoint before multiple endpoints.
-- Prefer one client loop before a framework or plugin system.
-- Prefer in-memory data before storage.
-- Prefer direct function calls before event buses, queues, or background workers.
-- Prefer explicit configuration before dynamic discovery.
-- Prefer readable scripts before complex automation.
-
-## Do Not Overengineer
-
-Avoid introducing:
-
-- microservices,
-- message brokers,
-- databases,
-- ORMs,
-- auth frameworks,
-- plugin systems,
-- background job systems,
-- observability stacks,
-- container orchestration,
-- complex dependency injection,
-- premature hardware abstractions,
-- production deployment machinery.
-
-These may become useful later, but they are not part of the current MVP milestone.
-
-## Dependencies
-
-Ask the user before introducing any new runtime or development dependency.
-
-When proposing a dependency, explain:
-
-- why it is needed now,
-- what simpler option was considered,
-- where it will be used,
-- whether it affects Raspberry Pi setup.
-
-Do not add packages just for convenience.
-
-## Documentation and Specs
-
-Always update docs or specs when decisions change.
-
-Use:
-
-- `docs/architecture.md` for architecture decisions,
-- `docs/roadmap.md` for milestone or scope changes,
-- `docs/specs.md` or files in `specs/` for behavior and implementation specs,
-- `README.md` only for high-level project orientation and setup guidance.
-
-When a spec is created or materially changed, also create or update its execution plan in `docs/plans/`. A material spec change is any change to behavior, scope, contracts, architecture, validation, or acceptance criteria. The plan must include an implementation prompt ready for Codex/OpenCode handoff. Purely editorial spec changes may skip a new plan, but the change summary must say that no implementation behavior changed.
-
-Repo-local Agent Skills live under `.agents/skills/`. They can provide portable operating guidance for skills-compatible agents, but they must not replace specs, plans, or project docs as the canonical source of truth.
-
-If implementation and documentation disagree, pause and make the decision explicit before continuing.
-
-## Assistant Behavior
-
-- Secret diagnostics (#110): keep the current `.env` and automated backend/SSH
-  workflow. Never read credential files or capture expanded Compose configs,
-  environment dumps, raw provider error bodies or shell traces for diagnosis.
-  Use official helpers with bounded output. Cleanup metadata disables env-file
-  resolution and interpolation; provider failures return fixed messages and
-  HTTP status. These reduce accidental exposure, not deliberate agent access.
-  See `specs/agent-secrets-protection.md` and its paired plan.
-
-- Read the existing repo context before making changes.
-- Respect the current milestone and keep scope narrow.
-- Ask before adding dependencies or changing architecture.
-- If a request conflicts with this file, follow the user's latest explicit instruction and update this file or the relevant docs if the decision is persistent.
-- When unsure, choose the smallest reversible change that advances the MVP.
-
-## Tool Environment
-
-OpenCode runs on Windows through WSL2 with the DevExpert provider
-(OpenAI-compatible API) at `https://inference.devexpert.io/v1`.
-
-Use `deepseek-v4-flash` as the recommended model and `deepseek-v4-pro`
-as the alternative model. OpenCode follows the same repository rules as
-Codex: use official scripts, keep dependencies local, stay on project
-branches, and do not change architecture or milestone scope without an
-explicit decision.
+Before operating backend/Raspberry, read the workflow's
+[Agent Capability Pack](docs/ai-assisted-workflow.md#agent-capability-pack).
+It routes to official lifecycle/SSH/demo helpers, runbook and checklist.
+Before exports/documentation routines, read [documentation workflow](docs/documentation-workflow.md).
+For provider changes or live voice turns, read the matching
+[repo-local skill and resources](docs/ai-assisted-workflow.md#repo-local-agent-skills)
+manually if necessary. No provider or skill-loading mechanism is required for
+the development agent itself.

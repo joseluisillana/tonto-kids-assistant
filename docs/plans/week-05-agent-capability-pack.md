@@ -1,5 +1,12 @@
 # Week 05 Agent Capability Pack Implementation Plan
 
+The plan below preserves the original Windows implementation handoff. Do not
+execute it as a new implementation request or restore its removed PowerShell
+scripts. Current Linux/Docker operation follows
+[the workflow](../ai-assisted-workflow.md#agent-capability-pack) and
+[script context](../../scripts/AGENTS.md). This editorial navigation correction
+changes no implementation behavior; the historical spec/plan remain together.
+
 **Status:** Implemented
 **Tracking:** GitHub issue #43
 
