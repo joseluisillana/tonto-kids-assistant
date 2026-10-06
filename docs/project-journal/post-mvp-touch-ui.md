@@ -476,3 +476,22 @@ Commit de migración `4c765ea`; hook de export existente aprobado. Rama publicad
 y PR #125 abierta con evidencia/criterios de conservación. Índices/journals
 canónicos enlazan la revisión; CI e integración pendientes. Issues de GitHub
 sin modificaciones y checkout limpio después de registrar esta referencia.
+
+### 2026-10-06 — ampliación: retirar estructura antigua con impacto explícito
+
+Operador amplía la misma spec 001: eliminar también los directorios/archivos
+antiguos, garantizando conservación e informando de enlaces afectados para decidir.
+El plan añade retirada de 67 candidatos: 64 referencias de transición y tres
+archivos con información propia que deben conservarse primero en ai/. Se mantienen
+journals, imágenes, arquitectura/runbooks y docs/specs.md como fuentes compartidas.
+
+Informe cleanup-impact.md: seis URLs a main se romperían al retirar las rutas,
+cuatro en #81 activa y dos en #89 cerrada. Dos enlaces a SHA fijo permanecen
+válidos. Dos enlaces locales y 29 related de procedencia se pueden reparar antes;
+#114 contiene dos rutas textuales antiguas de navegación manual. Escaneo público:
+48 bodies de issues, 77 de PRs y 29 comentarios; sin revisiones/inline comments.
+Referencias externas no accesibles (bookmarks/chats/copias) no se pueden enumerar.
+
+Export aislado con fuentes públicas y sin specs/ pasa usando el script existente;
+sigue sin incluir ai/. No se eliminan archivos ni se editan mensajes/estados de
+GitHub en esta ampliación: decisión sobre impacto/tratamiento pendiente del operador.

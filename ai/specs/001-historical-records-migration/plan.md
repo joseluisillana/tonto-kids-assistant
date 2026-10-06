@@ -10,6 +10,10 @@ Inventory and mapping are prepared. This plan defines the remaining migration;
 it does not authorize implementation of historical product backlog. The operator
 requested planning first, then explicitly requested implementation (see journal).
 Execute within that authorization, without asking again for decisions already made.
+The operator now adds final retirement of the old structure. Temporary transition
+paths used during batches A–E do not form the final accepted layout. Stage 4 below
+reports link impact and waits for the operator's external-reference decision;
+this scope/plan extension does not itself delete files or edit remote messages.
 
 ## Included and excluded scope
 
@@ -18,13 +22,16 @@ with five validation/evidence artifacts, their mapped plans/prompts and relevant
 auxiliary design/backlog docs. Preserve references to eight shared journals and
 five existing visual assets, and repair affected consumers and old paths.
 The current map covers 33 specs/ artifacts and 28 docs/plans/ files; two plan
-files stay at their current locations as documented. Reconcile counts against
-actual source/index state before assigning IDs.
+files were retained during migration. Preserve those files and specs/AGENTS.md
+at the proposed ai/ destinations in cleanup-impact.md before final retirement.
+Reconcile counts against actual source/index state before assigning IDs.
 
 GitHub issues remain defined, operated and retained in GitHub. Consult relevant
 bodies/comments/PRs only to verify associations and evidence. Preserve full
 corresponding issue URLs in each migrated local record's `related`. No remote
-issue import, local mirrors, remote lifecycle synchronization or GitHub edits.
+issue import, local mirrors or remote lifecycle synchronization. Remote link-only
+corrections are conditional on specific operator authorization after the impact
+report; issue statuses and historical checklists remain outside scope.
 Exclude product changes, historical backlog implementation, runtime/provider/
 hardware operation, dependencies, CI and export scripts. Preserve original language.
 
@@ -86,10 +93,9 @@ For each batch:
    definition/comments/status are copied to create a separate GitHub mirror.
 6. Write one index row per migrated record, with matching ID/title/status/updated;
    retain the row thereafter. Change status and index in the same change.
-7. Keep the legacy Markdown path as a concise transition pointer to the canonical
-   destination. Preserve historical externally referenced heading fragments where
-   needed, or route them to equivalent destination sections. Historical GitHub
-   blob links must remain usable without editing remote issue bodies.
+7. During these migration batches, retain legacy paths and heading fragments as
+   temporary transition pointers. Final removal is stage 4, after content and
+   external-reference decisions; do not interpret these pointers as permanent.
 8. Verify source coverage, content conservation, links, metadata and relationships
    for that batch before proceeding. Record results and exceptions in journal.md.
 
@@ -103,8 +109,9 @@ remaining legacy sources until their owning batch is complete.
   canonical paths; roadmap/milestone and product statuses change only if actual
   migration provenance warrants a factual correction, not due to relocation.
 - Keep shared journals, decisions, architecture, runbooks, setup/report documents,
-  visual assets, legacy plan template and phase-1 instrumentation evidence at their
-  mapped canonical locations. They reference record sources instead of duplicates.
+  visual assets at their shared canonical locations. Relocate the legacy plan
+  template and phase-1 instrumentation evidence into this spec's artifacts at
+  stage 4, preserving their information and labelling the old template historical.
 - Inspect Markdown references in component instructions and operational skills
   without rewriting their architecture/operating rules. Repair only links made
   stale by this migration. Retained transition pointers support external consumers.
@@ -116,7 +123,74 @@ remaining legacy sources until their owning batch is complete.
 Gate: every local source has one canonical owner, consumers resolve to that owner,
 and remaining transition pointers do not contain competing editable definitions.
 
-### 4. Final review, evidence and integration
+### 4. Retire legacy structure with preservation and link-impact decision
+
+#### 4.1 Prepare a concrete deletion and impact manifest
+
+- Use cleanup-impact.md: 64 migrated transition documents plus three remaining
+  structural files (67 candidates). Verify the list against the source ledger and
+  current tree; do not recursively delete directories or unknown files.
+- Distinguish active file links/YAML related entries from attributed historical
+  path mentions. Scan local docs/instructions, scripts/tests and public GitHub
+  bodies/comments/reviews. Record scan boundaries and unknown external bookmarks.
+- Report each main-branch URL that would fail, its source, impact and canonical
+  or immutable replacement. Fixed-SHA links and PR diffs preserve Git history.
+- Current report: six affected main URLs in #81 (four, active) and #89 (two,
+  closed); two fixed-SHA links stay valid. #114 retains two plain source paths
+  used for manual navigation, requiring separate operator consideration.
+- Two local Markdown links and 29 related source entries can be repaired within
+  this change. Review 325 literal old-path lines as history versus live guidance;
+  do not erase provenance to make a search count zero.
+
+Gate: present the impact report and record the operator's chosen treatment.
+Do not remove affected files or edit remote issue/comment bodies before that
+decision. Migration authorization does not select a link-breakage policy.
+
+#### 4.2 Preserve remaining unique information and repair references
+
+- Move specs/AGENTS.md instructions to ai/specs/AGENTS.md with correct ancestors,
+  scope/navigation and mandatory current planning rules. Preserve all operating,
+  acceptance and safety rules; reconcile obsolete placement guidance explicitly.
+- Preserve docs/plans/TEMPLATE-spec-implementation-plan.md as a labelled legacy
+  template artifact and docs/plans/ai-process-instrumentation-plan.md as phase-1
+  evidence in this spec's artifacts. No additional spec/issue records are needed.
+- Extend the hash/provenance ledger to all three sources. Verify existing bodies,
+  assets/trios against the original 64-source ledger, including the documented
+  narrow path/whitespace normalization, before retiring any aliases.
+- Update active local references to canonical targets. Replace deleted-source
+  related provenance with full immutable URLs under original baseline
+  818e88eacbac3989c091d1294c92e26ebeb663f7, preserving original fragments.
+- Apply only specifically authorized external corrections, or record explicitly
+  accepted external failures and recovery URLs. Keep GitHub issues remote and
+  do not change their state/checklists or mirror their content.
+- Preserve literal historical paths only as attributed evidence with canonical/
+  immutable lookup. Shared journals/images/context remain at their sources.
+
+Gate: all 67 sources have preserved information, all internal active references
+resolve, and each known external effect has an explicit approved treatment.
+
+#### 4.3 Remove verified files and validate final layout
+
+- Remove only the enumerated tracked legacy candidates. specs/, docs/plans/ and
+  docs/issues/ disappear from the tracked tree, along with the four standalone
+  legacy artifact aliases under docs/. Remove working directories only if empty;
+  leave unrelated/untracked content untouched and report it.
+- Keep docs/specs.md as milestone/overview context, not a duplicate registry.
+  Update root/common/local navigation and ai/ notes; no compatibility files or
+  competing legacy source-of-truth for migrated records remain at final acceptance.
+- Rescan files/images/headings, related entries and live operating references;
+  compare retained information/criteria/prompts with immutable history and hashes.
+- Check the unchanged exporter in an isolated public-doc fixture without specs/.
+  It currently succeeds in that scenario but still excludes ai/ and loses the old
+  exported transition pointers. Report this limit without expanding script scope
+  or claiming canonical export coverage; changing coverage needs a separate decision.
+- Record removed files, preserved remaining artifacts, corrected/accepted broken
+  links and recovery references in journals and PR evidence.
+
+Gate: no information loss, no internal dangling references, no tracked legacy
+structure, and external effects handled according to the recorded operator choice.
+
+### 5. Final review, evidence and integration
 
 - Run the complete preservation/link/metadata checks below and inspect final diff.
 - Record batch coverage and unresolved exceptions in this spec journal, with
@@ -133,6 +207,9 @@ and remaining transition pointers do not contain competing editable definitions.
 New canonical destinations and artifact owners are listed in migration-map.md.
 Affected trees: ai/specs/, ai/issues/, legacy specs/, docs/plans/, docs/issues/,
 plus docs/specs.md, shared journal and narrowly affected Markdown references.
+Retirement also preserves three structural files in their proposed ai/ destinations,
+removes four standalone aliases under docs/, and fixes provenance/navigation.
+Read-only cleanup-impact.md contains the exact list and external decision boundary.
 No new runtime/development dependencies, tooling or permanent validators needed.
 Use existing Git/gh and local tools for bounded checks; public GitHub read access
 may require the execution environment's normal approval. No credentials are read.
@@ -150,9 +227,13 @@ may require the execution environment's normal approval. No credentials are read
   Original acceptance criteria, exclusions and historical evidence must remain.
 - Dates/authorship: source attribution and unknown values are explicit; migration
   date does not replace original creation dates; retrospective plans labelled.
-- Links: check new/legacy relative paths, images, heading fragments, shared-plan
-  consumers and corresponding full GitHub URLs. Confirm GitHub issue identity
-  and source association, not merely URL format. Do not require one-to-one mapping.
+- Links: check canonical relative paths, images, heading fragments, shared-plan
+  consumers and full GitHub URLs. At final retirement, legacy paths must not be
+  internal link/related targets. Confirm issue identity and source association;
+  external failures require an explicit operator treatment from the impact report.
+- Retirement: verify 67 sources against preservation evidence, preserving the
+  three remaining structural files first. Assert no tracked legacy directories/
+  aliases, no deleted canonical data and no history rewrite.
 - Scope: no runtime/dependency/CI/export-script changes, remote mutations, provider
   operation, hardware validation or implementation of pending #53/#81/#88/#114.
 - Commands: `git diff --check`, `git status --short --branch`, diff/content review
@@ -176,11 +257,16 @@ Implement spec.md using this plan and migration-map.md after execution is reques
 Read all three record files, root/common and affected local instructions. Verify
 branch/status and original baseline; preserve current user-approved planning work.
 Resolve metadata/evidence, then execute batches A–E serially with their gates.
+Those batches are now implemented. Extend execution through retirement stage 4:
+present cleanup-impact.md, record the operator's link-treatment choice, preserve
+all 67 source files' information, then remove only the verified legacy candidates.
 Migrate only repository-defined records; GitHub issues stay in GitHub and local
 records retain verified full tracking URLs in related. Preserve original content,
 language, dates, authorship, evidence, plans/prompts and shared ownership; label
-retrospective plans and unknowns. Keep navigable legacy paths, update indexes and
-consumer references, and do not change product scope or operate providers/hardware.
+retrospective plans and unknowns. Legacy navigation pointers are temporary, not
+the final layout. Repair local references and use immutable Git provenance before
+retirement; remote reference edits require specific authorization from the report.
+Update indexes/consumers and do not change product scope or operate providers/hardware.
 Run the checks above, record real results/exceptions, and prepare reviewable PR(s).
 Do not mark done or close a remote issue merely because files were relocated.
 

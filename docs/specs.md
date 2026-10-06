@@ -18,6 +18,11 @@ Decisión del operador: las issues de GitHub permanecen definidas y gestionadas
 en GitHub. Solo migran registros locales existentes, conservando URLs correctas
 a sus issues de tracking en `related`; no se crean espejos de las issues remotas.
 
+Ampliación del operador: retirar también la estructura antigua. El
+[informe de impacto](../ai/specs/001-historical-records-migration/cleanup-impact.md)
+enumera 67 candidatos y los enlaces afectados. La retirada y las correcciones
+externas esperan su decisión; la conservación de todos los contenidos es obligatoria.
+
 
 ## Reorganización de instrucciones de agentes — definición 2026-10-06
 

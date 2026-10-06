@@ -54,6 +54,10 @@ editable competing definitions. Update the canonical ai/ destination.
 The [project overview](../docs/specs.md), shared [journals](../docs/project-journal/),
 architecture, decisions, operating guides and visual assets keep their sources.
 The legacy plan template and phase-1 instrumentation plan remain in docs/plans/.
+These remaining structural files and legacy transition paths are temporary: the
+operator extended migration spec 001 to retire them after preservation and an
+explicit decision on [external link impact](specs/001-historical-records-migration/cleanup-impact.md).
+No cleanup deletion has been performed at this planning stage.
 
 Every migrated record has one canonical destination. Preserve provenance,
 original links and shared artifacts; migration must not invent dates, prior plans,

@@ -8,6 +8,7 @@ updated: "2026-10-06"
 related:
   - "ai/specs/001-historical-records-migration/plan.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
+  - "ai/specs/001-historical-records-migration/cleanup-impact.md"
   - "ai/specs/001-historical-records-migration/migration-map.md"
   - "docs/specs.md"
   - "docs/project-journal/post-mvp-touch-ui.md"
@@ -27,8 +28,9 @@ the operator explicitly excludes importing or mirroring them as local records.
 
 ## Objective
 
-Prepare a complete source/destination map, then migrate historical records
-with traceable identity, evidence, dates and relationships.
+Migrate historical local records and retire the old structure with traceable
+identity, content, evidence, dates and relationships. Report external link
+breakage and obtain the operator's decision before removing affected paths.
 
 ## Included scope
 
@@ -38,11 +40,21 @@ reviewable mapping precede any relocation. Inventory, reference mapping and
 execution plan are prepared. The operator requested plan execution; relocation
 now follows its batches and verification gates.
 
+The operator extends this same spec on 2026-10-06 to remove the legacy structure,
+including temporary transition documents. Preserve unique information from
+specs/AGENTS.md and the two remaining docs/plans/ files in ai/ before retiring
+specs/, docs/plans/, docs/issues/ and the mapped standalone artifact aliases.
+Shared journals, images and operating/architecture docs remain canonical.
+Physical retirement also removes active dependencies on old paths; historical
+path names may remain as attributed provenance with immutable Git recovery URLs.
+See cleanup-impact.md for the exact candidates and affected external links.
+
 ## Excluded scope
 
 Product behavior, new dependencies, CI/export scripts, runtime/provider/hardware
-operation, relocation/mirroring of GitHub issues and changes to their bodies,
-relationships or status.
+operation, relocation/mirroring of GitHub issues and changes to their relationships
+or status. Remote issue bodies/comments remain unchanged unless the operator
+explicitly authorizes the exact link-only corrections listed in cleanup-impact.md.
 Do not rewrite original historical language or erase historical decisions.
 
 ## Acceptance criteria
@@ -56,7 +68,15 @@ Do not rewrite original historical language or erase historical decisions.
 - Retrospective plans are labelled; migration dates are separate from original dates.
 - Status mapping uses evidence and records conflicts; no completion inferred from age/code.
 - Migrated records have definition, plan, journal and synchronized index entries.
-- Existing links remain navigable and shared artifacts keep one canonical source.
+- Internal links and related entries resolve to canonical files or immutable
+  source history, with no active references to deleted legacy paths.
+- External links that would stop resolving are individually reported with source,
+  impact and replacement; retirement waits for the operator's explicit policy decision.
+- Every retired source is covered by preserved canonical content/provenance and
+  the source hash ledger; preserve the three remaining structural files first.
+- The tracked tree has no specs/, docs/plans/, docs/issues/ or mapped standalone
+  aliases after cleanup. Do not delete unrelated or untracked content.
+- Shared artifacts keep one canonical source; Git history is not rewritten.
 - Coverage, relationships, links and content preservation are checked before completion.
 
 ## Security considerations
@@ -69,7 +89,9 @@ do not read credential files. Preserve existing protection and D025 decisions.
 
 Stale body statuses versus merged PRs; closed issues with unchecked historical
 checkboxes; abandoned/superseded specs; missing prior plans; shared evidence;
-GitHub evidence needed to verify local references or resolve local status conflicts.
+GitHub evidence needed to verify local references or resolve local status conflicts;
+old main-branch document links can fail despite retained Git history; exported
+NotebookLM sources still exclude ai/. Unknown external bookmarks cannot be enumerated.
 These require explicit provenance and review rather than silent reinterpretation.
 
 Plan before implementation; maintain journal.md. Every status change updates
