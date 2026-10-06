@@ -170,6 +170,10 @@ y producción cero, tests/build pasan; ver registro de validación para CI.
 
 ## Workflow de Desarrollo Asistido por IA
 
+- `specs/agent-secrets-protection.md`: primera reparación autorizada de #110:
+  diagnósticos de limpieza y errores chat/STT acotados. Mantener .env y workflow;
+  aislamiento diferido. Plan: `docs/plans/agent-secrets-protection-implementation-plan.md`.
+
 - `specs/parallel-agent-workflow.md`: define el patrón de trabajo por unidad coherente, rama corta, PR pequeña y worktree dedicado cuando hay agentes o tareas en paralelo.
 - `docs/plans/parallel-agent-workflow.md`: plan de implementación documental de ese workflow.
 - `specs/kivy-ui-docker-emulation.md`: Emulación en Docker de la Interfaz Táctil (Implemented).

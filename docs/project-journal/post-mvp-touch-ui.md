@@ -155,3 +155,78 @@ roadmap y resumen vigente estabilizados: COMPLETADOS, sin pendientes funcionales
 ni referencias vigentes a #115 como borrador. CI63d4099 success; confirmar
 checks del commit documental de metadatos antes de merge. Cerrar #107 después
 de integración, mantener #81/#88/#110/#114 abiertas. Sin cambios de comportamiento.
+
+## 2026-10-06 — Definición inicial de spec #110
+
+Revisados issue original, estado y main `a985dac`, que integra #108.
+Rama `docs/issue-110-secrets-spec` desde main limpio. Spec
+`specs/agent-secrets-protection.md` y plan emparejado en DRAFT: matriz de
+operaciones, superficies actuales, canarios y aceptación por perfil.
+Se distingue endurecimiento del repo de aislamiento efectivo del agente.
+Decisiones de aislamiento/consumo/mediación Docker y SSH pendientes de revisión.
+Inspección de código y documentación públicos sin leer secretos ni ejecutar
+configuración expandida. Sin cambios de runtime ni dependencias.
+
+### #110 — propuesta concreta de aislamiento
+
+Preparado `docs/agent-secrets-isolation-design.md`: evaluación preliminar del
+perfil suministrado a la sesión y CLI Codex 0.160.0, con documentación oficial.
+Lectura del host y accesos Docker persistentes impiden acreditar aislamiento.
+OpenCode no encontrado en PATH; otros canales pendientes de pruebas.
+Recomendación pendiente de decisión: entorno de desarrollo sin secretos y
+runtime/SSH operados por humano, usando copia revisada no modificable por agente.
+Spec/plan amplían la amenaza a código y dependencias del runtime. No se cambian
+permisos, secretos ni scripts, y no se ejecutan pruebas contra secretos reales.
+
+### #110 — alcance elegido: exposiciones accidentales
+
+El operador prefiere mantener automatización actual. Aislamiento y operación
+solo humana quedan diferidos; spec/plan registran precedencia de esta decisión.
+Exploradas variables host, env_file externo y secretos Compose por archivo con
+fuentes Docker oficiales en `docs/agent-secrets-credential-options.md`.
+Backend ya consulta entorno: Docker requiere suministrarlo explícitamente.
+Ninguna opción elegida ni aplicada; no se leen ni modifican secretos reales.
+
+### #110 — reparación de diagnósticos autorizada y validada
+
+Operador descarta variable host y autoriza corregir diagnósticos conservando .env
+y workflow. Rama `fix/issue-110-safe-diagnostics`, con borradores previos de esta
+conversación conservados. Limpieza usa config sin resolución env_file ni
+interpolación antes de seleccionar nombre; no captura modelo expandido, suprime
+salidas Docker crudas y mantiene exit codes/residuales/volúmenes. Chat/STT no
+leen cuerpos HTTP fallidos ni reflejan razones de red/configuración; suprimen
+cadenas de excepción y mantienen estados HTTP y contratos de éxito.
+
+Validación: `./tonto.sh test python` con override temporal que elimina env_file
+del backend de tests: **135 passed**, sintaxis Python correcta; warning existente
+Starlette/httpx. Primera pasada detectó fixture multipart incompleto (8 fallos),
+corregido; segunda pasada completa pasa. Tests nuevos: 7 cleanup + 18 proveedores,
+incluyendo endpoints y trazas con canarios ficticios. Compose real con fixtures:
+sin canario expandido y nombre desde .env/override preservado, 2 casos pasan.
+`bash -n tonto.sh` y `git diff --check` pasan. Sin lectura/modificación de secretos,
+llamadas reales ni dependencias nuevas. No se revalida teardown físico ni voz;
+la consulta Compose real sí se valida, teardown usa stubs. #110 sigue abierta:
+otros diagnósticos/logs, build/export y tareas sin secretos quedan de seguimiento.
+
+### #110 — complemento de logs seguros
+
+Operador propone logs con información sensible ofuscada. Se implementa
+minimización previa: helper `backend/provider_diagnostics.py` con logging
+WARNING y JSON acotado a proveedor, operación, categoría y HTTP status validado.
+No acepta body/excepción/URL/headers/clave ni conversación/audio; no hashes ni
+prefijos de claves, no exc_info/stack_info y sin archivos/dependencias nuevos.
+Integrado en fallos chat/STT de ambos adaptadores, incluida configuración y
+credencial ausente. Spec/plan/workflow actualizados.
+Suite oficial Python en Docker con override sin env_file: **136 passed**,
+sintaxis Python y diff check pasan; warning Starlette/httpx previo. caplog
+verifica canarios, campos y ausencia de trazas en registros de errores; sin
+credenciales ni llamadas reales. No afirma sanitización de logs ajenos.
+
+### #110 — preparación de primera PR
+
+Operador autoriza preparar commit/PR del trabajo actual. Secuencia acordada
+registrada en spec/plan: PR 1 diagnósticos; PR 2 setup/tests sin credenciales;
+PR 3 builds/montajes; PR 4 export NotebookLM. Las fases futuras no se implementan
+en esta entrega; #110 queda abierta. Roadmap reconciliado con decisión vigente.
+Validación local vigente: 136 Python, consulta Compose ficticia, sintaxis y diff
+check; sin revalidación de voz o teardown real. Mantener estos límites en la PR.

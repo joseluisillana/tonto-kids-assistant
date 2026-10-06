@@ -15,6 +15,10 @@ Rama fix/docker-cleanup; depende de PR documental #108, sin agentes paralelos.
 
 ## Verificación y aceptación
 
+Actualización #110: consultar metadatos con --no-env-resolution y
+--no-interpolate; propagar exit codes con mensajes acotados y sin salida Docker
+cruda. Tests con canarios en stdout/stderr, además de alias y residuales.
+
 Sintaxis Bash y diff check. Stub temporal: residuales y errores producen exit
 no cero; comprobar proyecto personalizado y alias. Integración real: dev all
 + one-off activo + contenedor ajeno; down elimina solo TONTO, conserva

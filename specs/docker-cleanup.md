@@ -19,5 +19,14 @@ contenedor ajeno intacto; dependencias conservadas; alias e idempotencia pasan;
 residual simulado devuelve error; arranque y tests siguen funcionando.
 Actualizar puntos 2/4/6 conservando histórico.
 
+## Diagnósticos seguros — #110, 2026-10-06
+
+La consulta de metadatos desactiva resolución de env_file e interpolación antes
+de seleccionar el nombre; no captura configuración expandida. Aún genera un
+modelo estructural interno: no introducir secretos literales en YAML.
+No devolver stdout/stderr crudos de Docker al operador/agente. Fallos reportan
+operación y exit code; residuales se notifican sin volcado de IDs. Se conserva
+la resolución de proyecto de Compose y sus overrides. Sin cambios de .env.
+
 Fuera de alcance: TTS, URL UI, setup, caches, mDNS, UI física y dependencias nuevas.
 Plan: docs/plans/docker-cleanup-implementation-plan.md.

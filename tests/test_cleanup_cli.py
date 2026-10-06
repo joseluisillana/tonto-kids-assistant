@@ -18,15 +18,20 @@ def cleanup_cli(tmp_path):
 printf '%s\\n' "$*" >> "$FAKE_DOCKER_LOG"
 case "$1 $2" in
   'compose config')
+    if [[ "$*" != 'compose config --no-env-resolution --no-interpolate --format json' ]]; then
+      echo "$FAKE_SECRET"; exit 27
+    fi
+    echo "$FAKE_SECRET" >&2
     [ "$FAKE_FAILURE" = config ] && exit 23
     if [ "$FAKE_FAILURE" = name ]; then echo '{}'; else
       printf '{\\n  "name": "%s",\\n  "services": {}\\n}\\n' "$COMPOSE_PROJECT_NAME"
     fi ;;
-  'compose down') [ "$FAKE_FAILURE" != down ] || exit 24 ;;
+  'compose down') echo "$FAKE_SECRET"; echo "$FAKE_SECRET" >&2; [ "$FAKE_FAILURE" != down ] || exit 24 ;;
   'ps -aq')
+    echo "$FAKE_SECRET" >&2
     [ "$FAKE_FAILURE" = query ] && exit 25
     [ "$FAKE_FAILURE" != container ] || echo leftover-container ;;
-  'network ls') [ "$FAKE_FAILURE" != network ] || echo leftover-network ;;
+  'network ls') echo "$FAKE_SECRET" >&2; [ "$FAKE_FAILURE" != network ] || echo leftover-network ;;
   *) exit 26 ;;
 esac
 exit 0
@@ -44,6 +49,7 @@ exit 0
                 "PATH": f"{tmp_path}:{os.environ['PATH']}",
                 "FAKE_DOCKER_LOG": str(log),
                 "FAKE_FAILURE": failure,
+                "FAKE_SECRET": "invented-diagnostic-canary",
                 "COMPOSE_PROJECT_NAME": "custom-cleanup-project",
             },
             capture_output=True,
@@ -70,7 +76,7 @@ def test_cleanup_limits_scope_and_preserves_volumes(cleanup_cli, action):
 def test_cleanup_reports_remaining_resources(cleanup_cli, failure):
     result, _ = cleanup_cli(failure)
     assert result.returncode != 0
-    assert f"leftover-{failure}" in result.stderr
+    assert "Cleanup incomplete" in result.stderr
     assert "Dependency volumes preserved" not in result.stdout
 
 
@@ -85,3 +91,11 @@ def test_cleanup_refuses_unknown_project(cleanup_cli):
     assert result.returncode != 0
     assert "Could not determine" in result.stderr
     assert "compose down" not in calls
+
+
+@pytest.mark.parametrize("failure", ["", "config", "name", "down", "query", "container", "network"])
+def test_cleanup_does_not_return_raw_diagnostics(cleanup_cli, failure):
+    result, calls = cleanup_cli(failure)
+    if "invented-diagnostic-canary" in result.stdout + result.stderr + calls:
+        pytest.fail("Cleanup exposed a diagnostic canary", pytrace=False)
+    assert "compose config --no-env-resolution --no-interpolate --format json\n" in calls

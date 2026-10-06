@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+set -o pipefail
 export DOCKER_UID=$(id -u)
 export DOCKER_GID=$(id -g)
 
@@ -79,21 +80,38 @@ case "$COMMAND" in
     ;;
     
   down|stop)
-    # Never print the full configuration: it may contain credentials from .env.
-    compose_config=$(docker compose config --format json)
-    project_name=$(sed -n 's/^  "name": "\([^"]*\)",\{0,1\}$/\1/p' <<< "$compose_config")
-    if [ -z "$project_name" ]; then
+    # Disable both sources of secret expansion before selecting project metadata.
+    # Never return raw Compose diagnostics: even its errors can echo input values.
+    if project_name=$(docker compose config --no-env-resolution --no-interpolate --format json 2>/dev/null |
+        sed -n 's/^  "name": "\([^"]*\)",\{0,1\}$/\1/p'); then
+      :
+    else
+      result=$?
+      echo "Could not read Compose project metadata (exit $result)." >&2
+      exit "$result"
+    fi
+    if [[ ! "$project_name" =~ ^[a-z0-9][a-z0-9_-]*$ ]]; then
       echo "Could not determine the Compose project name." >&2
       exit 1
     fi
-    echo "Stopping and cleaning up all containers for project $project_name..."
-    docker compose down --remove-orphans
-    remaining_containers=$(docker ps -aq --filter "label=com.docker.compose.project=$project_name")
-    remaining_networks=$(docker network ls -q --filter "label=com.docker.compose.project=$project_name")
+    echo "Stopping and cleaning up project containers and networks..."
+    if docker compose down --remove-orphans >/dev/null 2>&1; then
+      :
+    else
+      result=$?
+      echo "Compose cleanup failed (exit $result)." >&2
+      exit "$result"
+    fi
+    if remaining_containers=$(docker ps -aq --filter "label=com.docker.compose.project=$project_name" 2>/dev/null) &&
+        remaining_networks=$(docker network ls -q --filter "label=com.docker.compose.project=$project_name" 2>/dev/null); then
+      :
+    else
+      result=$?
+      echo "Could not verify Docker cleanup (exit $result)." >&2
+      exit "$result"
+    fi
     if [ -n "$remaining_containers" ] || [ -n "$remaining_networks" ]; then
-      echo "Cleanup incomplete for project $project_name." >&2
-      echo "Remaining containers: ${remaining_containers:-none}" >&2
-      echo "Remaining networks: ${remaining_networks:-none}" >&2
+      echo "Cleanup incomplete: project containers or networks remain." >&2
       exit 1
     fi
     echo "Project containers and networks removed. Dependency volumes preserved."
