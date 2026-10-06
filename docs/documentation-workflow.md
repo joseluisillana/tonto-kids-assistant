@@ -106,6 +106,11 @@ For parallel work, keep evidence attached to the branch that produced it. If mul
 
 ## Spec Handoff Routine
 
+For new/migrated specs and issues, follow [ai/README.md](../ai/README.md) and
+use the record's plan.md/journal.md and INDEX.md. Legacy records retain their
+sources until migration; new indexes are not full history. Global journals
+retain milestone context and link record-specific evidence.
+
 Before creating or materially changing a spec, follow the canonical
 [Spec Handoff Workflow](ai-assisted-workflow.md#spec-handoff-workflow), including
 the paired plan, ready-to-paste implementation prompt, editorial exception,
@@ -129,7 +134,9 @@ be subdirectories of `exports/`; absolute equivalents are accepted. Repository
 root, source directories, `exports` itself, outside paths and symbolic links in
 the destination path are rejected before writing or deleting anything.
 
-Sources remain README/AGENTS, Markdown under docs/specs, and web/README. The
+Sources remain README/AGENTS, Markdown under docs/specs, and web/README.
+The current selection excludes ai/: read it directly for the new process and
+records. This instrumentation does not change exporter coverage or scripts. The
 export rejects symbolic links in source trees (including broken/internal links),
 hardlinked files and protected filename categories before reading contents.
 Validation failures leave the previous export intact. Output is prepared in a

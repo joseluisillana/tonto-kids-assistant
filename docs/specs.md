@@ -1,5 +1,16 @@
 # TONTO Kids Assistant - Especificaciones Base
 
+## Transición de proceso ai/ — 2026-10-06
+
+El proceso de registros nuevos/migrados vive en [ai/README.md](../ai/README.md),
+con índices [specs](../ai/specs/INDEX.md) e [issues](../ai/issues/INDEX.md).
+Fase 1 instrumentada localmente, sin migración histórica: ambos índices están
+vacíos y no representan este inventario. Specs, planes, journals e issues
+anteriores siguen vigentes en sus ubicaciones actuales. Plan/evidencia:
+[plan](plans/ai-process-instrumentation-plan.md) y journal post-mvp-touch-ui.
+La fase 2 queda separada; no cambia estado de hitos/producto.
+
+
 ## Reorganización de instrucciones de agentes — definición 2026-10-06
 
 `specs/agent-instructions-hierarchy.md` (implementada localmente; revisión e

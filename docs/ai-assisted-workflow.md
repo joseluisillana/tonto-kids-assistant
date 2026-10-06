@@ -3,7 +3,9 @@
 TONTO is both an AI product and an AI-assisted development project for the AI
 Expert course. AI accelerates the work; the developer owns the decisions.
 
-This is the canonical detailed procedure for all development agents and humans.
+This is the canonical detailed operating procedure for all agents and humans.
+The [ai/ process](../ai/README.md) owns planning/tracking for new and migrated
+records; this document retains environment, Git, approvals and operation.
 Read it before any edit, formatter, generator or command that writes repository
 files. Start with [root instructions](../AGENTS.md), then read the applicable
 local AGENTS.md files and the sections triggered by the task below. No provider,
@@ -54,7 +56,7 @@ TONTO may include repo-local Agent Skills under:
 
 These skills follow the portable Agent Skills pattern: a folder with `SKILL.md` frontmatter (`name`, `description`) and optional `references/`, `scripts/`, or `assets/` resources. Skills-compatible agents can discover them from the repository and load them when the task matches the description.
 
-Repo-local skills are useful for agent operating knowledge, but they do not replace project specs, plans, or durable decisions. Canonical project behavior still lives in `specs/`, `docs/plans/`, and the implementation.
+Repo-local skills are useful for agent operating knowledge, but they do not replace project specs, plans, or durable decisions. Canonical behavior lives in registered definitions/plans and implementation: ai/ for new/migrated records, specs/ and docs/plans/ for unmigrated history.
 
 Use `.agents/skills/devexpert-inference/SKILL.md` when working with:
 
@@ -369,9 +371,19 @@ When an issue exists, reference it from the PR body to maintain tracking. Use Gi
 
 ## Spec Handoff Workflow
 
-Always update docs/specs when decisions change. Use docs/architecture.md for
-architecture decisions, docs/roadmap.md for milestone/scope, docs/specs.md and
-specs/ for behavior/implementation, and README.md only for high-level orientation
+The [ai/ process](../ai/README.md) owns planning, lifecycles, journals, indexes
+and work without a registered record. New definitions use ai/specs/ or ai/issues/
+and their own plan.md/journal.md. Read all three files before acting. Existing
+legacy definitions and GitHub issues count as registered work and retain their
+locations until migration; do not create duplicates. Historical plans/prompts
+remain valid. Scope, handoff, verification and isolation requirements below
+still apply; legacy naming/template paths apply only to unmigrated records.
+
+
+Always update affected definitions and docs when decisions change. Use
+docs/architecture.md for architecture decisions, docs/roadmap.md for milestone/scope,
+ai/ for new/migrated records, docs/specs.md and specs/ for unmigrated history,
+and README.md only for high-level orientation
 and setup. Include related docs/specs in the same change as behavior,
 architecture, setup, scope or workflow changes. Repo-local skills provide
 portable operating guidance, not canonical specs, plans or durable decisions.
@@ -379,7 +391,9 @@ Read [documentation workflow](documentation-workflow.md) when updating docs,
 journal or exports; it owns the documentation routine and evidence details.
 
 
-Whenever a spec is created or materially changed, the same change should also create or update an execution plan in `docs/plans/`.
+Whenever a spec is created or materially changed, the same change must create
+or update its execution plan: plan.md beside new/migrated definitions, or the
+existing paired docs/plans/ plan for unmigrated records.
 
 A material spec change is any change to:
 
@@ -398,7 +412,7 @@ The expected flow is:
 spec -> execution plan -> implementation prompt -> implementation -> validation evidence
 ```
 
-Execution plans should use `docs/plans/TEMPLATE-spec-implementation-plan.md` unless an existing phase-specific plan already provides the same structure. The plan should include:
+New/migrated plans use the corresponding ai/ template. Unmigrated plans use `docs/plans/TEMPLATE-spec-implementation-plan.md` unless an existing phase-specific plan already provides the same structure. The plan should include:
 
 - objective and source spec,
 - included and excluded scope,
@@ -412,7 +426,7 @@ whether it can run in parallel, collision risks and integration order if related
 work merges first. Purely editorial changes may omit a plan update only when the
 summary explicitly states that no implementation behavior changed.
 
-Naming convention:
+Legacy naming convention (new records follow ai/):
 
 ```text
 specs/<feature-name>.md
