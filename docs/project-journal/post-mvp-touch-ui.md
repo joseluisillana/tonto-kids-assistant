@@ -308,3 +308,17 @@ Hardware/SSH, voz manual, proveedores reales y activación systemd excluidos.
 El operador autoriza una última PR solo documental, esperar CI, integrarla y
 sincronizar main antes de cerrar #110 por el alcance reducido elegido.
 El aislamiento universal original sigue diferido; se mantiene .env y workflow.
+
+
+### 2026-10-06 — preparación de la primera major v1.0.0
+
+#120 integrada en e98f43f con CI aprobada, #110 cerrada y main sincronizada.
+Investigación remota: 13 tags, último v0.6.1 (2026-07-18), ninguna GitHub Release.
+El operador aprueba v1.0.0 para cerrar MVP conversacional Linux/Docker validado.
+Rama chore/release-v1.0.0: VERSION, metadatos web y notas de release; spec/plan
+de publicación con CI, merge y tag anotado. Sin comportamiento ni dependencias
+nuevos. #81/#88/#114/#53 permanecen abiertos; aislamiento completo diferido.
+
+Validación local: test web y build web pasan (43 módulos); comparación JSON
+confirma lockfile intacto salvo metadatos raíz y versiones alineadas.
+Export/diff check pasan. La CI de PR y main controla la publicación del tag.

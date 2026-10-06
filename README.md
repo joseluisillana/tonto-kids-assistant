@@ -2,6 +2,12 @@
 
 _T.O.N.T.O — Thinking Oriented Natural Tutor Organism_
 
+Versión del proyecto: **1.0.0**, declarada en `VERSION` y alineada con los
+metadatos del paquete web. Cierre del MVP conversacional Linux/Docker validado.
+Contrato y alcance: [spec de release](specs/release-v1.0.0.md);
+[cambios y limitaciones](docs/releases/v1.0.0.md). Kiosk y aceptación física
+final de la UI táctil (#88) siguen pendientes.
+
 TONTO es un agente educativo físico diseñado para acompañar a un niño en su aprendizaje diario mediante conversación natural.
 
 Es un producto AI-first moderno que combina hardware físico accesible con modelos de IA avanzados para crear experiencias de aprendizaje inmersivas y personalizadas.
@@ -59,7 +65,7 @@ Queda fuera del primer loop automatizado: wake word, Arduino/LEDs, persistencia,
 ```
 ┌──────────────────────┐       HTTP /chat + /chat/audio       ┌──────────────────────┐
 │     Raspberry Pi     │──────────────────────────────────────►│      Linux host      │
-│    Thin Client v1.2  │                                       │      Backend IA      │
+│    Thin Client  │                                       │      Backend IA      │
 │                      │                                       │   Python/FastAPI     │
 │ • Text input         │                                       │                      │
 │ • arecord WAV        │                                       │ • POST /chat         │
