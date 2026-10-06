@@ -28,8 +28,8 @@ Remaining gaps for Week 06:
 
 ## Prepared Documents
 
-- `specs/week-06-closeout.md`
-- `docs/plans/week-06-closeout.md`
+- `ai/specs/029-week-06-closeout/spec.md`
+- `ai/specs/029-week-06-closeout/plan.md`
 - `docs/project-journal/week-06.md`
 - `docs/demo-checklist.md`
 

@@ -33,11 +33,11 @@ in fixtures/stubs. Client/backend/web do not import these scripts.
 
 ## Impact and validation
 
-Read [capability pack](../specs/week-05-agent-capability-pack.md) with its historical
+Read [capability pack](../ai/specs/027-week-05-agent-capability-pack/spec.md) with its historical
 notice, [demo runbook](../docs/demo-runbook.md),
 [Raspberry setup](../docs/raspberry-pi-setup.md),
-[secret spec](../specs/agent-secrets-protection.md),
-[cleanup](../specs/docker-cleanup.md) and
+[secret spec](../ai/specs/003-agent-secrets-protection/spec.md),
+[cleanup](../ai/specs/008-docker-cleanup/spec.md) and
 [documentation workflow](../docs/documentation-workflow.md) as appropriate.
 Changes to setup/dev/test/build require scripts and documentation together;
 task Compose remains credential-free and runtime .env workflow is preserved.

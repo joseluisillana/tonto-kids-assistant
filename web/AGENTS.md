@@ -36,10 +36,10 @@ preview scripts but no lint/format targets. Current Docker runtime supplies
 VITE_BACKEND_URL explicitly and does not mount web/.env; the older README .env
 instruction is not the Docker configuration path.
 
-Read [web README](README.md), [validation spec](../specs/web-validation-client.md),
-[Phase 3](../specs/audio-pipeline-phase-3-web-loop.md),
-[manual validation](../specs/audio-pipeline-phase-3-browser-manual-validation.md),
-[listening indicator](../specs/web-listening-indicator.md) and
-[text speech plan](../docs/plans/web-text-chat-spoken-response.md) when affected.
+Read [web README](README.md), [validation spec](../ai/specs/025-web-validation-client/spec.md),
+[Phase 3](../ai/specs/004-audio-pipeline-phase-3-web-loop/spec.md),
+[manual validation](../ai/specs/004-audio-pipeline-phase-3-web-loop/artifacts/audio-pipeline-phase-3-browser-manual-validation.md),
+[listening indicator](../ai/specs/024-web-listening-indicator/spec.md) and
+[text speech plan](../ai/specs/025-web-validation-client/artifacts/text-speech-plan.md) when affected.
 Automated helper tests/build do not validate microphone permissions or audibility;
 manual browser evidence follows the relevant spec.

@@ -191,7 +191,7 @@ Output:
 **Result:** capture and local playback worked correctly on Raspberry Pi.
 **Audio quality notes:** recording gain was raised to maximum with `alsamixer` before the successful capture. Playback was audible and correct according to the manual validation.
 **Blockers:** no capture blocker found.
-**AI tools used:** Codex reviewed `AGENTS.md`, `docs/ai-assisted-workflow.md`, `docs/project-journal/week-03.md`, `specs/audio-pipeline.md`, `docs/specs.md`, and `docs/hardware.md`, then recorded the human-provided Raspberry validation evidence.
+**AI tools used:** Codex reviewed `AGENTS.md`, `docs/ai-assisted-workflow.md`, `docs/project-journal/week-03.md`, `ai/specs/005-audio-pipeline/spec.md`, `docs/specs.md`, and `docs/hardware.md`, then recorded the human-provided Raspberry validation evidence.
 **Human decision:** capture validation is recorded only; no STT, wake word, audio endpoint, new dependency, or architecture change is introduced in this iteration.
 **Validation:** USB microphone capture is reproducible enough to unblock the next design step. The next iteration may decide the minimum audio upload contract to the backend while keeping `POST /chat` stable until that decision is explicit.
 
@@ -205,7 +205,7 @@ Output:
 
 ## Next Iteration: Audio Upload Contract Candidate
 
-After `v0.2.4-week3-microphone-validation`, the next design step documented `POST /chat/audio` as the minimum candidate contract for uploading one short WAV turn from Raspberry to the backend. The full candidate contract lives in `specs/audio-pipeline.md`.
+After `v0.2.4-week3-microphone-validation`, the next design step documented `POST /chat/audio` as the minimum candidate contract for uploading one short WAV turn from Raspberry to the backend. The full candidate contract lives in `ai/specs/005-audio-pipeline/spec.md`.
 
 ## Audio Upload Contract Implementation
 
@@ -225,7 +225,7 @@ The audio upload contract was implemented in `backend/` without adding STT, wake
 | `backend/audio_router.py` | New | `POST /chat/audio` with WAV validation, fixed STT placeholder, and conversation flow |
 | `tests/conftest.py` | New | TestClient fixture mocking OpenAI calls |
 | `tests/test_audio.py` | New | 11 tests: valid upload, missing fields, empty file, size limit, format validation, duration bounds |
-| `specs/audio-pipeline.md` | Updated | Marked endpoint as implemented, STT as pending placeholder |
+| `ai/specs/005-audio-pipeline/spec.md` | Updated | Marked endpoint as implemented, STT as pending placeholder |
 | `docs/specs.md` | Updated | Reflects endpoint implementation status |
 | `scripts/test.ps1` | Fixed | Syntax check heredoc quoting (pre-existing bug) |
 
@@ -584,13 +584,13 @@ Acceptance criteria:
 
 ## Fase 2B Validation Evidence
 
-Tracking plan: `specs/audio-pipeline-phase-2b-validation-guide.md`.
+Tracking plan: `ai/specs/005-audio-pipeline/artifacts/audio-pipeline-phase-2b-validation-guide.md`.
 
 **Date/time:** 2026-05-30, Europe/Madrid.
 **Operator:** Jose Luis Illana Ruiz.
 **Branch:** `feature/audio-upload-contract`.
 **Initial Git status:** `## feature/audio-upload-contract...origin/feature/audio-upload-contract`; only the validation guide itself was untracked before documentation updates.
-**Conclusion:** pass for the initial Phase 2B validation. After the later TTS tuning to `espeak -v es -s 135 -g 8`, this evidence remained historical until the post-adjustment revalidation in `specs/audio-pipeline-phase-2b-tts-revalidation.md` passed on 2026-05-30.
+**Conclusion:** pass for the initial Phase 2B validation. After the later TTS tuning to `espeak -v es -s 135 -g 8`, this evidence remained historical until the post-adjustment revalidation in `ai/specs/005-audio-pipeline/artifacts/audio-pipeline-phase-2b-tts-revalidation.md` passed on 2026-05-30.
 
 Pre-flight and setup:
 
@@ -687,7 +687,7 @@ Validation notes:
 
 ## Fase 2B Post-TTS Revalidation Evidence
 
-Tracking spec: `specs/audio-pipeline-phase-2b-tts-revalidation.md`.
+Tracking spec: `ai/specs/005-audio-pipeline/artifacts/audio-pipeline-phase-2b-tts-revalidation.md`.
 
 **Date/time:** 2026-05-30, Europe/Madrid.
 **Operator:** Jose Luis Illana Ruiz.
@@ -840,9 +840,9 @@ Key implementation guardrails recorded for the next agent:
 
 Documentation updated for this plan:
 
-- `specs/audio-pipeline-phase-3-web-loop.md`
-- `specs/audio-pipeline.md`
-- `specs/web-validation-client.md`
+- `ai/specs/004-audio-pipeline-phase-3-web-loop/spec.md`
+- `ai/specs/005-audio-pipeline/spec.md`
+- `ai/specs/025-web-validation-client/spec.md`
 - `docs/roadmap.md`
 - `docs/specs.md`
 - `docs/architecture.md`

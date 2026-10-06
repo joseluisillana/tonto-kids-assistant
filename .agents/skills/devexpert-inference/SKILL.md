@@ -22,8 +22,8 @@ Before changing repository behavior:
 
 1. Read `AGENTS.md`.
 2. Read `docs/ai-assisted-workflow.md`.
-3. Read `specs/inference-providers.md`.
-4. Read `docs/plans/inference-providers.md`.
+3. Read `ai/specs/011-inference-providers/spec.md`.
+4. Read `ai/specs/011-inference-providers/plan.md`.
 5. Read `references/endpoint-summary.md`.
 
 For current external details, consult the live DevExpert docs:

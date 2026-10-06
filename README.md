@@ -4,7 +4,7 @@ _T.O.N.T.O — Thinking Oriented Natural Tutor Organism_
 
 Versión del proyecto: **1.0.0**, declarada en `VERSION` y alineada con los
 metadatos del paquete web. Cierre del MVP conversacional Linux/Docker validado.
-Contrato y alcance: [spec de release](specs/release-v1.0.0.md);
+Contrato y alcance: [spec de release](ai/specs/022-release-v1.0.0/spec.md);
 [cambios y limitaciones](docs/releases/v1.0.0.md). Kiosk y aceptación física
 final de la UI táctil (#88) siguen pendientes.
 
@@ -228,7 +228,7 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 
 **Semana 3 - Pipeline de voz real completada**. El proyecto cerró la captura WAV, el endpoint `POST /chat/audio`, la integración STT backend, la automatización de voz en Raspberry y la Fase 3 web. El cliente web valida el mismo contrato de audio, mantiene el loop de texto como fallback estable y reproduce de forma audible la respuesta desde navegador.
 
-**Semana 4 - Kickoff documental preparado**. El siguiente hito queda faseado en `specs/week-04-demo-stability.md` y `docs/plans/week-04-demo-stability.md`: primero validar la demo actual varias veces, después corregir solo bloqueos reales, calibrar conversación/memoria corta si hace falta, y decidir explícitamente si Arduino/LEDs aportan suficiente valor para entrar en el MVP.
+**Semana 4 - Kickoff documental preparado**. El siguiente hito queda faseado en `ai/specs/026-week-04-demo-stability/spec.md` y `ai/specs/026-week-04-demo-stability/plan.md`: primero validar la demo actual varias veces, después corregir solo bloqueos reales, calibrar conversación/memoria corta si hace falta, y decidir explícitamente si Arduino/LEDs aportan suficiente valor para entrar en el MVP.
 
 **Hitos generales conseguidos**:
 

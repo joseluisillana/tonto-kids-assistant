@@ -4,7 +4,7 @@
 
 1. Read this file first. Before choosing or executing a work item, read
    [roadmap](docs/roadmap.md), [specs index](docs/specs.md) and the newest dated
-   entry under [project journal](docs/project-journal/). Journal filenames alone
+   entry under [project journal](docs/project-journal). Journal filenames alone
    do not determine recency. These sources own milestone/sprint status.
 2. Read [AI-assisted workflow](docs/ai-assisted-workflow.md) before any edit,
    formatter, generator or command that writes repository files. It owns the
@@ -29,9 +29,10 @@ and new or migrated records. Before acting on `ai/specs/<id>/` or
 `ai/issues/<id>/`, read spec.md/issue.md, plan.md and journal.md. Plan before
 implementation and maintain the record journal. Synchronize every status change
 with its INDEX.md in the same change; keep metadata/index dates and titles aligned.
-Retain closed records and rows. Legacy specs/issues count as registered work and
-remain authoritative at their current locations until migrated; new indexes do
-not yet cover that history.
+Retain closed records and rows. The historical local definitions are now migrated
+and listed in the ai/ indexes; legacy paths are navigation pointers. Shared
+milestone journals and operating docs retain their locations. GitHub issues remain
+defined/managed in GitHub; local records preserve corresponding full URLs in related.
 
 For work without a registered spec/issue, explicitly notify the user and wait
 for an OK. An explicit OK already given for the same scope remains valid;
@@ -76,7 +77,7 @@ The reconstruction prompt is [project genesis](docs/project-genesis.md).
 | [tests/](tests/AGENTS.md) | Python API/provider/client/CLI and real Kivy-widget tests; consumes implementation, not vice versa |
 | [spikes/](spikes/AGENTS.md) | Standalone Kivy exploration; not the product client or official CI suite |
 | [docs/](docs/AGENTS.md) | Architecture, decisions, workflow, journal, runbooks and execution plans |
-| [specs/](specs/AGENTS.md) | Product/workflow contracts and validation scope; no reorganization of SDD |
+| [specs/](specs/AGENTS.md) | Legacy contract/validation links; canonical migrated records in ai/specs/ |
 | [.agents/skills/](.agents/skills/AGENTS.md) | Optional discoverable operating guidance, also readable manually; delegates to docs/scripts |
 
 Contract changes in backend affect both clients and their tests. The authoritative
@@ -111,7 +112,7 @@ without introducing a new contract layer as part of unrelated work.
   for diagnostics or capture expanded Compose config, environment dumps, raw
   provider error bodies or shell traces. Use bounded official helpers. Read
   [Secret-safe diagnostics](docs/ai-assisted-workflow.md#secret-safe-diagnostics-110)
-  and [the #110 spec](specs/agent-secrets-protection.md) before related work.
+  and [the #110 spec](ai/specs/003-agent-secrets-protection/spec.md) before related work.
   These controls reduce accidental exposure; they do not provide isolation.
 - Apply [D025](docs/decisions.md#d025---devexpert-deprecado-para-la-validación-post-migración)
   before provider operation: DevExpert code/tests/history remain; no real smoke,

@@ -1,188 +1,86 @@
 # Week 06 Closeout — Implementation Plan
 
-**Spec:** `specs/week-06-closeout.md`
-**Tracking:** GitHub parent issue #65
+This legacy path is a transition reference. The editable canonical document
+is [here](../../ai/specs/029-week-06-closeout/plan.md). Historical content and provenance are preserved there.
+
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#week-06-closeout--implementation-plan)
 
 ## Overview
 
-Week 06 closes the TONTO MVP with documentation-only deliverables: a presentation checklist, known limitations, future work list, final report, and demo evidence. No code changes are expected.
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#overview)
 
 ## Phase 0 — Documentation Kickoff
 
-**Issue:** #66
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#phase-0--documentation-kickoff)
 
 ### Tasks
 
-1. Create `specs/week-06-closeout.md`.
-2. Create `docs/plans/week-06-closeout.md`.
-3. Create `docs/project-journal/week-06.md` with kickoff.
-4. Create GitHub Issues for Phases 1-5.
-5. Update `docs/specs.md` with Week 06 section.
-6. Update `docs/roadmap.md` Week 06 status.
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#tasks)
 
 ### Acceptance
 
-- All documents exist.
-- GitHub Issues track each phase.
-- Roadmap points to Week 06.
-
----
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#acceptance)
 
 ## Phase 1 — Demo Checklist
 
-**Issue:** #67
-
-**Status:** Complete - 2026-06-14
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#phase-1--demo-checklist)
 
 ### Tasks
 
-1. Create `docs/demo-checklist.md` with:
-   - Pre-conditions section (hardware, network, API keys).
-   - Backend verification steps (health, provider smoke).
-   - Raspberry verification steps (SSH, audio, mic).
-   - Web verification steps (optional).
-   - Recommended demo sequence (5-7 questions).
-   - Plan B / fallback section.
-2. Validate checklist is actionable by reading it as an operator.
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#tasks-1)
 
 ### Acceptance
 
-- `docs/demo-checklist.md` exists.
-- Covers pre-conditions, verification, demo sequence, fallback.
-- Actionable without guessing.
-
----
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#acceptance-1)
 
 ## Phase 2 — Known Limitations
 
-**Issue:** #68
-
-**Status:** Complete - 2026-06-18
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#phase-2--known-limitations)
 
 ### Tasks
 
-1. Create `docs/known-limitations.md` covering:
-   - TTS quality (espeak robotic).
-   - No persistence.
-   - No wake word.
-   - No Arduino/LEDs.
-   - Network dependency.
-   - Single hardware unit.
-   - Latency (~2-5s).
-   - DevExpert verbosity.
-   - ALSA/JACK warnings.
-2. Each limitation has description and impact.
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#tasks-2)
 
 ### Acceptance
 
-- `docs/known-limitations.md` exists.
-- Each limitation is clearly described.
-- Suitable for presentation audience.
-
----
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#acceptance-2)
 
 ## Phase 3 - Future Work
 
-**Issue:** #69
-
-**Status:** Complete - 2026-06-18
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#phase-3---future-work)
 
 ### Tasks
 
-1. Create `docs/future-work.md` covering:
-   - Raspberry touch UI with animated assistant face using the selected Waveshare 5" HDMI touch display.
-   - Inference provider improvements (#53).
-   - TTS alternatives.
-   - Session persistence.
-   - Wake word.
-   - Arduino/LEDs.
-   - Multi-user.
-   - Metrics dashboard.
-2. Each item has priority, description, complexity.
-3. Explicitly document that cloud deployment is not prioritized after the MVP.
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#tasks-3)
 
 ### Acceptance
 
-- `docs/future-work.md` exists.
-- Items are prioritized.
-- Each item is actionable.
-
----
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#acceptance-3)
 
 ## Phase 4 — Final Report
 
-**Issue:** #70
-
-**Status:** Complete - 2026-06-18
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#phase-4--final-report)
 
 ### Tasks
 
-1. Expand `docs/final-report-outline.md` into `docs/final-report.md`.
-2. Fill all 10 sections with substantive content:
-   - 1. Project Introduction.
-   - 2. MVP Scope.
-   - 3. Architecture.
-   - 4. Development Process.
-   - 5. AI-Assisted Development.
-   - 6. Implementation.
-   - 7. Validation.
-   - 8. Results.
-   - 9. Future Work (link to `docs/future-work.md`).
-   - 10. Appendix.
-3. Reference real project evidence (tests, journals, validation).
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#tasks-4)
 
 ### Acceptance
 
-- `docs/final-report.md` exists.
-- All 10 sections have content.
-- Content references real evidence.
-- Suitable for AI Expert course submission.
-
----
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#acceptance-4)
 
 ## Phase 5 — Final Demo Evidence and Closeout
 
-**Issue:** #71
-
-**Status:** Complete - 2026-06-18
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#phase-5--final-demo-evidence-and-closeout)
 
 ### Tasks
 
-1. Execute demo following `docs/demo-checklist.md`.
-2. Record evidence in `docs/project-journal/week-06.md`:
-   - Turn-by-turn results.
-   - Provider used.
-   - Latency.
-   - Issues encountered.
-3. Update `docs/specs.md` with final status.
-4. Update `docs/roadmap.md` with completion.
-5. Verify Definition of Done checklist.
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#tasks-5)
 
 ### Acceptance
 
-- Journal has demo evidence.
-- Definition of Done verified.
-- Specs and roadmap updated.
-- Project ready for presentation.
-
----
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#acceptance-5)
 
 ## Agent Prompt
 
-You are closing the TONTO MVP project. Your job is documentation only — no code changes, no new features, no new dependencies.
-
-Read these files before starting:
-- `AGENTS.md`
-- `docs/ai-assisted-workflow.md`
-- `specs/week-06-closeout.md`
-- This plan
-
-Follow the pre-edit Git gate. Use project branches. Create one branch per phase if working in parallel.
-
-For each phase:
-1. Create or update the specified document.
-2. Use real project evidence (tests, journals, validation records).
-3. Update `docs/project-journal/week-06.md` when the phase completes.
-4. Do not change code, tests, or scripts.
-
-When all phases are complete, verify the Definition of Done and update specs/roadmap.
+[Canonical section](../../ai/specs/029-week-06-closeout/plan.md#agent-prompt)

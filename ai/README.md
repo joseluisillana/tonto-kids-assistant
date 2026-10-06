@@ -45,23 +45,31 @@ its migration. Preserve all existing secret-safe diagnostic and operating rules.
 
 ## Transition and GitHub
 
-Historical records remain authoritative at their existing locations until
-individually migrated: [legacy index](../docs/specs.md), specs/, docs/plans/ and
-[project journals](../docs/project-journal/), plus linked GitHub issues. The new
-[spec index](specs/INDEX.md) and [issue index](issues/INDEX.md) are initially empty;
-they do not represent the full history. Do not create a duplicate new record
-just because a legacy record has not yet been migrated. New records use ai/;
-legacy records retain their existing plan/handoff locations during transition.
+The [spec index](specs/INDEX.md) and [local issue index](issues/INDEX.md) now cover
+the 28 migrated historical definitions, one existing local issue and new records.
+[Migration evidence](specs/001-historical-records-migration/metadata-review.md)
+records source/destination coverage, dates and status decisions. Legacy paths in
+specs/, docs/plans/ and docs/issues/ remain navigable transition pointers, not
+editable competing definitions. Update the canonical ai/ destination.
+The [project overview](../docs/specs.md), shared [journals](../docs/project-journal/),
+architecture, decisions, operating guides and visual assets keep their sources.
+The legacy plan template and phase-1 instrumentation plan remain in docs/plans/.
 
-Every migrated record will have one canonical destination. Preserve provenance,
+Every migrated record has one canonical destination. Preserve provenance,
 original links and shared artifacts; migration must not invent dates, prior plans,
-validation or completion. Historical migration is phase 2, a separate work item;
-it is not performed by this instrumentation.
+validation or completion. Phase 2 relocates local history; GitHub issues remain
+remote references and are not part of the local record count.
 
 `related` is a YAML list of unambiguous repository-relative paths or full external
 URLs. Use it for specs, local issues, GitHub issues and original artifacts. IDs
 belong to separate local sequences; they are not GitHub issue numbers. GitHub
-keeps its numbers, URLs and history. Read linked issues and their parent/child
+keeps its numbers, URLs, definitions, lifecycle and history. Manage GitHub issues
+on GitHub; do not import or mirror them as local issue records. ai/issues/ holds
+repository-defined issues only, including existing local definitions migrated
+from the legacy structure. Every migrated local spec/issue must preserve correct
+full URLs to its corresponding GitHub tracking issue(s) in related. Distinguish
+tracking issues from contextual issue or PR references; never invent a link when
+no corresponding issue is documented. Read linked issues and their parent/child
 relationships when coordinating work; no one-to-one mapping is assumed.
 Local `resolved` does not automatically close GitHub. Keep parent issues open
 while child issues or other required tasks remain. PR closing keywords apply

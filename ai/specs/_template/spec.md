@@ -19,6 +19,9 @@ Security applies throughout: no secrets, credentials, tokens, connection strings
 PII or real customer data. Sensitive configuration uses parameter names only,
 never values. Use fictional examples and sanitized evidence; preserve existing
 security controls. `related` uses repository-relative paths or full URLs.
+Preserve full URLs to corresponding GitHub tracking issues in `related` when
+applicable. GitHub issues remain managed on GitHub; do not create local mirrors
+or invent an association when none is documented.
 
 ## Context and motivation
 

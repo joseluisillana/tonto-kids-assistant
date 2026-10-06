@@ -4,19 +4,27 @@
 
 El proceso de registros nuevos/migrados vive en [ai/README.md](../ai/README.md),
 con índices [specs](../ai/specs/INDEX.md) e [issues](../ai/issues/INDEX.md).
-Fase 1 instrumentada localmente, sin migración histórica: ambos índices están
-vacíos y no representan este inventario. Specs, planes, journals e issues
-anteriores siguen vigentes en sus ubicaciones actuales. Plan/evidencia:
-[plan](plans/ai-process-instrumentation-plan.md) y journal post-mvp-touch-ui.
-La fase 2 queda separada; no cambia estado de hitos/producto.
+Fase 1 integrada en PR #124 (`818e88e`), con ambas comprobaciones CI aprobadas.
+El índice nuevo registra [la migración histórica](../ai/specs/001-historical-records-migration/spec.md)
+implementada localmente, pendiente de revisión/integración. Su
+[mapa](../ai/specs/001-historical-records-migration/migration-map.md) y
+[evidencia de conservación](../ai/specs/001-historical-records-migration/metadata-review.md)
+registran 28 specs históricas, un documento local de issue y 64 fuentes trasladadas.
+Los índices ai/ cubren esos registros; las rutas anteriores son referencias de
+transición. Journals compartidos, guías operativas e imágenes mantienen su fuente.
+La fase 2 sigue su [plan](../ai/specs/001-historical-records-migration/plan.md),
+sin cambios de comportamiento, estado de hitos ni operación de GitHub.
+Decisión del operador: las issues de GitHub permanecen definidas y gestionadas
+en GitHub. Solo migran registros locales existentes, conservando URLs correctas
+a sus issues de tracking en `related`; no se crean espejos de las issues remotas.
 
 
 ## Reorganización de instrucciones de agentes — definición 2026-10-06
 
-`specs/agent-instructions-hierarchy.md` (implementada localmente; revisión e
-integración pendientes, #122) define una jerarquía
+`ai/specs/002-agent-instructions-hierarchy/spec.md` (integrada en #123, `40342ee`;
+#122 cerrada) define una jerarquía
 portable de AGENTS.md con conservación atómica de reglas, fuentes canónicas
-y contexto progresivo. Plan: `docs/plans/agent-instructions-hierarchy-implementation-plan.md`.
+y contexto progresivo. Plan: `ai/specs/002-agent-instructions-hierarchy/plan.md`.
 Raíz y diez locales proporcionan navegación; el detalle común permanece en
 docs/ai-assisted-workflow.md y la matriz de conservación en el plan.
 La reorganización posterior de Spec Driven Development queda fuera de este cambio.
@@ -24,10 +32,10 @@ La reorganización posterior de Spec Driven Development queda fuera de este camb
 ## Visión General
 
 **Estado actual (2026-10-05):** el MVP está cerrado desde 2026-06-18. El trabajo
-activo es la UI táctil post-MVP definida en `specs/raspberry-touch-ui.md`.
+activo es la UI táctil post-MVP definida en `ai/specs/021-raspberry-touch-ui/spec.md`.
 La cobertura automatizada de Kivy se implementa en
-`specs/kivy-ui-testing-coverage.md`, con plan en
-`docs/plans/kivy-ui-testing-coverage-plan.md` e issue #105. Usa widgets reales
+`ai/specs/013-kivy-ui-testing-coverage/spec.md`, con plan en
+`ai/specs/013-kivy-ui-testing-coverage/plan.md` e issue #105. Usa widgets reales
 en Docker con SDL2/Xvfb; la validación física y kiosk siguen en #88.
 
 Validación Linux/Docker #107 COMPLETADA el 2026-10-06; integración PR #108.
@@ -53,7 +61,7 @@ voz -> captura Raspberry -> STT backend -> /chat -> respuesta -> TTS local en Ra
 
 La preparación de semana 3 mantuvo estable `/chat` y añadió `POST /chat/audio` como entrada de voz. La captura con micrófono USB ya fue validada en Raspberry con un WAV reproducible.
 
-Fase 2B fue validada inicialmente en Raspberry real: el cliente Raspberry (`client/main.py`) automatiza captura y subida con `--mode voice`. Después de esa validación se ajustó el TTS a `espeak -v es -s 135 -g 8` para mejorar inteligibilidad en respuestas largas. La revalidación post-ajuste pasó en Raspberry real el 2026-05-30 siguiendo `specs/audio-pipeline-phase-2b-tts-revalidation.md`: respuesta larga audible, más pausada, no atropellada y suficientemente entendible para demo. Fase 3 quedó implementada y validada el 2026-06-01 con captura desde microfono web, transcript visible, respuesta textual visible y respuesta audible desde navegador.
+Fase 2B fue validada inicialmente en Raspberry real: el cliente Raspberry (`client/main.py`) automatiza captura y subida con `--mode voice`. Después de esa validación se ajustó el TTS a `espeak -v es -s 135 -g 8` para mejorar inteligibilidad en respuestas largas. La revalidación post-ajuste pasó en Raspberry real el 2026-05-30 siguiendo `ai/specs/005-audio-pipeline/artifacts/audio-pipeline-phase-2b-tts-revalidation.md`: respuesta larga audible, más pausada, no atropellada y suficientemente entendible para demo. Fase 3 quedó implementada y validada el 2026-06-01 con captura desde microfono web, transcript visible, respuesta textual visible y respuesta audible desde navegador.
 
 ## Arquitectura
 
@@ -78,13 +86,13 @@ Fase 2B fue validada inicialmente en Raspberry real: el cliente Raspberry (`clie
 - POST /chat: Procesar una interacción conversacional con `session_id` y `message`
 - POST /chat/audio: Procesar un turno corto de audio WAV con STT backend, devolver `transcript` y `response`
 
-Durante semana 3, `/chat` sigue siendo el contrato estable. Tras validar la captura WAV en Raspberry, `specs/audio-pipeline.md` documentó `POST /chat/audio` como contrato mínimo candidato. Ahora el endpoint está implementado en `backend/audio_router.py` (rama `feature/audio-upload-contract`) con STT real en backend mediante OpenAI `gpt-4o-mini-transcribe` por defecto, configurable con `OPENAI_STT_MODEL`. La subida manual de un WAV desde Raspberry con `curl` quedó validada el 2026-05-30 contra el backend LAN con transcripción real, respuesta educativa y reproducción local con `espeak`. El endpoint no reemplaza `/chat`.
+Durante semana 3, `/chat` sigue siendo el contrato estable. Tras validar la captura WAV en Raspberry, `ai/specs/005-audio-pipeline/spec.md` documentó `POST /chat/audio` como contrato mínimo candidato. Ahora el endpoint está implementado en `backend/audio_router.py` (rama `feature/audio-upload-contract`) con STT real en backend mediante OpenAI `gpt-4o-mini-transcribe` por defecto, configurable con `OPENAI_STT_MODEL`. La subida manual de un WAV desde Raspberry con `curl` quedó validada el 2026-05-30 contra el backend LAN con transcripción real, respuesta educativa y reproducción local con `espeak`. El endpoint no reemplaza `/chat`.
 
-Fase 3 queda cerrada como validada en `specs/audio-pipeline-phase-3-web-loop.md`, `specs/web-validation-client.md` y `specs/audio-pipeline-phase-3-browser-manual-validation.md`. La web usa el contrato existente, captura desde microfono, envia WAV compatible, muestra transcript/response, reproduce la response de forma audible desde el navegador y registra evidencia visible; no añade endpoint propio, no cambia proveedor STT, no introduce dependencias ni expone subida manual de WAV como flujo de producto/demo. Como mejora posterior de UX web, las respuestas recibidas por el chat de texto `/chat` tambien se reproducen con Web Speech API cuando esta disponible, degradando a texto visible si speech falla o no esta soportado.
+Fase 3 queda cerrada como validada en `ai/specs/004-audio-pipeline-phase-3-web-loop/spec.md`, `ai/specs/025-web-validation-client/spec.md` y `ai/specs/004-audio-pipeline-phase-3-web-loop/artifacts/audio-pipeline-phase-3-browser-manual-validation.md`. La web usa el contrato existente, captura desde microfono, envia WAV compatible, muestra transcript/response, reproduce la response de forma audible desde el navegador y registra evidencia visible; no añade endpoint propio, no cambia proveedor STT, no introduce dependencias ni expone subida manual de WAV como flujo de producto/demo. Como mejora posterior de UX web, las respuestas recibidas por el chat de texto `/chat` tambien se reproducen con Web Speech API cuando esta disponible, degradando a texto visible si speech falla o no esta soportado.
 
 ## Semana 4 - Estabilidad de demo y decisión de estados físicos (completada)
 
-La spec de Semana 4 vive en `specs/week-04-demo-stability.md`, con plan emparejado en `docs/plans/week-04-demo-stability.md`.
+La spec de Semana 4 vive en `ai/specs/026-week-04-demo-stability/spec.md`, con plan emparejado en `ai/specs/026-week-04-demo-stability/plan.md`.
 
 Semana 4 empieza como una preparación documental para agentes IA y después avanza por fases:
 
@@ -97,8 +105,8 @@ Semana 4 empieza como una preparación documental para agentes IA y después ava
 
 Specs y planes de Phase 4 preparados antes de código:
 
-- `specs/raspberry-listening-indicator.md` + `docs/plans/raspberry-listening-indicator.md`
-- `specs/web-listening-indicator.md` + `docs/plans/web-listening-indicator.md`
+- `ai/specs/020-raspberry-listening-indicator/spec.md` + `ai/specs/020-raspberry-listening-indicator/plan.md`
+- `ai/specs/024-web-listening-indicator/spec.md` + `ai/specs/024-web-listening-indicator/plan.md`
 
 La spec web registra la decisión humana del 2026-06-07 para el follow-up #23 (cerrada): la captura web debe hacer auto-stop al llegar al límite configurado, mostrar un aviso simple de límite alcanzado y mantener el envío manual con `Enviar voz`. Issue #25 reparó la superficie principal del cliente web para mostrar un contador visible `00:SS / 00:10` y una barra de progreso mientras TONTO escucha. La validación manual humana confirmó que el comportamiento esperado queda cubierto sin cambiar el contrato `/chat/audio` ni añadir dependencias. Ambas issues (#23 y #25) quedan cerradas.
 
@@ -108,7 +116,7 @@ La memoria de Semana 4 no implica persistencia, perfiles, memoria vectorial ni m
 
 ## Semana 5 - Estabilidad y experiencia demo (completada)
 
-La spec de Semana 5 vive en `specs/week-05-demo-stability.md`, con plan emparejado en `docs/plans/week-05-demo-stability.md`.
+La spec de Semana 5 vive en `ai/specs/028-week-05-demo-stability/spec.md`, con plan emparejado en `ai/specs/028-week-05-demo-stability/plan.md`.
 
 Semana 5 convirtió el loop validado en una demo repetible y fácil de operar:
 
@@ -123,15 +131,15 @@ GitHub tracking: issue #33 (parent), issues #34-#38 (phases).
 
 Semana 5 also includes an extra workflow item, tracked by issue #43:
 
-- **Agent Capability Pack** — implemented and merged. Portable repo-owned Markdown and Bash helper scripts for backend lifecycle and Raspberry SSH operations. Its current Linux entry points are `scripts/agent-backend.sh` and `scripts/agent-raspberry.sh`; real Raspberry preflight passed with backend health. Spec: `specs/week-05-agent-capability-pack.md`; plan: `docs/plans/week-05-agent-capability-pack.md`.
+- **Agent Capability Pack** — implemented and merged. Portable repo-owned Markdown and Bash helper scripts for backend lifecycle and Raspberry SSH operations. Its current Linux entry points are `scripts/agent-backend.sh` and `scripts/agent-raspberry.sh`; real Raspberry preflight passed with backend health. Spec: `ai/specs/027-week-05-agent-capability-pack/spec.md`; plan: `ai/specs/027-week-05-agent-capability-pack/plan.md`.
 
 Semana 5 also includes a planned extra MVP line for AI Expert course alignment:
 
-- **Inference Providers / DevExpert Inference** — implemented through Phase 3, tracked by parent issue #48 and phase issues #50, #51, #49, #52, with future backlog #53. Phases 0-3 are complete: planning/provider specs, chat provider selection, STT provider selection, and runbook/setup documentation for OpenAI and DevExpert while keeping Raspberry and web clients provider-agnostic. OpenAI keeps using the Responses API for text, DevExpert uses its documented OpenAI-compatible Chat Completions endpoint, and both providers must remain covered by tests when inference behavior changes. General spec: `specs/inference-providers.md`; provider specs: `specs/inference-provider-openai.md`, `specs/inference-provider-devexpert.md`; plan: `docs/plans/inference-providers.md`; repo-local skill: `.agents/skills/devexpert-inference/SKILL.md`.
+- **Inference Providers / DevExpert Inference** — implemented through Phase 3, tracked by parent issue #48 and phase issues #50, #51, #49, #52, with future backlog #53. Phases 0-3 are complete: planning/provider specs, chat provider selection, STT provider selection, and runbook/setup documentation for OpenAI and DevExpert while keeping Raspberry and web clients provider-agnostic. OpenAI keeps using the Responses API for text, DevExpert uses its documented OpenAI-compatible Chat Completions endpoint, and both providers must remain covered by tests when inference behavior changes. General spec: `ai/specs/011-inference-providers/spec.md`; provider specs: `ai/specs/010-inference-provider-openai/spec.md`, `ai/specs/009-inference-provider-devexpert/spec.md`; plan: `ai/specs/011-inference-providers/plan.md`; repo-local skill: `.agents/skills/devexpert-inference/SKILL.md`.
 
 ## Semana 6 - Cierre del MVP y presentación (completada)
 
-La spec de Semana 6 vive en `specs/week-06-closeout.md`, con plan emparejado en `docs/plans/week-06-closeout.md`.
+La spec de Semana 6 vive en `ai/specs/029-week-06-closeout/spec.md`, con plan emparejado en `ai/specs/029-week-06-closeout/plan.md`.
 
 Semana 6 cierra el MVP con entregables documentales:
 
@@ -148,8 +156,8 @@ GitHub tracking: issue #65 (parent), issues #66-#71 (phases).
 
 El workflow actual ejecuta setup/test/build mediante Docker y `tonto.sh`.
 La reparación de P-107-05/06 separa el entorno opcional del IDE y configura
-cachés locales pip/npm. Spec: `specs/linux-setup-cache-stability.md`; plan:
-`docs/plans/linux-setup-cache-stability-implementation-plan.md`. Las specs de
+cachés locales pip/npm. Spec: `ai/specs/016-linux-setup-cache-stability/spec.md`; plan:
+`ai/specs/016-linux-setup-cache-stability/plan.md`. Las specs de
 ci-local-cache-alignment son registros del workflow anterior (issue #89 cerrada).
 La auditoría web P-107-07 queda reparada mediante lockfile compatible, sin
 cambiar el manifest; spec/plan web-dependency-audit-remediation. Audits completos
@@ -191,9 +199,9 @@ y producción cero, tests/build pasan; ver registro de validación para CI.
 
 ## Workflow de Desarrollo Asistido por IA
 
-- `specs/agent-secrets-protection.md`: primera reparación autorizada de #110:
+- `ai/specs/003-agent-secrets-protection/spec.md`: primera reparación autorizada de #110:
   diagnósticos de limpieza y errores chat/STT acotados. Mantener .env y workflow;
-  aislamiento diferido. Plan: `docs/plans/agent-secrets-protection-implementation-plan.md`.
+  aislamiento diferido. Plan: `ai/specs/003-agent-secrets-protection/plan.md`.
   PR 1/2 integradas en #116/#117; tareas sin carga/inyección de .env. PR 3
   limita contexto build UI y mounts a fuentes públicas read-only, dependencias
   y salidas específicas, conservando comandos oficiales.
@@ -203,10 +211,10 @@ y producción cero, tests/build pasan; ver registro de validación para CI.
   web/build/scripts y fixtures). Cierre autorizado tras integrar evidencia
   documental con CI; alcance de exposiciones accidentales, aislamiento diferido.
 
-- `specs/parallel-agent-workflow.md`: define el patrón de trabajo por unidad coherente, rama corta, PR pequeña y worktree dedicado cuando hay agentes o tareas en paralelo.
-- `docs/plans/parallel-agent-workflow.md`: plan de implementación documental de ese workflow.
-- `specs/kivy-ui-docker-emulation.md`: Emulación en Docker de la Interfaz Táctil (Implemented).
-- `specs/kivy-ui-testing-coverage.md`: pruebas de widgets Kivy reales bajo Xvfb,
+- `ai/specs/018-parallel-agent-workflow/spec.md`: define el patrón de trabajo por unidad coherente, rama corta, PR pequeña y worktree dedicado cuando hay agentes o tareas en paralelo.
+- `ai/specs/018-parallel-agent-workflow/plan.md`: plan de implementación documental de ese workflow.
+- `ai/specs/012-kivy-ui-docker-emulation/spec.md`: Emulación en Docker de la Interfaz Táctil (Implemented).
+- `ai/specs/013-kivy-ui-testing-coverage/spec.md`: pruebas de widgets Kivy reales bajo Xvfb,
   integradas en `./tonto.sh test all`.
 
 
@@ -220,8 +228,8 @@ actualización. Spec/plan post-migration-stability-validation reflejan la exclus
 
 ## Release v1.0.0
 
-`specs/release-v1.0.0.md` declara el contrato público del MVP y el alcance
-Linux/Docker validado; `docs/plans/release-v1.0.0-implementation-plan.md`
+`ai/specs/022-release-v1.0.0/spec.md` declara el contrato público del MVP y el alcance
+Linux/Docker validado; `ai/specs/022-release-v1.0.0/plan.md`
 define publicación tras CI y merge. Notas: `docs/releases/v1.0.0.md`.
 Versión monorepo y metadatos web alineados; pendientes táctil/kiosk y límites
 de aislamiento conservados. #110 ya cerrada tras #120, sin ampliar su alcance.

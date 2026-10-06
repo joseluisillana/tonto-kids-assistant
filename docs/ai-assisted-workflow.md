@@ -29,8 +29,8 @@ The Week 05 Agent Capability Pack is the portable command surface for AI-assiste
 
 Its source of truth is repository-owned Markdown and Bash scripts:
 
-- `specs/week-05-agent-capability-pack.md`
-- `docs/plans/week-05-agent-capability-pack.md`
+- `ai/specs/027-week-05-agent-capability-pack/spec.md`
+- `ai/specs/027-week-05-agent-capability-pack/plan.md`
 - `scripts/agent-backend.sh`
 - `scripts/agent-raspberry.sh`
 - `docs/raspberry-pi-setup.md`
@@ -64,7 +64,7 @@ Use `.agents/skills/devexpert-inference/SKILL.md` when working with:
 - the `https://inference.devexpert.io/v1` OpenAI-compatible gateway,
 - TONTO inference provider selection,
 - DevExpert chat, STT, TTS, embeddings, or model configuration,
-- the extra MVP line in `specs/inference-providers.md`.
+- the extra MVP line in `ai/specs/011-inference-providers/spec.md`.
 
 When an inference change touches provider behavior, agents must preserve both OpenAI and DevExpert support through focused tests or documented validation.
 Apply [D025](decisions.md#d025---devexpert-deprecado-para-la-validación-post-migración)
@@ -312,7 +312,7 @@ git worktree remove ../tonto-worktrees/<worktree-name>
 git worktree prune
 ```
 
-The detailed project spec for this workflow is `specs/parallel-agent-workflow.md`, with its paired plan in `docs/plans/parallel-agent-workflow.md`.
+The detailed project spec for this workflow is `ai/specs/018-parallel-agent-workflow/spec.md`, with its paired plan in `ai/specs/018-parallel-agent-workflow/plan.md`.
 
 ## GitHub CLI and Issues
 
@@ -327,7 +327,7 @@ and interpolation disabled and reports only operation/exit code. Provider
 errors expose fixed messages and upstream HTTP status, never response bodies
 or exception reasons/chains. These controls reduce accidental exposure; they
 do not deny deliberate filesystem/Docker access. See
-`specs/agent-secrets-protection.md` and its paired plan.
+`ai/specs/003-agent-secrets-protection/spec.md` and its paired plan.
 
 Provider failures also emit WARNING JSON events through standard logging:
 provider, chat/stt operation, bounded failure category and optional HTTP status.
@@ -436,7 +436,7 @@ docs/plans/<feature-name>-implementation-plan.md
 Existing phase plans may keep their established names, for example:
 
 ```text
-docs/plans/week-03-phase-3-web-loop.md
+ai/specs/004-audio-pipeline-phase-3-web-loop/plan.md
 ```
 
 The prompt belongs inside the plan file by default. Create separate prompt files only if one spec truly needs multiple distinct implementation handoffs.

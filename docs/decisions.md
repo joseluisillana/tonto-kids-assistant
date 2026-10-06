@@ -108,10 +108,10 @@ Implement non-physical listening/time indicators first because Phase 3 Raspberry
 
 Raspberry and web indicators must be specified and planned separately before code so they can be implemented in parallel while preserving the same backend contracts. The paired specs and plans are:
 
-- `specs/raspberry-listening-indicator.md`
-- `docs/plans/raspberry-listening-indicator.md`
-- `specs/web-listening-indicator.md`
-- `docs/plans/web-listening-indicator.md`
+- `ai/specs/020-raspberry-listening-indicator/spec.md`
+- `ai/specs/020-raspberry-listening-indicator/plan.md`
+- `ai/specs/024-web-listening-indicator/spec.md`
+- `ai/specs/024-web-listening-indicator/plan.md`
 
 ## D022 - Parallel agent workflow isolation
 
@@ -125,8 +125,8 @@ Use `git` for local repository operations and prefer `gh` for PRs, checks, merge
 
 The detailed spec and plan are:
 
-- `specs/parallel-agent-workflow.md`
-- `docs/plans/parallel-agent-workflow.md`
+- `ai/specs/018-parallel-agent-workflow/spec.md`
+- `ai/specs/018-parallel-agent-workflow/plan.md`
 
 ## D023 - Agent Capability Pack as portable AI development asset
 
@@ -136,8 +136,8 @@ Tool-specific assets such as Codex skills, OpenCode prompts, plugins, or MCP too
 
 The pack uses key-based SSH for Raspberry access with a dedicated local key stored outside the repository, prefers existing official scripts such as `./tonto.sh dev`, and must not commit secrets or introduce new dependencies. The paired spec and plan are:
 
-- `specs/week-05-agent-capability-pack.md`
-- `docs/plans/week-05-agent-capability-pack.md`
+- `ai/specs/027-week-05-agent-capability-pack/spec.md`
+- `ai/specs/027-week-05-agent-capability-pack/plan.md`
 
 ## D024 - Raspberry Touch UI Tech Stack
 

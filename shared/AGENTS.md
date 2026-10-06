@@ -15,7 +15,7 @@ Future shared model work must review [backend](../backend/AGENTS.md),
 [tests](../tests/AGENTS.md), preserving public HTTP contracts.
 
 Read [architecture](../docs/architecture.md),
-[conversation](../specs/conversation-loop.md) and [audio](../specs/audio-pipeline.md).
+[conversation](../ai/specs/007-conversation-loop/spec.md) and [audio](../ai/specs/005-audio-pipeline/spec.md).
 `./tonto.sh test python` checks syntax here; no dedicated shared behavior tests
 exist. A new shared behavior needs focused tests; this placeholder alone does not
 justify new abstractions or dependencies.
