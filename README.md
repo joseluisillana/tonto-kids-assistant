@@ -2,11 +2,14 @@
 
 _T.O.N.T.O — Thinking Oriented Natural Tutor Organism_
 
-Versión del proyecto: **1.0.0**, declarada en `VERSION` y alineada con los
-metadatos del paquete web. Cierre del MVP conversacional Linux/Docker validado.
-Contrato y alcance: [spec de release](ai/specs/022-release-v1.0.0/spec.md);
-[cambios y limitaciones](docs/releases/v1.0.0.md). Kiosk y aceptación física
-final de la UI táctil (#88) siguen pendientes.
+Versión declarada del código: **2.0.0**, en `VERSION` y metadatos web alineados.
+La PR #126 prepara esta versión mayor, por decisión del operador, con reparación
+del emulador en Docker Desktop Linux. [Cambios y limitaciones](docs/releases/v2.0.0.md)
+y [plan de preparación/publicación](ai/issues/003-kivy-docker-development-audio/plan.md).
+El tag y la GitHub Release v2.0.0 se publicarán después del merge y su validación;
+la release publicada anterior es [v1.0.0](docs/releases/v1.0.0.md).
+El contrato HTTP permanece compatible. Kiosk y aceptación física final de la
+UI táctil (#88) siguen pendientes.
 
 TONTO es un agente educativo físico diseñado para acompañar a un niño en su aprendizaje diario mediante conversación natural.
 

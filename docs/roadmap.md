@@ -497,3 +497,12 @@ tras cerrar #110 mediante #120 (e98f43f). Spec release-v1.0.0 y plan emparejado
 definen preparación, CI, tag y primera GitHub Release. VERSION y web se alinean.
 No cambia runtime ni dependencias. #81/#88, #114, #53 y aislamiento completo
 permanecen pendientes; esta release no cierra el hito táctil/kiosk.
+
+## Preparación de versión v2.0.0 — aprobada 2026-10-07
+
+El operador solicita versión mayor para PR #126, que repara UI/audio del emulador
+Docker Desktop Linux. Preparación en la misma rama/issue 003: VERSION, metadatos
+web y notas de release; etiquetado/publicación tras merge y CI main aprobada.
+No cambia el contrato HTTP ni cierra kiosk/touch físico o pendientes anteriores.
+Plan: [issue 003](../ai/issues/003-kivy-docker-development-audio/plan.md).
+Notas: [v2.0.0](releases/v2.0.0.md).

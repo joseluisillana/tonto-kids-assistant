@@ -242,3 +242,12 @@ Linux/Docker validado; `ai/specs/022-release-v1.0.0/plan.md`
 define publicación tras CI y merge. Notas: `docs/releases/v1.0.0.md`.
 Versión monorepo y metadatos web alineados; pendientes táctil/kiosk y límites
 de aislamiento conservados. #110 ya cerrada tras #120, sin ampliar su alcance.
+
+## Preparación v2.0.0 — Docker Desktop Linux
+
+La PR #126 y [issue 003](../ai/issues/003-kivy-docker-development-audio/issue.md)
+preparan la versión mayor 2.0.0 por decisión del operador: VERSION y metadatos
+web alineados, reparación de UI/audio y notas en
+[docs/releases/v2.0.0.md](releases/v2.0.0.md). El plan de la issue define validación
+y etiquetado del SHA integrado después del merge. Contratos HTTP compatibles;
+tag/publicación pendientes. La spec de v1.0.0 conserva su entrega histórica.

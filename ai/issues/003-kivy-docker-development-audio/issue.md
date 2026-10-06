@@ -56,6 +56,11 @@ No atribuir el fallo a 16 kHz, STT, Kivy o proveedor sin pruebas adicionales.
 
 ## Resolution criteria
 
+Ampliación del operador, 2026-10-07: esta PR prepara versión mayor 2.0.0
+para el código integrado. VERSION y metadatos web alineados, notas de release,
+documentación y procedimiento de etiquetado/publicación tras merge. Los tags
+históricos se conservan; publicación todavía pendiente. Ver plan.md.
+
 1. Entorno y precondiciones identificados, incluida la ubicación del daemon y
    los mecanismos efectivos de acceso a pantalla/audio.
 2. Línea de trabajo elegida mediante evidencia comparativa: conexión al audio,

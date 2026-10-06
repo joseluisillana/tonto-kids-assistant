@@ -506,3 +506,11 @@ la imagen incorpora ALSA-PulseAudio. Voz, texto, recreación y limpieza aceptado
 con backend y UI en Desktop. 188 pruebas Python y 29 Kivy pasan. Dos errores
 recuperables de red STT se registran sin atribuirlos al micrófono. No se instalan
 paquetes en host ni se modifican permisos X11. Revisión e integración pendientes.
+
+### 2026-10-07 — preparación de versión mayor 2.0.0 en PR #126
+
+Operador solicita elevar versión mayor en la reparación Desktop. Metadatos y
+notas preparados en la misma rama; tag/release se publicarán sobre el SHA
+integrado después de merge y validación. No se declaran rupturas HTTP ni cierres
+de pendientes de hardware. Plan y evidencia en
+[issue 003](../../ai/issues/003-kivy-docker-development-audio/plan.md).

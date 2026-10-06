@@ -76,6 +76,27 @@ las pruebas de widgets bajo Xvfb y los mocks no prueban hardware.
 
 ## Implementation prompt
 
+### Preparación de versión mayor solicitada — 2026-10-07
+
+Operador decide que PR #126 eleve 1.0.0 a 2.0.0. Preparar en esta misma rama
+VERSION, web/package.json y las dos versiones raíz de web/package-lock.json,
+sin alterar dependencias. README debe distinguir versión declarada del código
+y release publicada. Crear docs/releases/v2.0.0.md con alcance, compatibilidad,
+validación, precondiciones y límites; conservar notas y tag históricos v1.0.0.
+Actualizar resumen de specs, roadmap y journal global mediante referencias.
+
+Verificación: comparar manifiesto/lock contra HEAD, permitiendo únicamente
+versiones raíz; test web y build web oficiales en Desktop, diff check y export.
+Las pruebas Python/Kivy y físicas ya registradas siguen aplicando al runtime
+sin cambios. Actualizar título/descripción de PR para incluir preparación 2.0.0.
+
+Después del merge: actualizar main, verificar VERSION=2.0.0 y CI aprobada del
+commit integrado, comprobar ausencia de tag remoto/local v2.0.0 y crear tag
+anotado sobre ese SHA. Publicar GitHub Release con --verify-tag y las notas
+versionadas, solo como operación posterior autorizada. No etiquetar la rama
+de preparación ni reemplazar tags existentes. Esta petición prepara la versión;
+no autoriza crear la etiqueta/release antes del merge.
+
 ### Ampliación documental solicitada — 2026-10-07
 
 Integrar en esta misma issue y PR el comando explícito de próximos arranques:

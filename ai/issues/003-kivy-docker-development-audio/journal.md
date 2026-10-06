@@ -199,3 +199,18 @@ Intento de comparar dispositivos con compose run --device no ejecutó nada:
 esa opción no está admitida por run. No se extrae evidencia de audio de ese error.
 No hay dependencias nuevas ni reparación implementada. Pendiente concretar
 prueba de transporte hacia el host y aprobar dependencias/arquitectura necesarias.
+
+## Preparación v2.0.0 — 2026-10-07
+
+Operador solicita incremento mayor en esta PR. Plan ampliado antes de cambios.
+VERSION, manifest web y ambas versiones raíz del lock alineadas a 2.0.0.
+Comparación JSON con HEAD confirma que solo cambian esas versiones, sin cambios
+de paquetes/rangos/integridades. Tests web exit 0 y build web exit 0 (43 módulos).
+README, notas versionadas, roadmap y resumen de specs distinguen código declarado
+de publicación pendiente; no se modifican API ni dependencias.
+
+Notas v2.0.0 recogen reparación Desktop e instrucciones/registros ai/ integrados
+desde v1.0.0. No se encontró tag remoto v2.0.0 en la consulta acotada; etiquetar
+sobre SHA integrado requiere comprobar de nuevo ausencia y CI main después del
+merge. No se crea tag en esta rama ni se altera v1.0.0. Preparación incorporada
+a PR #126; publicación posterior pendiente.
