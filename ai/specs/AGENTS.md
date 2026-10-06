@@ -12,7 +12,7 @@ Some implemented specs retain historical commands: capability pack's old
 PowerShell helpers are migration evidence, not commands to recreate or execute.
 
 Depends on: existing implementation evidence and human decisions. Used by:
-component development, docs/plans handoffs, checks and operating skills.
+component development, registered plan handoffs, checks and operating skills.
 No runtime imports. For a material change, update/create plan.md beside the definition
 with the implementation prompt, scope and verification/isolation criteria in the
 same change. Read spec.md, plan.md and journal.md first; follow the naming,

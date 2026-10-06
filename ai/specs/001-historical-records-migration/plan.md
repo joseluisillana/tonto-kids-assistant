@@ -281,6 +281,13 @@ spec.md/INDEX.md status and updated synchronized. Retain closed history.
 
 ## Operator decisions for retirement
 
+Final instruction reconciliation: verify absence of docs/specs/ and docs/issues/
+alongside the already retired trees; remove obsolete coexistence guidance in
+root/common/documentation instructions and update the project overview. Keep
+shared historical journals, directing detailed work evidence to ai/ journals
+and global updates to milestone summaries with links. Check references, indices
+and git diff --check; no product behavior or runtime checks are changed.
+
 The operator authorized correcting GitHub references in #81, #89 and #114.
 Those corrections preserve issue state, title and all other body content.
 The operator subsequently required current ai/ procedure, rules and templates

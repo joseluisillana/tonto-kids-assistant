@@ -77,6 +77,12 @@ Do not rewrite original historical language or erase historical decisions.
   the source hash ledger; preserve instructions and phase-1 evidence; retain the old template only in Git.
 - The tracked tree has no specs/, docs/plans/, docs/issues/ or mapped standalone
   aliases after cleanup. Do not delete unrelated or untracked content.
+- Do not create docs/specs/ or recreate retired directories. Current agent
+  instructions must remove obsolete coexistence rules and direct all registered
+  local work to ai/. docs/specs.md remains a project overview.
+- Shared project journals retain existing evidence; detailed ongoing work is
+  recorded in each ai/ journal. Global updates summarize milestone or project-wide
+  decisions and link record journals without duplicating their change logs.
 - Shared artifacts keep one canonical source; Git history is not rewritten.
 - Coverage, relationships, links and content preservation are checked before completion.
 

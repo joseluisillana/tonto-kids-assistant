@@ -378,6 +378,14 @@ local duplicates. Historical plans and prompts retain evidence, while current
 operation follows ai/ rules and templates. Scope, handoff, verification and
 isolation requirements below still apply.
 
+Retired specs/, docs/specs/, docs/issues/ and docs/plans/ directories must not be
+recreated as alternate registries or template locations. Complete authorized
+relocations by removing superseded sources and stale operational references
+after checking content preservation and link impact; retain only useful provenance.
+The ai/ record journal owns detailed work evidence. docs/project-journal/ retains
+shared historical evidence and summaries of cross-record milestones or project-wide
+decisions. Link record journals there instead of maintaining duplicate change logs.
+
 
 Always update affected definitions and docs when decisions change. Use
 docs/architecture.md for architecture decisions, docs/roadmap.md for milestone/scope,

@@ -10,18 +10,22 @@ implementada localmente, pendiente de revisión/integración. Su
 [mapa](../ai/specs/001-historical-records-migration/migration-map.md) y
 [evidencia de conservación](../ai/specs/001-historical-records-migration/metadata-review.md)
 registran 28 specs históricas, un documento local de issue y 64 fuentes trasladadas.
-Los índices ai/ cubren esos registros; las rutas anteriores son referencias de
-transición. Journals compartidos, guías operativas e imágenes mantienen su fuente.
+Los índices ai/ cubren esos registros; las rutas anteriores se han retirado y
+solo quedan como procedencia histórica recuperable en Git. Journals compartidos,
+guías operativas e imágenes mantienen su fuente.
 La fase 2 sigue su [plan](../ai/specs/001-historical-records-migration/plan.md),
-sin cambios de comportamiento, estado de hitos ni operación de GitHub.
+sin cambios de comportamiento ni estado de hitos. Las referencias de GitHub
+afectadas se corrigieron con autorización explícita, sin cambiar sus estados.
 Decisión del operador: las issues de GitHub permanecen definidas y gestionadas
 en GitHub. Solo migran registros locales existentes, conservando URLs correctas
 a sus issues de tracking en `related`; no se crean espejos de las issues remotas.
 
 Ampliación del operador: retirar también la estructura antigua. El
 [informe de impacto](../ai/specs/001-historical-records-migration/cleanup-impact.md)
-enumera 67 candidatos y los enlaces afectados. La retirada y las correcciones
-externas esperan su decisión; la conservación de todos los contenidos es obligatoria.
+enumera los 67 archivos retirados y los enlaces afectados. La conservación está
+verificada y las ocho referencias autorizadas de GitHub están corregidas.
+No existen los directorios docs/specs/ ni docs/issues/; docs/specs.md conserva
+únicamente esta visión general, sin competir con los índices ai/.
 
 
 ## Reorganización de instrucciones de agentes — definición 2026-10-06

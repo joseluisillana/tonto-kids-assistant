@@ -4,9 +4,14 @@ Read [root](../AGENTS.md), mandatory [AI workflow](ai-assisted-workflow.md) and
 [documentation workflow](documentation-workflow.md) before editing docs or exports.
 
 This directory owns durable architecture/decisions, roadmap, specs index,
-project-journal, operating guides and plans. `architecture.md` explains design;
+project-journal and operating guides. `architecture.md` explains design;
 `decisions.md` records dated decisions; `roadmap.md`/`specs.md` plus the newest
-dated journal entry give current state. Registered plans and templates live exclusively in ai/. Demo runbook/checklist and Raspberry setup provide
+dated journal entry provide milestone context; ai/ indexes own local record status.
+Registered definitions, plans, journals and templates live exclusively in ai/.
+Do not recreate docs/specs/ or docs/issues/. docs/specs.md is a project overview,
+not an alternate record index. Global journal entries preserve shared historical
+evidence; add summaries only for milestone or project-wide changes and link the
+record journal instead of copying its detailed history. Demo runbook/checklist and Raspberry setup provide
 operation context. Releases and final report preserve evidence, not new scope.
 
 Depends on: code/scripts/CI and validated human decisions as evidence;

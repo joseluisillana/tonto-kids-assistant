@@ -38,9 +38,18 @@ For work without a registered spec/issue, explicitly notify the user and wait
 for an OK. An explicit OK already given for the same scope remains valid;
 planning and evidence still apply. ai/ adds process: architecture, conventions,
 security and operation in these instructions, local AGENTS.md and mandatory
-common workflow remain applicable. The explicitly authorized transition
-supersedes legacy placement rules for new records without editing local
-architectural instructions.
+common workflow remain applicable. All registered local work follows the current
+ai/ process. Do not recreate specs/, docs/specs/, docs/issues/ or docs/plans/,
+or maintain alternate rules/templates in those locations. After a relocation,
+remove superseded tracked sources and obsolete operational references once
+content preservation and link impact have been verified within the approved scope.
+Keep historical provenance recoverable; do not delete unrelated or untracked files.
+
+Record detailed work evidence in the affected ai/ record's journal.md. Use
+docs/project-journal/ for cross-record milestone summaries and project-wide
+decisions, linking to record journals rather than duplicating their change logs.
+Existing global entries retain historical evidence; old entries do not override
+current record status, roadmap or explicit operator decisions.
 
 ## Project overview
 
@@ -76,7 +85,7 @@ The reconstruction prompt is [project genesis](docs/project-genesis.md).
 | [scripts/](scripts/AGENTS.md) | Bash operation, SSH, demos, emulator, export and syntax checks; supports runtime and CI; CLI scripts tested in tests/ |
 | [tests/](tests/AGENTS.md) | Python API/provider/client/CLI and real Kivy-widget tests; consumes implementation, not vice versa |
 | [spikes/](spikes/AGENTS.md) | Standalone Kivy exploration; not the product client or official CI suite |
-| [docs/](docs/AGENTS.md) | Architecture, decisions, workflow, journal, runbooks and execution plans |
+| [docs/](docs/AGENTS.md) | Architecture, decisions, roadmap, project summaries, historical journal and runbooks |
 | [ai/specs/](ai/specs/AGENTS.md) | Registered contracts, plans, journals and validation scope |
 | [.agents/skills/](.agents/skills/AGENTS.md) | Optional discoverable operating guidance, also readable manually; delegates to docs/scripts |
 
