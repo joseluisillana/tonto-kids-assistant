@@ -1,5 +1,10 @@
 # TONTO Demo Checklist
 
+Apply [D025](decisions.md#d025---devexpert-deprecado-para-la-validación-post-migración)
+before provider selection: DevExpert examples are historical; no real smoke,
+credentials request or reactivation without a new operator decision. Use the
+OpenAI path for current operation; preserve earlier evidence as history.
+
 **Audience:** demo operator
 **Purpose:** verify the TONTO MVP before presentation day and follow a stable demo sequence.
 **Last Updated:** 2026-10-05
@@ -23,7 +28,8 @@ Use this checklist with `docs/demo-runbook.md`. The runbook explains the full op
 
 ## 2. Choose Provider
 
-Use OpenAI as the primary presentation provider unless there is a specific reason to demonstrate DevExpert.
+Use OpenAI as the current presentation provider. The historical DevExpert path
+requires a new explicit operator decision under D025 before operation.
 
 ### OpenAI
 

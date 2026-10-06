@@ -4,6 +4,17 @@
 **Tracking:** GitHub issue #43
 **Last Updated:** 2026-06-09
 
+## Current navigation — historical implementation below
+
+The interfaces below record the original Windows implementation. Linux/Docker
+migration replaced those runtime scripts with Bash; do not recreate or execute
+the PowerShell examples. Current operation is described by
+[Agent Capability Pack](../docs/ai-assisted-workflow.md#agent-capability-pack),
+[script context](../scripts/AGENTS.md) and the actual `scripts/agent-backend.sh`
+and `scripts/agent-raspberry.sh`. SSH safety and portable repo-owned guidance
+remain applicable. This is an editorial navigation correction, not a new
+behavior, contract or implementation phase.
+
 ## Objective
 
 Create a portable Agent Capability Pack so Codex, OpenCode, and other AI-assisted agents can operate common TONTO development tasks through repository-owned Markdown and Bash helpers.

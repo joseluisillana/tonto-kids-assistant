@@ -322,3 +322,53 @@ nuevos. #81/#88/#114/#53 permanecen abiertos; aislamiento completo diferido.
 Validación local: test web y build web pasan (43 módulos); comparación JSON
 confirma lockfile intacto salvo metadatos raíz y versiones alineadas.
 Export/diff check pasan. La CI de PR y main controla la publicación del tag.
+
+### 2026-10-06 — definición de jerarquía portable de instrucciones
+
+Sobre main limpio `1cf1640`, rama `docs/agent-instructions-hierarchy` e issue
+#122. Se abre spec/plan para adaptar el prompt del operador a AGENTS.md raíz
+y locales, con inventario atómico, matriz origen/destino, fuentes canónicas,
+navegación obligatoria y neutralidad del agente. No se modifica todavía AGENTS.md,
+skills ni workflow; implementación e inventario completo pendientes.
+Discrepancias Windows/DevExpert identificadas para separar historia de estado
+vigente sin borrar instrucciones. «YAMLD» interpretado como AGENTS.md/Markdown
+conforme al adjunto. Reorganización SDD posterior excluida; sin cambios de
+producto, dependencias o CI. Validación de esta entrega: revisión documental,
+rutas locales referenciadas y diff check; no se ejecuta runtime ni hardware.
+
+### 2026-10-06 — refinamiento de la spec de instrucciones
+
+Se precisan límites del inventario, fuerza normativa y disparadores, precedencia
+y excepciones post-MVP, navegación por ámbito y evidencia verificable por
+recorrido. Se registra que el export NotebookLM existente no incluye todos los
+futuros AGENTS.md locales, sin cambiar scripts. Spec y plan siguen DRAFT;
+confirmación de formato y ubicación del procedimiento común consultadas al
+operador. Sin migración de instrucciones ni cambios funcionales.
+
+El operador confirma AGENTS.md en Markdown (Q1 resuelta); no introducir YAML.
+Ubicación del procedimiento común (Q2) pendiente.
+
+Q2 resuelta por el operador: mantener detalle en docs/ai-assisted-workflow.md,
+con reglas críticas y lectura obligatoria desde AGENTS.md. Spec y plan reflejan
+la distribución confirmada; ambas consultas cerradas, implementación pendiente.
+
+### 2026-10-06 — implementación de jerarquía de instrucciones (#122)
+
+Inventario previo de cinco fuentes con 524 unidades de reglas/contexto/ejemplos,
+original y condiciones completos: 355 conservadas, 71 trasladadas, 76 fusionadas
+y 22 históricas. Raíz como mapa/gate, detalle común en workflow obligatorio y
+diez locales justificados. Skills, metadatos y contratos preservados; D025 y
+Linux/Docker etiquetan referencias históricas, sin reactivar DevExpert/Windows.
+Fuente adicional O001 documenta sustitución de selección obsoleta en checklist.
+
+Recorridos backend/shared, cliente/audio, web/audio, scripts/secretos y docs/spec
+revisados; referencias locales, secciones destino, comandos y dependencias
+contrastados. Shared sigue placeholder; hook limitado a .git directorio y export
+no cubre todos los locales, límites registrados sin modificar scripts.
+Diff solo Markdown, diff check sin errores; main remoto sigue 1cf1640.
+Sin código, dependencias, CI, reorganización SDD, credenciales, runtime/proveedor
+o hardware. No tests funcionales para este cambio documental. Entrega local lista
+para revisión/integración; issue #122 permanece abierta hasta completar ese flujo.
+
+Commit documental preparado; el hook pre-commit regeneró el export NotebookLM
+con éxito y su selección existente. Sin ampliar cobertura a todos los locales.
