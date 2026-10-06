@@ -27,6 +27,14 @@ fi
 COMMAND=$1
 TARGET=${2:-all}
 
+# Explicit writable mounts must exist before Docker creates root-owned paths.
+case "$COMMAND" in
+  setup|test|build|dev)
+    mkdir -p .cache/pip .cache/npm .cache/pytest-fixtures .cache/client-audio-tests \
+      web/node_modules web/dist web/.tmp-test
+    ;;
+esac
+
 case "$COMMAND" in
   setup|test|build)
     # Tasks use an explicit credential-free model, not runtime .env/overrides.

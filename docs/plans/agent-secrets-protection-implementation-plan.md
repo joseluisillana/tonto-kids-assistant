@@ -1,7 +1,7 @@
 # #110 — plan de reducción de exposiciones accidentales
 
-PR 1 integrada en #116; PR 2 validada localmente el 2026-10-06. Fuente:
-specs/agent-secrets-protection.md. Rama fix/issue-110-secret-free-tasks.
+PR 1/2 integradas en #116/#117; PR 3 validada localmente el 2026-10-06. Fuente:
+specs/agent-secrets-protection.md. Rama fix/issue-110-container-mounts.
 
 ## Objetivo y alcance
 
@@ -53,6 +53,19 @@ Rama fix/issue-110-secret-free-tasks desde main 8ef12ed, sin paralelismo.
 
 ## Verificación
 
+### Implementación de PR 3
+
+Rama fix/issue-110-container-mounts desde main 0222d39 (#117 integrada).
+1. Actualizar spec antes del código. Reducir build UI a client y allowlist
+   Dockerfile.ui; no añadir dependencias ni cambiar Dockerfile de producto.
+2. Reemplazar raíz repo/web por mounts positivos; fuentes read-only, venv,
+   caches y outputs escribibles. Preparar rutas host desde CLI para evitar
+   creación root-owned. Conservar runtime .env/SSH y overrides hardware.
+3. Tests de archivos ausentes/rutas necesarias dentro de tareas; contexto
+   Docker real con fixtures/canarios. Validar modelos runtime con datos ficticios.
+4. Setup/test all/build all y runtime import/health sin credenciales reales.
+5. Actualizar docs/evidencia, commit y PR Part of #110; PR 4 diferida.
+
 Usar .venv/bin/python -m pytest para pruebas focalizadas y suite Python cuando
 la venv local está disponible; no requiere Docker ni claves reales.
 Comando oficial adicional ./tonto.sh test python si se ejecuta con configuración
@@ -71,7 +84,12 @@ PR 2: setup oficial exit 0, npm audit 0; test all con 151 Python y 25 UI
 pasados más suite web; build all exit 0. Sin overrides temporales ni claves.
 Compose real con fixtures confirma tareas sin inyección, runtime conservado,
 volumen compartido y ejecución sin .env. Sintaxis Bash/diff check pasan.
-Los mounts/build context del filesystem siguen pendientes de PR 3.
+PR 3: setup exit 0; test all 153 Python + 25 UI y web pasan; build all exit 0.
+Tests efectivos confirman /app/.env/.git/docs/exports/secrets ausentes, fuentes
+read-only y fixtures escribibles. Build Docker real con fixture scratch y
+allowlist: solo Dockerfile.ui copiado, canarios/symlink excluidos. Runtime
+backend con env_file eliminado temporalmente: imports y /health pasan, .env y
+client ausentes. Sin credenciales reales ni revalidación de voz física.
 
 Complemento logs: suite oficial Python sin env_file **136 passed**, sintaxis
 Python y diff check pasan. caplog verifica campos acotados y ausencia de

@@ -325,8 +325,14 @@ sus overrides (`COMPOSE_FILE`/`COMPOSE_ENV_FILES`) se ignoran para estas tareas.
 `setup host` también retira esas dos claves de su proceso. Las imágenes, cachés
 y el volumen `backend-venv` se conservan. Si personalizas `COMPOSE_PROJECT_NAME`,
 expórtalo en la shell para tareas y runtime; no basta definirlo solo en `.env`.
-La exclusión de archivos secretos de bind mounts/contexto build es un seguimiento
-separado (#110), por lo que esta separación no aísla el filesystem del agente.
+Python/UI ya no montan la raíz del repositorio: solo fuentes públicas en modo
+read-only, dependencias y cachés/fixtures necesarios. Web monta src/configs
+públicos, tests, node_modules y salidas concretas; no monta web/.env. La imagen
+UI usa contexto client y client/.dockerignore permite solo Dockerfile.ui.
+El CLI prepara directorios escribibles para que Docker no los cree como root.
+La configuración runtime sigue recibiendo .env por env_file, sin montarlo como
+archivo en /app. No guardar secretos dentro de fuentes/cachés autorizadas.
+Esto no aísla al agente del host/daemon ni valida overrides manuales (#110).
 
 El emulador usa `http://backend:8000` dentro de Docker y TTS español con espeak.
 `dev ui` reconstruye la imagen y configura `/dev/snd` y los grupos de sus

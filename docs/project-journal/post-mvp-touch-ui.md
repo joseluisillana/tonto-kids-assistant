@@ -253,3 +253,22 @@ tareas sin claves, configuración runtime preservada, volumen compartido y
 ausencia de requisito .env. Bash/diff check pasan. Warnings Starlette/httpx e
 imghdr previos. Sin lectura/modificación de credenciales reales ni dependencias
 nuevas. No se inicia/paraliza demo real; #110 permanece abierta.
+
+### #110 — tercera entrega: contexto de build y mounts mínimos
+
+#117 mergeada con CI aprobada; main local/remoto 0222d39 y rama anterior borrada.
+Operador autoriza siguiente fase; rama fix/issue-110-container-mounts desde
+main limpio/actualizado. UI build usa client con allowlist de Dockerfile.ui.
+Runtime Python/UI monta backend o client/shared read-only y venv/X11; tareas
+montan fuentes/scripts/tests/config públicos read-only y caches/fixtures
+específicos. Web monta fuentes/config y outputs/dependencias concretos, sin
+web/.env. CLI prepara directorios host antes de Docker. No cambia .env ni SSH.
+
+Setup exit 0, npm audit 0; test all **153 Python + 25 UI** y web pasan; build all
+exit 0. Tests dentro del contenedor confirman exclusión de raíces protegidas y
+readonly/writable según uso. Build real scratch con archivos ficticios y symlink:
+solo Dockerfile.ui copiado. Backend runtime sin env_file temporalmente: imports,
+/health y ausencia de /app/.env/client correctos. Sintaxis/diff check pasan.
+Sin claves reales/dependencias nuevas ni revalidación de voz física. Fuentes
+autorizadas deben seguir sin secretos; no se promete aislamiento host/Docker.
+PR 4 exportación pendiente; #110 permanece abierta.

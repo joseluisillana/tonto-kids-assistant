@@ -1,7 +1,7 @@
 # #110 — reducción de exposiciones accidentales de secretos
 
-Estado: PR 1 integrada; PR 2 implementada y validada localmente, 2026-10-06.
-Baseline PR 2: main 8ef12ed. Rama: fix/issue-110-secret-free-tasks.
+Estado: PR 1/2 integradas; PR 3 validada localmente, 2026-10-06.
+Baseline PR 3: main 0222d39. Rama: fix/issue-110-container-mounts.
 Tracking: https://github.com/joseluisillana/tonto-kids-assistant/issues/110.
 Plan: docs/plans/agent-secrets-protection-implementation-plan.md.
 
@@ -22,8 +22,8 @@ original de #110 ni autoriza cerrar la issue.
 | Entrega | Alcance | Estado |
 | --- | --- | --- |
 | PR 1 | Spec/plan, limpieza y errores/logs chat/STT seguros | Integrada en #116, main 8ef12ed; CI aprobada |
-| PR 2 | Setup/tests sin credenciales reales, mismos comandos | Implementada y validada localmente; pendiente revisión/integración |
-| PR 3 | Exclusión de secretos en builds y montajes innecesarios | Pendiente |
+| PR 2 | Setup/tests sin credenciales reales, mismos comandos | Integrada en #117, main 0222d39; CI aprobada |
+| PR 3 | Exclusión de secretos en builds y montajes innecesarios | Implementada y validada localmente; pendiente revisión/integración |
 | PR 4 | Exportación NotebookLM con fuentes/destinos seguros | Pendiente |
 
 Las PRs siguientes actualizan esta spec y su plan antes de implementar su fase.
@@ -82,13 +82,37 @@ a leer la clave ni declarar rotación no verificada.
   archivo .env; esa exclusión pertenece a PR 3. Esta fase impide inyección
   accidental, no acredita aislamiento ni ausencia de secretos del filesystem.
 
-## Límites vigentes
+## Requisitos de PR 3 — contextos y montajes mínimos
+
+- UI build usa contexto client y allowlist en client/.dockerignore: solo
+  Dockerfile.ui, sin .env, claves, código ni symlinks como contenido de imagen.
+  El Dockerfile instala librerías; el código se suministra por mounts.
+- Retirar mounts de raíz del repo en Python/UI. Runtime backend: backend y
+  shared read-only más volumen venv; UI: client/shared read-only y venv/X11.
+- Tareas Python/UI montan fuentes/scripts/tests y archivos públicos requeridos
+  read-only; solo dependencias y caches/fixtures son escribibles. No montar .git,
+  docs, exports, secretos raíz ni home/SSH. Tests conservan rutas /app originales.
+- Web runtime/tareas montan archivos de configuración públicos, src/tests y
+  salidas/dependencias específicas; no carpeta web completa ni web/.env reales.
+  VITE_BACKEND_URL se suministra por environment runtime como antes.
+- CLI prepara directorios escribibles antes de Docker, conserva comandos,
+  instalación local/volumen, reload y overrides de audio. .env runtime se consume
+  como env_file por Compose, nunca como archivo montado en /app.
+- Canarios ficticios: comprobar contexto build efectivo y archivos ausentes
+  en contenedor, sin leer secretos reales. Setup/tests/build oficiales pasan.
+- Fuentes montadas se consideran públicas: no guardar secretos dentro de ellas.
+  Esta fase no bloquea código malicioso, overrides manuales, symlinks hacia
+  datos dentro de otro mount autorizado ni acceso al daemon/host.
+
+## Límites pendientes
 
 Compose todavía genera un modelo estructural internamente, pero sin resolver
 los env_file ni interpolar valores. No elimina el comando config ni garantiza
 seguridad de literales secretos introducidos en YAML: las configs públicas no
 deben contener credenciales. Otros comandos Docker, logs, acceso directo y
-exclusiones del filesystem de build/montajes/export permanecen como seguimiento.
+la exportación NotebookLM y las fuentes/cachés públicas autorizadas requieren
+disciplina operativa. Exclusiones de mounts y build acordadas están implementadas;
+no se evalúan otros builds u overrides externos del operador.
 Los logs de fallos chat/STT de esta entrega sí están acotados; logs de otros
 componentes/herramientas no quedan cubiertos por esa garantía.
 No presentar esta mejora como aislamiento ni sanitización universal del host.
