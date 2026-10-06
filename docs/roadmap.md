@@ -488,3 +488,12 @@ API con mocks, lifecycle/cleanup Docker y export pasan; evidencia en spec.
 Operador autoriza cierre de #110 después de integrar la PR documental con CI
 aprobada, por reducción de exposiciones accidentales. Aislamiento diferido;
 sin migración de secretos, hardware real ni cambios de UI táctil.
+
+
+## Cierre de versión v1.0.0 — aprobado 2026-10-06
+
+El operador aprueba la primera major del MVP conversacional Linux/Docker,
+tras cerrar #110 mediante #120 (e98f43f). Spec release-v1.0.0 y plan emparejado
+definen preparación, CI, tag y primera GitHub Release. VERSION y web se alinean.
+No cambia runtime ni dependencias. #81/#88, #114, #53 y aislamiento completo
+permanecen pendientes; esta release no cierra el hito táctil/kiosk.

@@ -195,3 +195,12 @@ D025: DevExpert deprecado por decisión del operador; no operarlo para validaci�
 ni pedir credenciales. Smoke real NO APLICA en #107. OpenAI real validado.
 Histórico/adaptadores existentes conservados, sin cambio de runtime en esta
 actualización. Spec/plan post-migration-stability-validation reflejan la exclusión.
+
+
+## Release v1.0.0
+
+`specs/release-v1.0.0.md` declara el contrato público del MVP y el alcance
+Linux/Docker validado; `docs/plans/release-v1.0.0-implementation-plan.md`
+define publicación tras CI y merge. Notas: `docs/releases/v1.0.0.md`.
+Versión monorepo y metadatos web alineados; pendientes táctil/kiosk y límites
+de aislamiento conservados. #110 ya cerrada tras #120, sin ampliar su alcance.
