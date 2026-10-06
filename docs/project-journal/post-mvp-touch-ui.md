@@ -495,3 +495,14 @@ Referencias externas no accesibles (bookmarks/chats/copias) no se pueden enumera
 Export aislado con fuentes públicas y sin specs/ pasa usando el script existente;
 sigue sin incluir ai/. No se eliminan archivos ni se editan mensajes/estados de
 GitHub en esta ampliación: decisión sobre impacto/tratamiento pendiente del operador.
+
+### 2026-10-07 — audio y UI de desarrollo en Docker Desktop Linux
+
+Investigación independiente y reparación registrada en
+[issue 003](../../ai/issues/003-kivy-docker-development-audio/issue.md), con
+[evidencia](../../ai/issues/003-kivy-docker-development-audio/journal.md).
+El launcher oficial detecta Desktop y gestiona puentes locales de pantalla/audio;
+la imagen incorpora ALSA-PulseAudio. Voz, texto, recreación y limpieza aceptados
+con backend y UI en Desktop. 188 pruebas Python y 29 Kivy pasan. Dos errores
+recuperables de red STT se registran sin atribuirlos al micrófono. No se instalan
+paquetes en host ni se modifican permisos X11. Revisión e integración pendientes.

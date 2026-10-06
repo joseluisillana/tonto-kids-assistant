@@ -91,7 +91,21 @@ case "$COMMAND" in
     elif [ "$TARGET" == "ui" ]; then
       echo "Iniciando emulador de UI..."
       source scripts/ui-emulator.sh
-      run_ui_emulator
+      if [[ $(docker info --format '{{.OperatingSystem}}' 2>/dev/null) == *"Docker Desktop"* ]]; then
+        run_ui_emulator &
+        ui_launcher_pid=$!
+        trap 'kill -TERM "$ui_launcher_pid" 2>/dev/null || true' INT
+        trap 'kill -TERM "$ui_launcher_pid" 2>/dev/null || true' TERM
+        ui_result=0
+        wait "$ui_launcher_pid" || ui_result=$?
+        # A signal interrupts wait before the launcher's cleanup has completed.
+        wait "$ui_launcher_pid" 2>/dev/null || true
+        trap - INT TERM
+        exit "$ui_result"
+      else
+        # Preserve native Compose's foreground terminal/signal behavior.
+        run_ui_emulator
+      fi
     else
       echo "Starting backend and web..."
       docker compose up backend web

@@ -49,6 +49,16 @@ def test_touch_ui_reads_backend_url_from_env(ui, monkeypatch):
         other.face._cancel_events()
 
 
+@pytest.mark.parametrize("configured,expected", [("0", 1), ("-2", 1), ("100", 10), ("bad", 6)])
+def test_touch_ui_bounds_recording_duration(monkeypatch, configured, expected):
+    monkeypatch.setenv("TONTO_RECORD_SECONDS", configured)
+    widget = touch_ui.TontoTouchUI()
+    try:
+        assert widget.record_seconds == expected
+    finally:
+        widget.face._cancel_events()
+
+
 def test_toggle_text_mode_restores_talk_button(ui):
     ui.toggle_text_mode(None)
     assert ui.text_mode_active
@@ -133,14 +143,15 @@ def test_voice_pipeline_uses_audio_contract(ui, monkeypatch):
 
 def test_voice_capture_failure_reports_error_without_upload(ui, monkeypatch):
     monkeypatch.setattr(touch_ui, "capture_audio", Mock(return_value=None))
-    monkeypatch.setattr("time.sleep", lambda seconds: None)
     error = Mock()
     upload = Mock()
     monkeypatch.setattr(ui, "on_pipeline_error", error)
-    monkeypatch.setattr(ui, "set_thinking_state", Mock())
+    thinking = Mock()
+    monkeypatch.setattr(ui, "set_thinking_state", thinking)
     monkeypatch.setattr(touch_ui, "send_audio", upload)
     ui.voice_pipeline_thread()
     error.assert_called_once_with("No se pudo grabar. Comprueba el micrófono y su configuración.")
+    thinking.assert_not_called()
     upload.assert_not_called()
 
 

@@ -342,13 +342,32 @@ Esto no aísla al agente del host/daemon ni valida overrides manuales (#110).
 
 El emulador usa `http://backend:8000` dentro de Docker y TTS español con espeak.
 `dev ui` reconstruye la imagen y configura `/dev/snd` y los grupos de sus
-nodos de carácter mediante un override Compose temporal, retirado al salir.
+nodos de carácter mediante un override Compose temporal en Engine nativo.
+En **Docker Desktop Linux**, detecta su daemon y conecta la pantalla X11 y el
+servicio de audio del usuario mediante puentes temporales en loopback. Requiere
+`socat`, `setsid` (util-linux), sesión X11 local y acceso X11 ya permitido al
+usuario; no instala paquetes ni modifica permisos del host. Si tu sesión no
+autoriza al usuario local, habilítalo desde su terminal con
+`xhost +SI:localuser:$(id -un)`; no uses `xhost +`.
+PipeWire con protocolo PulseAudio o PulseAudio proporciona captura y reproducción;
+el plugin ALSA está dentro de la imagen. Sin servicio de audio, UI/texto siguen
+disponibles y la voz muestra error de captura.
+
+Para Desktop, ejecuta `DOCKER_CONTEXT=desktop-linux ./tonto.sh setup` una vez y
+`DOCKER_CONTEXT=desktop-linux ./tonto.sh dev ui`. Backend se inicia como dependencia
+en ese mismo contexto; los puertos del backend deben estar libres. Cierra la
+ventana o usa Ctrl+C para retirar contenedor UI y puentes; backend permanece.
+Los puertos locales de puente son 26024 (X11) y 24713 (audio), configurables con
+`TONTO_UI_X11_PORT` y `TONTO_UI_AUDIO_PORT`. No se publica en LAN; el puente confía
+en los procesos locales. Un puerto ocupado se rechaza sin reutilizar el listener.
+Los overrides se retiran al salir, también si el arranque falla.
 Respeta `COMPOSE_FILE`/`COMPOSE_PATH_SEPARATOR` exportados en el entorno y los
 archivos base/override convencionales. Si la selección de archivos Compose se
 configura únicamente en `.env`, el operador debe exportarla para `dev ui`; el
 helper no lee archivos de secretos. Kivy usa directorios temporales escribibles
-y arranca con `python -m client.touch_ui`. Sin ese dispositivo, síntesis a WAV y pruebas Xvfb siguen siendo
-posibles, pero micrófono y reproducción audible requieren hardware ALSA.
+y arranca con `python -m client.touch_ui`. En Engine nativo, sin dispositivos
+de audio, síntesis a WAV y pruebas Xvfb siguen siendo posibles; la voz requiere
+acceso al hardware. En Desktop no se montan dispositivos ALSA ni sockets host.
 El modo PC y Raspberry usan espeak para sintetizar voz en Linux.
 
 En Linux/Docker (vía `tonto.sh`), el `.venv` local sirve únicamente para alimentar el autocompletado del IDE, mientras que Docker maneja y aísla las dependencias reales del contenedor en un volumen propio (`backend-venv`). Las dependencias web viven en `web/node_modules/`. No instales paquetes Python o npm globales para trabajar en el MVP.

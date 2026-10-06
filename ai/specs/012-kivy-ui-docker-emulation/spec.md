@@ -4,15 +4,43 @@ title: "Kivy UI Docker Emulation"
 status: done
 owner: "Unknown — legacy ownership not recorded"
 created: "2026-10-05"
-updated: "2026-10-06"
+updated: "2026-10-07"
 related:
   - "https://github.com/joseluisillana/tonto-kids-assistant/blob/818e88eacbac3989c091d1294c92e26ebeb663f7/specs/kivy-ui-docker-emulation.md"
   - "ai/specs/001-historical-records-migration/metadata-review.md"
   - "ai/specs/019-post-migration-stability-validation/artifacts/migrate-linux-docker-validation.md"
   - "ai/specs/012-kivy-ui-docker-emulation/plan.md"
+  - "ai/issues/003-kivy-docker-development-audio/issue.md"
 ---
 
 # Kivy UI Docker Emulation
+
+## Extensión Docker Desktop Linux — 2026-10-07
+
+El contrato actual usa `client.touch_ui`, no el spike histórico. Docker Desktop
+es entorno requerido para desarrollo; su daemon corre en VM. `dev ui` detecta
+el daemon real mediante su OperatingSystem y conserva la vía ALSA directa en
+Engine nativo. Desktop requiere una sesión X11 local, socat y setsid existentes
+en el host, servicio PipeWire/PulseAudio para voz y dependencias preparadas con
+setup en el mismo contexto. No instala paquetes del host automáticamente.
+
+Desktop usa puentes socat ligados exclusivamente a loopback para pantalla y,
+cuando está disponible, audio del usuario. No copia cookies ni modifica control
+de acceso X11; el escritorio debe autorizar previamente al usuario local.
+Se confía en los procesos locales que pueden conectar al puente como ese
+usuario; no se publica en LAN. La imagen incorpora libasound2-plugins y una
+configuración ALSA de tipo pulse activada solo por el launcher Desktop.
+La ventana usa renderizado software validado. El backend vive en el mismo
+proyecto/contexto y la UI usa su dirección de servicio Docker.
+
+Al cerrar ventana, fallar o interrumpir el launcher, se retiran contenedor UI,
+grupos de procesos de los puentes y override temporal. Backend queda disponible.
+Puertos ocupados/configuración gráfica inválida producen diagnóstico antes de
+arrancar; sin servicio de audio la ventana/texto siguen disponibles. Un fallo
+de captura se muestra como error, sin simular procesamiento del backend.
+
+Criterios y validación de esta extensión: issue 003. El status done conserva
+la entrega histórica; no acredita cierre de la extensión antes de su aceptación.
 
 **Status:** Implemented
 **Date:** 2026-10-05
