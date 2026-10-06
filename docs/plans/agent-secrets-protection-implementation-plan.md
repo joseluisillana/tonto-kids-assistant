@@ -1,7 +1,8 @@
 # #110 — plan de reducción de exposiciones accidentales
 
-PR 1/2/3 integradas en #116/#117/#118; PR 4 validada localmente, 2026-10-06.
-Fuente: specs/agent-secrets-protection.md. Rama fix/issue-110-safe-notebooklm-export.
+Cuatro entregas integradas en #116/#117/#118/#119; revalidación completa del
+alcance automatizable aprobada el 2026-10-06 sobre main 70104a4.
+Fuente: specs/agent-secrets-protection.md. Rama docs/issue-110-validation-closeout.
 
 ## Objetivo y alcance
 
@@ -53,6 +54,20 @@ Rama fix/issue-110-secret-free-tasks desde main 8ef12ed, sin paralelismo.
 
 ## Verificación
 
+### Revalidación de cierre y PR documental
+
+Autorizada por el operador tras integrar #119 (main 70104a4). Rama
+docs/issue-110-validation-closeout. Ejecutar setup, test all, build all; sintaxis
+de todos los scripts Bash; fixtures del instalador de hook/export; wrappers
+backend/Raspberry/demo con comandos externos simulados, nunca hardware.
+Revalidar lifecycle y limpieza Docker en proyecto efímero sin secretos/puertos
+ocupados; conversación API con chat/STT HTTP mocks (sin proveedores reales).
+Registrar matriz exacta en spec, reconciliar roadmap/journal y preparar PR solo
+documental. Esperar CI de su commit, mergear y sincronizar main; entonces cerrar
+#110 con evidencia y decisión de alcance reducido. Sin claves reales ni turnos
+manuales. Si aparece un fallo funcional, registrarlo y resolver alcance antes
+de declarar completada la revalidación; no ocultar exclusiones o fallos.
+
 ### Implementación de PR 3
 
 Rama fix/issue-110-container-mounts desde main 0222d39 (#117 integrada).
@@ -74,6 +89,11 @@ Bash -n tonto.sh y git diff --check. No cambiar ni inspeccionar secretos reales.
 No se exige web/UI o demo física para errores y diagnóstico sin cambios de loop.
 
 ## Criterios
+
+Revalidación integrada: setup/test all/build all pasan (175 Python, 25 Kivy,
+web); 22 casos auxiliares, 6 turnos API simulados, lifecycle/cleanup Docker real,
+contexto scratch, export/hook y sintaxis pasan. Matriz y límites en la spec.
+La PR de cierre no cambia comportamiento ni dependencias.
 
 PR 4: suite Python oficial **175 passed** (22 casos nuevos de exportación),
 export real exit 0, sintaxis Bash y diff check pasan. Comparación con script
@@ -123,7 +143,9 @@ roadmap/specs/journal y verifica rama/status. Mantén .env y operación automát
 backend/SSH. No leas secretos reales, no ejecutes dumps ni añadas dependencias.
 Tests con mocks/canarios; conserva contratos, overrides y volúmenes. DevExpert
 solo mocks. Ejecuta verificación y documenta límites. Part of #110 en PR; no
-cierres objetivo original por esta reparación parcial.
+atribuyas aislamiento universal a esta reparación. Para el cierre autorizado,
+consulta la matriz de evidencia de la spec; integra la PR documental con CI
+aprobada, sincroniza main y cierra #110 por el alcance reducido elegido.
 
 ## Aislamiento del trabajo
 
