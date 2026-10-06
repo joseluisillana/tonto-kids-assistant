@@ -1,7 +1,7 @@
 ---
 id: "003-kivy-docker-development-audio"
 title: "Emulador Kivy en Docker: investigación de captura y reproducción para desarrollo"
-status: resolved
+status: closed
 owner: "jose"
 created: "2026-10-07"
 updated: "2026-10-07"

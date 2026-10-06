@@ -173,3 +173,9 @@ de fallo del host. Docker Desktop y Engine nativo no son intercambiables para
 acceso a recursos; el entorno soportado debe definirse con el operador si limita
 su requisito. Conexión y captura demostradas en imagen mínima; integración UI,
 transcripción, recuperación y launcher definitivo siguen pendientes.
+
+## Cierre — 2026-10-07
+
+Merge, CI del commit integrado, tag anotado y release v2.0.0 completados.
+Registrar publicación en README/notas/journal e issue/INDEX closed mediante
+PR documental; validar diff y CI antes de integrar el registro.

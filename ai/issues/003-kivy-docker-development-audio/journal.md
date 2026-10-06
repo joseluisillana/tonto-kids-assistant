@@ -214,3 +214,18 @@ desde v1.0.0. No se encontró tag remoto v2.0.0 en la consulta acotada; etiqueta
 sobre SHA integrado requiere comprobar de nuevo ausencia y CI main después del
 merge. No se crea tag en esta rama ni se altera v1.0.0. Preparación incorporada
 a PR #126; publicación posterior pendiente.
+
+## Integración y publicación — 2026-10-07
+
+Operador autoriza merge condicionado a CI y publicación de 2.0.0. CI del head
+50dc1fc7b0ab3c95a1b6686789d06a7eb32de20c aprobada (runs 37547089425 y
+37547085539). PR #126 integrada mediante squash como
+acc9c38f19ec973c3843234cab74d8e875e78cc7. CI main de ese SHA aprobada:
+https://github.com/joseluisillana/tonto-kids-assistant/actions/runs/37547339596.
+Versiones raíz verificadas en 2.0.0 y etiqueta ausente antes de publicar.
+Tag anotado v2.0.0 publicado y referencia remota resuelta al SHA integrado.
+Release pública, sin draft/prerelease y marcada latest:
+https://github.com/joseluisillana/tonto-kids-assistant/releases/tag/v2.0.0.
+Publicado 2026-10-06T23:37:03Z, 2026-10-07 en Europe/Madrid.
+Issue cerrada tras aceptación humana e integración; README y notas actualizados.
+No se modifica el tag histórico v1.0.0 ni el contenido del commit etiquetado.

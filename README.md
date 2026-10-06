@@ -3,11 +3,10 @@
 _T.O.N.T.O — Thinking Oriented Natural Tutor Organism_
 
 Versión declarada del código: **2.0.0**, en `VERSION` y metadatos web alineados.
-La PR #126 prepara esta versión mayor, por decisión del operador, con reparación
-del emulador en Docker Desktop Linux. [Cambios y limitaciones](docs/releases/v2.0.0.md)
-y [plan de preparación/publicación](ai/issues/003-kivy-docker-development-audio/plan.md).
-El tag y la GitHub Release v2.0.0 se publicarán después del merge y su validación;
-la release publicada anterior es [v1.0.0](docs/releases/v1.0.0.md).
+La PR #126 integra esta versión mayor con reparación del emulador en Docker
+Desktop Linux. [Release v2.0.0 publicada](https://github.com/joseluisillana/tonto-kids-assistant/releases/tag/v2.0.0),
+[cambios y limitaciones](docs/releases/v2.0.0.md) y
+[registro de publicación](ai/issues/003-kivy-docker-development-audio/journal.md).
 El contrato HTTP permanece compatible. Kiosk y aceptación física final de la
 UI táctil (#88) siguen pendientes.
 
