@@ -1,0 +1,37 @@
+# Dependency setup and automated checks. Never add runtime credentials here.
+services:
+  backend:
+    image: python:3.12-slim
+    user: "${DOCKER_UID:-1000}:${DOCKER_GID:-1000}"
+    volumes:
+      - .:/app
+      - backend-venv:/app/.venv
+    working_dir: /app
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PIP_CACHE_DIR: /app/.cache/pip
+
+  web:
+    image: node:22
+    user: "${DOCKER_UID:-1000}:${DOCKER_GID:-1000}"
+    volumes:
+      - ./web:/app/web
+      - ./.cache/npm:/app/.cache/npm
+    working_dir: /app/web
+    environment:
+      npm_config_cache: /app/.cache/npm
+
+  ui-emulator:
+    build:
+      context: .
+      dockerfile: client/Dockerfile.ui
+    user: "${DOCKER_UID:-1000}:${DOCKER_GID:-1000}"
+    volumes:
+      - .:/app
+      - backend-venv:/app/.venv
+    working_dir: /app
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+
+volumes:
+  backend-venv:

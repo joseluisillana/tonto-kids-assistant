@@ -15,7 +15,7 @@ def setup_cli(tmp_path):
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
     for name, body in {
-        "docker": 'echo "$*" >> "$SETUP_LOG"\n[ "$FAIL_AT" != "$*" ] || exit 37\nexit 0\n',
+        "docker": 'echo "$*" >> "$SETUP_LOG"\nshift 5\n[ "$FAIL_AT" != "compose $*" ] || exit 37\nexit 0\n',
         "python3": 'echo "host-python $*" >> "$SETUP_LOG"\nexit 38\n',
     }.items():
         executable = bin_dir / name
@@ -51,7 +51,8 @@ def test_docker_setup_preserves_host_and_never_runs_host_python(setup_cli):
     result, calls = setup_cli()
     assert result.returncode == 0
     assert "host-python" not in calls and "host-pip" not in calls
-    assert "compose run --rm web npm ci" in calls
+    assert "--env-file /dev/null -f " in calls
+    assert "docker-compose.tasks.yml run --rm web npm ci" in calls
     assert "Docker development environment is ready" in result.stdout
 
 

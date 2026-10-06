@@ -173,6 +173,8 @@ y producción cero, tests/build pasan; ver registro de validación para CI.
 - `specs/agent-secrets-protection.md`: primera reparación autorizada de #110:
   diagnósticos de limpieza y errores chat/STT acotados. Mantener .env y workflow;
   aislamiento diferido. Plan: `docs/plans/agent-secrets-protection-implementation-plan.md`.
+  PR 1 integrada en #116; PR 2 separa configuración de setup/tests/build de
+  runtime y evita carga/inyección de .env, manteniendo comandos oficiales.
 
 - `specs/parallel-agent-workflow.md`: define el patrón de trabajo por unidad coherente, rama corta, PR pequeña y worktree dedicado cuando hay agentes o tareas en paralelo.
 - `docs/plans/parallel-agent-workflow.md`: plan de implementación documental de ese workflow.

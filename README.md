@@ -273,7 +273,7 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 
 1. Clona el repositorio y ejecuta `./tonto.sh setup` en Linux con Docker Compose.
 2. El operador configura proveedor y credenciales en `.env`, usando
-   `.env.example` como plantilla. Compose carga ese archivo; los agentes no
+   `.env.example` como plantilla. El runtime Compose carga ese archivo; los agentes no
    deben leer ni imprimir secretos. Consulta `docs/demo-runbook.md`.
 3. Ejecuta `./tonto.sh dev all` para backend y web, o
    `./tonto.sh dev backend` para usar Raspberry/emulador.
@@ -317,6 +317,16 @@ software y un socket X11 temporal aislado. `test all` ejecuta Python, UI y web;
 las pruebas UI no capturan audio ni llaman al backend. Requiere ejecutar
 `setup` primero para preparar el volumen de dependencias. La prueba táctil y
 kiosk en Raspberry sigue siendo una validación separada.
+
+`setup`, `test` y `build` usan `docker-compose.tasks.yml` sin `env_file` y con
+`--env-file /dev/null`: no crean ni cargan `.env`, no inyectan las claves de
+OpenAI/DevExpert del host y no arrancan el backend real. El archivo runtime y
+sus overrides (`COMPOSE_FILE`/`COMPOSE_ENV_FILES`) se ignoran para estas tareas.
+`setup host` también retira esas dos claves de su proceso. Las imágenes, cachés
+y el volumen `backend-venv` se conservan. Si personalizas `COMPOSE_PROJECT_NAME`,
+expórtalo en la shell para tareas y runtime; no basta definirlo solo en `.env`.
+La exclusión de archivos secretos de bind mounts/contexto build es un seguimiento
+separado (#110), por lo que esta separación no aísla el filesystem del agente.
 
 El emulador usa `http://backend:8000` dentro de Docker y TTS español con espeak.
 `dev ui` reconstruye la imagen y configura `/dev/snd` y los grupos de sus
