@@ -17,7 +17,7 @@ remain managed in GitHub and are linked, not imported.
 | 009-inference-provider-devexpert | Inference Provider - DevExpert | done | 2026-10-06 |
 | 010-inference-provider-openai | Inference Provider - OpenAI | done | 2026-10-06 |
 | 011-inference-providers | Extra MVP Line - Inference Providers | done | 2026-10-06 |
-| 012-kivy-ui-docker-emulation | Kivy UI Docker Emulation | done | 2026-10-06 |
+| 012-kivy-ui-docker-emulation | Kivy UI Docker Emulation | done | 2026-10-07 |
 | 013-kivy-ui-testing-coverage | Kivy UI Testing Coverage | done | 2026-10-06 |
 | 014-linux-emulator-audio-device-startup | Arranque del emulador con audio físico Linux | done | 2026-10-06 |
 | 015-linux-emulator-connection-tts | Conexión y TTS del emulador Linux | done | 2026-10-06 |

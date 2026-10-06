@@ -43,3 +43,15 @@ uses its repo-local .venv via `./scripts/demo-raspberry.sh` or
 [checklist](../docs/demo-checklist.md) before operation. Live voice guidance is
 [raspberry-voice-demo](../.agents/skills/raspberry-voice-demo/SKILL.md), readable
 manually; operation alone does not authorize source edits.
+
+For local Docker Desktop Linux development, run from the repository root:
+
+```bash
+DOCKER_CONTEXT=desktop-linux ./tonto.sh dev ui
+```
+
+Close the previous emulator window and wait for its launcher to finish before
+subsequent launches; this frees its bridge ports. Do not start concurrent launchers
+with the same ports. Backend remains available. Use the explicit Desktop context;
+native Engine uses `DOCKER_CONTEXT=default`. Prerequisites and human instructions
+are in [README](../README.md#comandos-oficiales).

@@ -10,7 +10,9 @@ RUN apt-get update && apt-get install -y \
     alsa-utils \
     espeak \
     portaudio19-dev \
+    libasound2-plugins \
     gcc \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 RUN mkdir -p /tmp/.X11-unix && chmod 1777 /tmp/.X11-unix
+RUN printf '</usr/share/alsa/alsa.conf>\npcm.!default { type pulse }\nctl.!default { type pulse }\n' > /etc/tonto-pulse.conf

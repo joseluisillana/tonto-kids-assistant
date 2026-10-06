@@ -2,6 +2,17 @@
 
 **Spec:** `ai/specs/012-kivy-ui-docker-emulation/spec.md`
 
+## Extensión autorizada — 2026-10-07
+
+Ejecutar el plan de `ai/issues/003-kivy-docker-development-audio/plan.md` en
+fix/kivy-docker-desktop-audio. El ensayo independiente valida UI/audio mediante
+puentes locales y ALSA-PulseAudio en imagen. Implementar launcher con detección
+de daemon, preflight, manejo de señales y limpieza garantizada; mantener vía
+nativa y Raspberry. Actualizar README/instrucciones, verificar sintaxis Bash,
+test python y test ui, y validar arranque/voz real del stack Desktop. No instalar
+paquetes host ni abrir acceso X11 global. La implementación actual sustituye
+los prompts históricos de abajo; no aplicar comandos de plataformas archivadas.
+
 ## 1. Context
 
 We need to provide an isolated Docker environment to emulate the Raspberry Pi Touch UI (Kivy spike) on developer machines without contaminating the host OS with native SDL/Kivy dependencies.

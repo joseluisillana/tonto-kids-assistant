@@ -150,6 +150,18 @@ Run commands from the repository root; `tonto.sh` is the main entry point.
 | `./tonto.sh down` (alias `stop`) | Project containers/networks cleanup; dependency volume preserved |
 
 CI is [.github/workflows/ci.yml](.github/workflows/ci.yml): setup, test all, build all.
+
+For Docker Desktop Linux, launch the emulator from the repository root with:
+
+```bash
+DOCKER_CONTEXT=desktop-linux ./tonto.sh dev ui
+```
+
+Before subsequent launches, close the previous UI window and wait for its launcher
+to finish cleaning up the bridges and ports. Do not start a second launcher while
+the first is active. The backend remains running. Use this explicit context rather
+than relying on the global selection; native Engine uses `DOCKER_CONTEXT=default`.
+See [human startup guidance](README.md#comandos-oficiales) for prerequisites.
 There are no public lint/format/generation targets to assume. Documentation-only
 changes need reference/meaning checks and `git diff --check`; choose behavior
 tests by the affected component. Automated tests do not establish physical voice,

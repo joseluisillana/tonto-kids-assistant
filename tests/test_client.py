@@ -272,10 +272,13 @@ def _audio_test_path(filename: str) -> str:
 
 
 @pytest.mark.parametrize("stage", ["rec", "wait"])
-def test_capture_audio_pc_recovers_error(monkeypatch, tmp_path, stage):
+@pytest.mark.parametrize("invalid_device", [False, True])
+def test_capture_audio_pc_recovers_error(monkeypatch, tmp_path, stage, invalid_device):
     class PortAudioError(Exception):
         pass
     def fail(*args, **kwargs):
+        if invalid_device:
+            raise ValueError("No input device matching name")
         raise PortAudioError("Invalid sample rate")
     monkeypatch.setenv("TONTO_AUDIO_MODE", "pc")
     monkeypatch.setitem(sys.modules, "sounddevice", SimpleNamespace(

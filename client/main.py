@@ -164,7 +164,7 @@ def capture_audio(
                 dtype='float32', device=input_device,
             )
             sd.wait()
-        except sd.PortAudioError:
+        except (sd.PortAudioError, ValueError):
             print("No se pudo grabar: comprueba el micrófono y su compatibilidad con 16000 Hz.")
             return None
         

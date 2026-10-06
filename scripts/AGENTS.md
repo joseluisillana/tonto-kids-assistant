@@ -17,7 +17,10 @@ CI; scripts/ supplies narrower operating helpers. Public entry points:
 - `demo-raspberry.sh`: health/venv checks then voice client;
   `demo-touch.sh`: touch process startup, not foreground voice capture.
 - `ui-emulator.sh`: sourced by tonto.sh; discovers audio device group IDs and
-  writes only a temporary device/group override, not expanded runtime config.
+  writes a temporary device/group override on native Engine. Docker Desktop
+  uses local socat screen/audio bridges with lifecycle cleanup and temporary
+  environment override. Never captures expanded runtime config or changes X11
+  permissions. See issue 003 and emulator spec for supported prerequisites.
 - `check_syntax.py`: AST parsing backend/client/shared/tests without importing
   them. `export-docs-for-notebooklm.sh`: validated public Markdown export.
 - `install-git-hooks.sh`: local pre-commit export hook; current implementation
@@ -32,6 +35,19 @@ runbooks; tests/test_*_cli.py and test_notebooklm_export.py consume script behav
 in fixtures/stubs. Client/backend/web do not import these scripts.
 
 ## Impact and validation
+
+Operate the Docker Desktop Linux emulator from the repository root with:
+
+```bash
+DOCKER_CONTEXT=desktop-linux ./tonto.sh dev ui
+```
+
+Before repeating the command, close the previous UI window and wait until its
+launcher finishes removing the container, bridges and temporary override. Do not
+launch a second instance on occupied bridge ports. Backend remains running.
+Select Desktop explicitly rather than relying on the global Docker context;
+native Engine uses `DOCKER_CONTEXT=default`. Human instructions and prerequisites
+are in [README](../README.md#comandos-oficiales).
 
 Read [capability pack](../ai/specs/027-week-05-agent-capability-pack/spec.md) with its historical
 notice, [demo runbook](../docs/demo-runbook.md),

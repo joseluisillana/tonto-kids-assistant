@@ -61,7 +61,7 @@ class TontoTouchUI(FloatLayout):
         self.audio_device = os.environ.get("TONTO_AUDIO_DEVICE")
         self.wav_path = os.environ.get("TONTO_AUDIO_PATH", os.path.join(tempfile.gettempdir(), "tonto-touch.wav"))
         try:
-            self.record_seconds = int(os.environ.get("TONTO_RECORD_SECONDS", "6"))
+            self.record_seconds = max(1, min(10, int(os.environ.get("TONTO_RECORD_SECONDS", "6"))))
         except ValueError:
             self.record_seconds = 6
 
@@ -172,9 +172,6 @@ class TontoTouchUI(FloatLayout):
         wav_bytes = capture_audio(self.audio_device, self.record_seconds, self.wav_path, show_progress=False)
         
         if not wav_bytes:
-            self.set_thinking_state()
-            import time
-            time.sleep(1.5)
             self.on_pipeline_error("No se pudo grabar. Comprueba el micrófono y su configuración.")
             return
             

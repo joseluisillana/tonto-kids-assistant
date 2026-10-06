@@ -2,11 +2,14 @@
 
 _T.O.N.T.O — Thinking Oriented Natural Tutor Organism_
 
-Versión del proyecto: **1.0.0**, declarada en `VERSION` y alineada con los
-metadatos del paquete web. Cierre del MVP conversacional Linux/Docker validado.
-Contrato y alcance: [spec de release](ai/specs/022-release-v1.0.0/spec.md);
-[cambios y limitaciones](docs/releases/v1.0.0.md). Kiosk y aceptación física
-final de la UI táctil (#88) siguen pendientes.
+Versión declarada del código: **2.0.0**, en `VERSION` y metadatos web alineados.
+La PR #126 prepara esta versión mayor, por decisión del operador, con reparación
+del emulador en Docker Desktop Linux. [Cambios y limitaciones](docs/releases/v2.0.0.md)
+y [plan de preparación/publicación](ai/issues/003-kivy-docker-development-audio/plan.md).
+El tag y la GitHub Release v2.0.0 se publicarán después del merge y su validación;
+la release publicada anterior es [v1.0.0](docs/releases/v1.0.0.md).
+El contrato HTTP permanece compatible. Kiosk y aceptación física final de la
+UI táctil (#88) siguen pendientes.
 
 TONTO es un agente educativo físico diseñado para acompañar a un niño en su aprendizaje diario mediante conversación natural.
 
@@ -286,8 +289,10 @@ El flujo común para Codex, OpenCode, Copilot, Cursor, Claude u otras herramient
 4. Backend local: `http://127.0.0.1:8000`; web: `http://127.0.0.1:5173/`.
    Raspberry usa la IP LAN del host, por ejemplo `http://192.168.1.91:8000`.
    Docker expone el backend en la LAN; el firewall debe permitir el puerto.
-5. Ejecuta `./tonto.sh dev ui` para el emulador Kivy. La captura/reproducción
-   física requiere dispositivo de audio disponible en el host.
+5. Para el emulador Kivy en Docker Desktop Linux, ejecuta desde la raíz
+   `DOCKER_CONTEXT=desktop-linux ./tonto.sh dev ui`. En próximos arranques,
+   cierra primero la ventana anterior y espera a que termine su launcher.
+   La captura/reproducción física requiere audio disponible en el host.
 
 ### Comandos Oficiales
 
@@ -299,7 +304,8 @@ Usa estos comandos en vez de instalar dependencias o lanzar herramientas a mano:
 ./tonto.sh setup host
 ./tonto.sh dev backend
 ./tonto.sh dev web
-./tonto.sh dev ui
+# Emulador en Docker Desktop Linux; cerrar la ventana anterior antes de repetir
+DOCKER_CONTEXT=desktop-linux ./tonto.sh dev ui
 ./tonto.sh dev all
 ./tonto.sh test python
 ./tonto.sh test ui
@@ -342,13 +348,42 @@ Esto no aísla al agente del host/daemon ni valida overrides manuales (#110).
 
 El emulador usa `http://backend:8000` dentro de Docker y TTS español con espeak.
 `dev ui` reconstruye la imagen y configura `/dev/snd` y los grupos de sus
-nodos de carácter mediante un override Compose temporal, retirado al salir.
+nodos de carácter mediante un override Compose temporal en Engine nativo.
+En **Docker Desktop Linux**, detecta su daemon y conecta la pantalla X11 y el
+servicio de audio del usuario mediante puentes temporales en loopback. Requiere
+`socat`, `setsid` (util-linux), sesión X11 local y acceso X11 ya permitido al
+usuario; no instala paquetes ni modifica permisos del host. Si tu sesión no
+autoriza al usuario local, habilítalo desde su terminal con
+`xhost +SI:localuser:$(id -un)`; no uses `xhost +`.
+PipeWire con protocolo PulseAudio o PulseAudio proporciona captura y reproducción;
+el plugin ALSA está dentro de la imagen. Sin servicio de audio, UI/texto siguen
+disponibles y la voz muestra error de captura.
+
+Para Desktop, ejecuta `DOCKER_CONTEXT=desktop-linux ./tonto.sh setup` una vez y
+usa el siguiente comando desde la raíz del repositorio. **Para próximos arranques,
+cierra la ventana anterior y espera a que termine su launcher** antes de repetirlo:
+
+```bash
+DOCKER_CONTEXT=desktop-linux ./tonto.sh dev ui
+```
+
+El cierre retira los puentes y libera sus puertos; no inicies un segundo launcher
+mientras el anterior siga activo. Para Engine nativo, usa
+`DOCKER_CONTEXT=default ./tonto.sh dev ui` con sus precondiciones de hardware.
+Backend se inicia como dependencia
+en ese mismo contexto; los puertos del backend deben estar libres. Cierra la
+ventana o usa Ctrl+C para retirar contenedor UI y puentes; backend permanece.
+Los puertos locales de puente son 26024 (X11) y 24713 (audio), configurables con
+`TONTO_UI_X11_PORT` y `TONTO_UI_AUDIO_PORT`. No se publica en LAN; el puente confía
+en los procesos locales. Un puerto ocupado se rechaza sin reutilizar el listener.
+Los overrides se retiran al salir, también si el arranque falla.
 Respeta `COMPOSE_FILE`/`COMPOSE_PATH_SEPARATOR` exportados en el entorno y los
 archivos base/override convencionales. Si la selección de archivos Compose se
 configura únicamente en `.env`, el operador debe exportarla para `dev ui`; el
 helper no lee archivos de secretos. Kivy usa directorios temporales escribibles
-y arranca con `python -m client.touch_ui`. Sin ese dispositivo, síntesis a WAV y pruebas Xvfb siguen siendo
-posibles, pero micrófono y reproducción audible requieren hardware ALSA.
+y arranca con `python -m client.touch_ui`. En Engine nativo, sin dispositivos
+de audio, síntesis a WAV y pruebas Xvfb siguen siendo posibles; la voz requiere
+acceso al hardware. En Desktop no se montan dispositivos ALSA ni sockets host.
 El modo PC y Raspberry usan espeak para sintetizar voz en Linux.
 
 En Linux/Docker (vía `tonto.sh`), el `.venv` local sirve únicamente para alimentar el autocompletado del IDE, mientras que Docker maneja y aísla las dependencias reales del contenedor en un volumen propio (`backend-venv`). Las dependencias web viven en `web/node_modules/`. No instales paquetes Python o npm globales para trabajar en el MVP.
