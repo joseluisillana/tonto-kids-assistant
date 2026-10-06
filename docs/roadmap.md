@@ -481,6 +481,10 @@ mantener workflow y .env; variable host descartada y aislamiento diferido.
 PR 1 integrada en #116 (8ef12ed), CI completa aprobada: limpieza y errores/logs
 chat/STT seguros. PR 2 integrada en #117 (0222d39), CI completa aprobada:
 setup/tests/build sin inyección de claves. PR 3 integrada en #118 (b254ded),
-CI aprobada: contexto UI mínimo y mounts positivos/read-only. PR 4 validada
-localmente: export NotebookLM con fuentes/destinos verificados, pendiente PR/merge.
-#110 sigue abierta; sin migración de secretos ni cambios de UI táctil.
+CI aprobada: contexto UI mínimo y mounts positivos/read-only. PR 4 integrada
+en #119 (70104a4): export NotebookLM con fuentes/destinos verificados.
+Revalidación integrada: setup, 175 Python + 25 Kivy + web, build, scripts,
+API con mocks, lifecycle/cleanup Docker y export pasan; evidencia en spec.
+Operador autoriza cierre de #110 después de integrar la PR documental con CI
+aprobada, por reducción de exposiciones accidentales. Aislamiento diferido;
+sin migración de secretos, hardware real ni cambios de UI táctil.

@@ -291,3 +291,20 @@ Sintaxis Bash/diff check pasan, warning Starlette/httpx previo. Sin lectura de
 secretos reales ni dependencias nuevas. Fuentes regulares deben seguir públicas;
 no se escanean claves en Markdown ni se cubren carreras adversarias/concurrencia.
 #110 sigue abierta para revisar aceptación del alcance reducido tras integración.
+
+
+### #110 — revalidación integrada y cierre documental autorizado
+
+Las cuatro entregas ya están integradas: #116 (8ef12ed), #117 (0222d39),
+#118 (b254ded) y #119 (70104a4), todas con CI aprobada. Sobre este baseline se
+ejecutan setup, test all (175 Python + 25 Kivy + web), build all y sintaxis Bash: pasan.
+Pasan además 22 casos auxiliares con stubs, seis turnos API texto/audio con
+HTTP mocks, lifecycle/cleanup Docker real en proyecto efímero sin secretos,
+contexto UI scratch, export real y hook en fixture. Matriz completa en spec.
+El harness API se repite con PYTHONPATH correcto tras un fallo de importación
+de su primera invocación; no se modifica producto ni dependencias.
+
+Hardware/SSH, voz manual, proveedores reales y activación systemd excluidos.
+El operador autoriza una última PR solo documental, esperar CI, integrarla y
+sincronizar main antes de cerrar #110 por el alcance reducido elegido.
+El aislamiento universal original sigue diferido; se mantiene .env y workflow.
