@@ -12,6 +12,7 @@ related:
   - "docs/specs.md"
   - "docs/project-journal/post-mvp-touch-ui.md"
   - "https://github.com/joseluisillana/tonto-kids-assistant/pull/124"
+  - "https://github.com/joseluisillana/tonto-kids-assistant/pull/125"
 ---
 
 # Historical specs and issues migration

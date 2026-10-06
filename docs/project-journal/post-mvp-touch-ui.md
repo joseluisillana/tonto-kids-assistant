@@ -471,3 +471,8 @@ ai/ y no se amplía: navegar al repositorio para contratos canónicos.
 
 Entrega local lista para PR; spec de migración in-progress hasta revisión/CI e
 integración. No se cierran issues de producto por trasladar documentación.
+
+Commit de migración `4c765ea`; hook de export existente aprobado. Rama publicada
+y PR #125 abierta con evidencia/criterios de conservación. Índices/journals
+canónicos enlazan la revisión; CI e integración pendientes. Issues de GitHub
+sin modificaciones y checkout limpio después de registrar esta referencia.
