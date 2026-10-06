@@ -179,6 +179,11 @@ exacta. No se altera backend para ocultarlos o introducir reintentos.
 Validación: setup exit 0, 188 Python, 29 Kivy, sintaxis Bash y diff check pasan.
 Sin paquetes instalados en host ni configuración permanente modificada.
 
+Reparación guardada en commit 3bddad0 y publicada para revisión en
+[PR #126](https://github.com/joseluisillana/tonto-kids-assistant/pull/126), borrador.
+La issue local permanece resolved hasta revisión/integración; no existe una issue
+GitHub duplicada. Backend y emulador oficiales siguen activos en Desktop.
+
 Intento de comparar dispositivos con compose run --device no ejecutó nada:
 esa opción no está admitida por run. No se extrae evidencia de audio de ese error.
 No hay dependencias nuevas ni reparación implementada. Pendiente concretar

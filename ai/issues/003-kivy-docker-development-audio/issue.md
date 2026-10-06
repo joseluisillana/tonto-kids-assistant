@@ -6,6 +6,7 @@ owner: "jose"
 created: "2026-10-07"
 updated: "2026-10-07"
 related:
+  - "https://github.com/joseluisillana/tonto-kids-assistant/pull/126"
   - "ai/specs/012-kivy-ui-docker-emulation/spec.md"
   - "ai/specs/005-audio-pipeline/spec.md"
   - "ai/specs/021-raspberry-touch-ui/spec.md"
