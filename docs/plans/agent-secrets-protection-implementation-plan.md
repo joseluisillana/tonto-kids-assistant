@@ -1,7 +1,7 @@
 # #110 — plan de reducción de exposiciones accidentales
 
-PR 1/2 integradas en #116/#117; PR 3 validada localmente el 2026-10-06. Fuente:
-specs/agent-secrets-protection.md. Rama fix/issue-110-container-mounts.
+PR 1/2/3 integradas en #116/#117/#118; PR 4 validada localmente, 2026-10-06.
+Fuente: specs/agent-secrets-protection.md. Rama fix/issue-110-safe-notebooklm-export.
 
 ## Objetivo y alcance
 
@@ -74,6 +74,23 @@ Bash -n tonto.sh y git diff --check. No cambiar ni inspeccionar secretos reales.
 No se exige web/UI o demo física para errores y diagnóstico sin cambios de loop.
 
 ## Criterios
+
+PR 4: suite Python oficial **175 passed** (22 casos nuevos de exportación),
+export real exit 0, sintaxis Bash y diff check pasan. Comparación con script
+previo en fixtures: 7 archivos idénticos byte a byte (individuales/INDEX/combinado).
+Rechazos cubren rutas peligrosas, enlaces/hardlinks/fuentes protegidas y fallo
+de copia con diagnóstico ficticio sensible; export previo permanece intacto.
+
+### Implementación de PR 4
+
+Rama fix/issue-110-safe-notebooklm-export desde main b254ded (#118 integrada).
+Validar fuentes y destinos antes de IO de contenido, rechazar enlaces y
+hardlinks, acotar salida de errores y staging seguro bajo exports. Preservar
+formato/orden de fuentes y hook Bash; no nuevas dependencias ni escaneo de claves.
+Tests ejecutan exportador real sobre repo ficticio sin acceso a secretos reales:
+canarios/enlaces/rutas/errores y salida normal. Ejecutar suite Python oficial,
+export real autorizado y comparar combinado con fuentes públicas sin volcarlas.
+Actualizar workflow/spec/plan/roadmap/journal; PR Part of #110, sin cierre ni merge.
 
 Evidencia 2026-10-06: suite oficial Python en Docker con override env_file vacío,
 135 passed. Sintaxis Python/Bash y diff check pasan. Consulta Compose real con

@@ -176,6 +176,8 @@ y producción cero, tests/build pasan; ver registro de validación para CI.
   PR 1/2 integradas en #116/#117; tareas sin carga/inyección de .env. PR 3
   limita contexto build UI y mounts a fuentes públicas read-only, dependencias
   y salidas específicas, conservando comandos oficiales.
+  PR 3 integrada en #118; PR 4 valida fuentes/destinos de export NotebookLM,
+  rechaza enlaces/hardlinks y conserva export previo ante errores de validación.
 
 - `specs/parallel-agent-workflow.md`: define el patrón de trabajo por unidad coherente, rama corta, PR pequeña y worktree dedicado cuando hay agentes o tareas en paralelo.
 - `docs/plans/parallel-agent-workflow.md`: plan de implementación documental de ese workflow.

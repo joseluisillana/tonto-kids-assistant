@@ -480,7 +480,7 @@ Spec: `specs/agent-secrets-protection.md`; plan:
 mantener workflow y .env; variable host descartada y aislamiento diferido.
 PR 1 integrada en #116 (8ef12ed), CI completa aprobada: limpieza y errores/logs
 chat/STT seguros. PR 2 integrada en #117 (0222d39), CI completa aprobada:
-setup/tests/build sin inyección de claves. PR 3 validada localmente: contexto
-UI mínimo y mounts positivos/read-only, pendiente revisión/integración.
-Siguiente entrega: export NotebookLM, tras merge de PR 3.
+setup/tests/build sin inyección de claves. PR 3 integrada en #118 (b254ded),
+CI aprobada: contexto UI mínimo y mounts positivos/read-only. PR 4 validada
+localmente: export NotebookLM con fuentes/destinos verificados, pendiente PR/merge.
 #110 sigue abierta; sin migración de secretos ni cambios de UI táctil.

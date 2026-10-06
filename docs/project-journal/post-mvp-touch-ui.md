@@ -272,3 +272,22 @@ solo Dockerfile.ui copiado. Backend runtime sin env_file temporalmente: imports,
 Sin claves reales/dependencias nuevas ni revalidación de voz física. Fuentes
 autorizadas deben seguir sin secretos; no se promete aislamiento host/Docker.
 PR 4 exportación pendiente; #110 permanece abierta.
+
+### #110 — cuarta entrega: exportación NotebookLM segura
+
+#118 integrada con CI completa en main b254ded; rama anterior retirada.
+Operador autoriza exportación: rama fix/issue-110-safe-notebooklm-export desde
+main limpio/actualizado. Destinos solo bajo exports/subdirectorio, normalizados;
+sin links en componentes. Fuentes validadas antes de contenido y borrado:
+rechazo de symlinks en árboles docs/specs, links rotos/internos, hardlinks y
+categorías protegidas. Staging privado y reemplazo de output derivado autorizado;
+errores fijos sin diagnósticos crudos. Formato y hook Bash conservados.
+
+Suite Python oficial **175 passed**, con 22 tests nuevos de exportación. Primer
+fixture esperaba rechazo de un dotfile que el glob ya excluía; ajustado a fuente
+protegida visible y añadida preservación ante fallo IO. Export real exit 0;
+comparación con baseline sobre fixtures: 7 archivos idénticos byte a byte.
+Sintaxis Bash/diff check pasan, warning Starlette/httpx previo. Sin lectura de
+secretos reales ni dependencias nuevas. Fuentes regulares deben seguir públicas;
+no se escanean claves en Markdown ni se cubren carreras adversarias/concurrencia.
+#110 sigue abierta para revisar aceptación del alcance reducido tras integración.
